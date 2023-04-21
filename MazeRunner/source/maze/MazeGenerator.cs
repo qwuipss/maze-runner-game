@@ -8,7 +8,7 @@ namespace MazeRunner;
 
 public static class MazeGenerator
 {
-    private static readonly Random _random = new(123);
+    private static readonly Random _random = new(123); // debug value
 
     public static Maze GenerateMaze(int width, int height)
     {
@@ -16,9 +16,7 @@ public static class MazeGenerator
         var backtrackingCells = new Stack<Cell>();
         var (cells, emptiesInserted) = GetGridCells(width, height);
 
-        var startCell = new Cell(1, 1); // todo
-
-        var currentCell = startCell;
+        var currentCell = new Cell(1, 1);
         visitedCells.Add(currentCell);
 
         while (visitedCells.Count != emptiesInserted)
@@ -29,14 +27,12 @@ public static class MazeGenerator
             {
                 backtrackingCells.Push(currentCell);
 
-                var randomAdjacentCell = adjacentCells[_random.Next(0, adjacentCells.Count)];
+                var adjacentCell = adjacentCells[_random.Next(0, adjacentCells.Count)];
 
-                RemoveWallBetween(currentCell, randomAdjacentCell, cells);
+                RemoveWallBetween(currentCell, adjacentCell, cells);
 
-                visitedCells.Add(randomAdjacentCell);
-                currentCell = randomAdjacentCell;
-
-                new Maze(cells).LoadToFile(new System.IO.FileInfo("maze.txt")); // debug
+                visitedCells.Add(adjacentCell);
+                currentCell = adjacentCell;
             }
             else
             {
@@ -44,7 +40,7 @@ public static class MazeGenerator
             }
         }
 
-        return new Maze(cells);
+        return new Maze(cells.Transpose());
     }
 
     private static (CellType[,] Cells, int EmptiesInserted) GetGridCells(int width, int height)
