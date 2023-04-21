@@ -14,14 +14,14 @@ public static class MazeGenerator
     {
         var visitedCells = new HashSet<Cell>();
         var backtrackingCells = new Stack<Cell>();
-        var cells = GetDefaultMaze(width, height);
+        var (cells, emptiesInserted) = GetGridCells(width, height);
 
-        var startCell = new Cell(1, 1);
+        var startCell = new Cell(1, 1); // todo
 
         var currentCell = startCell;
         visitedCells.Add(currentCell);
 
-        while (visitedCells.Count != width * height) // todo
+        while (visitedCells.Count != emptiesInserted)
         {
             var adjacentCells = GetAdjacentEmptyNotVisitedCells(currentCell, cells, visitedCells);
 
@@ -47,9 +47,10 @@ public static class MazeGenerator
         return new Maze(cells);
     }
 
-    private static CellType[,] GetDefaultMaze(int width, int height)
+    private static (CellType[,] Cells, int EmptiesInserted) GetGridCells(int width, int height)
     {
         var cells = new CellType[width, height];
+        var emptiesInserted = 0;
 
         for (int x = 0; x < width; x++)
         {
@@ -59,6 +60,7 @@ public static class MazeGenerator
                  && x.InRange(0, width - 1) && y.InRange(0, height - 1))
                 {
                     cells[x, y] = CellType.Empty;
+                    emptiesInserted++;
                 }
                 else
                 {
@@ -67,7 +69,7 @@ public static class MazeGenerator
             }
         }
 
-        return cells;
+        return (cells, emptiesInserted);
     }
 
     private static void RemoveWallBetween(Cell first, Cell second, CellType[,] cells)
