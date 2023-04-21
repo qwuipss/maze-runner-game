@@ -16,12 +16,14 @@ public static class MazeGenerator
         var backtrackingCells = new Stack<Cell>();
         var (cells, emptiesInserted) = GetGridCells(width, height);
 
-        var currentCell = new Cell(1, 1);
+        var currentCell = GetRandomCellWithPrefferedType(cells, CellType.Empty);
         visitedCells.Add(currentCell);
 
         while (visitedCells.Count != emptiesInserted)
         {
-            var adjacentCells = GetAdjacentEmptyNotVisitedCells(currentCell, cells, visitedCells);
+            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, cells, CellType.Empty, 2)
+                               .Where(cell => !visitedCells.Contains(cell))
+                               .ToList();
 
             if (adjacentCells.Count is not 0)
             {
@@ -81,21 +83,55 @@ public static class MazeGenerator
         cells[wallCoords.X, wallCoords.Y] = CellType.Empty;
     }
 
-    private static List<Cell> GetAdjacentEmptyNotVisitedCells(Cell cell, CellType[,] cells, HashSet<Cell> visitedCells)
+    private static Cell GetRandomCellWithPrefferedType(CellType[,] cells, CellType prefferedType)
     {
-        const int CellsDistance = 2;
+        var cell = new Cell(_random.Next(0, cells.GetLength(0)), _random.Next(0, cells.GetLength(1)));
 
+        return GetRandomCellWithPrefferedType(cells, cell, prefferedType);
+    }
+
+    private static Cell GetRandomCellWithPrefferedType(CellType[,] cells, Cell cell, CellType prefferedType)
+    {
+        var searchingQueue = new Queue<Cell>();
+        var visitedCells = new HashSet<Cell>();
+
+        searchingQueue.Enqueue(cell);
+        visitedCells.Add(cell);
+
+        while (searchingQueue.Count is not 0)
+        {
+            var currentCell = searchingQueue.Dequeue();
+
+            if (cells[currentCell.X, currentCell.Y] == prefferedType)
+            {
+                return currentCell;
+            }
+
+            foreach (var adjCell in GetAdjacentCells(currentCell, cells, 1)
+                                   .Where(cell => !visitedCells.Contains(cell)))
+            {
+                searchingQueue.Enqueue(adjCell);
+            }
+        }
+
+        throw new KeyNotFoundException($"cell with type: {prefferedType} doesn't exist in {nameof(cells)}");   
+    }
+
+    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, CellType[,] cells, int cellOffset)
+    {
         return new List<Cell>()
         {
-            cell with { X = cell.X + CellsDistance },
-            cell with { X = cell.X - CellsDistance },
-            cell with { Y = cell.Y + CellsDistance },
-            cell with { Y = cell.Y - CellsDistance },
+            cell with { X = cell.X + cellOffset },
+            cell with { X = cell.X - cellOffset },
+            cell with { Y = cell.Y + cellOffset },
+            cell with { Y = cell.Y - cellOffset },
         }
-        .Where(cell =>
-               cell.InBoundsOf(cells)
-            && cells[cell.X, cell.Y] is CellType.Empty // test without this
-            && !visitedCells.Contains(cell))
-        .ToList();
+        .Where(cell => cell.InBoundsOf(cells));
+    }
+
+    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, CellType[,] cells, CellType prefferedType, int cellOffset)
+    {
+        return GetAdjacentCells(cell, cells, cellOffset)
+              .Where(cell => cells[cell.X, cell.Y] == prefferedType);
     }
 }
