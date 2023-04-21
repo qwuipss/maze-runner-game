@@ -1,12 +1,10 @@
-﻿using System.IO;
-
-namespace MazeRunner;
+﻿namespace MazeRunner;
 
 internal class Program
 {
     public static void Main(string[] args)
     {
-        MazeGenerator.GenerateMaze(15, 10).LoadToFile(new FileInfo("maze.txt"));
+        MazeGenerator.GenerateMaze(15, 10);
 
         //using var game = new MazeRunnerGame();
         //game.Run();

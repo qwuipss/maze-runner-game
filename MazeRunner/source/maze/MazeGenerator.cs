@@ -1,6 +1,8 @@
+#region Usings
 using System;
 using System.Collections.Generic;
 using System.Linq;
+#endregion
 
 namespace MazeRunner;
 
@@ -11,7 +13,7 @@ public static class MazeGenerator
     public static Maze GenerateMaze(int width, int height)
     {
         var visitedCells = new HashSet<Cell>();
-        var cellsStack = new Stack<Cell>();
+        var backtrackingCells = new Stack<Cell>();
         var cells = GetDefaultMaze(width, height);
 
         var startCell = new Cell(1, 1);
@@ -21,36 +23,28 @@ public static class MazeGenerator
 
         while (visitedCells.Count != width * height) // todo
         {
-            var adjacentCells = GetAdjacentCells(currentCell)
-                               .Where(cell => cell.InBoundsOf(cells)
-                                           && IsCellEmptyNotVisited(cell, cells, visitedCells))
-                               .ToList();
+            var adjacentCells = GetAdjacentEmptyNotVisitedCells(currentCell, cells, visitedCells);
 
             if (adjacentCells.Count is not 0)
             {
-                var randomAdjacentCell = adjacentCells[_random.Next(0, adjacentCells.Count)];
-                cellsStack.Push(currentCell);
+                backtrackingCells.Push(currentCell);
 
-                var removedWall = RemoveWallBetween(currentCell, randomAdjacentCell, cells);
+                var randomAdjacentCell = adjacentCells[_random.Next(0, adjacentCells.Count)];
+
+                RemoveWallBetween(currentCell, randomAdjacentCell, cells);
 
                 visitedCells.Add(randomAdjacentCell);
                 currentCell = randomAdjacentCell;
 
-                new Maze(cells).LoadToFile(new System.IO.FileInfo("maze.txt"));
+                new Maze(cells).LoadToFile(new System.IO.FileInfo("maze.txt")); // debug
             }
             else
             {
-                currentCell = cellsStack.Pop();
+                currentCell = backtrackingCells.Pop();
             }
         }
 
         return new Maze(cells);
-    }
-
-
-    private static bool IsCellEmptyNotVisited(Cell cell, CellType[,] cells, HashSet<Cell> visitedCells)
-    {
-        return cells[cell.X, cell.Y] is CellType.Empty && !visitedCells.Contains(cell);
     }
 
     private static CellType[,] GetDefaultMaze(int width, int height)
@@ -76,10 +70,7 @@ public static class MazeGenerator
         return cells;
     }
 
-    /// <returns> 
-    /// MazeCell with coordinates of removed wall
-    /// </returns>
-    private static Cell RemoveWallBetween(Cell first, Cell second, CellType[,] cells)
+    private static void RemoveWallBetween(Cell first, Cell second, CellType[,] cells)
     {
         var dx = second.X - first.X;
         var dy = second.Y - first.Y;
@@ -90,11 +81,9 @@ public static class MazeGenerator
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
         cells[wallCoords.X, wallCoords.Y] = CellType.Empty;
-
-        return wallCoords;
     }
 
-    private static List<Cell> GetAdjacentCells(Cell cell)
+    private static List<Cell> GetAdjacentEmptyNotVisitedCells(Cell cell, CellType[,] cells, HashSet<Cell> visitedCells)
     {
         const int CellsDistance = 2;
 
@@ -104,6 +93,11 @@ public static class MazeGenerator
             cell with { X = cell.X - CellsDistance },
             cell with { Y = cell.Y + CellsDistance },
             cell with { Y = cell.Y - CellsDistance },
-        };
+        }
+        .Where(cell =>
+               cell.InBoundsOf(cells)
+            && cells[cell.X, cell.Y] is CellType.Empty // test without this
+            && !visitedCells.Contains(cell))
+        .ToList();
     }
 }
