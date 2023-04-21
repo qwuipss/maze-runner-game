@@ -10,9 +10,9 @@ public class Maze
     public int Width { get; init; }
     public int Height { get; init; }
 
-    private readonly MazeCell[,] _cells;
+    private readonly CellType[,] _cells;
 
-    public Maze(MazeCell[,] cells)
+    public Maze(CellType[,] cells)
     {
         Width = cells.GetLength(0);
         Height = cells.GetLength(1);
@@ -28,7 +28,7 @@ public class Maze
         {
             for (int y = 0; y < Height; y++)
             {
-                writer.Write((char)_cells[x, y].CellType);
+                writer.Write((char)_cells[x, y]);
             }
 
             writer.Write(Environment.NewLine);
