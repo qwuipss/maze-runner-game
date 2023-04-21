@@ -10,11 +10,28 @@ public static class MazeGenerator
 {
     private static readonly Random _random = new(123); // debug value
 
+    /// <param name="width">
+    /// Only odd. If even then will be rounded up to the nearest odd number
+    /// </param>
+    /// <param name="height">
+    /// Only odd. If even then will be rounded up to the nearest odd number
+    /// </param>
+    /// <returns></returns>
     public static Maze GenerateMaze(int width, int height)
     {
+        static (int Width, int Height) RoundUpToOdd(int width, int height)
+        {
+            var newWidth = width % 2 is 0 ? width + 1 : width;
+            var newHeight = height % 2 is 0 ? height + 1 : height;
+
+            return (newWidth, newHeight);
+        }
+
         var visitedCells = new HashSet<Cell>();
         var backtrackingCells = new Stack<Cell>();
-        var (cells, emptiesInserted) = GetGridCells(width, height);
+
+        (width, height) = RoundUpToOdd(width, height);
+        var (cells, emptiesInserted) = GetDefaultCells(width, height);
 
         var currentCell = GetRandomCellWithPrefferedType(cells, CellType.Empty);
         visitedCells.Add(currentCell);
@@ -45,7 +62,7 @@ public static class MazeGenerator
         return new Maze(cells.Transpose());
     }
 
-    private static (CellType[,] Cells, int EmptiesInserted) GetGridCells(int width, int height)
+    private static (CellType[,] Cells, int EmptiesInserted) GetDefaultCells(int width, int height)
     {
         var cells = new CellType[width, height];
         var emptiesInserted = 0;
