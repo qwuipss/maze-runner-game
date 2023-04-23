@@ -31,14 +31,14 @@ public static class MazeGenerator
         var backtrackingCells = new Stack<Cell>();
 
         (width, height) = RoundUpToOdd(width, height);
-        var (cells, emptiesInserted) = GetDefaultCells(width, height);
+        var (tiles, emptiesInserted) = GetDefaultCells(width, height);
 
-        var currentCell = GetRandomCellWithPrefferedType(cells, CellType.Floor);
+        var currentCell = GetRandomCellWithPrefferedType(tiles, CellType.Floor);
         visitedCells.Add(currentCell);
 
         while (visitedCells.Count != emptiesInserted)
         {
-            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, cells, CellType.Floor, 2)
+            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, tiles, CellType.Floor, 2)
                                .Where(cell => !visitedCells.Contains(cell))
                                .ToList();
 
@@ -48,7 +48,7 @@ public static class MazeGenerator
 
                 var adjacentCell = adjacentCells[_random.Next(0, adjacentCells.Count)];
 
-                RemoveWallBetween(currentCell, adjacentCell, cells);
+                RemoveWallBetween(currentCell, adjacentCell, tiles);
 
                 visitedCells.Add(adjacentCell);
                 currentCell = adjacentCell;
@@ -59,10 +59,10 @@ public static class MazeGenerator
             }
         }
 
-        return new Maze(cells.Transpose());
+        return new Maze(tiles.Transpose());
     }
 
-    private static (MazeTile[,] Cells, int EmptiesInserted) GetDefaultCells(int width, int height)
+    private static (MazeTile[,] Tiles, int EmptiesInserted) GetDefaultCells(int width, int height)
     {
         var cells = new MazeTile[width, height];
         var emptiesInserted = 0;
@@ -87,7 +87,7 @@ public static class MazeGenerator
         return (cells, emptiesInserted);
     }
 
-    private static void RemoveWallBetween(Cell first, Cell second, MazeTile[,] cells)
+    private static void RemoveWallBetween(Cell first, Cell second, MazeTile[,] tiles)
     {
         var dx = second.X - first.X;
         var dy = second.Y - first.Y;
@@ -97,17 +97,17 @@ public static class MazeGenerator
 
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
-        cells[wallCoords.X, wallCoords.Y] = new FloorTile();
+        tiles[wallCoords.X, wallCoords.Y] = new FloorTile();
     }
 
-    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] cells, CellType prefferedType)
+    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, CellType prefferedType)
     {
-        var cell = new Cell(_random.Next(0, cells.GetLength(0)), _random.Next(0, cells.GetLength(1)));
+        var cell = new Cell(_random.Next(0, tiles.GetLength(0)), _random.Next(0, tiles.GetLength(1)));
 
-        return GetRandomCellWithPrefferedType(cells, cell, prefferedType);
+        return GetRandomCellWithPrefferedType(tiles, cell, prefferedType);
     }
 
-    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] cells, Cell cell, CellType prefferedType)
+    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, Cell cell, CellType prefferedType)
     {
         var searchingQueue = new Queue<Cell>();
         var visitedCells = new HashSet<Cell>();
@@ -119,22 +119,22 @@ public static class MazeGenerator
         {
             var currentCell = searchingQueue.Dequeue();
 
-            if (cells[currentCell.X, currentCell.Y].CellType == prefferedType)
+            if (tiles[currentCell.X, currentCell.Y].CellType == prefferedType)
             {
                 return currentCell;
             }
 
-            foreach (var adjCell in GetAdjacentCells(currentCell, cells, 1)
+            foreach (var adjCell in GetAdjacentCells(currentCell, tiles, 1)
                                    .Where(cell => !visitedCells.Contains(cell)))
             {
                 searchingQueue.Enqueue(adjCell);
             }
         }
 
-        throw new KeyNotFoundException($"cell with type: {prefferedType} doesn't exist in {nameof(cells)}");
+        throw new KeyNotFoundException($"cell with type: {prefferedType} doesn't exist in {nameof(tiles)}");
     }
 
-    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, MazeTile[,] cells, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, MazeTile[,] tiles, int cellOffset)
     {
         return new List<Cell>()
         {
@@ -143,12 +143,12 @@ public static class MazeGenerator
             cell with { Y = cell.Y + cellOffset },
             cell with { Y = cell.Y - cellOffset },
         }
-        .Where(cell => cell.InBoundsOf(cells));
+        .Where(cell => cell.InBoundsOf(tiles));
     }
 
-    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, MazeTile[,] cells, CellType prefferedType, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, MazeTile[,] tiles, CellType prefferedType, int cellOffset)
     {
-        return GetAdjacentCells(cell, cells, cellOffset)
-              .Where(cell => cells[cell.X, cell.Y].CellType == prefferedType);
+        return GetAdjacentCells(cell, tiles, cellOffset)
+              .Where(cell => tiles[cell.X, cell.Y].CellType == prefferedType);
     }
 }
