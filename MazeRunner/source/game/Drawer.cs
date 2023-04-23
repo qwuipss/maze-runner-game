@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
 #endregion
 
 namespace MazeRunner;
@@ -10,9 +9,6 @@ namespace MazeRunner;
 public class Drawer
 {
     private static readonly Lazy<Drawer> _instance = new(() => new Drawer());
-
-    private const int MazeTileWidth = Settings.MazeTileWidth;
-    private const int MazeTileHeight = Settings.MazeTileHeight;
 
     private SpriteBatch _spriteBatch;
 
@@ -46,10 +42,12 @@ public class Drawer
         {
             for (int y = 0; y < maze.Height; y++)
             {
+                var mazeTile = maze[x, y];
+
                 _spriteBatch.Draw(
-                    maze[x, y].Texture, 
-                    new Rectangle(x * MazeTileWidth, y * MazeTileHeight, MazeTileWidth, MazeTileHeight), 
-                    Color.White);
+                    mazeTile.Texture,
+                    new Rectangle(x * MazeTile.Size, y * MazeTile.Size, MazeTile.Size, MazeTile.Size),
+                    Color.White); // todo
             }
         }
     }

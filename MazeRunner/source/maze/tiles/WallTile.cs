@@ -10,13 +10,13 @@ public class WallTile : MazeTile
 
     public override Texture2D Texture
     {
-        get 
-        { 
-            return _texture; 
+        get
+        {
+            return _texture;
         }
     }
 
-    public override CellType CellType 
+    public override CellType CellType
     {
         get
         {

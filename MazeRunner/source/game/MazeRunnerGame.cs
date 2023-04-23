@@ -10,8 +10,9 @@ public class MazeRunnerGame : Game
 {
     private GraphicsDeviceManager _graphics;
 
+    private Drawer _drawer;
+
     private Maze _maze;
-    private readonly Drawer _drawer = Drawer.GetInstance();
 
     public MazeRunnerGame()
     {
@@ -29,15 +30,15 @@ public class MazeRunnerGame : Game
     {
         base.Initialize();
 
-        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
-        _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
-
+        _drawer = Drawer.GetInstance();
         _drawer.Initialize(this);
-        TilesTextures.Initialize(this);
+
+        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
     }
 
     protected override void LoadContent()
     {
+        TilesTextures.LoadTextures(this);
     }
 
     protected override void Update(GameTime gameTime)
@@ -50,7 +51,7 @@ public class MazeRunnerGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        //GraphicsDevice.Clear(Color.White);
+        GraphicsDevice.Clear(Color.White);
 
         _drawer.BeginDraw();
 
