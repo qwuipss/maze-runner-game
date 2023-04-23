@@ -29,7 +29,7 @@ public static class MazeGenerator
 
         var visitedCells = new HashSet<Cell>();
         var backtrackingCells = new Stack<Cell>();
-
+         
         (width, height) = RoundUpToOdd(width, height);
         var (cells, emptiesInserted) = GetDefaultCells(width, height);
 

@@ -11,25 +11,40 @@ public class MazeRunnerGame : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
 
+    private Maze _maze;
+
+    private Texture2D wall;
+    private Texture2D floor;
+
     public MazeRunnerGame()
     {
-        _graphics = new GraphicsDeviceManager(this);
+        _graphics = new(this)
+        {
+            
+            PreferredBackBufferWidth = 17 * 16,
+            PreferredBackBufferHeight = 9 * 16
+        };
+
+        _graphics.ApplyChanges();
+
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
     }
 
     protected override void Initialize()
     {
-        // TODO: Add your initialization logic here
-
         base.Initialize();
+
+        _maze = MazeGenerator.GenerateMaze(17, 9);
+        _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
     }
 
     protected override void LoadContent()
     {
         _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-        // TODO: use this.Content to load your game content here
+        wall = Content.Load<Texture2D>("wall");
+        floor = Content.Load<Texture2D>("floor");
     }
 
     protected override void Update(GameTime gameTime)
@@ -37,16 +52,31 @@ public class MazeRunnerGame : Game
         if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        // TODO: Add your update logic here
-
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Red);
+        GraphicsDevice.Clear(Color.White);
 
-        // TODO: Add your drawing code here
+        _spriteBatch.Begin();
+
+        for (int x = 0; x < _maze.Width; x++)
+        {
+            for (int y = 0; y < _maze.Height; y++)
+            {
+                if (_maze[x, y] is CellType.Empty)
+                {
+                    _spriteBatch.Draw(floor, new Rectangle(x * 16, y * 16, 16, 16), Color.White);
+                }
+                else if (_maze[x, y] is CellType.Wall)
+                {
+                    _spriteBatch.Draw(wall, new Rectangle(x * 16, y * 16, 16, 16), Color.White);
+                }
+            }
+        }
+
+        _spriteBatch.End();
 
         base.Draw(gameTime);
     }

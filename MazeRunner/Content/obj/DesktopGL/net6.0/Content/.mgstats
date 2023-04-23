@@ -1,1 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"D:/projects/cs projects/MazeRunner/MazeRunner/Content/floor.png","D:/projects/cs projects/MazeRunner/MazeRunner/Content/bin/DesktopGL/Content/floor.xnb","TextureProcessor","Texture2DContent",293,1109,0.088246
+"D:/projects/cs projects/MazeRunner/MazeRunner/Content/wall.png","D:/projects/cs projects/MazeRunner/MazeRunner/Content/bin/DesktopGL/Content/wall.xnb","TextureProcessor","Texture2DContent",224,1109,0.0010935
