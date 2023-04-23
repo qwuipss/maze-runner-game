@@ -1,9 +1,7 @@
 ﻿#region Usings
-using static MazeRunner.Settings;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
+using static MazeRunner.Settings;
 #endregion
 
 namespace MazeRunner;
@@ -35,11 +33,11 @@ public class MazeRunnerGame : Game
         _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
 
         _drawer.Initialize(this);
+        TilesTextures.Initialize(this);
     }
 
     protected override void LoadContent()
     {
-        _drawer.LoadContent(this);
     }
 
     protected override void Update(GameTime gameTime)

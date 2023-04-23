@@ -29,7 +29,7 @@ public static class MazeGenerator
 
         var visitedCells = new HashSet<Cell>();
         var backtrackingCells = new Stack<Cell>();
-         
+
         (width, height) = RoundUpToOdd(width, height);
         var (cells, emptiesInserted) = GetDefaultCells(width, height);
 
@@ -62,9 +62,9 @@ public static class MazeGenerator
         return new Maze(cells.Transpose());
     }
 
-    private static (CellType[,] Cells, int EmptiesInserted) GetDefaultCells(int width, int height)
+    private static (MazeTile[,] Cells, int EmptiesInserted) GetDefaultCells(int width, int height)
     {
-        var cells = new CellType[width, height];
+        var cells = new MazeTile[width, height];
         var emptiesInserted = 0;
 
         for (int x = 0; x < width; x++)
@@ -74,12 +74,12 @@ public static class MazeGenerator
                 if (x % 2 != 0 && y % 2 != 0
                  && x.InRange(0, width - 1) && y.InRange(0, height - 1))
                 {
-                    cells[x, y] = CellType.Floor;
+                    cells[x, y] = new FloorTile();
                     emptiesInserted++;
                 }
                 else
                 {
-                    cells[x, y] = CellType.Wall;
+                    cells[x, y] = new WallTile();
                 }
             }
         }
@@ -87,7 +87,7 @@ public static class MazeGenerator
         return (cells, emptiesInserted);
     }
 
-    private static void RemoveWallBetween(Cell first, Cell second, CellType[,] cells)
+    private static void RemoveWallBetween(Cell first, Cell second, MazeTile[,] cells)
     {
         var dx = second.X - first.X;
         var dy = second.Y - first.Y;
@@ -97,17 +97,17 @@ public static class MazeGenerator
 
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
-        cells[wallCoords.X, wallCoords.Y] = CellType.Floor;
+        cells[wallCoords.X, wallCoords.Y] = new FloorTile();
     }
 
-    private static Cell GetRandomCellWithPrefferedType(CellType[,] cells, CellType prefferedType)
+    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] cells, CellType prefferedType)
     {
         var cell = new Cell(_random.Next(0, cells.GetLength(0)), _random.Next(0, cells.GetLength(1)));
 
         return GetRandomCellWithPrefferedType(cells, cell, prefferedType);
     }
 
-    private static Cell GetRandomCellWithPrefferedType(CellType[,] cells, Cell cell, CellType prefferedType)
+    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] cells, Cell cell, CellType prefferedType)
     {
         var searchingQueue = new Queue<Cell>();
         var visitedCells = new HashSet<Cell>();
@@ -119,7 +119,7 @@ public static class MazeGenerator
         {
             var currentCell = searchingQueue.Dequeue();
 
-            if (cells[currentCell.X, currentCell.Y] == prefferedType)
+            if (cells[currentCell.X, currentCell.Y].CellType == prefferedType)
             {
                 return currentCell;
             }
@@ -131,10 +131,10 @@ public static class MazeGenerator
             }
         }
 
-        throw new KeyNotFoundException($"cell with type: {prefferedType} doesn't exist in {nameof(cells)}");   
+        throw new KeyNotFoundException($"cell with type: {prefferedType} doesn't exist in {nameof(cells)}");
     }
 
-    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, CellType[,] cells, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, MazeTile[,] cells, int cellOffset)
     {
         return new List<Cell>()
         {
@@ -146,9 +146,9 @@ public static class MazeGenerator
         .Where(cell => cell.InBoundsOf(cells));
     }
 
-    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, CellType[,] cells, CellType prefferedType, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, MazeTile[,] cells, CellType prefferedType, int cellOffset)
     {
         return GetAdjacentCells(cell, cells, cellOffset)
-              .Where(cell => cells[cell.X, cell.Y] == prefferedType);
+              .Where(cell => cells[cell.X, cell.Y].CellType == prefferedType);
     }
 }

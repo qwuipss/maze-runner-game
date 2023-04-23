@@ -1,7 +1,6 @@
 ﻿#region Usings
 using System;
 using System.IO;
-using System.Runtime.CompilerServices;
 #endregion
 
 namespace MazeRunner;
@@ -11,9 +10,9 @@ public class Maze
     public int Width { get; init; }
     public int Height { get; init; }
 
-    private readonly CellType[,] _cells;
+    private readonly MazeTile[,] _cells;
 
-    public Maze(CellType[,] cells)
+    public Maze(MazeTile[,] cells)
     {
         Height = cells.GetLength(0);
         Width = cells.GetLength(1);
@@ -21,11 +20,11 @@ public class Maze
         _cells = cells;
     }
 
-    public CellType this[int x, int y]
+    public MazeTile this[int x, int y]
     {
-        get 
-        { 
-            return _cells[y, x]; 
+        get
+        {
+            return _cells[y, x];
         }
     }
 
@@ -37,7 +36,7 @@ public class Maze
         {
             for (int y = 0; y < Height; y++)
             {
-                writer.Write((char)this[x, y]);
+                writer.Write((char)this[x, y].CellType);
             }
 
             writer.Write(Environment.NewLine);
