@@ -1,7 +1,9 @@
 ﻿#region Usings
+using static MazeRunner.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 #endregion
 
 namespace MazeRunner;
@@ -20,12 +22,9 @@ public class MazeRunnerGame : Game
     {
         _graphics = new(this)
         {
-            
-            PreferredBackBufferWidth = 17 * 16,
-            PreferredBackBufferHeight = 9 * 16
+            PreferredBackBufferWidth = WindowWidth,
+            PreferredBackBufferHeight = WindowHeight,
         };
-
-        _graphics.ApplyChanges();
 
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -35,7 +34,7 @@ public class MazeRunnerGame : Game
     {
         base.Initialize();
 
-        _maze = MazeGenerator.GenerateMaze(17, 9);
+        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
         _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
     }
 
@@ -65,14 +64,22 @@ public class MazeRunnerGame : Game
         {
             for (int y = 0; y < _maze.Height; y++)
             {
+                Texture2D texture;
+
                 if (_maze[x, y] is CellType.Empty)
                 {
-                    _spriteBatch.Draw(floor, new Rectangle(x * 16, y * 16, 16, 16), Color.White);
+                    texture = floor;
                 }
                 else if (_maze[x, y] is CellType.Wall)
                 {
-                    _spriteBatch.Draw(wall, new Rectangle(x * 16, y * 16, 16, 16), Color.White);
+                    texture = wall;
                 }
+                else
+                {
+                    throw new NotImplementedException();
+                }
+
+                _spriteBatch.Draw(texture, new Rectangle(x * TileWidth, y * TileHeight, TileWidth, TileHeight), Color.White);
             }
         }
 
