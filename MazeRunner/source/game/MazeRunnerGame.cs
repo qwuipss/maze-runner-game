@@ -11,12 +11,9 @@ namespace MazeRunner;
 public class MazeRunnerGame : Game
 {
     private GraphicsDeviceManager _graphics;
-    private SpriteBatch _spriteBatch;
 
     private Maze _maze;
-
-    private Texture2D wall;
-    private Texture2D floor;
+    private readonly Drawer _drawer = Drawer.GetInstance();
 
     public MazeRunnerGame()
     {
@@ -36,14 +33,13 @@ public class MazeRunnerGame : Game
 
         _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
         _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
+
+        _drawer.Initialize(this);
     }
 
     protected override void LoadContent()
     {
-        _spriteBatch = new SpriteBatch(GraphicsDevice);
-
-        wall = Content.Load<Texture2D>("wall");
-        floor = Content.Load<Texture2D>("floor");
+        _drawer.LoadContent(this);
     }
 
     protected override void Update(GameTime gameTime)
@@ -56,34 +52,13 @@ public class MazeRunnerGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.White);
+        //GraphicsDevice.Clear(Color.White);
 
-        _spriteBatch.Begin();
+        _drawer.BeginDraw();
 
-        for (int x = 0; x < _maze.Width; x++)
-        {
-            for (int y = 0; y < _maze.Height; y++)
-            {
-                Texture2D texture;
+        _drawer.DrawMaze(_maze);
 
-                if (_maze[x, y] is CellType.Empty)
-                {
-                    texture = floor;
-                }
-                else if (_maze[x, y] is CellType.Wall)
-                {
-                    texture = wall;
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-
-                _spriteBatch.Draw(texture, new Rectangle(x * TileWidth, y * TileHeight, TileWidth, TileHeight), Color.White);
-            }
-        }
-
-        _spriteBatch.End();
+        _drawer.EndDraw();
 
         base.Draw(gameTime);
     }

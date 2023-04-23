@@ -15,8 +15,8 @@ public class Maze
 
     public Maze(CellType[,] cells)
     {
-        Width = cells.GetLength(1);
         Height = cells.GetLength(0);
+        Width = cells.GetLength(1);
 
         _cells = cells;
     }

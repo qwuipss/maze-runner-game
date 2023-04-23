@@ -8,7 +8,7 @@ namespace MazeRunner;
 
 public static class MazeGenerator
 {
-    private static readonly Random _random = new(123); // debug value
+    private static readonly Random _random = new();
 
     /// <param name="width">
     /// Only odd. If even then will be rounded up to the nearest odd number
@@ -33,12 +33,12 @@ public static class MazeGenerator
         (width, height) = RoundUpToOdd(width, height);
         var (cells, emptiesInserted) = GetDefaultCells(width, height);
 
-        var currentCell = GetRandomCellWithPrefferedType(cells, CellType.Empty);
+        var currentCell = GetRandomCellWithPrefferedType(cells, CellType.Floor);
         visitedCells.Add(currentCell);
 
         while (visitedCells.Count != emptiesInserted)
         {
-            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, cells, CellType.Empty, 2)
+            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, cells, CellType.Floor, 2)
                                .Where(cell => !visitedCells.Contains(cell))
                                .ToList();
 
@@ -74,7 +74,7 @@ public static class MazeGenerator
                 if (x % 2 != 0 && y % 2 != 0
                  && x.InRange(0, width - 1) && y.InRange(0, height - 1))
                 {
-                    cells[x, y] = CellType.Empty;
+                    cells[x, y] = CellType.Floor;
                     emptiesInserted++;
                 }
                 else
@@ -97,7 +97,7 @@ public static class MazeGenerator
 
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
-        cells[wallCoords.X, wallCoords.Y] = CellType.Empty;
+        cells[wallCoords.X, wallCoords.Y] = CellType.Floor;
     }
 
     private static Cell GetRandomCellWithPrefferedType(CellType[,] cells, CellType prefferedType)
