@@ -64,7 +64,7 @@ public static class MazeGenerator
 
     private static (MazeTile[,] Tiles, int EmptiesInserted) GetDefaultCells(int width, int height)
     {
-        var cells = new MazeTile[width, height];
+        var tiles = new MazeTile[width, height];
         var emptiesInserted = 0;
 
         for (int x = 0; x < width; x++)
@@ -74,17 +74,17 @@ public static class MazeGenerator
                 if (x % 2 != 0 && y % 2 != 0
                  && x.InRange(0, width - 1) && y.InRange(0, height - 1))
                 {
-                    cells[x, y] = new FloorTile();
+                    tiles[x, y] = new FloorTile();
                     emptiesInserted++;
                 }
                 else
                 {
-                    cells[x, y] = new WallTile();
+                    tiles[x, y] = new WallTile();
                 }
             }
         }
 
-        return (cells, emptiesInserted);
+        return (tiles, emptiesInserted);
     }
 
     private static void RemoveWallBetween(Cell first, Cell second, MazeTile[,] tiles)
