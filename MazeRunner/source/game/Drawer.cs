@@ -36,7 +36,7 @@ public class Drawer
         _spriteBatch.End();
     }
 
-    public void DrawMaze(Maze maze)
+    public void DrawMaze(Maze maze, GameTime gameTime)
     {
         for (int x = 0; x < maze.Width; x++)
         {
@@ -46,8 +46,10 @@ public class Drawer
 
                 _spriteBatch.Draw(
                     mazeTile.Texture,
-                    new Rectangle(x * MazeTile.Size, y * MazeTile.Size, MazeTile.Size, MazeTile.Size),
-                    Color.White); // todo
+                    new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
+                    new Rectangle(mazeTile.GetCurrentAnimationFrame(gameTime),
+                                  new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
+                    Color.White);
             }
         }
     }

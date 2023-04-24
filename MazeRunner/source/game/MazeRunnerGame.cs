@@ -56,7 +56,7 @@ public class MazeRunnerGame : Game
 
         _drawer.BeginDraw();
 
-        _drawer.DrawMaze(_maze);
+        _drawer.DrawMaze(_maze, gameTime);
 
         _drawer.EndDraw();
 
