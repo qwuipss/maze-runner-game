@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Threading.Channels;
 #endregion
 
 namespace MazeRunner;
@@ -46,10 +45,10 @@ public class DropTrapTile : MazeTile
             switch (_condition)
             {
                 case TrapCondition.Opened:
-                    CloseTrapWithChance(OpenChance);
+                    CloseWithChance(OpenChance);
                     break;
                 case TrapCondition.Closed:
-                    OpenTrapWithChance(CloseChance);
+                    OpenWithChance(CloseChance);
                     break;
                 case TrapCondition.Opening:
                     ContinueOpening();
@@ -60,7 +59,7 @@ public class DropTrapTile : MazeTile
                 default:
                     break;
             }
-            
+
             _elapsedGameTime -= AnimationFrameDelayMs;
         }
 
@@ -95,12 +94,12 @@ public class DropTrapTile : MazeTile
         }
     }
 
-    private void OpenTrapWithChance(double chance)
+    private void OpenWithChance(double chance)
     {
         SwitchTrapConditionWithChance(chance, TrapCondition.Opening);
     }
 
-    private void CloseTrapWithChance(double chance)
+    private void CloseWithChance(double chance)
     {
         SwitchTrapConditionWithChance(chance, TrapCondition.Closing);
     }
