@@ -14,20 +14,18 @@ public class DropTrapTile : MazeTile
     private const double OpenChance = 1e-1;
     private const double CloseChance = 1e-2;
 
-    private static readonly Texture2D _texture = TilesTextures.DropTrap;
-
     private static readonly Random _random = new();
 
     private TrapCondition _condition = TrapCondition.Closed;
 
     private double _elapsedGameTime = 0;
-    private int _currentAnimationFrame = 0;
+    private int _currentAnimationFrameX = 0;
 
     public override Texture2D Texture
     {
         get
         {
-            return _texture;
+            return TilesTextures.DropTrap;
         }
     }
 
@@ -66,7 +64,7 @@ public class DropTrapTile : MazeTile
             _elapsedGameTime -= AnimationFrameDelayMs;
         }
 
-        return new Point(_currentAnimationFrame, 0);
+        return new Point(_currentAnimationFrameX, 0);
     }
 
     protected override int FramesCount
@@ -79,9 +77,9 @@ public class DropTrapTile : MazeTile
 
     private void ContinueOpening()
     {
-        _currentAnimationFrame += FrameWidth;
+        _currentAnimationFrameX += FrameWidth;
 
-        if (_currentAnimationFrame == FrameWidth * FramesCount - FrameWidth)
+        if (_currentAnimationFrameX == FrameWidth * FramesCount - FrameWidth)
         {
             _condition = TrapCondition.Opened;
         }
@@ -89,9 +87,9 @@ public class DropTrapTile : MazeTile
 
     private void ContinueClosing()
     {
-        _currentAnimationFrame -= FrameWidth;
+        _currentAnimationFrameX -= FrameWidth;
 
-        if (_currentAnimationFrame == FrameWidth)
+        if (_currentAnimationFrameX == FrameWidth)
         {
             _condition = TrapCondition.Closed;
         }
