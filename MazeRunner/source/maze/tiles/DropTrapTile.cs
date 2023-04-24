@@ -96,15 +96,15 @@ public class DropTrapTile : MazeTile
 
     private void OpenWithChance(double chance)
     {
-        SwitchTrapConditionWithChance(chance, TrapCondition.Opening);
+        SwitchConditionWithChance(chance, TrapCondition.Opening);
     }
 
     private void CloseWithChance(double chance)
     {
-        SwitchTrapConditionWithChance(chance, TrapCondition.Closing);
+        SwitchConditionWithChance(chance, TrapCondition.Closing);
     }
 
-    private void SwitchTrapConditionWithChance(double chance, TrapCondition newCondition)
+    private void SwitchConditionWithChance(double chance, TrapCondition newCondition)
     {
         var randomValue = _random.NextDouble();
 
