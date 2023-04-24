@@ -1,7 +1,8 @@
 ﻿namespace MazeRunner;
 
-public enum CellType
+public enum TileType
 {
     Floor = ' ',
     Wall = '#',
+    DropTrap = 'o',
 }

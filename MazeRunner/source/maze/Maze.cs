@@ -10,21 +10,25 @@ public class Maze
     public int Width { get; init; }
     public int Height { get; init; }
 
-    private readonly MazeTile[,] _cells;
+    public readonly MazeTile[,] Tiles;
 
     public Maze(MazeTile[,] cells)
     {
         Height = cells.GetLength(0);
         Width = cells.GetLength(1);
 
-        _cells = cells;
+        Tiles = cells;
     }
 
     public MazeTile this[int x, int y]
     {
         get
         {
-            return _cells[y, x];
+            return Tiles[y, x];
+        }
+        set
+        {
+            Tiles[y, x] = value;
         }
     }
 
@@ -36,7 +40,7 @@ public class Maze
         {
             for (int y = 0; y < Height; y++)
             {
-                writer.Write((char)this[x, y].CellType);
+                writer.Write((char)this[x, y].TileType);
             }
 
             writer.Write(Environment.NewLine);

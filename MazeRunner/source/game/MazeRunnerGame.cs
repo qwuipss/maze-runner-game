@@ -34,6 +34,7 @@ public class MazeRunnerGame : Game
         _drawer.Initialize(this);
 
         _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
+        MazeGenerator.InsertTiles(_maze, () => new DropTrapTile(), 5);
     }
 
     protected override void LoadContent()

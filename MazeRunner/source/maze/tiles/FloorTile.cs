@@ -16,11 +16,11 @@ public class FloorTile : MazeTile
         }
     }
 
-    public override CellType CellType
+    public override TileType TileType
     {
         get
         {
-            return CellType.Floor;
+            return TileType.Floor;
         }
     }
 }

@@ -31,14 +31,14 @@ public static class MazeGenerator
         var backtrackingCells = new Stack<Cell>();
 
         (width, height) = RoundUpToOdd(width, height);
-        var (tiles, emptiesInserted) = GetDefaultCells(width, height);
+        var (tiles, floorsInserted) = GetDefaultCells(width, height);
 
-        var currentCell = GetRandomCellWithPrefferedType(tiles, CellType.Floor);
+        var currentCell = GetRandomCellWithPrefferedType(tiles, TileType.Floor);
         visitedCells.Add(currentCell);
 
-        while (visitedCells.Count != emptiesInserted)
+        while (visitedCells.Count != floorsInserted)
         {
-            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, tiles, CellType.Floor, 2)
+            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, tiles, TileType.Floor, 2)
                                .Where(cell => !visitedCells.Contains(cell))
                                .ToList();
 
@@ -62,7 +62,35 @@ public static class MazeGenerator
         return new Maze(tiles.Transpose());
     }
 
-    private static (MazeTile[,] Tiles, int EmptiesInserted) GetDefaultCells(int width, int height)
+    public static void InsertTiles(Maze maze, Func<MazeTile> tile, int percentage)
+    {
+        var floorsCount = GetFloorsCount(maze);
+        var insertionsCount = floorsCount * percentage / 100;
+
+        for (int i = 0; i < insertionsCount; i++)
+        {
+            var cell = GetRandomCellWithPrefferedType(maze.Tiles, TileType.Floor);
+
+            maze[cell.Y, cell.X] = tile.Invoke();
+        }
+    }
+
+    private static int GetFloorsCount(Maze maze)
+    {
+        var floorsCount = 0;
+
+        foreach (var tile in maze.Tiles)
+        {
+            if (tile.TileType is TileType.Floor)
+            {
+                floorsCount++;
+            }
+        }
+
+        return floorsCount;
+    }
+
+    private static (MazeTile[,] Tiles, int FloorsInserted) GetDefaultCells(int width, int height)
     {
         var tiles = new MazeTile[width, height];
         var emptiesInserted = 0;
@@ -100,14 +128,14 @@ public static class MazeGenerator
         tiles[wallCoords.X, wallCoords.Y] = new FloorTile();
     }
 
-    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, CellType prefferedType)
+    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, TileType prefferedType)
     {
         var cell = new Cell(_random.Next(0, tiles.GetLength(0)), _random.Next(0, tiles.GetLength(1)));
 
         return GetRandomCellWithPrefferedType(tiles, cell, prefferedType);
     }
 
-    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, Cell cell, CellType prefferedType)
+    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, Cell cell, TileType prefferedType)
     {
         var searchingQueue = new Queue<Cell>();
         var visitedCells = new HashSet<Cell>();
@@ -119,15 +147,18 @@ public static class MazeGenerator
         {
             var currentCell = searchingQueue.Dequeue();
 
-            if (tiles[currentCell.X, currentCell.Y].CellType == prefferedType)
+            if (tiles[currentCell.X, currentCell.Y].TileType == prefferedType)
             {
                 return currentCell;
             }
 
-            foreach (var adjCell in GetAdjacentCells(currentCell, tiles, 1)
-                                   .Where(cell => !visitedCells.Contains(cell)))
+            foreach (var adjCell in GetAdjacentCells(currentCell, tiles, 1))
             {
-                searchingQueue.Enqueue(adjCell);
+                if (!visitedCells.Contains(adjCell))
+                {
+                    visitedCells.Add(adjCell);
+                    searchingQueue.Enqueue(adjCell);
+                }
             }
         }
 
@@ -146,9 +177,9 @@ public static class MazeGenerator
         .Where(cell => cell.InBoundsOf(tiles));
     }
 
-    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, MazeTile[,] tiles, CellType prefferedType, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, MazeTile[,] tiles, TileType prefferedType, int cellOffset)
     {
         return GetAdjacentCells(cell, tiles, cellOffset)
-              .Where(cell => tiles[cell.X, cell.Y].CellType == prefferedType);
+              .Where(cell => tiles[cell.X, cell.Y].TileType == prefferedType);
     }
 }
