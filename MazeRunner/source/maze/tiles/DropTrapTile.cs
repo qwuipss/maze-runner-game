@@ -9,17 +9,13 @@ namespace MazeRunner;
 
 public class DropTrapTile : MazeTile
 {
-    private enum TrapCondition
-    {
-        Opened,
-        Closed,
-        Opening,
-        Closing,
-    }
+    private const int AnimationFrameDelayMs = 35;
 
-    private const int AnimationFrameDelayMs = 50;
+    private const double OpenChance = 1e-1;
+    private const double CloseChance = 1e-2;
 
     private static readonly Texture2D _texture = TilesTextures.DropTrap;
+
     private static readonly Random _random = new();
 
     private TrapCondition _condition = TrapCondition.Closed;
@@ -52,10 +48,10 @@ public class DropTrapTile : MazeTile
             switch (_condition)
             {
                 case TrapCondition.Opened:
-                    CloseTrapWithChance(1e-1);
+                    CloseTrapWithChance(OpenChance);
                     break;
                 case TrapCondition.Closed:
-                    OpenTrapWithChance(1e-2);
+                    OpenTrapWithChance(CloseChance);
                     break;
                 case TrapCondition.Opening:
                     ContinueOpening();
