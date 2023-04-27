@@ -1,4 +1,5 @@
 ﻿#region Usings
+using Microsoft.Xna.Framework;
 using System;
 #endregion
 
@@ -19,6 +20,36 @@ public abstract class MazeTrap : MazeTile
     protected abstract double ElapsedGameTime { get; set; }
 
     protected abstract TrapCondition Condition { get; set; }
+
+    public override Point GetCurrentAnimationFrame(GameTime gameTime)
+    {
+        ElapsedGameTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        if (ElapsedGameTime >= AnimationFrameDelayMs)
+        {
+            switch (Condition)
+            {
+                case TrapCondition.Active:
+                    DeactivateWithChance(ActivateChance);
+                    break;
+                case TrapCondition.Inactive:
+                    ActivateWithChance(DeactivateChance);
+                    break;
+                case TrapCondition.Activating:
+                    ContinueActivating();
+                    break;
+                case TrapCondition.Deactivating:
+                    ContinueDeactivating();
+                    break;
+                default:
+                    break;
+            }
+
+            ElapsedGameTime -= AnimationFrameDelayMs;
+        }
+
+        return new Point(CurrentAnimationFrameX, 0);
+    }
 
     protected virtual void ContinueActivating()
     {
