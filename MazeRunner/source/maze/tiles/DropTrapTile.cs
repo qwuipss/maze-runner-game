@@ -6,19 +6,9 @@ using System;
 
 namespace MazeRunner;
 
-public class DropTrapTile : MazeTile
+public class DropTrapTile : MazeTrap
 {
-    private const int AnimationFrameDelayMs = 35;
-
-    private const double OpenChance = 1e-1;
-    private const double CloseChance = 1e-2;
-
     private static readonly Random _random = new();
-
-    private TrapCondition _condition = TrapCondition.Closed;
-
-    private double _elapsedGameTime = 0;
-    private int _currentAnimationFrameX = 0;
 
     public override Texture2D Texture
     {
@@ -38,32 +28,32 @@ public class DropTrapTile : MazeTile
 
     public override Point GetCurrentAnimationFrame(GameTime gameTime)
     {
-        _elapsedGameTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+        ElapsedGameTime += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (_elapsedGameTime >= AnimationFrameDelayMs)
+        if (ElapsedGameTime >= AnimationFrameDelayMs)
         {
-            switch (_condition)
+            switch (Condition)
             {
-                case TrapCondition.Opened:
-                    CloseWithChance(OpenChance);
+                case TrapCondition.Active:
+                    DeactivateWithChance(ActivateChance);
                     break;
-                case TrapCondition.Closed:
-                    OpenWithChance(CloseChance);
+                case TrapCondition.Inactive:
+                    ActivateWithChance(DeactivateChance);
                     break;
-                case TrapCondition.Opening:
-                    ContinueOpening();
+                case TrapCondition.Activating:
+                    ContinueActivating();
                     break;
-                case TrapCondition.Closing:
-                    ContinueClosing();
+                case TrapCondition.Deactivating:
+                    ContinueDeactivating();
                     break;
                 default:
                     break;
             }
 
-            _elapsedGameTime -= AnimationFrameDelayMs;
+            ElapsedGameTime -= AnimationFrameDelayMs;
         }
 
-        return new Point(_currentAnimationFrameX, 0);
+        return new Point(CurrentAnimationFrameX, 0);
     }
 
     protected override int FramesCount
@@ -74,43 +64,41 @@ public class DropTrapTile : MazeTile
         }
     }
 
-    private void ContinueOpening()
+    protected override double ActivateChance
     {
-        _currentAnimationFrameX += FrameWidth;
-
-        if (_currentAnimationFrameX == FrameWidth * FramesCount - FrameWidth)
+        get
         {
-            _condition = TrapCondition.Opened;
+            return 1e-1;
         }
     }
 
-    private void ContinueClosing()
+    protected override double DeactivateChance
     {
-        _currentAnimationFrameX -= FrameWidth;
-
-        if (_currentAnimationFrameX == FrameWidth)
+        get
         {
-            _condition = TrapCondition.Closed;
+            return 1e-2;
         }
     }
 
-    private void OpenWithChance(double chance)
+    protected override Random Random
     {
-        SwitchConditionWithChance(chance, TrapCondition.Opening);
-    }
-
-    private void CloseWithChance(double chance)
-    {
-        SwitchConditionWithChance(chance, TrapCondition.Closing);
-    }
-
-    private void SwitchConditionWithChance(double chance, TrapCondition newCondition)
-    {
-        var randomValue = _random.NextDouble();
-
-        if (chance > randomValue)
+        get
         {
-            _condition = newCondition;
+            return _random;
         }
     }
+
+    protected override int AnimationFrameDelayMs
+    {
+        get
+        {
+            return 35;
+        }
+    }
+
+    protected override int CurrentAnimationFrameX { get; set; } = 0;
+
+    protected override double ElapsedGameTime { get; set; } = 0;
+
+    protected override TrapCondition Condition { get; set; } = TrapCondition.Inactive;
 }
