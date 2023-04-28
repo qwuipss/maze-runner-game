@@ -27,16 +27,16 @@ public abstract class MazeTile
         }
     }
 
-    public virtual Point GetCurrentAnimationFrame(GameTime gameTime)
-    {
-        return Point.Zero;
-    }
-
-    protected virtual int FramesCount
+    public virtual int FramesCount
     {
         get
         {
             return 1;
         }
+    }
+
+    public virtual Point GetCurrentAnimationFrame(GameTime gameTime)
+    {
+        return Point.Zero;
     }
 }

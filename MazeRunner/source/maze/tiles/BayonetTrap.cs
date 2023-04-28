@@ -1,13 +1,15 @@
 ﻿#region Usings
 using Microsoft.Xna.Framework.Graphics;
-using System;
 #endregion
 
 namespace MazeRunner;
 
 public class BayonetTrap : MazeTrap
 {
-    private static readonly Random _random = new();
+    public BayonetTrap()
+    {
+        State = new TrapDeactivatedState(this);
+    }
 
     public override Texture2D Texture
     {
@@ -25,7 +27,7 @@ public class BayonetTrap : MazeTrap
         }
     }
 
-    protected override int FramesCount
+    public override int FramesCount
     {
         get
         {
@@ -33,7 +35,7 @@ public class BayonetTrap : MazeTrap
         }
     }
 
-    protected override double ActivateChance
+    public override double ActivateChance
     {
         get
         {
@@ -41,7 +43,7 @@ public class BayonetTrap : MazeTrap
         }
     }
 
-    protected override double DeactivateChance
+    public override double DeactivateChance
     {
         get
         {
@@ -49,15 +51,7 @@ public class BayonetTrap : MazeTrap
         }
     }
 
-    protected override Random Random
-    {
-        get
-        {
-            return _random;
-        }
-    }
-
-    protected override int AnimationFrameDelayMs
+    public override int AnimationFrameDelayMs
     {
         get
         {
@@ -65,9 +59,9 @@ public class BayonetTrap : MazeTrap
         }
     }
 
-    protected override int CurrentAnimationFrameX { get; set; } = 0;
+    public override int CurrentAnimationFrameX { get; set; } = 0;
 
     protected override double ElapsedGameTime { get; set; } = 0;
 
-    protected override TrapCondition Condition { get; set; } = TrapCondition.Inactive;
+    protected override IMazeTrapState State { get; set; }
 }

@@ -1,13 +1,15 @@
 ﻿#region Usings
 using Microsoft.Xna.Framework.Graphics;
-using System;
 #endregion
 
 namespace MazeRunner;
 
 public class DropTrapTile : MazeTrap
 {
-    private static readonly Random _random = new();
+    public DropTrapTile()
+    {
+        State = new TrapDeactivatedState(this);
+    }
 
     public override Texture2D Texture
     {
@@ -25,15 +27,7 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    protected override int FramesCount
-    {
-        get
-        {
-            return 8;
-        }
-    }
-
-    protected override double ActivateChance
+    public override double ActivateChance
     {
         get
         {
@@ -41,7 +35,7 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    protected override double DeactivateChance
+    public override double DeactivateChance
     {
         get
         {
@@ -49,15 +43,7 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    protected override Random Random
-    {
-        get
-        {
-            return _random;
-        }
-    }
-
-    protected override int AnimationFrameDelayMs
+    public override int AnimationFrameDelayMs
     {
         get
         {
@@ -65,9 +51,17 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    protected override int CurrentAnimationFrameX { get; set; } = 0;
+    public override int FramesCount
+    {
+        get
+        {
+            return 8;
+        }
+    }
+
+    public override int CurrentAnimationFrameX { get; set; } = 0;
+
+    protected override IMazeTrapState State { get; set; }
 
     protected override double ElapsedGameTime { get; set; } = 0;
-
-    protected override TrapCondition Condition { get; set; } = TrapCondition.Inactive;
 }
