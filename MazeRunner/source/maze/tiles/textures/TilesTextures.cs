@@ -13,6 +13,7 @@ public static class TilesTextures
     public static Texture2D Floor { get; private set; }
     public static Texture2D Wall { get; private set; }
     public static Texture2D DropTrap { get; private set; }
+    public static Texture2D BayonetTrap { get; private set; }
 
     public static void LoadTextures(Game game)
     {
@@ -24,6 +25,7 @@ public static class TilesTextures
         Floor = game.Content.Load<Texture2D>("floor");
         Wall = game.Content.Load<Texture2D>("wall");
         DropTrap = game.Content.Load<Texture2D>("dropTrap");
+        BayonetTrap = game.Content.Load<Texture2D>("bayonetTrap");
 
         _texturesLoaded = true;
     }

@@ -5,7 +5,7 @@ using System;
 
 namespace MazeRunner;
 
-public class DropTrapTile : MazeTrap
+public class BayonetTrap : MazeTrap
 {
     private static readonly Random _random = new();
 
@@ -13,7 +13,7 @@ public class DropTrapTile : MazeTrap
     {
         get
         {
-            return TilesTextures.DropTrap;
+            return TilesTextures.BayonetTrap;
         }
     }
 
@@ -29,7 +29,7 @@ public class DropTrapTile : MazeTrap
     {
         get
         {
-            return 8;
+            return 4;
         }
     }
 
@@ -61,7 +61,7 @@ public class DropTrapTile : MazeTrap
     {
         get
         {
-            return 35;
+            return 75;
         }
     }
 
