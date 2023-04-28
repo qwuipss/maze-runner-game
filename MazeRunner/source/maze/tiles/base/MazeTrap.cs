@@ -65,7 +65,7 @@ public abstract class MazeTrap : MazeTile
     {
         CurrentAnimationFrameX -= FrameWidth;
 
-        if (CurrentAnimationFrameX == FrameWidth)
+        if (CurrentAnimationFrameX is 0)
         {
             Condition = TrapCondition.Inactive;
         }
