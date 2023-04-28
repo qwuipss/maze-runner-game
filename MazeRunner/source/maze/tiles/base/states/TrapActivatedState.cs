@@ -11,7 +11,7 @@ public class TrapActivatedState : IMazeTrapState
 
     public IMazeTrapState ProcessState()
     {
-        if (RandomHelper.Roll(_mazeTrap.DeactivateChance))
+        if (RandomHelper.RollChance(_mazeTrap.DeactivateChance))
         {
             return new TrapDeactivatingState(_mazeTrap);
         }

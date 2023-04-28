@@ -27,6 +27,14 @@ public class DropTrapTile : MazeTrap
         }
     }
 
+    public override int FramesCount
+    {
+        get
+        {
+            return 8;
+        }
+    }
+
     public override double ActivateChance
     {
         get
@@ -51,17 +59,5 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 8;
-        }
-    }
-
-    public override int CurrentAnimationFrameX { get; set; } = 0;
-
     protected override IMazeTrapState State { get; set; }
-
-    protected override double ElapsedGameTime { get; set; } = 0;
 }

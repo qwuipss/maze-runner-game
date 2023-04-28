@@ -12,9 +12,9 @@ public abstract class MazeTrap : MazeTile, IMazeTrapState
 
     public abstract int AnimationFrameDelayMs { get; }
 
-    public abstract int CurrentAnimationFrameX { get; set; }
+    public virtual int CurrentAnimationFrameX { get; set; }
 
-    protected abstract double ElapsedGameTime { get; set; }
+    protected virtual double ElapsedGameTime { get; set; }
 
     protected abstract IMazeTrapState State { get; set; }
 
@@ -29,7 +29,7 @@ public abstract class MazeTrap : MazeTile, IMazeTrapState
 
         if (ElapsedGameTime >= AnimationFrameDelayMs)
         {
-            State = State.ProcessState();
+            State = ProcessState();
             ElapsedGameTime -= AnimationFrameDelayMs;
         }
 

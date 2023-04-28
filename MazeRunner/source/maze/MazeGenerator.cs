@@ -8,8 +8,6 @@ namespace MazeRunner;
 
 public static class MazeGenerator
 {
-    private static readonly Random _random = new();
-
     /// <param name="width">
     /// Only odd. If even then will be rounded up to the nearest odd number
     /// </param>
@@ -46,7 +44,7 @@ public static class MazeGenerator
             {
                 backtrackingCells.Push(currentCell);
 
-                var adjacentCell = adjacentCells[_random.Next(0, adjacentCells.Count)];
+                var adjacentCell = adjacentCells[RandomHelper.Next(0, adjacentCells.Count)];
 
                 RemoveWallBetween(currentCell, adjacentCell, tiles);
 
@@ -130,7 +128,7 @@ public static class MazeGenerator
 
     private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, TileType prefferedType)
     {
-        var cell = new Cell(_random.Next(0, tiles.GetLength(0)), _random.Next(0, tiles.GetLength(1)));
+        var cell = new Cell(RandomHelper.Next(0, tiles.GetLength(0)), RandomHelper.Next(0, tiles.GetLength(1)));
 
         return GetRandomCellWithPrefferedType(tiles, cell, prefferedType);
     }

@@ -39,7 +39,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return 1e-1 / 3;
+            return 1e-1 / 2;
         }
     }
 
@@ -47,7 +47,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return 1e-2 / 2;
+            return 1e-2 * 4;
         }
     }
 
@@ -58,10 +58,6 @@ public class BayonetTrap : MazeTrap
             return 75;
         }
     }
-
-    public override int CurrentAnimationFrameX { get; set; } = 0;
-
-    protected override double ElapsedGameTime { get; set; } = 0;
 
     protected override IMazeTrapState State { get; set; }
 }
