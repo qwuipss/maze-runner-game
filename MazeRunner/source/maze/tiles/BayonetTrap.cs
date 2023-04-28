@@ -21,7 +21,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return TileType.DropTrap;
+            return TileType.BayonetTrap;
         }
     }
 
@@ -29,7 +29,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return 4;
+            return 5;
         }
     }
 
