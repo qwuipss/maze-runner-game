@@ -37,7 +37,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return 1e-1;
+            return 1e-1 / 3;
         }
     }
 
@@ -45,7 +45,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return 1e-2;
+            return 1e-2 / 2;
         }
     }
 
