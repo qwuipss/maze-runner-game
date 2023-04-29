@@ -40,7 +40,7 @@ public class MazeRunnerGame : Game
 
     protected override void LoadContent()
     {
-        TilesTextures.LoadTextures(this);
+        Textures.Load(this);
     }
 
     protected override void Update(GameTime gameTime)

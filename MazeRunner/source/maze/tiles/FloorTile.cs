@@ -10,7 +10,7 @@ public class FloorTile : MazeTile
     {
         get
         {
-            return TilesTextures.Floor;
+            return Textures.Floor;
         }
     }
 

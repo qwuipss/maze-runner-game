@@ -15,7 +15,7 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return TilesTextures.BayonetTrap;
+            return Textures.BayonetTrap;
         }
     }
 
