@@ -37,8 +37,26 @@ public static class Textures
         }
     }
 
+    public static class Sprites
+    {
+        private const string ContentDirectory = "sprites";
+
+        public static class Heroes
+        {
+            private const string ContentDirectory = $"{Sprites.ContentDirectory}/heroes";
+
+            public static Texture2D HeroIdle { get; private set; }
+
+            public static void Load(Game game)
+            {
+                HeroIdle = game.Content.Load<Texture2D>($"{ContentDirectory}/heroIdle");
+            }
+        }
+    }
+
     public static void Load(Game game)
     {
         MazeTiles.Load(game);
+        Sprites.Heroes.Load(game);
     }
 }

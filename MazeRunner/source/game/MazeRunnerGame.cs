@@ -2,6 +2,7 @@
 using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Sprites.Heroes;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
@@ -16,6 +17,7 @@ public class MazeRunnerGame : Game
     private Drawer _drawer;
 
     private Maze _maze;
+    private Hero _hero;
 
     public MazeRunnerGame()
     {
@@ -41,7 +43,7 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
-        _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
+        _hero = new Hero();
     }
 
     protected override void LoadContent()
@@ -64,6 +66,7 @@ public class MazeRunnerGame : Game
         _drawer.BeginDraw();
 
         _drawer.DrawMaze(_maze, gameTime);
+        _drawer.DrawSprite(_hero, gameTime);
 
         _drawer.EndDraw();
 

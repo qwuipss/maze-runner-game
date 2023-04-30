@@ -1,6 +1,7 @@
 ﻿#region Usings
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -42,6 +43,16 @@ public class Drawer
     {
         DrawMazeSkeleton(maze, gameTime);
         DrawTraps(maze, gameTime);
+    }
+
+    public void DrawSprite(Sprite sprite, GameTime gameTime)
+    {
+        _spriteBatch.Draw(
+                sprite.Texture,
+                sprite.Position,
+                new Rectangle(sprite.GetCurrentAnimationPoint(gameTime),
+                              new Point(sprite.Width, sprite.Height)),
+                Color.White);
     }
 
     private void DrawMazeSkeleton(Maze maze, GameTime gameTime)
