@@ -6,7 +6,7 @@ namespace MazeRunner.Helpers;
 
 public static class RandomHelper
 {
-    private static readonly Random _random = new(123);
+    private static readonly Random _random = new(17);
 
     public static bool RollChance(double chance)
     {

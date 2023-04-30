@@ -1,4 +1,4 @@
-﻿namespace MazeRunner;
+﻿namespace MazeRunner.Extensions;
 
 public static class Int32Extensions
 {

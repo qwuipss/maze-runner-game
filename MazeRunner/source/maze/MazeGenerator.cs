@@ -1,4 +1,5 @@
 #region Usings
+using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using System;

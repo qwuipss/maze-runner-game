@@ -1,4 +1,5 @@
 ﻿#region Usings
+using MazeRunner.Extensions;
 using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,18 @@ namespace MazeRunner.MazeBase;
 
 public class Maze
 {
+    private readonly MazeTile[,] _skeleton;
+
+    private readonly Dictionary<Cell, MazeTrap> _traps;
+
+    public ImmutableDoubleDimArray<MazeTile> Skeleton
+    {
+        get
+        {
+            return _skeleton.ToImmutableDoubleDimArray();
+        }
+    }
+
     public ImmutableDictionary<Cell, MazeTrap> Traps
     {
         get
@@ -18,14 +31,9 @@ public class Maze
         }
     }
 
-    public MazeTile[,] Skeleton { get; init; }
-
-    private readonly Dictionary<Cell, MazeTrap> _traps;
-
     public Maze(MazeTile[,] skeleton)
     {
-        Skeleton = skeleton;
-
+        _skeleton = skeleton;
         _traps = new();
     }
 
