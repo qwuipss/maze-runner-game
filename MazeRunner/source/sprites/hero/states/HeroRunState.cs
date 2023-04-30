@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
 
-public class IdleState : ISpriteState
+public class HeroRunState : ISpriteState
 {
     private int _currentAnimationPointX;
 
@@ -14,7 +14,7 @@ public class IdleState : ISpriteState
     {
         get
         {
-            return Textures.Sprites.Heroes.HeroIdle;
+            return Textures.Sprites.Hero.HeroRun;
         }
     }
 

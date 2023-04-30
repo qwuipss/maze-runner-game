@@ -61,7 +61,7 @@
 /processorParam:TextureFormat=Color
 /build:mazetiles/wall.png
 
-#begin sprites/hero/hero.png
+#begin sprites/hero/heroIdle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -71,5 +71,17 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:sprites/hero/hero.png;sprites/hero/heroIdle.png
+/build:sprites/hero/heroIdle.png
+
+#begin sprites/hero/heroRun.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/hero/heroRun.png
 

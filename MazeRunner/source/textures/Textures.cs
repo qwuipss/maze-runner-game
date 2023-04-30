@@ -41,15 +41,17 @@ public static class Textures
     {
         private const string ContentDirectory = "sprites";
 
-        public static class Heroes
+        public static class Hero
         {
             private const string ContentDirectory = $"{Sprites.ContentDirectory}/hero";
 
             public static Texture2D HeroIdle { get; private set; }
+            public static Texture2D HeroRun { get; private set; }
 
             public static void Load(Game game)
             {
                 HeroIdle = game.Content.Load<Texture2D>($"{ContentDirectory}/heroIdle");
+                HeroRun = game.Content.Load<Texture2D>($"{ContentDirectory}/heroRun");
             }
         }
     }
@@ -57,6 +59,6 @@ public static class Textures
     public static void Load(Game game)
     {
         MazeTiles.Load(game);
-        Sprites.Heroes.Load(game);
+        Sprites.Hero.Load(game);
     }
 }

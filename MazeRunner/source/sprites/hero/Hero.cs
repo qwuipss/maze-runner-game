@@ -13,6 +13,6 @@ public class Hero : Sprite
 
     public Hero()
     {
-        State = new IdleState();
+        State = new HeroIdleState();
     }
 }
