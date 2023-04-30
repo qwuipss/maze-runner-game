@@ -2,7 +2,7 @@
 using System;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.Helpers;
 
 public static class RandomHelper
 {

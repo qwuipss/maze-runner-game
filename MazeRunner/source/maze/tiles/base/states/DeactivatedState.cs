@@ -1,4 +1,5 @@
 ﻿#region Usings
+using MazeRunner.Helpers;
 using Microsoft.Xna.Framework;
 #endregion
 

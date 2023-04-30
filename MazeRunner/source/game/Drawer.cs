@@ -39,11 +39,11 @@ public class Drawer
 
     public void DrawMaze(Maze maze, GameTime gameTime)
     {
-        for (int x = 0; x < maze.Width; x++)
+        for (int y = 0; y < maze.Tiles.GetLength(0); y++)
         {
-            for (int y = 0; y < maze.Height; y++)
+            for (int x = 0; x < maze.Tiles.GetLength(1); x++)
             {
-                var mazeTile = maze[x, y];
+                var mazeTile = maze.Tiles[y, x];
 
                 _spriteBatch.Draw(
                     mazeTile.Texture,
