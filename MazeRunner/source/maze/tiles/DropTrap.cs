@@ -1,14 +1,16 @@
 ﻿#region Usings
+using MazeRunner.Content;
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.MazeBase.Tiles;
 
-public class DropTrapTile : MazeTrap
+public class DropTrap : MazeTrap
 {
-    public DropTrapTile()
+    public DropTrap()
     {
-        State = new TrapDeactivatedState(this);
+        State = new DeactivatedState(this);
     }
 
     public override Texture2D Texture
@@ -19,19 +21,19 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    public override TileType TileType
-    {
-        get
-        {
-            return TileType.DropTrap;
-        }
-    }
-
     public override int FramesCount
     {
         get
         {
             return 8;
+        }
+    }
+
+    public override TileType TileType
+    {
+        get
+        {
+            return TileType.DropTrap;
         }
     }
 
@@ -51,7 +53,7 @@ public class DropTrapTile : MazeTrap
         }
     }
 
-    public override int AnimationFrameDelayMs
+    protected override int AnimationDelayMs
     {
         get
         {

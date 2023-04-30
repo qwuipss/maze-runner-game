@@ -1,14 +1,16 @@
 ﻿#region Usings
+using MazeRunner.Content;
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.MazeBase.Tiles;
 
 public class BayonetTrap : MazeTrap
 {
     public BayonetTrap()
     {
-        State = new TrapDeactivatedState(this);
+        State = new DeactivatedState(this);
     }
 
     public override Texture2D Texture
@@ -51,7 +53,7 @@ public class BayonetTrap : MazeTrap
         }
     }
 
-    public override int AnimationFrameDelayMs
+    protected override int AnimationDelayMs
     {
         get
         {

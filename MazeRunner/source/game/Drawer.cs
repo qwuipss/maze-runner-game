@@ -1,4 +1,5 @@
 ﻿#region Usings
+using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -46,9 +47,9 @@ public class Drawer
 
                 _spriteBatch.Draw(
                     mazeTile.Texture,
-                    new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
-                    new Rectangle(mazeTile.GetCurrentAnimationFrame(gameTime),
-                                  new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
+                    new Vector2(x * mazeTile.Width, y * mazeTile.Height),
+                    new Rectangle(mazeTile.GetCurrentAnimationPoint(gameTime),
+                                  new Point(mazeTile.Width, mazeTile.Height)),
                     Color.White);
             }
         }

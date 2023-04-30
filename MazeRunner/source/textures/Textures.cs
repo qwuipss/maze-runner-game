@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.Content;
 
 public static class Textures
 {

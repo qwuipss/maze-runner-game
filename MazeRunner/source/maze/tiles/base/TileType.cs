@@ -1,4 +1,4 @@
-﻿namespace MazeRunner;
+﻿namespace MazeRunner.MazeBase.Tiles;
 
 public enum TileType
 {

@@ -1,4 +1,4 @@
-﻿namespace MazeRunner;
+﻿namespace MazeRunner.MazeBase;
 
 public readonly record struct Cell(int X, int Y)
 {

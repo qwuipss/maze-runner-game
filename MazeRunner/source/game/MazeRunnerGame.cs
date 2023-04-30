@@ -1,4 +1,7 @@
 ﻿#region Usings
+using MazeRunner.Content;
+using MazeRunner.MazeBase;
+using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
@@ -34,7 +37,7 @@ public class MazeRunnerGame : Game
         _drawer.Initialize(this);
 
         _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
-        MazeGenerator.InsertTiles(_maze, () => new DropTrapTile(), 3);
+        MazeGenerator.InsertTiles(_maze, () => new DropTrap(), 3);
         MazeGenerator.InsertTiles(_maze, () => new BayonetTrap(), 4);
     }
 

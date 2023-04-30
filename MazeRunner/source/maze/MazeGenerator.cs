@@ -1,10 +1,11 @@
 #region Usings
+using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.MazeBase;
 
 public static class MazeGenerator
 {
@@ -100,12 +101,12 @@ public static class MazeGenerator
                 if (x % 2 != 0 && y % 2 != 0
                  && x.InRange(0, width - 1) && y.InRange(0, height - 1))
                 {
-                    tiles[x, y] = new FloorTile();
+                    tiles[x, y] = new Floor();
                     emptiesInserted++;
                 }
                 else
                 {
-                    tiles[x, y] = new WallTile();
+                    tiles[x, y] = new Wall();
                 }
             }
         }
@@ -123,7 +124,7 @@ public static class MazeGenerator
 
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
-        tiles[wallCoords.X, wallCoords.Y] = new FloorTile();
+        tiles[wallCoords.X, wallCoords.Y] = new Floor();
     }
 
     private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, TileType prefferedType)

@@ -1,9 +1,10 @@
 ﻿#region Usings
+using MazeRunner.MazeBase.Tiles;
 using System;
 using System.IO;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.MazeBase;
 
 public class Maze
 {

@@ -1,16 +1,17 @@
 ﻿#region Usings
+using MazeRunner.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.MazeBase.Tiles;
 
-public class WallTile : MazeTile
+public class Floor : MazeTile
 {
     public override Texture2D Texture
     {
         get
         {
-            return Textures.Wall;
+            return Textures.Floor;
         }
     }
 
@@ -18,7 +19,7 @@ public class WallTile : MazeTile
     {
         get
         {
-            return TileType.Wall;
+            return TileType.Floor;
         }
     }
 }

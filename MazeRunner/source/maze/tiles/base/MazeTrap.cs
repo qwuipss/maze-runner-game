@@ -1,38 +1,37 @@
 ﻿#region Usings
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace MazeRunner;
+namespace MazeRunner.MazeBase.Tiles;
 
-public abstract class MazeTrap : MazeTile, IMazeTrapState
+public abstract class MazeTrap : MazeTile
 {
     public abstract double ActivateChance { get; }
 
     public abstract double DeactivateChance { get; }
-
-    public abstract int AnimationFrameDelayMs { get; }
-
-    public virtual int CurrentAnimationFrameX { get; set; }
-
-    protected virtual double ElapsedGameTime { get; set; }
-
-    protected abstract IMazeTrapState State { get; set; }
 
     public virtual IMazeTrapState ProcessState()
     {
         return State.ProcessState();
     }
 
-    public override Point GetCurrentAnimationFrame(GameTime gameTime)
+    public override Point GetCurrentAnimationPoint(GameTime gameTime)
     {
-        ElapsedGameTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (ElapsedGameTime >= AnimationFrameDelayMs)
+        if (ElapsedGameTimeMs >= AnimationDelayMs)
         {
             State = ProcessState();
-            ElapsedGameTime -= AnimationFrameDelayMs;
+            ElapsedGameTimeMs -= AnimationDelayMs;
         }
 
-        return new Point(CurrentAnimationFrameX, 0);
+        return State.CurrentAnimationPoint;
     }
+
+    protected abstract IMazeTrapState State { get; set; }
+
+    protected abstract int AnimationDelayMs { get; }
+
+    protected virtual double ElapsedGameTimeMs { get; set; }
 }
