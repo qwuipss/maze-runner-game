@@ -1,6 +1,5 @@
 ﻿#region Usings
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
@@ -8,32 +7,38 @@ namespace MazeRunner.Content;
 
 public static class Textures
 {
-    private static bool _texturesLoaded = false;
+    public static class MazeTiles
+    {
+        private const string ContentDirectory = "mazetiles";
 
-    #region MazeTiles
-    public static Texture2D Floor { get; private set; }
-    public static Texture2D Wall { get; private set; }
-    public static Texture2D DropTrap { get; private set; }
-    public static Texture2D BayonetTrap { get; private set; }
-    #endregion
+        public static Texture2D Floor { get; private set; }
+        public static Texture2D Wall { get; private set; }
+
+        public static class MazeTraps
+        {
+            private const string ContentDirectory = $"{MazeTiles.ContentDirectory}/mazetraps";
+
+            public static Texture2D DropTrap { get; private set; }
+            public static Texture2D BayonetTrap { get; private set; }
+
+            public static void Load(Game game)
+            {
+                DropTrap = game.Content.Load<Texture2D>($"{ContentDirectory}/dropTrap");
+                BayonetTrap = game.Content.Load<Texture2D>($"{ContentDirectory}/bayonetTrap");
+            }
+        }
+
+        public static void Load(Game game)
+        {
+            Floor = game.Content.Load<Texture2D>($"{ContentDirectory}/floor");
+            Wall = game.Content.Load<Texture2D>($"{ContentDirectory}/wall");
+
+            MazeTraps.Load(game);
+        }
+    }
 
     public static void Load(Game game)
     {
-        if (_texturesLoaded)
-        {
-            throw new ContentLoadException("tiles textures already loaded");
-        }
-
-        LoadMazeTiles(game);
-
-        _texturesLoaded = true;
-    }
-
-    private static void LoadMazeTiles(Game game)
-    {
-        Floor = game.Content.Load<Texture2D>("floor");
-        Wall = game.Content.Load<Texture2D>("wall");
-        DropTrap = game.Content.Load<Texture2D>("dropTrap");
-        BayonetTrap = game.Content.Load<Texture2D>("bayonetTrap");
+        MazeTiles.Load(game);
     }
 }

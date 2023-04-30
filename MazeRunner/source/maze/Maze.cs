@@ -3,7 +3,6 @@ using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Collections.ObjectModel;
 using System.IO;
 #endregion
 
@@ -38,7 +37,7 @@ public class Maze
     public bool IsFloor(Cell cell)
     {
         return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
-           && !Traps.ContainsKey(cell);
+           && !_traps.ContainsKey(cell);
     }
 
     public int GetFloorsCount()
@@ -67,7 +66,7 @@ public class Maze
         {
             for (int x = 0; x < Skeleton.GetLength(1); x++)
             {
-                if (Traps.TryGetValue(new Cell(x, y), out var trap))
+                if (_traps.TryGetValue(new Cell(x, y), out var trap))
                 {
                     writer.Write((char)trap.TileType);
                 }

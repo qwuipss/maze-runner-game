@@ -11,7 +11,7 @@ public class Wall : MazeTile
     {
         get
         {
-            return Textures.Wall;
+            return Textures.MazeTiles.Wall;
         }
     }
 

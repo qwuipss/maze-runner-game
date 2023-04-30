@@ -11,7 +11,7 @@ public class Floor : MazeTile
     {
         get
         {
-            return Textures.Floor;
+            return Textures.MazeTiles.Floor;
         }
     }
 

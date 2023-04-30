@@ -17,7 +17,7 @@ public class DropTrap : MazeTrap
     {
         get
         {
-            return Textures.DropTrap;
+            return Textures.MazeTiles.MazeTraps.DropTrap;
         }
     }
 
