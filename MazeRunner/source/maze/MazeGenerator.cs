@@ -16,7 +16,6 @@ public static class MazeGenerator
     /// <param name="height">
     /// Only odd. If even then will be rounded up to the nearest odd number
     /// </param>
-    /// <returns></returns>
     public static Maze GenerateMaze(int width, int height)
     {
         static (int Width, int Height) RoundUpToOdd(int width, int height)
@@ -33,12 +32,16 @@ public static class MazeGenerator
         (width, height) = RoundUpToOdd(width, height);
         var (tiles, floorsInserted) = GetDefaultCells(width, height);
 
-        var currentCell = GetRandomCellWithPrefferedType(tiles, TileType.Floor);
+        var maze = new Maze(tiles);
+
+        maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
+
+        var currentCell = GetRandomFloorCell(maze);
         visitedCells.Add(currentCell);
 
         while (visitedCells.Count != floorsInserted)
         {
-            var adjacentCells = GetAdjacentCellsWithPrefferedType(currentCell, tiles, TileType.Floor, 2)
+            var adjacentCells = GetAdjacentFloorCells(currentCell, maze, 2)
                                .Where(cell => !visitedCells.Contains(cell))
                                .ToList();
 
@@ -59,35 +62,19 @@ public static class MazeGenerator
             }
         }
 
-        return new Maze(tiles);
+        return maze;
     }
 
-    public static void InsertTiles(Maze maze, Func<MazeTile> tile, int percentage)
+    public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, int percentage)
     {
-        var floorsCount = GetFloorsCount(maze);
-        var insertionsCount = floorsCount * percentage / 100;
+        var insertionsCount = maze.GetFloorsCount() * percentage / 100;
 
         for (int i = 0; i < insertionsCount; i++)
         {
-            var cell = GetRandomCellWithPrefferedType(maze.Tiles, TileType.Floor);
+            var cell = GetRandomFloorCell(maze);
 
-            maze.Tiles[cell.Y, cell.X] = tile.Invoke();
+            maze.InsertTrap(trapSource.Invoke(), cell);
         }
-    }
-
-    private static int GetFloorsCount(Maze maze)
-    {
-        var floorsCount = 0;
-
-        foreach (var tile in maze.Tiles)
-        {
-            if (tile.TileType is TileType.Floor)
-            {
-                floorsCount++;
-            }
-        }
-
-        return floorsCount;
     }
 
     private static (MazeTile[,] Tiles, int FloorsInserted) GetDefaultCells(int width, int height)
@@ -128,14 +115,14 @@ public static class MazeGenerator
         tiles[wallCoords.Y, wallCoords.X] = new Floor();
     }
 
-    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, TileType prefferedType)
+    private static Cell GetRandomFloorCell(Maze maze)
     {
-        var cell = new Cell(RandomHelper.Next(0, tiles.GetLength(1)), RandomHelper.Next(0, tiles.GetLength(0)));
+        var cell = new Cell(RandomHelper.Next(0, maze.Skeleton.GetLength(1)), RandomHelper.Next(0, maze.Skeleton.GetLength(0)));
 
-        return GetRandomCellWithPrefferedType(tiles, cell, prefferedType);
+        return GetRandomFloorCell(maze, cell);
     }
 
-    private static Cell GetRandomCellWithPrefferedType(MazeTile[,] tiles, Cell cell, TileType prefferedType)
+    private static Cell GetRandomFloorCell(Maze maze, Cell cell)
     {
         var searchingQueue = new Queue<Cell>();
         var visitedCells = new HashSet<Cell>();
@@ -147,12 +134,12 @@ public static class MazeGenerator
         {
             var currentCell = searchingQueue.Dequeue();
 
-            if (tiles[currentCell.Y, currentCell.X].TileType == prefferedType)
+            if (maze.IsFloor(currentCell))
             {
                 return currentCell;
             }
 
-            foreach (var adjCell in GetAdjacentCells(currentCell, tiles, 1))
+            foreach (var adjCell in GetAdjacentCells(currentCell, maze, 1))
             {
                 if (!visitedCells.Contains(adjCell))
                 {
@@ -162,10 +149,10 @@ public static class MazeGenerator
             }
         }
 
-        throw new KeyNotFoundException($"cell with type: {prefferedType} doesn't exist in {nameof(tiles)}");
+        throw new KeyNotFoundException($"cell with type: {nameof(TileType.Floor)} doesn't exist in {nameof(maze)}");
     }
 
-    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, MazeTile[,] tiles, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset)
     {
         return new List<Cell>()
         {
@@ -174,12 +161,12 @@ public static class MazeGenerator
             cell with { Y = cell.Y + cellOffset },
             cell with { Y = cell.Y - cellOffset },
         }
-        .Where(cell => cell.InBoundsOf(tiles));
+        .Where(cell => cell.InBoundsOf(maze.Skeleton));
     }
 
-    private static IEnumerable<Cell> GetAdjacentCellsWithPrefferedType(Cell cell, MazeTile[,] tiles, TileType prefferedType, int cellOffset)
+    private static IEnumerable<Cell> GetAdjacentFloorCells(Cell cell, Maze maze, int cellOffset)
     {
-        return GetAdjacentCells(cell, tiles, cellOffset)
-              .Where(cell => tiles[cell.Y, cell.X].TileType == prefferedType);
+        return GetAdjacentCells(cell, maze, cellOffset)
+              .Where(cell => maze.IsFloor(cell));
     }
 }
