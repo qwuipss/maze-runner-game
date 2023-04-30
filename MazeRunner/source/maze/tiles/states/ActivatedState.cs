@@ -1,19 +1,21 @@
 ﻿#region Usings
+using MazeRunner.Helpers;
 using Microsoft.Xna.Framework;
 #endregion
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
-public class ActivatingState : IMazeTrapState
+public class ActivatedState : IMazeTrapState
 {
     private readonly MazeTrap _trap;
 
-    private int _currentAnimationPointX;
+    private readonly int _currentAnimationPointX;
 
-    public ActivatingState(MazeTrap trap)
+    public ActivatedState(MazeTrap trap)
     {
         _trap = trap;
-        _currentAnimationPointX = _trap.Width;
+
+        _currentAnimationPointX = (_trap.FramesCount - 1) * _trap.Width;
     }
 
     public Point CurrentAnimationPoint
@@ -26,11 +28,9 @@ public class ActivatingState : IMazeTrapState
 
     public IMazeTrapState ProcessState()
     {
-        _currentAnimationPointX += _trap.Width;
-
-        if (_currentAnimationPointX == (_trap.FramesCount - 1) * _trap.Width)
+        if (RandomHelper.RollChance(_trap.DeactivateChance))
         {
-            return new ActivatedState(_trap);
+            return new DeactivatingState(_trap);
         }
 
         return this;

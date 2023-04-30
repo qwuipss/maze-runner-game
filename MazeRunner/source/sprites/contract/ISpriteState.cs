@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace MazeRunner.Sprites;
+namespace MazeRunner.Sprites.States;
 
 public interface ISpriteState
 {
@@ -15,7 +15,9 @@ public interface ISpriteState
 
     public int Height { get; }
 
-    public Point GetCurrentAnimationPoint(GameTime gameTime);
+    public int AnimationDelayMs { get; }
+
+    public Point CurrentAnimationPoint { get; }
 
     public ISpriteState ProcessState();
 }

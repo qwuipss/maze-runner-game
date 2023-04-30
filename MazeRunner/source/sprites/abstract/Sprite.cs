@@ -1,4 +1,5 @@
 ﻿#region Usings
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
@@ -35,9 +36,19 @@ public abstract class Sprite
         }
     }
 
+    protected virtual double ElapsedGameTimeMs { get; set; }
+
     public virtual Point GetCurrentAnimationPoint(GameTime gameTime)
     {
-        return State.GetCurrentAnimationPoint(gameTime);
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        if (ElapsedGameTimeMs >= State.AnimationDelayMs)
+        {
+            State = ProcessState();
+            ElapsedGameTimeMs -= State.AnimationDelayMs;
+        }
+
+        return State.CurrentAnimationPoint;
     }
 
     public virtual ISpriteState ProcessState()

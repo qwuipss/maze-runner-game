@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 
-namespace MazeRunner.Sprites.Heroes;
+namespace MazeRunner.Sprites.States;
 
 public class IdleState : ISpriteState
 {
@@ -42,15 +42,26 @@ public class IdleState : ISpriteState
         }
     }
 
-    public Point GetCurrentAnimationPoint(GameTime gameTime)
+    public int AnimationDelayMs
     {
-        _currentAnimationPointX = (_currentAnimationPointX + Width) % Width;
+        get
+        {
+            return 50;
+        }
+    }
 
-        return new Point(_currentAnimationPointX, 0);
+    public Point CurrentAnimationPoint
+    {
+        get
+        {
+            return new Point(_currentAnimationPointX, 0);
+        }
     }
 
     public ISpriteState ProcessState()
     {
+        _currentAnimationPointX = (_currentAnimationPointX + Width) % (Width * FramesCount);
+
         return this;
     }
 }

@@ -1,8 +1,9 @@
 ﻿#region Usings
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 #endregion
 
-namespace MazeRunner.Sprites.Heroes;
+namespace MazeRunner.Sprites;
 
 public class Hero : Sprite
 {

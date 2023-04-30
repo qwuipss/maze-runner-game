@@ -43,7 +43,7 @@ public static class Textures
 
         public static class Heroes
         {
-            private const string ContentDirectory = $"{Sprites.ContentDirectory}/heroes";
+            private const string ContentDirectory = $"{Sprites.ContentDirectory}/hero";
 
             public static Texture2D HeroIdle { get; private set; }
 

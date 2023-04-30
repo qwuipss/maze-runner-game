@@ -2,7 +2,7 @@
 using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Sprites.Heroes;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
