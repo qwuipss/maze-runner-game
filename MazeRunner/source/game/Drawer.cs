@@ -1,5 +1,6 @@
 ﻿#region Usings
 using MazeRunner.MazeBase;
+using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -39,19 +40,36 @@ public class Drawer
 
     public void DrawMaze(Maze maze, GameTime gameTime)
     {
+        DrawMazeSkeleton(maze, gameTime);
+        DrawTraps(maze, gameTime);
+    }
+
+    private void DrawMazeSkeleton(Maze maze, GameTime gameTime)
+    {
         for (int y = 0; y < maze.Skeleton.GetLength(0); y++)
         {
             for (int x = 0; x < maze.Skeleton.GetLength(1); x++)
             {
-                var mazeTile = maze.Skeleton[y, x];
-
-                _spriteBatch.Draw(
-                    mazeTile.Texture,
-                    new Vector2(x * mazeTile.Width, y * mazeTile.Height),
-                    new Rectangle(mazeTile.GetCurrentAnimationPoint(gameTime),
-                                  new Point(mazeTile.Width, mazeTile.Height)),
-                    Color.White);
+                DrawMazeTile(maze.Skeleton[y, x], x, y, gameTime);
             }
         }
+    }
+
+    private void DrawTraps(Maze maze, GameTime gameTime)
+    {
+        foreach (var trap in maze.Traps)
+        {
+            DrawMazeTile(trap.Value, trap.Key.X, trap.Key.Y, gameTime);
+        }
+    }
+
+    private void DrawMazeTile(MazeTile mazeTile, int x, int y, GameTime gameTime)
+    {
+        _spriteBatch.Draw(
+            mazeTile.Texture,
+            new Vector2(x * mazeTile.Width, y * mazeTile.Height),
+            new Rectangle(mazeTile.GetCurrentAnimationPoint(gameTime),
+                          new Point(mazeTile.Width, mazeTile.Height)),
+            Color.White);
     }
 }

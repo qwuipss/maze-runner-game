@@ -37,9 +37,6 @@ public class MazeRunnerGame : Game
         _drawer.Initialize(this);
 
         _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
-        //MazeGenerator.InsertTiles(_maze, () => new DropTrap(), 3);
-        //MazeGenerator.InsertTiles(_maze, () => new BayonetTrap(), 4);
-
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 10);
 
         _maze.LoadToFile(new System.IO.FileInfo("maze.txt"));

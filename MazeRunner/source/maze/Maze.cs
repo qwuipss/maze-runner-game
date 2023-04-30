@@ -2,6 +2,8 @@
 using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.IO;
 #endregion
 
@@ -9,24 +11,34 @@ namespace MazeRunner.MazeBase;
 
 public class Maze
 {
-    public readonly MazeTile[,] Skeleton;
-    public readonly Dictionary<Cell, MazeTrap> Traps;
+    public ImmutableDictionary<Cell, MazeTrap> Traps
+    {
+        get
+        {
+            return _traps.ToImmutableDictionary();
+        }
+    }
+
+    public MazeTile[,] Skeleton { get; init; }
+
+    private readonly Dictionary<Cell, MazeTrap> _traps;
 
     public Maze(MazeTile[,] skeleton)
     {
         Skeleton = skeleton;
-        Traps = new();
+
+        _traps = new();
     }
 
     public void InsertTrap(MazeTrap trap, Cell cell)
     {
-        Traps.Add(cell, trap);
+        _traps.Add(cell, trap);
     }
 
     public bool IsFloor(Cell cell)
     {
         return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
-            && !Traps.ContainsKey(cell);
+           && !Traps.ContainsKey(cell);
     }
 
     public int GetFloorsCount()
@@ -55,7 +67,14 @@ public class Maze
         {
             for (int x = 0; x < Skeleton.GetLength(1); x++)
             {
-                writer.Write((char)Skeleton[y, x].TileType);
+                if (Traps.TryGetValue(new Cell(x, y), out var trap))
+                {
+                    writer.Write((char)trap.TileType);
+                }
+                else
+                {
+                    writer.Write((char)Skeleton[y, x].TileType);
+                }
             }
 
             writer.Write(Environment.NewLine);
