@@ -12,6 +12,8 @@ public abstract class Sprite
 
     public abstract Vector2 Position { get; set; }
 
+    public abstract Vector2 Speed { get; }
+
     public virtual Texture2D Texture
     {
         get
