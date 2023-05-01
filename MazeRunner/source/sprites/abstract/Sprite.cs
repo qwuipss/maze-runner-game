@@ -8,6 +8,8 @@ namespace MazeRunner.Sprites;
 
 public abstract class Sprite
 {
+    public abstract Rectangle HitBox { get; }
+
     public abstract ISpriteState State { get; set; }
 
     public abstract Vector2 Speed { get; }
@@ -22,7 +24,7 @@ public abstract class Sprite
         }
     }
 
-    public virtual int Width
+    public virtual int FrameWidth
     {
         get
         {
@@ -30,7 +32,7 @@ public abstract class Sprite
         }
     }
 
-    public virtual int Height
+    public virtual int FrameHeight
     {
         get
         {
@@ -42,7 +44,7 @@ public abstract class Sprite
 
     protected virtual double ElapsedGameTimeMs { get; set; }
 
-    public virtual Point GetCurrentAnimationPoint(GameTime gameTime)
+    public virtual Point GetCurrentAnimationFramePoint(GameTime gameTime)
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 

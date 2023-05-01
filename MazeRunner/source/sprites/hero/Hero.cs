@@ -8,8 +8,10 @@ namespace MazeRunner.Sprites;
 
 public class Hero : Sprite
 {
-    private Vector2 _speed;
     private Vector2 _position;
+
+    private const int HitBoxWidth = 7;
+    private const int HitBoxHeight = 9;
 
     public override ISpriteState State { get; set; }
 
@@ -37,13 +39,24 @@ public class Hero : Sprite
     {
         get
         {
-            return _speed;
+            return new Vector2(3, 3);
+        }
+    }
+
+    public override Rectangle HitBox
+    {
+        get
+        {
+            return new Rectangle(
+                (int)_position.X + (FrameWidth - HitBoxWidth), 
+                (int)_position.Y + (FrameHeight - HitBoxHeight), 
+                HitBoxWidth, 
+                HitBoxHeight);
         }
     }
 
     public Hero(Vector2 position)
     {
-        _speed = new Vector2(3, 3);
         _position = position;
 
         State = new HeroIdleState();

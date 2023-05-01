@@ -50,8 +50,8 @@ public class Drawer
         _spriteBatch.Draw(
                 sprite.Texture,
                 sprite.Position,
-                new Rectangle(sprite.GetCurrentAnimationPoint(gameTime),
-                              new Point(sprite.Width, sprite.Height)),
+                new Rectangle(sprite.GetCurrentAnimationFramePoint(gameTime),
+                              new Point(sprite.FrameWidth, sprite.FrameHeight)),
                 Color.White,
                 0,
                 Vector2.Zero,
