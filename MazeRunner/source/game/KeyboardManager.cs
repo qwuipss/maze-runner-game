@@ -1,8 +1,6 @@
 ﻿#region Usings
 using MazeRunner.Sprites;
-using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
@@ -15,18 +13,6 @@ public static class KeyboardManager
     private const int KeyboardPollingDelayMs = 50;
 
     public static Vector2 ProcessHeroMovement(Hero hero, GameTime gameTime)
-    {
-        if (!IsPollingTimePassed(gameTime))
-            return Vector2.Zero;
-
-        var movement = ProcessHeroMovement(hero);
-        ProcessHeroState(hero, movement);
-        ProcessHeroFrameEffect(hero, movement);
-
-        return movement;
-    }
-
-    private static Vector2 ProcessHeroMovement(Hero hero)
     {
         var movement = Vector2.Zero;
         var speed = hero.Speed;
@@ -51,37 +37,7 @@ public static class KeyboardManager
         return movement;
     }
 
-    private static void ProcessHeroState(Hero hero, Vector2 movement)
-    {
-        if (movement == Vector2.Zero)
-        {
-            if (hero.State is not HeroIdleState)
-            {
-                hero.State = new HeroIdleState();
-            }
-        }
-        else
-        {
-            if (hero.State is not HeroRunState)
-            {
-                hero.State = new HeroRunState();
-            }
-        }
-    }
-
-    private static void ProcessHeroFrameEffect(Hero hero, Vector2 movement)
-    {
-        if (movement.X > 0)
-        {
-            hero.FrameEffect = SpriteEffects.None;
-        }
-        else if (movement.X < 0)
-        {
-            hero.FrameEffect = SpriteEffects.FlipHorizontally;
-        }
-    }
-
-    private static bool IsPollingTimePassed(GameTime gameTime)
+    public static bool IsPollingTimePassed(GameTime gameTime)
     {
         _elapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 

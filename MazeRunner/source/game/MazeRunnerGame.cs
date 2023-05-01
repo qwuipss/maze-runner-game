@@ -43,7 +43,7 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
-        _hero = new Hero();
+        _hero = new Hero(Vector2.Zero);
     }
 
     protected override void LoadContent()
@@ -53,7 +53,11 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        _hero.Position += KeyboardManager.ProcessHeroMovement(_hero, gameTime);
+        if (KeyboardManager.IsPollingTimePassed(gameTime))
+        {
+            var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
+            _hero.Position += movement;
+        }
 
         base.Update(gameTime);
     }
