@@ -10,8 +10,11 @@ public class Hero : Sprite
 {
     private Vector2 _position;
 
-    private const int HitBoxWidth = 7;
-    private const int HitBoxHeight = 9;
+    private const int HitBoxOffsetX = 3;
+    private const int HitBoxOffsetY = 4;
+
+    private const int HitBoxWidth = 9;
+    private const int HitBoxHeight = 11;
 
     public override ISpriteState State { get; set; }
 
@@ -48,9 +51,9 @@ public class Hero : Sprite
         get
         {
             return new Rectangle(
-                (int)_position.X + (FrameWidth - HitBoxWidth), 
-                (int)_position.Y + (FrameHeight - HitBoxHeight), 
-                HitBoxWidth, 
+                (int)_position.X + HitBoxOffsetX,
+                (int)_position.Y + HitBoxOffsetY,
+                HitBoxWidth,
                 HitBoxHeight);
         }
     }

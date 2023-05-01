@@ -2,6 +2,7 @@
 using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Physics;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using static MazeRunner.Settings;
@@ -43,7 +44,7 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
-        _hero = new Hero(new Vector2(16,16));
+        _hero = new Hero(new Vector2(16, 16));
     }
 
     protected override void LoadContent()
@@ -56,13 +57,12 @@ public class MazeRunnerGame : Game
         if (KeyboardManager.IsPollingTimePassed(gameTime))
         {
             var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
-            if (!CheckMazeCollisions())
+
+            if (!CollisionManager.ColidesWithWalls(_hero, _maze, movement))
             {
                 _hero.Position += movement;
             }
         }
-
-        CheckMazeCollisions();
 
         base.Update(gameTime);
     }
@@ -79,39 +79,5 @@ public class MazeRunnerGame : Game
         _drawer.EndDraw();
 
         base.Draw(gameTime);
-    }
-
-    private bool CheckMazeCollisions()
-    {
-        var skeleton = _maze.Skeleton;
-
-        var position = _hero.Position;
-
-        for (int y = 0; y < skeleton.GetLength(0); y++)
-        {
-            for (int x = 0; x < skeleton.GetLength(1); x++)
-            {
-                var tile = skeleton[y, x];
-
-                if (tile is Floor)
-                {
-                    continue;
-                }
-
-                var tileHitBox = new Rectangle(
-                    x * tile.FrameWidth, 
-                    y * tile.FrameHeight, 
-                    tile.FrameWidth, 
-                    tile.FrameHeight);
-
-                if (tileHitBox.Intersects(_hero.HitBox))
-                {
-                    return true;
-                }
-
-            }
-        }
-
-        return false;
     }
 }
