@@ -11,7 +11,9 @@ public abstract class BaseState : ISpriteState
 
     public abstract int FramesCount { get; }
 
-    public virtual int TextureWidth
+    public virtual SpriteEffects FrameEffect { get; set; }
+
+    public virtual int FrameWidth
     {
         get
         {
@@ -19,7 +21,7 @@ public abstract class BaseState : ISpriteState
         }
     }
 
-    public virtual int TextureHeight
+    public virtual int FrameHeight
     {
         get
         {
@@ -27,7 +29,7 @@ public abstract class BaseState : ISpriteState
         }
     }
 
-    public virtual int AnimationDelayMs
+    public virtual int FrameAnimationDelayMs
     {
         get
         {
@@ -35,20 +37,20 @@ public abstract class BaseState : ISpriteState
         }
     }
 
-    public Point CurrentAnimationPoint
+    public Point CurrentAnimationFramePoint
     {
         get
         {
-            return new Point(CurrentAnimationPointX, 0);
+            return new Point(CurrentAnimationFramePointX, 0);
         }
     }
 
     public virtual ISpriteState ProcessState()
     {
-        CurrentAnimationPointX = (CurrentAnimationPointX + TextureWidth) % (TextureWidth * FramesCount);
+        CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameWidth) % (FrameWidth * FramesCount);
 
         return this;
     }
 
-    protected virtual int CurrentAnimationPointX { get; set; }
+    protected virtual int CurrentAnimationFramePointX { get; set; }
 }

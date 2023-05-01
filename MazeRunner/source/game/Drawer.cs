@@ -52,7 +52,12 @@ public class Drawer
                 sprite.Position,
                 new Rectangle(sprite.GetCurrentAnimationPoint(gameTime),
                               new Point(sprite.Width, sprite.Height)),
-                Color.White);
+                Color.White,
+                0,
+                Vector2.Zero,
+                Vector2.One,
+                sprite.FrameEffect,
+                1);
     }
 
     private void DrawMazeSkeleton(Maze maze, GameTime gameTime)

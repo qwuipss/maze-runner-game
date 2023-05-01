@@ -4,7 +4,6 @@ using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
 #endregion
 
@@ -12,8 +11,6 @@ namespace MazeRunner;
 
 public class MazeRunnerGame : Game
 {
-    private const int KeyboardPollingDelayMs = 50;
-
     private GraphicsDeviceManager _graphics;
 
     private Drawer _drawer;
@@ -21,8 +18,6 @@ public class MazeRunnerGame : Game
     private Maze _maze;
 
     private Hero _hero;
-
-    private double _elapsedGameTimeMs;
 
     public MazeRunnerGame()
     {
@@ -58,33 +53,7 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        _elapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        if (_elapsedGameTimeMs >= KeyboardPollingDelayMs)
-        {
-            _elapsedGameTimeMs -= KeyboardPollingDelayMs;
-        }
-        else
-        {
-            return;
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.W))
-        {
-            _hero.Position = new Vector2(_hero.Position.X, _hero.Position.Y - _hero.Speed.Y);
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.S))
-        {
-            _hero.Position = new Vector2(_hero.Position.X, _hero.Position.Y + _hero.Speed.Y);
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.A))
-        {
-            _hero.Position = new Vector2(_hero.Position.X - _hero.Speed.X, _hero.Position.Y);
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.D))
-        {
-            _hero.Position = new Vector2(_hero.Position.X + _hero.Speed.X, _hero.Position.Y);
-        }
+        _hero.Position += KeyboardManager.ProcessHeroMovement(_hero, gameTime);
 
         base.Update(gameTime);
     }

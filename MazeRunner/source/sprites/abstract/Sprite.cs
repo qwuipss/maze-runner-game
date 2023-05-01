@@ -26,7 +26,7 @@ public abstract class Sprite
     {
         get
         {
-            return State.TextureWidth;
+            return State.FrameWidth;
         }
     }
 
@@ -34,9 +34,11 @@ public abstract class Sprite
     {
         get
         {
-            return State.TextureHeight;
+            return State.FrameHeight;
         }
     }
+
+    public virtual SpriteEffects FrameEffect { get; set; }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
 
@@ -44,13 +46,13 @@ public abstract class Sprite
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (ElapsedGameTimeMs >= State.AnimationDelayMs)
+        if (ElapsedGameTimeMs >= State.FrameAnimationDelayMs)
         {
             State = ProcessState();
-            ElapsedGameTimeMs -= State.AnimationDelayMs;
+            ElapsedGameTimeMs -= State.FrameAnimationDelayMs;
         }
 
-        return State.CurrentAnimationPoint;
+        return State.CurrentAnimationFramePoint;
     }
 
     public virtual ISpriteState ProcessState()

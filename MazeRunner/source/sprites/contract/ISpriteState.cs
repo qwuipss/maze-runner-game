@@ -11,13 +11,15 @@ public interface ISpriteState
 
     public int FramesCount { get; }
 
-    public int TextureWidth { get; }
+    public int FrameWidth { get; }
 
-    public int TextureHeight { get; }
+    public int FrameHeight { get; }
 
-    public int AnimationDelayMs { get; }
+    public SpriteEffects FrameEffect { get; set; }
 
-    public Point CurrentAnimationPoint { get; }
+    public int FrameAnimationDelayMs { get; }
+
+    public Point CurrentAnimationFramePoint { get; }
 
     public ISpriteState ProcessState();
 }
