@@ -1,4 +1,5 @@
 ﻿#region Usings
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
@@ -7,36 +8,51 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public abstract class MazeTile
 {
-    public abstract Texture2D Texture { get; }
-
     public abstract TileType TileType { get; }
 
-    public virtual int FramesCount
+    public virtual Texture2D Texture
     {
         get
         {
-            return 1;
+            return State.Texture;
         }
     }
 
-    public virtual int Width
+    public virtual int FrameWidth
     {
         get
         {
-            return Texture.Width / FramesCount;
+            return State.FrameWidth;
         }
     }
 
-    public virtual int Height
+    public virtual int FrameHeight
     {
         get
         {
-            return Texture.Height;
+            return State.FrameHeight;
         }
     }
 
-    public virtual Point GetCurrentAnimationPoint(GameTime gameTime)
+    public virtual IMazeTileState State { get; set; }
+
+    protected virtual double ElapsedGameTimeMs { get; set; }
+
+    public virtual Point GetCurrentAnimationFramePoint(GameTime gameTime)
     {
-        return Point.Zero;
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        if (ElapsedGameTimeMs >= State.FrameAnimationDelayMs)
+        {
+            State = ProcessState();
+            ElapsedGameTimeMs -= State.FrameAnimationDelayMs;
+        }
+
+        return State.CurrentAnimationFramePoint;
+    }
+
+    public virtual IMazeTileState ProcessState()
+    {
+        return State.ProcessState();
     }
 }

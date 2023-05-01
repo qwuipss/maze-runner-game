@@ -1,18 +1,14 @@
 ﻿#region Usings
-using MazeRunner.Content;
-using Microsoft.Xna.Framework.Graphics;
+using MazeRunner.MazeBase.Tiles.States;
 #endregion
 
 namespace MazeRunner.MazeBase.Tiles;
 
 public class Wall : MazeTile
 {
-    public override Texture2D Texture
+    public Wall()
     {
-        get
-        {
-            return Textures.MazeTiles.Wall;
-        }
+        State = new WallIdleState();
     }
 
     public override TileType TileType

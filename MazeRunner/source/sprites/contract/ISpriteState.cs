@@ -11,9 +11,9 @@ public interface ISpriteState
 
     public int FramesCount { get; }
 
-    public int Width { get; }
+    public int TextureWidth { get; }
 
-    public int Height { get; }
+    public int TextureHeight { get; }
 
     public int AnimationDelayMs { get; }
 

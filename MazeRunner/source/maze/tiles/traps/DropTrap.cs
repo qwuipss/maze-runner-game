@@ -1,7 +1,5 @@
 ﻿#region Usings
-using MazeRunner.Content;
 using MazeRunner.MazeBase.Tiles.States;
-using Microsoft.Xna.Framework.Graphics;
 #endregion
 
 namespace MazeRunner.MazeBase.Tiles;
@@ -10,23 +8,7 @@ public class DropTrap : MazeTrap
 {
     public DropTrap()
     {
-        State = new DeactivatedState(this);
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.MazeTiles.MazeTraps.DropTrap;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 8;
-        }
+        State = new DropTrapDeactivatedState(this);
     }
 
     public override TileType TileType
@@ -41,7 +23,7 @@ public class DropTrap : MazeTrap
     {
         get
         {
-            return 1e-1;
+            return 1e-2 / 3;
         }
     }
 
@@ -49,17 +31,7 @@ public class DropTrap : MazeTrap
     {
         get
         {
-            return 1e-2;
+            return 1e-1;
         }
     }
-
-    protected override int AnimationDelayMs
-    {
-        get
-        {
-            return 35;
-        }
-    }
-
-    protected override IMazeTrapState State { get; set; }
 }

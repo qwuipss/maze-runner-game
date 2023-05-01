@@ -11,7 +11,7 @@ public abstract class BaseState : ISpriteState
 
     public abstract int FramesCount { get; }
 
-    public virtual int Width
+    public virtual int TextureWidth
     {
         get
         {
@@ -19,7 +19,7 @@ public abstract class BaseState : ISpriteState
         }
     }
 
-    public virtual int Height
+    public virtual int TextureHeight
     {
         get
         {
@@ -45,7 +45,7 @@ public abstract class BaseState : ISpriteState
 
     public virtual ISpriteState ProcessState()
     {
-        CurrentAnimationPointX = (CurrentAnimationPointX + Width) % (Width * FramesCount);
+        CurrentAnimationPointX = (CurrentAnimationPointX + TextureWidth) % (TextureWidth * FramesCount);
 
         return this;
     }

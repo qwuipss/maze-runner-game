@@ -10,9 +10,9 @@ public abstract class Sprite
 {
     public abstract ISpriteState State { get; set; }
 
-    public abstract Vector2 Position { get; set; }
-
     public abstract Vector2 Speed { get; }
+
+    public abstract Vector2 Position { get; set; }
 
     public virtual Texture2D Texture
     {
@@ -26,7 +26,7 @@ public abstract class Sprite
     {
         get
         {
-            return State.Width;
+            return State.TextureWidth;
         }
     }
 
@@ -34,7 +34,7 @@ public abstract class Sprite
     {
         get
         {
-            return State.Height;
+            return State.TextureHeight;
         }
     }
 

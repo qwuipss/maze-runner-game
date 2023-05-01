@@ -78,9 +78,9 @@ public class Drawer
     {
         _spriteBatch.Draw(
             mazeTile.Texture,
-            new Vector2(x * mazeTile.Width, y * mazeTile.Height),
-            new Rectangle(mazeTile.GetCurrentAnimationPoint(gameTime),
-                          new Point(mazeTile.Width, mazeTile.Height)),
+            new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
+            new Rectangle(mazeTile.GetCurrentAnimationFramePoint(gameTime),
+                          new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
             Color.White);
     }
 }
