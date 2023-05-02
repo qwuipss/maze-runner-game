@@ -26,15 +26,12 @@ public class Hero : Sprite
         }
         set
         {
-            if (value != Vector2.Zero)
-            {
-                var movement = value - _position;
+            var movement = value - _position;
 
-                ProcessState(movement);
-                ProcessFrameEffect(movement);
+            ProcessState(movement);
+            ProcessFrameEffect(movement);
 
-                _position = value;
-            }
+            _position = value;
         }
     }
 
