@@ -15,6 +15,8 @@ public class Maze
 
     private readonly Dictionary<Cell, MazeTrap> _traps;
 
+    public Exit Exit { get; set; }
+
     public ImmutableDoubleDimArray<MazeTile> Skeleton
     {
         get

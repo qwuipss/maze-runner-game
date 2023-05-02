@@ -44,6 +44,8 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
+        MazeGenerator.InsertExit(_maze, new Exit());
+
         _hero = new Hero(new Vector2(16, 16));
     }
 

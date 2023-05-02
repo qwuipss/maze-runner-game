@@ -6,4 +6,5 @@ public enum TileType
     Wall = '#',
     DropTrap = 'o',
     BayonetTrap = 'x',
+    Exit = '*',
 }

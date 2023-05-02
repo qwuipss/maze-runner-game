@@ -13,6 +13,7 @@ public static class Textures
 
         public static Texture2D Floor { get; private set; }
         public static Texture2D Wall { get; private set; }
+        public static Texture2D Exit { get; private set; }
 
         public static class MazeTraps
         {
@@ -32,6 +33,7 @@ public static class Textures
         {
             Floor = game.Content.Load<Texture2D>($"{ContentDirectory}/floor");
             Wall = game.Content.Load<Texture2D>($"{ContentDirectory}/wall");
+            Exit = game.Content.Load<Texture2D>($"{ContentDirectory}/exit");
 
             MazeTraps.Load(game);
         }

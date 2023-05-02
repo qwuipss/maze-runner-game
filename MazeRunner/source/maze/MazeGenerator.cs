@@ -78,6 +78,11 @@ public static class MazeGenerator
         }
     }
 
+    public static void InsertExit(Maze maze, Exit exit)
+    {
+        maze.Exit = exit;
+    }
+
     private static (MazeTile[,] Tiles, int FloorsInserted) GetDefaultCells(int width, int height)
     {
         var tiles = new MazeTile[height, width];
