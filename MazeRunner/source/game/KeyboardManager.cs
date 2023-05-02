@@ -21,14 +21,17 @@ public static class KeyboardManager
         {
             movement -= new Vector2(0, speed.Y);
         }
+
         if (Keyboard.GetState().IsKeyDown(Keys.S))
         {
             movement += new Vector2(0, speed.Y);
         }
+
         if (Keyboard.GetState().IsKeyDown(Keys.A))
         {
             movement -= new Vector2(speed.X, 0);
         }
+
         if (Keyboard.GetState().IsKeyDown(Keys.D))
         {
             movement += new Vector2(speed.X, 0);

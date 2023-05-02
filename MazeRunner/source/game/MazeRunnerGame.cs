@@ -5,7 +5,6 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Physics;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
-using System;
 using static MazeRunner.Settings;
 #endregion
 
@@ -79,20 +78,23 @@ public class MazeRunnerGame : Game
 
     private void ProcessHeroMovement(GameTime gameTime)
     {
+        var totalMovement = Vector2.Zero;
+
         var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
 
         var movementX = new Vector2(movement.X, 0);
-
-        if (movementX.X != 0 && !CollisionManager.ColidesWithWalls(_hero, _maze, movementX))
-        {
-            _hero.Position += movementX;
-        }
-
         var movementY = new Vector2(0, movement.Y);
 
-        if (movementY.Y != 0 && !CollisionManager.ColidesWithWalls(_hero, _maze, movementY))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, movementX))
         {
-            _hero.Position += movementY;
+            totalMovement += movementX;
         }
+
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, movementY))
+        {
+            totalMovement += movementY;
+        }
+
+        _hero.Position += totalMovement;
     }
 }
