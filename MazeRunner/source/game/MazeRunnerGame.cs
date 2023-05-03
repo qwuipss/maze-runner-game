@@ -5,6 +5,7 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Physics;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
 #endregion
 
@@ -44,9 +45,9 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
-        MazeGenerator.InsertExit(_maze, new Exit());
+        MazeGenerator.InsertExit(_maze);
 
-        _hero = new Hero(new Vector2(16, 16));
+        _hero = new Hero(new Vector2(16, 16)); // todo
     }
 
     protected override void LoadContent()
@@ -59,6 +60,11 @@ public class MazeRunnerGame : Game
         if (KeyboardManager.IsPollingTimePassed(gameTime))
         {
             ProcessHeroMovement(gameTime);
+        }
+
+        if (Keyboard.GetState().IsKeyDown(Keys.G))
+        {
+            _maze.ExitInfo.Exit.Open();
         }
 
         base.Update(gameTime);

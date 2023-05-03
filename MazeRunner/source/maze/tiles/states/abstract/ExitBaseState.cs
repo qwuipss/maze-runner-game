@@ -19,7 +19,7 @@ public abstract class ExitBaseState : MazeTileBaseState
     {
         get
         {
-            return 1;
+            return 5;
         }
     }
 

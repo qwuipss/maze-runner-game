@@ -2,6 +2,7 @@
 using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,9 +79,68 @@ public static class MazeGenerator
         }
     }
 
-    public static void InsertExit(Maze maze, Exit exit)
+    public static void InsertExit(Maze maze)
     {
-        maze.Exit = exit;
+        var width = maze.Skeleton.GetLength(1);
+        var height = maze.Skeleton.GetLength(0);
+
+        var (coordX, coordY) = GetExitCoords(width, height);
+
+        var rotation = GetExitFrameRotationAngle(coordX, coordY, width, height);
+
+        var exit = new Exit(rotation);
+
+        exit.OriginFrameRotationVector = GetExitOriginFrameRotationVector(exit);
+
+        maze.InsertExit(exit, new Cell(coordX, coordY));
+    }
+
+    private static (int CoordX, int CoordY) GetExitCoords(int width, int height)
+    {
+        int coordX, coordY;
+
+        if (RandomHelper.RandomBoolean())
+        {
+            coordX = RandomHelper.Next(1, width);
+            coordY = RandomHelper.RandomBoolean() ? 0 : height - 1;
+        }
+        else
+        {
+            coordY = RandomHelper.Next(1, height);
+            coordX = RandomHelper.RandomBoolean() ? 0 : width - 1;
+        }
+
+        return (coordX, coordY);
+    }
+
+    private static Vector2 GetExitOriginFrameRotationVector(Exit exit)
+    {
+        if (exit.FrameRotationAngle is (float)Math.PI / 2)
+        {
+            return new Vector2(0, exit.FrameHeight);
+        }
+
+        if (exit.FrameRotationAngle is (float)-Math.PI / 2)
+        {
+            return new Vector2(exit.FrameWidth, 0);
+        }
+
+        return Vector2.Zero;
+    }
+
+    private static float GetExitFrameRotationAngle(int coordX, int coordY, int width, int height)
+    {
+        if (coordX is 0)
+        {
+            return (float)-Math.PI / 2;
+        }
+
+        if (coordX == width - 1)
+        {
+            return (float)Math.PI / 2;
+        }
+
+        return 0;
     }
 
     private static (MazeTile[,] Tiles, int FloorsInserted) GetDefaultCells(int width, int height)

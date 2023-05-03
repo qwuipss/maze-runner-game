@@ -3,7 +3,7 @@
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
-public class ExitOpenedState : BayonetTrapBaseState
+public class ExitOpenedState : ExitBaseState
 {
     public ExitOpenedState()
     {

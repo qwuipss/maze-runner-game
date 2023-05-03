@@ -1,10 +1,13 @@
 ﻿namespace MazeRunner.MazeBase.Tiles.States;
 
-public class ExitOpeningState : BayonetTrapBaseState
+public class ExitOpeningState : ExitBaseState
 {
-    public ExitOpeningState()
+    public override int FrameAnimationDelayMs
     {
-        CurrentAnimationFramePointX = FrameWidth;
+        get
+        {
+            return 400;
+        }
     }
 
     public override IMazeTileState ProcessState()

@@ -1,10 +1,12 @@
 ﻿#region Usings
+using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using static MazeRunner.Content.Textures;
 #endregion
 
 namespace MazeRunner;
@@ -43,6 +45,7 @@ public class Drawer
     {
         DrawMazeSkeleton(maze, gameTime);
         DrawTraps(maze, gameTime);
+        DrawExit(maze, gameTime);
     }
 
     public void DrawSprite(Sprite sprite, GameTime gameTime)
@@ -77,6 +80,26 @@ public class Drawer
         {
             DrawMazeTile(trap.Value, trap.Key.X, trap.Key.Y, gameTime);
         }
+    }
+
+    private void DrawExit(Maze maze, GameTime gameTime)
+    {
+        var exitInfo = maze.ExitInfo;
+
+        var exit = exitInfo.Exit;
+        var coords = exitInfo.Coords;
+
+        _spriteBatch.Draw(
+            exit.Texture,
+            new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight),
+            new Rectangle(exit.GetCurrentAnimationFramePoint(gameTime),
+            new Point(exit.FrameWidth, exit.FrameHeight)),
+            Color.White,
+            exit.FrameRotationAngle,
+            exit.OriginFrameRotationVector,
+            Vector2.One,
+            SpriteEffects.None,
+            0);
     }
 
     private void DrawMazeTile(MazeTile mazeTile, int x, int y, GameTime gameTime)

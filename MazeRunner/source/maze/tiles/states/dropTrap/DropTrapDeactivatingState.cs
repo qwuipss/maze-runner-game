@@ -6,7 +6,7 @@ public class DropTrapDeactivatingState : DropTrapBaseState
     {
         Trap = trap;
 
-        CurrentAnimationFramePointX = (FramesCount - 2) * FrameWidth;
+        CurrentAnimationFramePointX = (FramesCount - 1) * FrameWidth;
     }
 
     public override IMazeTileState ProcessState()

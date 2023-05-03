@@ -5,8 +5,6 @@ public class BayonetTrapActivatingState : BayonetTrapBaseState
     public BayonetTrapActivatingState(MazeTrap trap)
     {
         Trap = trap;
-
-        CurrentAnimationFramePointX = FrameWidth;
     }
 
     public override IMazeTileState ProcessState()

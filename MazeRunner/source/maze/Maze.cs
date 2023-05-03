@@ -15,7 +15,7 @@ public class Maze
 
     private readonly Dictionary<Cell, MazeTrap> _traps;
 
-    public Exit Exit { get; set; }
+    public (Exit Exit, Cell Coords) ExitInfo { get; set; }
 
     public ImmutableDoubleDimArray<MazeTile> Skeleton
     {
@@ -44,10 +44,18 @@ public class Maze
         _traps.Add(cell, trap);
     }
 
+    public void InsertExit(Exit exit, Cell coords)
+    {
+        ExitInfo = (exit, coords);
+
+        _skeleton[coords.Y, coords.X] = new Floor();
+    }
+
     public bool IsFloor(Cell cell)
     {
         return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
-           && !_traps.ContainsKey(cell);
+           && !_traps.ContainsKey(cell)
+           && cell != ExitInfo.Coords;
     }
 
     public int GetFloorsCount()

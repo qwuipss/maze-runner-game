@@ -17,4 +17,9 @@ public static class RandomHelper
     {
         return _random.Next(minValue, maxValue);
     }
+
+    public static bool RandomBoolean()
+    {
+        return _random.Next(0, 2) is 0;
+    }
 }

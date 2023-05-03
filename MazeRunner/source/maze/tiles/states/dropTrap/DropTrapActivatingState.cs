@@ -5,8 +5,6 @@ public class DropTrapActivatingState : DropTrapBaseState
     public DropTrapActivatingState(MazeTrap trap)
     {
         Trap = trap;
-
-        CurrentAnimationFramePointX = FrameWidth;
     }
 
     public override IMazeTileState ProcessState()

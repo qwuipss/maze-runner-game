@@ -8,10 +8,10 @@ namespace MazeRunner.Sprites;
 
 public class Hero : Sprite
 {
-    private Vector2 _position;
+    private Vector2 _position; // 
 
-    private const int HitBoxOffsetX = 3;
-    private const int HitBoxOffsetY = 4;
+    private const int HitBoxOffsetX = 3; //
+    private const int HitBoxOffsetY = 4; //
 
     private const int HitBoxWidth = 9;
     private const int HitBoxHeight = 11;
