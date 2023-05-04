@@ -1,11 +1,13 @@
 ﻿#region Usings
 using MazeRunner.Content;
+using MazeRunner.Extensions;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Physics;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using static MazeRunner.Settings;
 #endregion
 
@@ -55,14 +57,7 @@ public class MazeRunnerGame : Game
             ProcessHeroMovement(gameTime);
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.G)) // debug
-        {
-            InitializeMaze();
-        }
-        if (Keyboard.GetState().IsKeyDown(Keys.F)) // debug
-        {
-            _maze.ExitInfo.Exit.Open();
-        }
+        CheckDebugButtons();
 
         base.Update(gameTime);
     }
@@ -108,6 +103,16 @@ public class MazeRunnerGame : Game
 
     private void ProcessHeroMovement(GameTime gameTime)
     {
+        static Vector2 NormalizeDiagonalSpeed(Vector2 speed, Vector2 movement)
+        {
+            if (movement.Abs() == speed)
+            {
+                return new Vector2((float)(movement.X / Math.Sqrt(2)), (float)(movement.Y / Math.Sqrt(2)));
+            }
+
+            return movement;
+        }
+
         var totalMovement = Vector2.Zero;
 
         var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
@@ -115,19 +120,33 @@ public class MazeRunnerGame : Game
         var movementX = new Vector2(movement.X, 0);
         var movementY = new Vector2(0, movement.Y);
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX)
-         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementX))
+        //if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX)
+         //&& !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementX))
         {
             totalMovement += movementX;
         }
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY)
-         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementY))
+        //if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY)
+         //&& !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementY))
         {
             totalMovement += movementY;
         }
 
+        totalMovement = NormalizeDiagonalSpeed(_hero.Speed, movement);
+
         _heroPosition += totalMovement;
         _hero.ProcessPositionChange(totalMovement);
+    }
+
+    private void CheckDebugButtons()
+    {
+        if (Keyboard.GetState().IsKeyDown(Keys.G)) // generate maze
+        {
+            InitializeMaze();
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.O)) // open exit
+        {
+            _maze.ExitInfo.Exit.Open();
+        }
     }
 }
