@@ -46,11 +46,11 @@ public class Drawer
         DrawExit(maze, gameTime);
     }
 
-    public void DrawSprite(Sprite sprite, GameTime gameTime)
+    public void DrawSprite(Sprite sprite, Vector2 position, GameTime gameTime)
     {
         _spriteBatch.Draw(
                 sprite.Texture,
-                sprite.Position,
+                position,
                 new Rectangle(sprite.GetCurrentAnimationFramePoint(gameTime),
                               new Point(sprite.FrameWidth, sprite.FrameHeight)),
                 Color.White,

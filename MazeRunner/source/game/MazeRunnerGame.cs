@@ -20,6 +20,7 @@ public class MazeRunnerGame : Game
     private Maze _maze;
 
     private Hero _hero;
+    private Vector2 _heroPosition;
 
     public MazeRunnerGame()
     {
@@ -47,7 +48,8 @@ public class MazeRunnerGame : Game
 
         MazeGenerator.InsertExit(_maze);
 
-        _hero = new Hero(new Vector2(16, 16)); // todo
+        _hero = new Hero();
+        _heroPosition = new Vector2(16, 16);
     }
 
     protected override void LoadContent()
@@ -78,7 +80,7 @@ public class MazeRunnerGame : Game
         _drawer.BeginDraw();
 
         _drawer.DrawMaze(_maze, gameTime);
-        _drawer.DrawSprite(_hero, gameTime);
+        _drawer.DrawSprite(_hero, _heroPosition, gameTime);
 
         _drawer.EndDraw();
 
@@ -94,16 +96,17 @@ public class MazeRunnerGame : Game
         var movementX = new Vector2(movement.X, 0);
         var movementY = new Vector2(0, movement.Y);
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, movementX))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX))
         {
             totalMovement += movementX;
         }
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, movementY))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY))
         {
             totalMovement += movementY;
         }
 
-        _hero.Position += totalMovement;
+        _heroPosition += totalMovement;
+        _hero.ProcessPositionChange(totalMovement);
     }
 }

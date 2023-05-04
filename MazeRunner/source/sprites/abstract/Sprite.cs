@@ -8,13 +8,9 @@ namespace MazeRunner.Sprites;
 
 public abstract class Sprite
 {
-    public abstract Rectangle HitBox { get; }
-
     public abstract ISpriteState State { get; set; }
 
     public abstract Vector2 Speed { get; }
-
-    public abstract Vector2 Position { get; set; }
 
     public virtual Texture2D Texture
     {
@@ -61,4 +57,6 @@ public abstract class Sprite
     {
         return State.ProcessState();
     }
+
+    public abstract Rectangle GetHitBox(Vector2 position);
 }

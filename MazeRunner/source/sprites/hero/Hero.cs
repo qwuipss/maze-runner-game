@@ -8,8 +8,6 @@ namespace MazeRunner.Sprites;
 
 public class Hero : Sprite
 {
-    private Vector2 _position; // 
-
     private const int HitBoxOffsetX = 3; //
     private const int HitBoxOffsetY = 4; //
 
@@ -17,24 +15,6 @@ public class Hero : Sprite
     private const int HitBoxHeight = 11;
 
     public override ISpriteState State { get; set; }
-
-    public override Vector2 Position
-    {
-        get
-        {
-            return _position;
-        }
-        set
-        {
-            var movement = value - _position;
-
-            ProcessState(movement);
-            ProcessFrameEffect(movement);
-
-            _position = value;
-        }
-    }
-
     public override Vector2 Speed
     {
         get
@@ -43,23 +23,24 @@ public class Hero : Sprite
         }
     }
 
-    public override Rectangle HitBox
+    public override Rectangle GetHitBox(Vector2 position)
     {
-        get
-        {
-            return new Rectangle(
-                (int)_position.X + HitBoxOffsetX,
-                (int)_position.Y + HitBoxOffsetY,
-                HitBoxWidth,
-                HitBoxHeight);
-        }
+        return new Rectangle(
+            (int)position.X + HitBoxOffsetX,
+            (int)position.Y + HitBoxOffsetY,
+            HitBoxWidth,
+            HitBoxHeight);
     }
 
-    public Hero(Vector2 position)
+    public Hero()
     {
-        _position = position;
-
         State = new HeroIdleState();
+    }
+
+    public void ProcessPositionChange(Vector2 movement)
+    {
+        ProcessState(movement);
+        ProcessFrameEffect(movement);
     }
 
     private void ProcessState(Vector2 movement)

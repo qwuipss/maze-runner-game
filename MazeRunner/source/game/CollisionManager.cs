@@ -9,7 +9,7 @@ namespace MazeRunner.Physics;
 
 public static class CollisionManager
 {
-    public static bool ColidesWithWalls(Hero hero, Maze maze, Vector2 movement)
+    public static bool ColidesWithWalls(Hero hero, Maze maze, Vector2 position, Vector2 movement)
     {
         var mazeSkeleton = maze.Skeleton;
 
@@ -24,7 +24,7 @@ public static class CollisionManager
                     continue;
                 }
 
-                if (GetExtendedHeroHitBox(hero, movement).Intersects(GetMazeTileHitBox(tile, x, y)))
+                if (GetExtendedHeroHitBox(hero, position, movement).Intersects(GetMazeTileHitBox(tile, x, y)))
                 {
                     return true;
                 }
@@ -40,9 +40,9 @@ public static class CollisionManager
                              mazeTile.FrameWidth, mazeTile.FrameHeight);
     }
 
-    private static Rectangle GetExtendedHeroHitBox(Hero hero, Vector2 movement)
+    private static Rectangle GetExtendedHeroHitBox(Hero hero, Vector2 position, Vector2 movement)
     {
-        var hitBox = hero.HitBox;
+        var hitBox = hero.GetHitBox(position);
 
         var x = hitBox.X;
         var y = hitBox.Y;
