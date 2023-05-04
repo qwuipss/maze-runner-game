@@ -64,7 +64,8 @@ public class MazeRunnerGame : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.G))
         {
-            _maze.ExitInfo.Exit.Open();
+            _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
+            MazeGenerator.InsertExit(_maze);
         }
 
         base.Update(gameTime);

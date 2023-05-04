@@ -36,8 +36,6 @@ public static class MazeGenerator
 
         var maze = new Maze(tiles);
 
-        maze.LoadToFile(new System.IO.FileInfo("maze.txt"));
-
         var currentCell = GetRandomFloorCell(maze);
         visitedCells.Add(currentCell);
 
@@ -81,22 +79,27 @@ public static class MazeGenerator
 
     public static void InsertExit(Maze maze)
     {
-        var width = maze.Skeleton.GetLength(1);
-        var height = maze.Skeleton.GetLength(0);
-
-        var (coordX, coordY) = GetExitCoords(width, height);
-
-        var rotation = GetExitFrameRotationAngle(coordX, coordY, width, height);
+        var sideCell = GetRandomSideCell(maze);
+        var rotation = GetExitFrameRotationAngle(sideCell, maze);
 
         var exit = new Exit(rotation);
 
         exit.OriginFrameRotationVector = GetExitOriginFrameRotationVector(exit);
 
-        maze.InsertExit(exit, new Cell(coordX, coordY));
+        maze.InsertExit(exit, sideCell);
     }
 
-    private static (int CoordX, int CoordY) GetExitCoords(int width, int height)
+    private static (int Width, int Height) GetMazeDimension(Maze maze)
     {
+        var skeleton = maze.Skeleton;
+
+        return (skeleton.GetLength(1), skeleton.GetLength(0));
+    }
+
+    private static Cell GetRandomSideCell(Maze maze)
+    {
+        var (width, height) = GetMazeDimension(maze);
+
         int coordX, coordY;
 
         if (RandomHelper.RandomBoolean())
@@ -110,7 +113,60 @@ public static class MazeGenerator
             coordX = RandomHelper.RandomBoolean() ? 0 : width - 1;
         }
 
-        return (coordX, coordY);
+        return GetRandomSideCell(maze, new Cell(coordX, coordY));
+    }
+
+    private static Cell GetRandomSideCell(Maze maze, Cell sideCell)
+    {
+        var (width, height) = GetMazeDimension(maze);
+
+        var searchingQueue = new Queue<Cell>();
+        var visitedCells = new HashSet<Cell>();
+
+        searchingQueue.Enqueue(sideCell);
+        visitedCells.Add(sideCell);
+
+        while (searchingQueue.Count is not 0)
+        {
+            var currentCell = searchingQueue.Dequeue();
+            var adjCells = GetAdjacentCells(currentCell, maze, 1);
+
+            if (adjCells.Where(cell => !maze.IsWall(cell)).Count() is not 0)
+            {
+                return currentCell;
+            }
+
+            if (currentCell.IsCornerOf(maze.Skeleton))
+            {
+                AddCellInSearchingQueue(adjCells, visitedCells, searchingQueue);
+            }
+            else
+            {
+                AddCellInSearchingQueue(GetSideAdjacentCells(currentCell, maze), visitedCells, searchingQueue);
+            }
+        }
+
+        throw new KeyNotFoundException($"unable to find appropriate cell in {nameof(maze)}");
+    }
+
+    private static IEnumerable<Cell> GetSideAdjacentCells(Cell cell, Maze maze)
+    {
+        var (width, height) = GetMazeDimension(maze);
+
+        if ((cell.X is 0 || cell.X == width - 1) && cell.Y.InRange(1, height - 1))
+        {
+            yield return cell with { Y = cell.Y - 1 };
+            yield return cell with { Y = cell.Y + 1 };
+        }
+        else if ((cell.Y is 0 || cell.Y == height - 1) && cell.X.InRange(1, width - 1))
+        {
+            yield return cell with { X = cell.X - 1 };
+            yield return cell with { X = cell.X + 1 };
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
     }
 
     private static Vector2 GetExitOriginFrameRotationVector(Exit exit)
@@ -128,14 +184,14 @@ public static class MazeGenerator
         return Vector2.Zero;
     }
 
-    private static float GetExitFrameRotationAngle(int coordX, int coordY, int width, int height)
+    private static float GetExitFrameRotationAngle(Cell exitCell, Maze maze)
     {
-        if (coordX is 0)
+        if (exitCell.X is 0)
         {
             return (float)-Math.PI / 2;
         }
 
-        if (coordX == width - 1)
+        if (exitCell.X == maze.Skeleton.GetLength(1) - 1)
         {
             return (float)Math.PI / 2;
         }
@@ -205,17 +261,22 @@ public static class MazeGenerator
                 return currentCell;
             }
 
-            foreach (var adjCell in GetAdjacentCells(currentCell, maze, 1))
-            {
-                if (!visitedCells.Contains(adjCell))
-                {
-                    visitedCells.Add(adjCell);
-                    searchingQueue.Enqueue(adjCell);
-                }
-            }
+            AddCellInSearchingQueue(GetAdjacentCells(currentCell, maze, 1), visitedCells, searchingQueue);
         }
 
         throw new KeyNotFoundException($"cell with type: {nameof(TileType.Floor)} doesn't exist in {nameof(maze)}");
+    }
+
+    private static void AddCellInSearchingQueue(IEnumerable<Cell> cells, HashSet<Cell> visitedCells, Queue<Cell> searchingQueue)
+    {
+        foreach (var cell in cells)
+        {
+            if (!visitedCells.Contains(cell))
+            {
+                searchingQueue.Enqueue(cell);
+                visitedCells.Add(cell);
+            }
+        }
     }
 
     private static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset)

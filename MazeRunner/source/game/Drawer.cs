@@ -1,12 +1,10 @@
 ﻿#region Usings
-using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using static MazeRunner.Content.Textures;
 #endregion
 
 namespace MazeRunner;

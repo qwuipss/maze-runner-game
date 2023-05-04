@@ -58,6 +58,11 @@ public class Maze
            && cell != ExitInfo.Coords;
     }
 
+    public bool IsWall(Cell cell)
+    {
+        return Skeleton[cell.Y, cell.X].TileType is TileType.Wall;
+    }
+
     public int GetFloorsCount()
     {
         var floorsCount = 0;

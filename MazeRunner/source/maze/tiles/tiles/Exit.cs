@@ -1,9 +1,7 @@
 ﻿#region Usings
 using MazeRunner.MazeBase.Tiles.States;
-using MazeRunner.MazeBase;
-using System;
-using System.Net;
 using Microsoft.Xna.Framework;
+using System;
 #endregion
 
 namespace MazeRunner.MazeBase.Tiles;
