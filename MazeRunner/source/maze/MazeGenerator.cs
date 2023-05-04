@@ -89,6 +89,14 @@ public static class MazeGenerator
         maze.InsertExit(exit, sideCell);
     }
 
+    public static Cell GetRandomFloorCell(Maze maze)
+    {
+        var cell = new Cell(RandomHelper.Next(0, maze.Skeleton.GetLength(1)), RandomHelper.Next(0, maze.Skeleton.GetLength(0)));
+
+        return GetRandomFloorCell(maze, cell);
+    }
+
+
     private static (int Width, int Height) GetMazeDimension(Maze maze)
     {
         var skeleton = maze.Skeleton;
@@ -235,13 +243,6 @@ public static class MazeGenerator
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
         tiles[wallCoords.Y, wallCoords.X] = new Floor();
-    }
-
-    private static Cell GetRandomFloorCell(Maze maze)
-    {
-        var cell = new Cell(RandomHelper.Next(0, maze.Skeleton.GetLength(1)), RandomHelper.Next(0, maze.Skeleton.GetLength(0)));
-
-        return GetRandomFloorCell(maze, cell);
     }
 
     private static Cell GetRandomFloorCell(Maze maze, Cell cell)

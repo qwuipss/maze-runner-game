@@ -24,7 +24,7 @@ public class MazeRunnerGame : Game
 
     public MazeRunnerGame()
     {
-        _graphics = new(this)
+        _graphics = new GraphicsDeviceManager(this)
         {
             PreferredBackBufferWidth = WindowWidth,
             PreferredBackBufferHeight = WindowHeight,
@@ -100,7 +100,10 @@ public class MazeRunnerGame : Game
     private void InitializeHero()
     {
         _hero = new Hero();
-        _heroPosition = new Vector2(16, 16);//
+
+        var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
+
+        _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
     }
 
     private void ProcessHeroMovement(GameTime gameTime)

@@ -74,9 +74,12 @@ public class Drawer
 
     private void DrawTraps(Maze maze, GameTime gameTime)
     {
-        foreach (var trap in maze.Traps)
+        foreach (var trapInfo in maze.Traps)
         {
-            DrawMazeTile(trap.Value, trap.Key.X, trap.Key.Y, gameTime);
+            var trap = trapInfo.Value;
+            var trapCoord = trapInfo.Key;
+
+            DrawMazeTile(trap, trapCoord.X, trapCoord.Y, gameTime);
         }
     }
 

@@ -24,7 +24,7 @@ public static class CollisionManager
                     continue;
                 }
 
-                if (GetExtendedHeroHitBox(hero, position, movement).Intersects(GetMazeTileHitBox(tile, x, y)))
+                if (HeroCollidesWithMazeTile(hero, position, movement, tile, x, y))
                 {
                     return true;
                 }
@@ -41,8 +41,13 @@ public static class CollisionManager
         var exit = exitInfo.Exit;
         var coords = exitInfo.Coords;
 
-        return GetExtendedHeroHitBox(hero, position, movement).Intersects(GetMazeTileHitBox(exit, coords.X, coords.Y))
+        return HeroCollidesWithMazeTile(hero, position, movement, exit, coords.X, coords.Y)
            && !exit.IsOpened;
+    }
+
+    private static bool HeroCollidesWithMazeTile(Hero hero, Vector2 heroPosition, Vector2 movement, MazeTile tile, int x, int y)
+    {
+        return GetExtendedHeroHitBox(hero, heroPosition, movement).Intersects(GetMazeTileHitBox(tile, x, y));
     }
 
     private static Rectangle GetMazeTileHitBox(MazeTile mazeTile, int x, int y)
