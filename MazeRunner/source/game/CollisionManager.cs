@@ -34,6 +34,17 @@ public static class CollisionManager
         return false;
     }
 
+    public static bool CollidesWithExit(Hero hero, Maze maze, Vector2 position, Vector2 movement)
+    {
+        var exitInfo = maze.ExitInfo;
+
+        var exit = exitInfo.Exit;
+        var coords = exitInfo.Coords;
+
+        return GetExtendedHeroHitBox(hero, position, movement).Intersects(GetMazeTileHitBox(exit, coords.X, coords.Y))
+           && !exit.IsOpened;
+    }
+
     private static Rectangle GetMazeTileHitBox(MazeTile mazeTile, int x, int y)
     {
         return new Rectangle(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight,

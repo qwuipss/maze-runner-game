@@ -38,18 +38,9 @@ public class MazeRunnerGame : Game
     {
         base.Initialize();
 
-        _drawer = Drawer.GetInstance();
-        _drawer.Initialize(this);
-
-        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
-
-        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
-        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
-
-        MazeGenerator.InsertExit(_maze);
-
-        _hero = new Hero();
-        _heroPosition = new Vector2(16, 16);
+        InitializeDrawer();
+        InitializeMaze();
+        InitializeHero();
     }
 
     protected override void LoadContent()
@@ -64,10 +55,13 @@ public class MazeRunnerGame : Game
             ProcessHeroMovement(gameTime);
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.G))
+        if (Keyboard.GetState().IsKeyDown(Keys.G)) // debug
         {
-            _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
-            MazeGenerator.InsertExit(_maze);
+            InitializeMaze();
+        }
+        if (Keyboard.GetState().IsKeyDown(Keys.F)) // debug
+        {
+            _maze.ExitInfo.Exit.Open();
         }
 
         base.Update(gameTime);
@@ -87,6 +81,28 @@ public class MazeRunnerGame : Game
         base.Draw(gameTime);
     }
 
+    private void InitializeMaze()
+    {
+        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
+
+        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
+        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
+
+        MazeGenerator.InsertExit(_maze);
+    }
+
+    private void InitializeDrawer()
+    {
+        _drawer = Drawer.GetInstance();
+        _drawer.Initialize(this);
+    }
+
+    private void InitializeHero()
+    {
+        _hero = new Hero();
+        _heroPosition = new Vector2(16, 16);//
+    }
+
     private void ProcessHeroMovement(GameTime gameTime)
     {
         var totalMovement = Vector2.Zero;
@@ -96,12 +112,14 @@ public class MazeRunnerGame : Game
         var movementX = new Vector2(movement.X, 0);
         var movementY = new Vector2(0, movement.Y);
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX)
+         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementX))
         {
             totalMovement += movementX;
         }
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY)
+         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementY))
         {
             totalMovement += movementY;
         }
