@@ -120,19 +120,19 @@ public class MazeRunnerGame : Game
         var movementX = new Vector2(movement.X, 0);
         var movementY = new Vector2(0, movement.Y);
 
-        //if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX)
-         //&& !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementX))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX)
+         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementX))
         {
             totalMovement += movementX;
         }
 
-        //if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY)
-         //&& !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementY))
+        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY)
+         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementY))
         {
             totalMovement += movementY;
         }
 
-        totalMovement = NormalizeDiagonalSpeed(_hero.Speed, movement);
+        totalMovement = NormalizeDiagonalSpeed(_hero.Speed, totalMovement);
 
         _heroPosition += totalMovement;
         _hero.ProcessPositionChange(totalMovement);
