@@ -2,8 +2,8 @@
 
 internal static class Settings
 {
-    public const int MazeWidth = 41; // odd only
-    public const int MazeHeight = 27; // odd only
+    public const int MazeWidth = 15; // odd only
+    public const int MazeHeight = 15; // odd only
 
     public const int TileSetDimension = 16;
 

@@ -15,7 +15,7 @@ public class Key : MazeItem
 
     public Key()
     {
-        State = new KeyIdleState(); 
+        State = new KeyIdleState();
     }
 
     public override TileType TileType

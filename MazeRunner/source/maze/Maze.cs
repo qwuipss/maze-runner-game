@@ -61,6 +61,11 @@ public class Maze
         _items.Add(cell, item);
     }
 
+    public void RemoveItem(Cell cell)
+    {
+        _items.Remove(cell);
+    }
+
     public void InsertExit(Exit exit, Cell coords)
     {
         ExitInfo = (exit, coords);

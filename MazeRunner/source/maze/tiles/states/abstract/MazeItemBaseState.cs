@@ -1,6 +1,5 @@
 ﻿#region Usings
 using MazeRunner.Content;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 #endregion
 

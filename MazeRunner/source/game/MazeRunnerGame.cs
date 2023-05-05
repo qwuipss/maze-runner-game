@@ -20,6 +20,7 @@ public class MazeRunnerGame : Game
     private Drawer _drawer;
 
     private Maze _maze;
+    private bool _mazeKeyCollected;
 
     private Hero _hero;
     private Vector2 _heroPosition;
@@ -55,9 +56,9 @@ public class MazeRunnerGame : Game
         if (KeyboardManager.IsPollingTimePassed(gameTime))
         {
             ProcessHeroMovement(gameTime);
+            ProcessHeroItemsColliding();
+            CheckDebugButtons();
         }
-
-        CheckDebugButtons();
 
         base.Update(gameTime);
     }
@@ -84,6 +85,8 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
         MazeGenerator.InsertExit(_maze);
+
+        _mazeKeyCollected = false;
         MazeGenerator.InsertItem(_maze, new Key());
     }
 
@@ -100,6 +103,25 @@ public class MazeRunnerGame : Game
         var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
 
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
+    }
+
+    private void ProcessHeroItemsColliding()
+    {
+        if (CollisionManager.CollidesWithItems(_hero, _maze, _heroPosition, out var itemInfo))
+        {
+            var (coords, item) = itemInfo;
+
+            ProcessHeroKeyColliding(coords, item);
+        }
+    }
+
+    private void ProcessHeroKeyColliding(Cell coords, MazeItem item)
+    {
+        if (CollisionManager.CollidesWithKey(_hero, _heroPosition, coords, item))
+        {
+            _maze.RemoveItem(coords);
+            _mazeKeyCollected = true;
+        }
     }
 
     private void ProcessHeroMovement(GameTime gameTime)
@@ -152,7 +174,10 @@ public class MazeRunnerGame : Game
         }
         if (Keyboard.GetState().IsKeyDown(Keys.O)) // open exit
         {
-            _maze.ExitInfo.Exit.Open();
+            if (_mazeKeyCollected)
+            {
+                _maze.ExitInfo.Exit.Open();
+            }
         }
     }
 }

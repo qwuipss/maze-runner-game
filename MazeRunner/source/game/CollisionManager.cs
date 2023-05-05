@@ -24,7 +24,7 @@ public static class CollisionManager
                     continue;
                 }
 
-                if (HeroCollidesWithMazeTile(hero, position, movement, tile, x, y))
+                if (CollidesWithMazeTile(hero, position, movement, tile, x, y))
                 {
                     return true;
                 }
@@ -36,27 +36,51 @@ public static class CollisionManager
 
     public static bool CollidesWithExit(Hero hero, Maze maze, Vector2 position, Vector2 movement)
     {
-        var exitInfo = maze.ExitInfo;
+        var (exit, coords) = maze.ExitInfo;
 
-        var exit = exitInfo.Exit;
-        var coords = exitInfo.Coords;
-
-        return HeroCollidesWithMazeTile(hero, position, movement, exit, coords.X, coords.Y)
+        return CollidesWithMazeTile(hero, position, movement, exit, coords.X, coords.Y)
            && !exit.IsOpened;
     }
 
-    private static bool HeroCollidesWithMazeTile(Hero hero, Vector2 heroPosition, Vector2 movement, MazeTile tile, int x, int y)
+    public static bool CollidesWithItems(Hero hero, Maze maze, Vector2 position, out (Cell Coords, MazeItem Item) itemInfo)
     {
-        return GetExtendedHeroHitBox(hero, heroPosition, movement).Intersects(GetMazeTileHitBox(tile, x, y));
+        foreach (var (coords, item) in maze.Items)
+        {
+            itemInfo = (coords, item);
+
+            if (CollidesWithMazeTile(hero, position, Vector2.Zero, item, coords.X, coords.Y))
+            {
+                return true;
+            }
+        }
+
+        itemInfo = (new Cell(), null);
+        return false;
     }
 
-    private static Rectangle GetMazeTileHitBox(MazeTile mazeTile, int x, int y)
+    public static bool CollidesWithKey(Hero hero, Vector2 position, Cell itemCoords, MazeItem item)
+    {
+        if (item is Key
+         && CollidesWithMazeTile(hero, position, Vector2.Zero, item, itemCoords.X, itemCoords.Y))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool CollidesWithMazeTile(Hero hero, Vector2 heroPosition, Vector2 movement, MazeTile tile, int x, int y)
+    {
+        return GetExtendedHitBox(hero, heroPosition, movement).Intersects(GetHitBox(tile, x, y));
+    }
+
+    private static Rectangle GetHitBox(MazeTile mazeTile, int x, int y)
     {
         return new Rectangle(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight,
                              mazeTile.FrameWidth, mazeTile.FrameHeight);
     }
 
-    private static Rectangle GetExtendedHeroHitBox(Hero hero, Vector2 position, Vector2 movement)
+    private static Rectangle GetExtendedHitBox(Hero hero, Vector2 position, Vector2 movement)
     {
         var hitBox = hero.GetHitBox(position);
 
