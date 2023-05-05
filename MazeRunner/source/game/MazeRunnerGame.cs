@@ -103,6 +103,16 @@ public class MazeRunnerGame : Game
 
     private void ProcessHeroMovement(GameTime gameTime)
     {
+        var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
+
+        var totalMovement = GetTotalMovement(movement);
+
+        _heroPosition += totalMovement;
+        _hero.ProcessPositionChange(totalMovement);
+    }
+
+    private Vector2 GetTotalMovement(Vector2 movement)
+    {
         static Vector2 NormalizeDiagonalSpeed(Vector2 speed, Vector2 movement)
         {
             if (movement.Abs() == speed)
@@ -114,8 +124,6 @@ public class MazeRunnerGame : Game
         }
 
         var totalMovement = Vector2.Zero;
-
-        var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
 
         var movementX = new Vector2(movement.X, 0);
         var movementY = new Vector2(0, movement.Y);
@@ -132,10 +140,7 @@ public class MazeRunnerGame : Game
             totalMovement += movementY;
         }
 
-        totalMovement = NormalizeDiagonalSpeed(_hero.Speed, totalMovement);
-
-        _heroPosition += totalMovement;
-        _hero.ProcessPositionChange(totalMovement);
+        return NormalizeDiagonalSpeed(_hero.Speed, totalMovement);
     }
 
     private void CheckDebugButtons()
