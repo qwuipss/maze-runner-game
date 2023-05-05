@@ -25,6 +25,13 @@
 /processorParam:TextureFormat=Color
 /build:C:/Users/Ivan/Downloads/exit.png;mazetiles/exit.png
 
+#begin fonts/notification.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:fonts/notification.spritefont
+
 #begin mazetiles/items/key.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -17,7 +17,7 @@ public class Maze
 
     private readonly Dictionary<Cell, MazeItem> _items;
 
-    public (Exit Exit, Cell Coords) ExitInfo { get; set; }
+    public (Cell Coords, Exit Exit) ExitInfo { get; set; }
 
     public ImmutableDoubleDimArray<MazeTile> Skeleton
     {
@@ -68,7 +68,7 @@ public class Maze
 
     public void InsertExit(Exit exit, Cell coords)
     {
-        ExitInfo = (exit, coords);
+        ExitInfo = (coords, exit);
 
         _skeleton[coords.Y, coords.X] = new Floor();
     }

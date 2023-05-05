@@ -16,6 +16,8 @@ public class Drawer
 
     private SpriteBatch _spriteBatch;
 
+    private SpriteFont _spriteFont;
+
     private Drawer()
     {
     }
@@ -38,6 +40,16 @@ public class Drawer
     public void EndDraw()
     {
         _spriteBatch.End();
+    }
+
+    public void SetSpriteFont(SpriteFont spriteFont)
+    {
+        _spriteFont = spriteFont;
+    }
+
+    public void DrawString(string text, Vector2 position)
+    {
+        _spriteBatch.DrawString(_spriteFont, text, position, Color.White);
     }
 
     public void DrawMaze(Maze maze, GameTime gameTime)

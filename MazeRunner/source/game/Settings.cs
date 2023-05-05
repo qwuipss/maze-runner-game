@@ -4,8 +4,8 @@ namespace MazeRunner;
 
 internal static class Settings
 {
-    public const int MazeWidth = 57; // odd only
-    public const int MazeHeight = 33; // odd only
+    public const int MazeWidth = 15; // odd only
+    public const int MazeHeight = 11; // odd only
 
     public const int TileSetDimension = 16;
 

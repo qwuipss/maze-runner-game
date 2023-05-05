@@ -7,6 +7,7 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Physics;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using static MazeRunner.Settings;
@@ -25,6 +26,10 @@ public class MazeRunnerGame : Game
 
     private Hero _hero;
     private Vector2 _heroPosition;
+
+    private float _findKeyTextShowDistance; 
+    private bool _findKeyTextShowed;
+    private bool _needDrawFindKeyText;
 
     public MazeRunnerGame()
     {
@@ -46,11 +51,14 @@ public class MazeRunnerGame : Game
         InitializeDrawer();
         InitializeMaze();
         InitializeHero();
+
+        _findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
     }
 
     protected override void LoadContent()
     {
         Textures.Load(this);
+        Fonts.Load(this);
     }
 
     protected override void Update(GameTime gameTime)
@@ -61,6 +69,14 @@ public class MazeRunnerGame : Game
             ProcessHeroItemsColliding();
 
             CheckDebugButtons();
+        }
+
+        if (!_findKeyTextShowed)
+        {
+            if (CheckHeroExitLocatedNearby())
+            {
+                _needDrawFindKeyText = true;
+            }
         }
 
         base.Update(gameTime);
@@ -74,6 +90,12 @@ public class MazeRunnerGame : Game
 
         _drawer.DrawMaze(_maze, gameTime);
         _drawer.DrawSprite(_hero, _heroPosition, gameTime);
+
+        if (_needDrawFindKeyText)
+        {
+            _drawer.DrawString("i have to find the key", Vector2.Zero);
+            _needDrawFindKeyText = false;
+        }
 
         _drawer.EndDraw();
 
@@ -99,6 +121,8 @@ public class MazeRunnerGame : Game
     {
         _drawer = Drawer.GetInstance();
         _drawer.Initialize(this);
+
+        _drawer.SetSpriteFont(Fonts.NotificationFont);
     }
 
     private void InitializeHero()
@@ -110,6 +134,15 @@ public class MazeRunnerGame : Game
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
     }
     #endregion
+
+    private bool CheckHeroExitLocatedNearby()
+    {
+        var (coords, exit) = _maze.ExitInfo;
+
+        var coordsAsVector = new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight);
+
+        return Vector2.Distance(coordsAsVector, _heroPosition) <= _findKeyTextShowDistance;
+    }
 
     #region HeroCollisionCheckers
     private void ProcessHeroItemsColliding()

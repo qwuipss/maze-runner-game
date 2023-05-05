@@ -36,7 +36,7 @@ public static class CollisionManager
 
     public static bool CollidesWithExit(Hero hero, Maze maze, Vector2 position, Vector2 movement)
     {
-        var (exit, coords) = maze.ExitInfo;
+        var (coords, exit) = maze.ExitInfo;
 
         return CollidesWithMazeTile(hero, position, movement, exit, coords.X, coords.Y)
            && !exit.IsOpened;
