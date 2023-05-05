@@ -97,7 +97,7 @@
 /processorParam:TextureFormat=Color
 /build:mazetiles/traps/dropTrap.png
 
-#begin sprites/hero/heroIdle.png
+#begin sprites/hero/idle.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -107,9 +107,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:sprites/hero/heroIdle.png
+/build:sprites/hero/idle.png
 
-#begin sprites/hero/heroRun.png
+#begin sprites/hero/run.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -119,5 +119,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:sprites/hero/heroRun.png
+/build:sprites/hero/run.png
 

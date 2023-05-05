@@ -38,6 +38,7 @@ public class MazeRunnerGame : Game
         IsMouseVisible = true;
     }
 
+    #region GameBase
     protected override void Initialize()
     {
         base.Initialize();
@@ -78,7 +79,9 @@ public class MazeRunnerGame : Game
 
         base.Draw(gameTime);
     }
+    #endregion
 
+    #region Initializers
     private void InitializeMaze()
     {
         _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
@@ -106,7 +109,9 @@ public class MazeRunnerGame : Game
 
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
     }
+    #endregion
 
+    #region HeroCollisionCheckers
     private void ProcessHeroItemsColliding()
     {
         if (CollisionManager.CollidesWithItems(_hero, _maze, _heroPosition, out var itemInfo))
@@ -131,7 +136,7 @@ public class MazeRunnerGame : Game
 
     private void ProcessHeroMovement(GameTime gameTime)
     {
-        var movement = KeyboardManager.ProcessHeroMovement(_hero, gameTime);
+        var movement = KeyboardManager.ProcessHeroMovement(_hero);
 
         var totalMovement = GetTotalMovement(movement);
 
@@ -196,6 +201,7 @@ public class MazeRunnerGame : Game
 
         return false;
     }
+    #endregion
 
     private void CheckDebugButtons()
     {

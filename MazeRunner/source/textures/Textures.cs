@@ -69,8 +69,8 @@ public static class Textures
 
             public static void Load(Game game)
             {
-                HeroIdle = game.Content.Load<Texture2D>($"{ContentDirectory}/heroIdle");
-                HeroRun = game.Content.Load<Texture2D>($"{ContentDirectory}/heroRun");
+                HeroIdle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                HeroRun = game.Content.Load<Texture2D>($"{ContentDirectory}/run");
             }
         }
     }

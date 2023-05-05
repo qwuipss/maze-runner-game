@@ -101,7 +101,6 @@ public static class MazeGenerator
         return GetRandomFloorCell(maze, cell);
     }
 
-
     private static (int Width, int Height) GetMazeDimension(Maze maze)
     {
         var skeleton = maze.Skeleton;

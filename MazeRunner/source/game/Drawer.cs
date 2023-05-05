@@ -5,6 +5,7 @@ using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.CompilerServices;
 #endregion
 
 namespace MazeRunner;
@@ -49,28 +50,11 @@ public class Drawer
 
     public void DrawSprite(Sprite sprite, Vector2 position, GameTime gameTime)
     {
-        _spriteBatch.Draw(
-                sprite.Texture,
-                position,
-                new Rectangle(sprite.GetCurrentAnimationFramePoint(gameTime),
-                              new Point(sprite.FrameWidth, sprite.FrameHeight)),
-                Color.White,
-                0,
-                Vector2.Zero,
-                Vector2.One,
-                sprite.FrameEffect,
-                1);
-    }
-
-    private void DrawItems(Maze maze, GameTime gameTime)
-    {
-        foreach (var itemInfo in maze.Items)
-        {
-            var item = itemInfo.Value;
-            var coords = itemInfo.Key;
-
-            DrawMazeTile(item, coords.X, coords.Y, gameTime);
-        }
+        Draw(sprite.Texture,
+             position,
+             new Rectangle(sprite.GetCurrentAnimationFramePoint(gameTime),
+                           new Point(sprite.FrameWidth, sprite.FrameHeight)),
+             spriteEffects: sprite.FrameEffect);
     }
 
     private void DrawMazeSkeleton(Maze maze, GameTime gameTime)
@@ -102,26 +86,37 @@ public class Drawer
         var exit = exitInfo.Exit;
         var coords = exitInfo.Coords;
 
-        _spriteBatch.Draw(
-            exit.Texture,
-            new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight),
-            new Rectangle(exit.GetCurrentAnimationFramePoint(gameTime),
-            new Point(exit.FrameWidth, exit.FrameHeight)),
-            Color.White,
-            exit.FrameRotationAngle,
-            exit.OriginFrameRotationVector,
-            Vector2.One,
-            SpriteEffects.None,
-            0);
+        DrawMazeTile(exit, coords.X, coords.Y, gameTime, exit.FrameRotationAngle, exit.OriginFrameRotationVector);
     }
 
-    private void DrawMazeTile(MazeTile mazeTile, int x, int y, GameTime gameTime)
+    private void DrawItems(Maze maze, GameTime gameTime)
     {
-        _spriteBatch.Draw(
-            mazeTile.Texture,
-            new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
-            new Rectangle(mazeTile.GetCurrentAnimationFramePoint(gameTime),
-                          new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
-            Color.White);
+        foreach (var itemInfo in maze.Items)
+        {
+            var item = itemInfo.Value;
+            var coords = itemInfo.Key;
+
+            DrawMazeTile(item, coords.X, coords.Y, gameTime);
+        }
+    }
+
+    private void DrawMazeTile(MazeTile mazeTile, int x, int y, GameTime gameTime, float rotation = 0, Vector2 origin = default)
+    {
+        Draw(
+             mazeTile.Texture,
+             new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
+             new Rectangle(mazeTile.GetCurrentAnimationFramePoint(gameTime),
+                           new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
+             rotation,
+             origin);
+    }
+
+    private void Draw(
+        Texture2D texture, 
+        Vector2 position, Rectangle sourceRectangle, 
+        float rotation = 0, Vector2 origin = default, 
+        SpriteEffects spriteEffects = default)
+    {
+        _spriteBatch.Draw(texture, position, sourceRectangle, Color.White, rotation, origin, Vector2.One, spriteEffects, 0);
     }
 }

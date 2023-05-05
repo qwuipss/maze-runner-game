@@ -2,6 +2,7 @@
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using static MazeRunner.Settings;
 #endregion
 
 namespace MazeRunner;
@@ -12,27 +13,27 @@ public static class KeyboardManager
 
     private const int KeyboardPollingDelayMs = 50;
 
-    public static Vector2 ProcessHeroMovement(Hero hero, GameTime gameTime)
+    public static Vector2 ProcessHeroMovement(Hero hero)
     {
         var movement = Vector2.Zero;
         var speed = hero.Speed;
 
-        if (Keyboard.GetState().IsKeyDown(Keys.W))
+        if (Keyboard.GetState().IsKeyDown(MoveForward))
         {
             movement -= new Vector2(0, speed.Y);
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.S))
+        if (Keyboard.GetState().IsKeyDown(MoveBack))
         {
             movement += new Vector2(0, speed.Y);
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.A))
+        if (Keyboard.GetState().IsKeyDown(MoveLeft))
         {
             movement -= new Vector2(speed.X, 0);
         }
 
-        if (Keyboard.GetState().IsKeyDown(Keys.D))
+        if (Keyboard.GetState().IsKeyDown(MoveRight))
         {
             movement += new Vector2(speed.X, 0);
         }
