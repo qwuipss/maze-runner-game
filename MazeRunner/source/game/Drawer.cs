@@ -44,6 +44,7 @@ public class Drawer
         DrawMazeSkeleton(maze, gameTime);
         DrawTraps(maze, gameTime);
         DrawExit(maze, gameTime);
+        DrawItems(maze, gameTime);
     }
 
     public void DrawSprite(Sprite sprite, Vector2 position, GameTime gameTime)
@@ -59,6 +60,17 @@ public class Drawer
                 Vector2.One,
                 sprite.FrameEffect,
                 1);
+    }
+
+    private void DrawItems(Maze maze, GameTime gameTime)
+    {
+        foreach (var itemInfo in maze.Items)
+        {
+            var item = itemInfo.Value;
+            var coords = itemInfo.Key;
+
+            DrawMazeTile(item, coords.X, coords.Y, gameTime);
+        }
     }
 
     private void DrawMazeSkeleton(Maze maze, GameTime gameTime)

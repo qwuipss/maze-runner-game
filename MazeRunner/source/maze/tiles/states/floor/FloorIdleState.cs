@@ -1,8 +1,4 @@
-﻿#region Usings
-#endregion
-
-
-namespace MazeRunner.MazeBase.Tiles.States;
+﻿namespace MazeRunner.MazeBase.Tiles.States;
 
 public class FloorIdleState : FloorBaseState
 {

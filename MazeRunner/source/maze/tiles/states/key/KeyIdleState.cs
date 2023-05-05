@@ -1,6 +1,6 @@
 ﻿namespace MazeRunner.MazeBase.Tiles.States;
 
-public class WallIdleState : WallBaseState
+public class KeyIdleState : MazeItemBaseState
 {
     public override IMazeTileState ProcessState()
     {

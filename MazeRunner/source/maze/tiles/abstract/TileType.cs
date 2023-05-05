@@ -2,9 +2,10 @@
 
 public enum TileType
 {
-    Floor = ' ',
-    Wall = '#',
-    DropTrap = 'o',
-    BayonetTrap = 'x',
-    Exit = '*',
+    Floor,
+    Wall,
+    DropTrap,
+    BayonetTrap,
+    Exit,
+    Item,
 }

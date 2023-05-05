@@ -89,6 +89,11 @@ public static class MazeGenerator
         maze.InsertExit(exit, sideCell);
     }
 
+    public static void InsertItem(Maze maze, MazeItem item)
+    {
+        maze.InsertItem(item, GetRandomFloorCell(maze));
+    }
+
     public static Cell GetRandomFloorCell(Maze maze)
     {
         var cell = new Cell(RandomHelper.Next(0, maze.Skeleton.GetLength(1)), RandomHelper.Next(0, maze.Skeleton.GetLength(0)));

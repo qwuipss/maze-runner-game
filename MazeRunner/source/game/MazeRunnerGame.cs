@@ -84,6 +84,7 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
 
         MazeGenerator.InsertExit(_maze);
+        MazeGenerator.InsertItem(_maze, new Key());
     }
 
     private void InitializeDrawer()
