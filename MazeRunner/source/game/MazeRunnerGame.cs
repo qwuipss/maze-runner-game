@@ -58,6 +58,7 @@ public class MazeRunnerGame : Game
         {
             ProcessHeroMovement(gameTime);
             ProcessHeroItemsColliding();
+
             CheckDebugButtons();
         }
 
@@ -112,13 +113,16 @@ public class MazeRunnerGame : Game
         {
             var (coords, item) = itemInfo;
 
-            ProcessHeroKeyColliding(coords, item);
+            if (item is Key key)
+            {
+                ProcessHeroKeyColliding(coords, key);
+            }
         }
     }
 
-    private void ProcessHeroKeyColliding(Cell coords, MazeItem item)
+    private void ProcessHeroKeyColliding(Cell coords, Key key)
     {
-        if (CollisionManager.CollidesWithKey(_hero, _heroPosition, coords, item))
+        if (CollisionManager.CollidesWithKey(_hero, _heroPosition, coords, key))
         {
             _maze.RemoveItem(coords);
             _mazeKeyCollected = true;

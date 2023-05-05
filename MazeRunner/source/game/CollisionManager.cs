@@ -58,10 +58,9 @@ public static class CollisionManager
         return false;
     }
 
-    public static bool CollidesWithKey(Hero hero, Vector2 position, Cell itemCoords, MazeItem item)
+    public static bool CollidesWithKey(Hero hero, Vector2 position, Cell itemCoords, Key key)
     {
-        if (item is Key
-         && CollidesWithMazeTile(hero, position, Vector2.Zero, item, itemCoords.X, itemCoords.Y))
+        if (CollidesWithMazeTile(hero, position, Vector2.Zero, key, itemCoords.X, itemCoords.Y))
         {
             return true;
         }
