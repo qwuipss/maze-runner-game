@@ -1,6 +1,7 @@
 ﻿#region Usings
 using MazeRunner.Content;
 using MazeRunner.Extensions;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Physics;
@@ -163,7 +164,33 @@ public class MazeRunnerGame : Game
             totalMovement += movementY;
         }
 
+        if (ProcessDiagonalMovement(totalMovement, movementX, movementY, out totalMovement))
+        {
+            return totalMovement;
+        }
+
         return NormalizeDiagonalSpeed(_hero.Speed, totalMovement);
+    }
+
+    private bool ProcessDiagonalMovement(Vector2 movement, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement)
+    {
+        if (CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movement))
+        {
+            if (RandomHelper.RandomBoolean())
+            {
+                totalMovement = movementX;
+            }
+            else
+            {
+                totalMovement = movementY;
+            }
+
+            return true;
+        }
+
+        totalMovement = movement;
+
+        return false;
     }
 
     private void CheckDebugButtons()
