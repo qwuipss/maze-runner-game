@@ -7,6 +7,7 @@ namespace MazeRunner.Content;
 
 public static class Textures
 {
+    #region MazeTiles
     public static class MazeTiles
     {
         private const string BaseContentDirectory = "mazetiles";
@@ -17,6 +18,7 @@ public static class Textures
         public static Texture2D Wall { get; private set; }
         public static Texture2D Exit { get; private set; }
 
+        #region MazeTraps
         public static class MazeTraps
         {
             private const string ContentDirectory = $"{BaseContentDirectory}/traps";
@@ -30,7 +32,9 @@ public static class Textures
                 BayonetTrap = game.Content.Load<Texture2D>($"{ContentDirectory}/bayonetTrap");
             }
         }
+        #endregion
 
+        #region MazeItems
         public static class MazeItems
         {
             private const string ContentDirectory = $"{BaseContentDirectory}/items";
@@ -42,6 +46,7 @@ public static class Textures
                 Key = game.Content.Load<Texture2D>($"{ContentDirectory}/key");
             }
         }
+        #endregion
 
         public static void Load(Game game)
         {
@@ -55,7 +60,9 @@ public static class Textures
             MazeItems.Load(game);
         }
     }
+    #endregion
 
+    #region Sprites
     public static class Sprites
     {
         private const string ContentDirectory = "sprites";
@@ -74,6 +81,7 @@ public static class Textures
             }
         }
     }
+    #endregion
 
     public static void Load(Game game)
     {

@@ -57,7 +57,7 @@ public class MazeRunnerGame : Game
     {
         if (KeyboardManager.IsPollingTimePassed(gameTime))
         {
-            ProcessHeroMovement(gameTime);
+            ProcessHeroMovement();
             ProcessHeroItemsColliding();
 
             CheckDebugButtons();
@@ -134,7 +134,7 @@ public class MazeRunnerGame : Game
         }
     }
 
-    private void ProcessHeroMovement(GameTime gameTime)
+    private void ProcessHeroMovement()
     {
         var movement = KeyboardManager.ProcessHeroMovement(_hero);
 
