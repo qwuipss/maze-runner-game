@@ -8,9 +8,9 @@ namespace MazeRunner.Sprites;
 
 public abstract class Sprite
 {
-    public abstract ISpriteState State { get; set; }
-
     public abstract Vector2 Speed { get; }
+
+    protected abstract ISpriteState State { get; set; }
 
     public virtual Texture2D Texture
     {

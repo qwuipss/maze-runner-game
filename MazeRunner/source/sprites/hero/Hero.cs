@@ -14,7 +14,6 @@ public class Hero : Sprite
     private const int HitBoxWidth = 9;
     private const int HitBoxHeight = 11;
 
-    public override ISpriteState State { get; set; }
     public override Vector2 Speed
     {
         get
@@ -22,6 +21,8 @@ public class Hero : Sprite
             return new Vector2(3, 3);
         }
     }
+
+    protected override ISpriteState State { get; set; }
 
     public override Rectangle GetHitBox(Vector2 position)
     {
