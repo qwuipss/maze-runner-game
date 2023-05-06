@@ -5,7 +5,6 @@ using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Runtime.CompilerServices;
 #endregion
 
 namespace MazeRunner;
@@ -47,9 +46,9 @@ public class Drawer
         _spriteFont = spriteFont;
     }
 
-    public void DrawString(string text, Vector2 position)
+    public void DrawString(string text, Vector2 position, Color color)
     {
-        _spriteBatch.DrawString(_spriteFont, text, position, Color.White);
+        _spriteBatch.DrawString(_spriteFont, text, position, color);
     }
 
     public void DrawMaze(Maze maze, GameTime gameTime)
@@ -124,9 +123,9 @@ public class Drawer
     }
 
     private void Draw(
-        Texture2D texture, 
-        Vector2 position, Rectangle sourceRectangle, 
-        float rotation = 0, Vector2 origin = default, 
+        Texture2D texture,
+        Vector2 position, Rectangle sourceRectangle,
+        float rotation = 0, Vector2 origin = default,
         SpriteEffects spriteEffects = default)
     {
         _spriteBatch.Draw(texture, position, sourceRectangle, Color.White, rotation, origin, Vector2.One, spriteEffects, 0);

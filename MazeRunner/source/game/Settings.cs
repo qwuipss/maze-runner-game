@@ -4,13 +4,15 @@ namespace MazeRunner;
 
 internal static class Settings
 {
-    public const int MazeWidth = 15; // odd only
-    public const int MazeHeight = 11; // odd only
+    public static int MazeWidth = 15; // odd only
+    public static int MazeHeight = 11; // odd only
 
     public const int TileSetDimension = 16;
 
-    public const int WindowWidth = MazeWidth * TileSetDimension;
-    public const int WindowHeight = MazeHeight * TileSetDimension;
+    public static int WindowWidth = MazeWidth * TileSetDimension;
+    public static int WindowHeight = MazeHeight * TileSetDimension;
+
+    public const double FindKeyTextMaxShowTimeMs = 3000;
 
     #region Controls
     public static Keys MoveForward = Keys.W;

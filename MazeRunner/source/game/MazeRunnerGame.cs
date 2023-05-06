@@ -17,19 +17,34 @@ namespace MazeRunner;
 
 public class MazeRunnerGame : Game
 {
+    #region GraphicsData
     private GraphicsDeviceManager _graphics;
+    #endregion
 
+    #region DrawerData
     private Drawer _drawer;
+    #endregion
 
+    #region MazeData
     private Maze _maze;
     private bool _mazeKeyCollected;
+    #endregion
 
+    #region HeroData
     private Hero _hero;
     private Vector2 _heroPosition;
+    #endregion
 
-    private float _findKeyTextShowDistance; 
+    #region FindKeyTextData
+    private const string FindKeyText = "i have to find the key";
+    private float _findKeyTextStringLength;
+
+    private double _findKeyTextShowTime;
+    private float _findKeyTextShowDistance;
+
     private bool _findKeyTextShowed;
     private bool _needDrawFindKeyText;
+    #endregion
 
     public MazeRunnerGame()
     {
@@ -53,6 +68,7 @@ public class MazeRunnerGame : Game
         InitializeHero();
 
         _findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
+        _findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
     }
 
     protected override void LoadContent()
@@ -71,13 +87,7 @@ public class MazeRunnerGame : Game
             CheckDebugButtons();
         }
 
-        if (!_findKeyTextShowed)
-        {
-            if (CheckHeroExitLocatedNearby())
-            {
-                _needDrawFindKeyText = true;
-            }
-        }
+        ProcessFindKeyTextDrawing();
 
         base.Update(gameTime);
     }
@@ -91,11 +101,7 @@ public class MazeRunnerGame : Game
         _drawer.DrawMaze(_maze, gameTime);
         _drawer.DrawSprite(_hero, _heroPosition, gameTime);
 
-        if (_needDrawFindKeyText)
-        {
-            _drawer.DrawString("i have to find the key", Vector2.Zero);
-            _needDrawFindKeyText = false;
-        }
+        DrawFindKeyText(gameTime);
 
         _drawer.EndDraw();
 
@@ -122,7 +128,7 @@ public class MazeRunnerGame : Game
         _drawer = Drawer.GetInstance();
         _drawer.Initialize(this);
 
-        _drawer.SetSpriteFont(Fonts.NotificationFont);
+        _drawer.SetSpriteFont(Fonts.BaseFont);
     }
 
     private void InitializeHero()
@@ -134,15 +140,6 @@ public class MazeRunnerGame : Game
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
     }
     #endregion
-
-    private bool CheckHeroExitLocatedNearby()
-    {
-        var (coords, exit) = _maze.ExitInfo;
-
-        var coordsAsVector = new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight);
-
-        return Vector2.Distance(coordsAsVector, _heroPosition) <= _findKeyTextShowDistance;
-    }
 
     #region HeroCollisionCheckers
     private void ProcessHeroItemsColliding()
@@ -236,12 +233,64 @@ public class MazeRunnerGame : Game
     }
     #endregion
 
+    #region DrawingPreprocessers
+    private void ProcessFindKeyTextDrawing()
+    {
+        if (!_findKeyTextShowed && !_mazeKeyCollected)
+        {
+            if (CheckHeroExitLocatedNearby())
+            {
+                _needDrawFindKeyText = true;
+                _findKeyTextShowed = true;
+            }
+        }
+
+        if (_mazeKeyCollected && _needDrawFindKeyText)
+        {
+            _needDrawFindKeyText = false;
+        }
+    }
+
+    private void DrawFindKeyText(GameTime gameTime)
+    {
+        const float windowTopIndentCoeff = .75f;
+
+        if (_needDrawFindKeyText)
+        {
+            if (_findKeyTextShowTime > FindKeyTextMaxShowTimeMs)
+            {
+                _needDrawFindKeyText = false;
+                return;
+            }
+
+            var positionX = (_graphics.PreferredBackBufferWidth - _findKeyTextStringLength) / 2;
+            var positionY = (float)(_graphics.PreferredBackBufferHeight * windowTopIndentCoeff);
+
+            var position = new Vector2(positionX, positionY);
+
+            _drawer.DrawString(FindKeyText, position, Color.Black);
+
+            _findKeyTextShowTime += gameTime.ElapsedGameTime.TotalMilliseconds;
+        }
+    }
+
+    private bool CheckHeroExitLocatedNearby()
+    {
+        var (coords, exit) = _maze.ExitInfo;
+
+        var coordsAsVector = new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight);
+
+        return Vector2.Distance(coordsAsVector, _heroPosition) <= _findKeyTextShowDistance;
+    }
+    #endregion
+
     private void CheckDebugButtons()
     {
         if (Keyboard.GetState().IsKeyDown(Keys.G)) // generate maze
         {
             InitializeMaze();
         }
+
         if (Keyboard.GetState().IsKeyDown(Keys.O)) // open exit
         {
             if (_mazeKeyCollected)
