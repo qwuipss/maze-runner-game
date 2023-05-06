@@ -67,8 +67,7 @@ public class MazeRunnerGame : Game
         InitializeMaze();
         InitializeHero();
 
-        _findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
-        _findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
+        InitializeFindKeyText();
     }
 
     protected override void LoadContent()
@@ -138,6 +137,12 @@ public class MazeRunnerGame : Game
         var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
 
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
+    }
+
+    private void InitializeFindKeyText()
+    {
+        _findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
+        _findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
     }
     #endregion
 
