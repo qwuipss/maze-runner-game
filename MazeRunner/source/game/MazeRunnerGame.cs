@@ -67,7 +67,7 @@ public class MazeRunnerGame : Game
         InitializeMaze();
         InitializeHero();
 
-        InitializeFindKeyText();
+        InitializeFindKeyTextData();
     }
 
     protected override void LoadContent()
@@ -139,7 +139,7 @@ public class MazeRunnerGame : Game
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
     }
 
-    private void InitializeFindKeyText()
+    private void InitializeFindKeyTextData()
     {
         _findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
         _findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
