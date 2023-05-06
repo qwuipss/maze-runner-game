@@ -183,12 +183,12 @@ public static class MazeGenerator
 
     private static Vector2 GetExitOriginFrameRotationVector(Exit exit)
     {
-        if (exit.FrameRotationAngle is (float)Math.PI / 2)
+        if (exit.FrameRotationAngle is MathHelper.PiOver2)
         {
             return new Vector2(0, exit.FrameHeight);
         }
 
-        if (exit.FrameRotationAngle is (float)-Math.PI / 2)
+        if (exit.FrameRotationAngle is -MathHelper.PiOver2)
         {
             return new Vector2(exit.FrameWidth, 0);
         }
@@ -200,12 +200,12 @@ public static class MazeGenerator
     {
         if (exitCell.X is 0)
         {
-            return (float)-Math.PI / 2;
+            return -MathHelper.PiOver2;
         }
 
         if (exitCell.X == maze.Skeleton.GetLength(1) - 1)
         {
-            return (float)Math.PI / 2;
+            return MathHelper.PiOver2;
         }
 
         return 0;
