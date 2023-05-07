@@ -4,11 +4,6 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class BayonetTrap : MazeTrap
 {
-    public BayonetTrap()
-    {
-        State = new BayonetTrapDeactivatedState(this);
-    }
-
     public override TileType TileType
     {
         get
@@ -31,5 +26,10 @@ public class BayonetTrap : MazeTrap
         {
             return 1e-2 * 4;
         }
+    }
+
+    public BayonetTrap()
+    {
+        State = new BayonetTrapDeactivatedState(this);
     }
 }

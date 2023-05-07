@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
 
-namespace MazeRunner.source.managers;
+namespace MazeRunner.Managers;
 
 public static class KeyboardManager
 {

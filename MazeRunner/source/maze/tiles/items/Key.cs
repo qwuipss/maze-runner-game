@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles;
 
-public class Key : MazeItem
+public sealed class Key : MazeItem
 {
     private const int HitBoxOffsetX = 4;
     private const int HitBoxOffsetY = 4;

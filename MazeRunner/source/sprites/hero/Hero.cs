@@ -1,4 +1,6 @@
-﻿using MazeRunner.Sprites.States;
+﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -22,18 +24,28 @@ public class Hero : Sprite
 
     protected override ISpriteState State { get; set; }
 
-    public override Rectangle GetHitBox(Vector2 position)
-    {
-        return new Rectangle(
-            (int)position.X + HitBoxOffsetX,
-            (int)position.Y + HitBoxOffsetY,
-            HitBoxWidth,
-            HitBoxHeight);
-    }
-
     public Hero()
     {
         State = new HeroIdleState();
+    }
+
+    public override Rectangle GetHitBox(Vector2 position)
+    {
+        return new Rectangle(
+                (int)position.X + HitBoxOffsetX,
+                (int)position.Y + HitBoxOffsetY,
+                HitBoxWidth,
+                HitBoxHeight);
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Drawer.DrawSprite(this, gameTime);
+    }
+
+    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    {
+        throw new System.NotImplementedException();
     }
 
     public void ProcessPositionChange(Vector2 movement)

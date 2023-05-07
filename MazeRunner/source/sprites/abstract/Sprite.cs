@@ -4,11 +4,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites;
 
-public abstract class Sprite
+public abstract class Sprite : Components.MazeRunnerGameComponent
 {
     public abstract Vector2 Speed { get; }
 
     protected abstract ISpriteState State { get; set; }
+
+    public virtual float DrawingPriority 
+    { 
+        get
+        {
+            return 0;
+        } 
+    }
 
     public virtual Texture2D Texture
     {
@@ -51,10 +59,10 @@ public abstract class Sprite
         return State.CurrentAnimationFramePoint;
     }
 
+    public abstract Rectangle GetHitBox(Vector2 position);
+
     public virtual ISpriteState ProcessState()
     {
         return State.ProcessState();
     }
-
-    public abstract Rectangle GetHitBox(Vector2 position);
 }

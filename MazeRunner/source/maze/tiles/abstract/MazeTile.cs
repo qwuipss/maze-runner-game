@@ -8,6 +8,14 @@ public abstract class MazeTile
 {
     public abstract TileType TileType { get; }
 
+    public virtual float DrawingPriority
+    {
+        get
+        {
+            return 1;
+        }
+    }
+
     public virtual Texture2D Texture
     {
         get

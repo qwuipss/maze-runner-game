@@ -7,7 +7,5 @@ namespace MazeRunner.Cameras;
 
 public interface ICamera
 {
-    public void Follow(Sprite sprite, Vector2 position);
-
     public Matrix GetTransformMatrix();
 }

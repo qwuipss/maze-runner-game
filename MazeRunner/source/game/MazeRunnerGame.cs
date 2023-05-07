@@ -1,15 +1,18 @@
-﻿using MazeRunner.Content;
+﻿using MazeRunner.Cameras;
+using MazeRunner.Components;
+using MazeRunner.Content;
+using MazeRunner.Drawing;
 using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.source.managers;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
+using System.Collections.Generic;
 using static MazeRunner.Settings;
 
 namespace MazeRunner;
@@ -20,41 +23,40 @@ public class MazeRunnerGame : Game
     private readonly GraphicsDeviceManager _graphics;
     #endregion
 
-    #region DrawerData
-    private Drawer _drawer;
+    #region MazeData
+    public Maze Maze { get; private set; }
+    public bool MazeKeyCollected { get; private set; }
     #endregion
 
-    #region MazeData
-    private Maze _maze;
-    private bool _mazeKeyCollected;
+    #region SpritesData
+    public Dictionary<Sprite, Vector2> SpritesPositions { get; init; }
     #endregion
 
     #region HeroData
-    private Hero _hero;
-    private Vector2 _heroPosition;
-    #endregion    
-    
+    public Hero Hero { get; private set; }
+    #endregion
+
     #region CameraData
-    private Camera _camera;
+    private HeroCamera _heroCamera;
+    #endregion
+
+    #region GameComponents
+    private List<MazeRunnerGameComponent> _components;
     #endregion
 
     #region FindKeyTextData
-    private const string FindKeyText = "i have to find the key";
-    private float _findKeyTextStringLength;
-
-    private double _findKeyTextShowTime;
-    private float _findKeyTextShowDistance;
-
-    private bool _findKeyTextShowed;
-    private bool _needDrawFindKeyText;
+    private FindKeyTextWriter _findKeyTextWriter;
     #endregion
 
     public MazeRunnerGame()
     {
-        _graphics = new GraphicsDeviceManager(this);
+        IsMouseVisible = true;
 
         Content.RootDirectory = "Content";
-        IsMouseVisible = true;
+
+        _graphics = new GraphicsDeviceManager(this);
+
+        SpritesPositions = new Dictionary<Sprite, Vector2>();
     }
 
     #region GameBase
@@ -63,12 +65,15 @@ public class MazeRunnerGame : Game
         base.Initialize();
 
         SetFullScreen();
+
         InitializeDrawer();
+        InitializeCamera();
         InitializeMaze();
         InitializeHero();
-        InitializeCamera();
 
-        InitializeFindKeyTextData();
+        InitializeTextWriters();
+
+        InitializeComponentsList();
     }
 
     protected override void LoadContent()
@@ -87,8 +92,10 @@ public class MazeRunnerGame : Game
             CheckDebugButtons();
         }
 
-        _camera.Follow(_hero, _heroPosition);
-        ProcessFindKeyTextDrawing();
+        foreach (var component in _components)
+        {
+            component.Update(this, gameTime);
+        }
 
         base.Update(gameTime);
     }
@@ -97,14 +104,14 @@ public class MazeRunnerGame : Game
     {
         GraphicsDevice.Clear(Color.White);
 
-        _drawer.BeginDraw(_camera);
+        Drawer.BeginDraw(_heroCamera);
 
-        _drawer.DrawMaze(_maze, gameTime);
-        _drawer.DrawSprite(_hero, _heroPosition, gameTime);
+        foreach (var component in _components)
+        {
+            component.Draw(gameTime);
+        }
 
-        DrawFindKeyText(gameTime);
-
-        _drawer.EndDraw();
+        Drawer.EndDraw();
 
         base.Draw(gameTime);
     }
@@ -118,54 +125,67 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        _graphics.ApplyChanges();
+        //_graphics.ApplyChanges();
+    }
+
+    private void InitializeComponentsList()
+    {
+        _components = new List<MazeRunnerGameComponent>()
+        {
+            Maze, Hero, _findKeyTextWriter, _heroCamera,
+        };
     }
 
     private void InitializeMaze()
     {
-        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
+        Maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
-        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
-        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
+        MazeGenerator.InsertTraps(Maze, () => new BayonetTrap(), 3);
+        MazeGenerator.InsertTraps(Maze, () => new DropTrap(), 2);
 
-        MazeGenerator.InsertExit(_maze);
+        MazeGenerator.InsertExit(Maze);
 
-        MazeGenerator.InsertItem(_maze, new Key());
+        MazeGenerator.InsertItem(Maze, new Key());
     }
 
     private void InitializeDrawer()
     {
-        _drawer = Drawer.GetInstance();
-        _drawer.Initialize(this);
+        Drawer.Initialize(this);
 
-        _drawer.SetSpriteFont(Fonts.BaseFont);
+        Drawer.SetSpriteFont(Fonts.BaseFont);
     }
 
     private void InitializeHero()
     {
-        _hero = new Hero();
+        Hero = new Hero();
 
-        var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
+        var heroCell = MazeGenerator.GetRandomFloorCell(Maze);
 
-        _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
+        SpritesPositions.Add(Hero, new Vector2(heroCell.X * Hero.FrameWidth, heroCell.Y * Hero.FrameHeight));
     }
 
     private void InitializeCamera()
     {
-        _camera = new Camera(GraphicsDevice.Viewport, 7);
+        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, 7);
     }
 
-    private void InitializeFindKeyTextData()
+    private void InitializeTextWriters()
     {
-        _findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
-        _findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
+        _findKeyTextWriter = FindKeyTextWriter.GetInstance();
+
+        _findKeyTextWriter.Initialize(this);
+
+        //_findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
+        //_findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
     }
     #endregion
 
     #region HeroCollisionCheckers
     private void ProcessHeroItemsColliding()
     {
-        if (CollisionManager.CollidesWithItems(_hero, _maze, _heroPosition, out var itemInfo))
+        var heroPosition = SpritesPositions[Hero];
+
+        if (CollisionManager.CollidesWithItems(Hero, heroPosition, Maze, out var itemInfo))
         {
             var (coords, item) = itemInfo;
 
@@ -178,21 +198,23 @@ public class MazeRunnerGame : Game
 
     private void ProcessHeroKeyColliding(Cell coords, Key key)
     {
-        if (CollisionManager.CollidesWithKey(_hero, _heroPosition, coords, key))
+        var heroPosition = SpritesPositions[Hero];
+
+        if (CollisionManager.CollidesWithKey(Hero, heroPosition, coords, key))
         {
-            _maze.RemoveItem(coords);
-            _mazeKeyCollected = true;
+            Maze.RemoveItem(coords);
+            MazeKeyCollected = true;
         }
     }
 
     private void ProcessHeroMovement()
     {
-        var movement = KeyboardManager.ProcessHeroMovement(_hero);
+        var movement = KeyboardManager.ProcessHeroMovement(Hero);
 
         var totalMovement = GetTotalMovement(movement);
 
-        _heroPosition += totalMovement;
-        _hero.ProcessPositionChange(totalMovement);
+        SpritesPositions[Hero] += totalMovement;
+        Hero.ProcessPositionChange(totalMovement);
     }
 
     private Vector2 GetTotalMovement(Vector2 movement)
@@ -207,19 +229,21 @@ public class MazeRunnerGame : Game
             return movement;
         }
 
+        var heroPosition = SpritesPositions[Hero];
+
         var totalMovement = Vector2.Zero;
 
         var movementX = new Vector2(movement.X, 0);
         var movementY = new Vector2(0, movement.Y);
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementX)
-         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementX))
+        if (!CollisionManager.ColidesWithWalls(Hero, heroPosition, Maze, movementX)
+         && !CollisionManager.CollidesWithExit(Hero, heroPosition, Maze, movementX))
         {
             totalMovement += movementX;
         }
 
-        if (!CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movementY)
-         && !CollisionManager.CollidesWithExit(_hero, _maze, _heroPosition, movementY))
+        if (!CollisionManager.ColidesWithWalls(Hero, heroPosition, Maze, movementY)
+         && !CollisionManager.CollidesWithExit(Hero, heroPosition, Maze, movementY))
         {
             totalMovement += movementY;
         }
@@ -229,12 +253,14 @@ public class MazeRunnerGame : Game
             return totalMovement;
         }
 
-        return NormalizeDiagonalSpeed(_hero.Speed, totalMovement);
+        return NormalizeDiagonalSpeed(Hero.Speed, totalMovement);
     }
 
     private bool ProcessDiagonalMovement(Vector2 movement, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement)
     {
-        if (CollisionManager.ColidesWithWalls(_hero, _maze, _heroPosition, movement))
+        var heroPosition = SpritesPositions[Hero];
+
+        if (CollisionManager.ColidesWithWalls(Hero, heroPosition, Maze, movement))
         {
             if (RandomHelper.RandomBoolean())
             {
@@ -254,57 +280,6 @@ public class MazeRunnerGame : Game
     }
     #endregion
 
-    #region DrawingPreprocessers
-    private void ProcessFindKeyTextDrawing()
-    {
-        if (!_findKeyTextShowed && !_mazeKeyCollected)
-        {
-            if (CheckHeroExitLocatedNearby())
-            {
-                _needDrawFindKeyText = true;
-                _findKeyTextShowed = true;
-            }
-        }
-
-        if (_mazeKeyCollected && _needDrawFindKeyText)
-        {
-            _needDrawFindKeyText = false;
-        }
-    }
-
-    private void DrawFindKeyText(GameTime gameTime)
-    {
-        const float windowTopIndentCoeff = .75f;
-
-        if (_needDrawFindKeyText)
-        {
-            if (_findKeyTextShowTime > FindKeyTextMaxShowTimeMs)
-            {
-                _needDrawFindKeyText = false;
-                return;
-            }
-
-            var positionX = (_graphics.PreferredBackBufferWidth - _findKeyTextStringLength) / 2;
-            var positionY = (float)(_graphics.PreferredBackBufferHeight * windowTopIndentCoeff);
-
-            var position = new Vector2(positionX, positionY);
-
-            _drawer.DrawString(FindKeyText, position, Color.Black);
-
-            _findKeyTextShowTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-        }
-    }
-
-    private bool CheckHeroExitLocatedNearby()
-    {
-        var (coords, exit) = _maze.ExitInfo;
-
-        var coordsAsVector = new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight);
-
-        return Vector2.Distance(coordsAsVector, _heroPosition) <= _findKeyTextShowDistance;
-    }
-    #endregion
-
     private void CheckDebugButtons()
     {
         if (Keyboard.GetState().IsKeyDown(Keys.Escape)) // exit
@@ -319,9 +294,9 @@ public class MazeRunnerGame : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.O)) // open exit
         {
-            if (_mazeKeyCollected)
+            if (MazeKeyCollected)
             {
-                _maze.ExitInfo.Exit.Open();
+                Maze.ExitInfo.Exit.Open();
             }
         }
     }

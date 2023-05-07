@@ -6,6 +6,14 @@ public abstract class MazeItem : MazeTile
 {
     public abstract ItemType ItemType { get; }
 
+    public override float DrawingPriority
+    {
+        get
+        {
+            return 0;
+        }
+    }
+
     public override TileType TileType
     {
         get

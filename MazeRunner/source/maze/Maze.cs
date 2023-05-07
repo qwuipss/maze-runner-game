@@ -1,5 +1,8 @@
-﻿using MazeRunner.Extensions;
+﻿using MazeRunner.Components;
+using MazeRunner.Extensions;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Drawing;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -7,7 +10,7 @@ using System.IO;
 
 namespace MazeRunner.MazeBase;
 
-public class Maze
+public class Maze : MazeRunnerGameComponent
 {
     private readonly MazeTile[,] _skeleton;
 
@@ -47,6 +50,16 @@ public class Maze
 
         _traps = new();
         _items = new();
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Drawer.DrawMaze(this, gameTime);
+    }
+
+    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    {
+        throw new NotImplementedException();
     }
 
     public void InsertTrap(MazeTrap trap, Cell cell)

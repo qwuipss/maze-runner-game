@@ -4,9 +4,12 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class Wall : MazeTile
 {
-    public Wall()
+    public override float DrawingPriority
     {
-        State = new WallIdleState();
+        get
+        {
+            return 1;
+        }
     }
 
     public override TileType TileType
@@ -15,5 +18,10 @@ public class Wall : MazeTile
         {
             return TileType.Wall;
         }
+    }
+
+    public Wall()
+    {
+        State = new WallIdleState();
     }
 }

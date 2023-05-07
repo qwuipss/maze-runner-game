@@ -17,19 +17,19 @@ public class Exit : MazeTile
         }
     }
 
-    public Exit(float rotation)
-    {
-        State = new ExitClosedState();
-
-        FrameRotationAngle = rotation;
-    }
-
     public override TileType TileType
     {
         get
         {
             return TileType.Exit;
         }
+    }
+
+    public Exit(float rotation)
+    {
+        State = new ExitClosedState();
+
+        FrameRotationAngle = rotation;
     }
 
     public void Open()

@@ -1,11 +1,12 @@
 ﻿using MazeRunner.Cameras;
+using MazeRunner.Components;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MazeRunner;
+namespace MazeRunner.Cameras;
 
-public class Camera : ICamera
+public class HeroCamera : MazeRunnerGameComponent, ICamera
 {
     private readonly Vector3 _origin;
 
@@ -15,7 +16,7 @@ public class Camera : ICamera
 
     private Matrix _transformMatrix;
 
-    public Camera(Viewport viewPort, float scaleCoeff = 1)
+    public HeroCamera(Viewport viewPort, float scaleCoeff = 1)
     {
         _scale = Matrix.CreateScale(new Vector3(scaleCoeff, scaleCoeff, 0));
 
@@ -23,11 +24,22 @@ public class Camera : ICamera
         _bordersOffset = Matrix.CreateTranslation(_origin);
     }
 
-    public void Follow(Sprite sprite, Vector2 position)
+    public override void Draw(GameTime gameTime)
+    {
+    }
+
+    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    {
+        var hero = game.Hero;
+
+        Follow(hero, game.SpritesPositions[hero]);
+    }
+
+    private void Follow(Sprite sprite, Vector2 spritePosition)
     {
         var cameraPosition = Matrix.CreateTranslation(
-            -position.X - (sprite.FrameWidth / 2),
-            -position.Y - (sprite.FrameHeight / 2),
+            -spritePosition.X - (sprite.FrameWidth / 2),
+            -spritePosition.Y - (sprite.FrameHeight / 2),
             0);
 
         _transformMatrix = cameraPosition * _scale * _bordersOffset;

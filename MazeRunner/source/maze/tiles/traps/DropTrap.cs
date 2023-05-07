@@ -4,11 +4,6 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class DropTrap : MazeTrap
 {
-    public DropTrap()
-    {
-        State = new DropTrapDeactivatedState(this);
-    }
-
     public override TileType TileType
     {
         get
@@ -31,5 +26,10 @@ public class DropTrap : MazeTrap
         {
             return 1e-1;
         }
+    }
+
+    public DropTrap()
+    {
+        State = new DropTrapDeactivatedState(this);
     }
 }
