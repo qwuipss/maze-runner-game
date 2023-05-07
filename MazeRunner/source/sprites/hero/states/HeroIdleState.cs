@@ -1,7 +1,5 @@
-﻿#region Usings
-using MazeRunner.Content;
+﻿using MazeRunner.Content;
 using Microsoft.Xna.Framework.Graphics;
-#endregion
 
 namespace MazeRunner.Sprites.States;
 

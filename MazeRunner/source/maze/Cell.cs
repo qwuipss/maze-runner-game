@@ -1,6 +1,4 @@
-﻿#region Usings
-using MazeRunner.Extensions;
-#endregion
+﻿using MazeRunner.Extensions;
 
 namespace MazeRunner.MazeBase;
 

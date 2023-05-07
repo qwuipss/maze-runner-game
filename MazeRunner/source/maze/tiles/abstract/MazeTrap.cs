@@ -1,7 +1,4 @@
-﻿#region Usings
-#endregion
-
-namespace MazeRunner.MazeBase.Tiles;
+﻿namespace MazeRunner.MazeBase.Tiles;
 
 public abstract class MazeTrap : MazeTile
 {

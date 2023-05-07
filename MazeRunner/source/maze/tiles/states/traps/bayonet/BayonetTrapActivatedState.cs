@@ -1,6 +1,4 @@
-﻿#region Usings
-using MazeRunner.Helpers;
-#endregion
+﻿using MazeRunner.Helpers;
 
 namespace MazeRunner.MazeBase.Tiles.States;
 

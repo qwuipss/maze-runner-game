@@ -1,7 +1,5 @@
-﻿#region Usings
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using System;
-#endregion
 
 namespace MazeRunner.Extensions;
 

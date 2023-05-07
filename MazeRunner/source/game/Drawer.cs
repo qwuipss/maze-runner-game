@@ -1,11 +1,10 @@
-﻿#region Usings
+﻿using MazeRunner.Cameras;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-#endregion
 
 namespace MazeRunner;
 
@@ -31,9 +30,9 @@ public class Drawer
         _spriteBatch = new(game.GraphicsDevice);
     }
 
-    public void BeginDraw(Camera camera)
+    public void BeginDraw(ICamera camera)
     {
-        _spriteBatch.Begin(transformMatrix: camera.TransformMatrix);
+        _spriteBatch.Begin(transformMatrix: camera.GetTransformMatrix(), samplerState: SamplerState.PointClamp);
     }
 
     public void EndDraw()

@@ -1,11 +1,9 @@
-﻿#region Usings
-using MazeRunner.Sprites;
+﻿using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using static MazeRunner.Settings;
-#endregion
 
-namespace MazeRunner;
+namespace MazeRunner.source.managers;
 
 public static class KeyboardManager
 {

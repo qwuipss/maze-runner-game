@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MazeRunner;
 
@@ -6,11 +9,6 @@ internal static class Settings
 {
     public static int MazeWidth = 51; // odd only
     public static int MazeHeight = 41; // odd only
-
-    public const int TileSetDimension = 16;
-
-    public static int WindowWidth = MazeWidth * TileSetDimension;
-    public static int WindowHeight = MazeHeight * TileSetDimension;
 
     public const double FindKeyTextMaxShowTimeMs = 3000;
 

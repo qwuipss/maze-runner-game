@@ -1,27 +1,24 @@
-﻿#region Usings
-using MazeRunner.Content;
+﻿using MazeRunner.Content;
 using MazeRunner.Extensions;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Physics;
+using MazeRunner.source.managers;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using static MazeRunner.Settings;
-#endregion
 
 namespace MazeRunner;
 
 public class MazeRunnerGame : Game
 {
     #region GraphicsData
-    private GraphicsDeviceManager _graphics;
+    private readonly GraphicsDeviceManager _graphics;
     #endregion
-
-    private Camera _camera;
 
     #region DrawerData
     private Drawer _drawer;
@@ -35,6 +32,10 @@ public class MazeRunnerGame : Game
     #region HeroData
     private Hero _hero;
     private Vector2 _heroPosition;
+    #endregion    
+    
+    #region CameraData
+    private Camera _camera;
     #endregion
 
     #region FindKeyTextData
@@ -50,11 +51,7 @@ public class MazeRunnerGame : Game
 
     public MazeRunnerGame()
     {
-        _graphics = new GraphicsDeviceManager(this)
-        {
-            PreferredBackBufferWidth = WindowWidth,
-            PreferredBackBufferHeight = WindowHeight,
-        };
+        _graphics = new GraphicsDeviceManager(this);
 
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
@@ -65,6 +62,7 @@ public class MazeRunnerGame : Game
     {
         base.Initialize();
 
+        SetFullScreen();
         InitializeDrawer();
         InitializeMaze();
         InitializeHero();
@@ -89,7 +87,7 @@ public class MazeRunnerGame : Game
             CheckDebugButtons();
         }
 
-        _camera.Follow(_hero, _heroPosition, WindowWidth, WindowHeight);
+        _camera.Follow(_hero, _heroPosition);
         ProcessFindKeyTextDrawing();
 
         base.Update(gameTime);
@@ -113,6 +111,16 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region Initializers
+    private void SetFullScreen()
+    {
+        _graphics.IsFullScreen = true;
+
+        _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+        _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+
+        _graphics.ApplyChanges();
+    }
+
     private void InitializeMaze()
     {
         _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
@@ -122,7 +130,6 @@ public class MazeRunnerGame : Game
 
         MazeGenerator.InsertExit(_maze);
 
-        _mazeKeyCollected = false;
         MazeGenerator.InsertItem(_maze, new Key());
     }
 
@@ -145,7 +152,7 @@ public class MazeRunnerGame : Game
 
     private void InitializeCamera()
     {
-        _camera = new Camera();
+        _camera = new Camera(GraphicsDevice.Viewport, 7);
     }
 
     private void InitializeFindKeyTextData()
@@ -300,6 +307,11 @@ public class MazeRunnerGame : Game
 
     private void CheckDebugButtons()
     {
+        if (Keyboard.GetState().IsKeyDown(Keys.Escape)) // exit
+        {
+            Exit();
+        }
+
         if (Keyboard.GetState().IsKeyDown(Keys.G)) // generate maze
         {
             InitializeMaze();

@@ -1,11 +1,9 @@
-﻿#region Usings
-using MazeRunner.MazeBase;
+﻿using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
-#endregion
 
-namespace MazeRunner.Physics;
+namespace MazeRunner.Managers;
 
 public static class CollisionManager
 {

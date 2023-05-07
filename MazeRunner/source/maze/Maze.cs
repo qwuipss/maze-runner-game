@@ -1,11 +1,9 @@
-﻿#region Usings
-using MazeRunner.Extensions;
+﻿using MazeRunner.Extensions;
 using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
-#endregion
 
 namespace MazeRunner.MazeBase;
 
