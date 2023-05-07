@@ -1,5 +1,4 @@
-﻿using MazeRunner.Components;
-using MazeRunner.Drawing;
+﻿using MazeRunner.Drawing;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -45,7 +44,6 @@ public class Hero : Sprite
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        throw new System.NotImplementedException();
     }
 
     public void ProcessPositionChange(Vector2 movement)

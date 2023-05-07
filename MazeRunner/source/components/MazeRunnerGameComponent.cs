@@ -1,5 +1,4 @@
-﻿using MazeRunner.Drawing;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Components;
 

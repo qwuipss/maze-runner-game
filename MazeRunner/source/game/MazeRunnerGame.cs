@@ -161,7 +161,9 @@ public class MazeRunnerGame : Game
 
         var heroCell = MazeGenerator.GetRandomFloorCell(Maze);
 
-        SpritesPositions.Add(Hero, new Vector2(heroCell.X * Hero.FrameWidth, heroCell.Y * Hero.FrameHeight));
+        var heroPosition = Maze.GetCellPosition(heroCell);
+
+        SpritesPositions.Add(Hero, heroPosition);
     }
 
     private void InitializeCamera()

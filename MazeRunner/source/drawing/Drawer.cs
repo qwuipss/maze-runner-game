@@ -4,7 +4,6 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 
 namespace MazeRunner.Drawing;
@@ -41,7 +40,7 @@ public static class Drawer
 
     public static void DrawString(string text, Vector2 position, Color color, float layerDepth, float rotation = 0)
     {
-        _spriteBatch.DrawString(_spriteFont, text, position, color, rotation, Vector2.Zero, 1, SpriteEffects.None, layerDepth); 
+        _spriteBatch.DrawString(_spriteFont, text, position, color, rotation, Vector2.Zero, 1, SpriteEffects.None, layerDepth);
     }
 
     public static void DrawMaze(Maze maze, GameTime gameTime)

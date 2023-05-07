@@ -1,7 +1,7 @@
 ﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
 using MazeRunner.Extensions;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Drawing;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -59,7 +59,23 @@ public class Maze : MazeRunnerGameComponent
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        throw new NotImplementedException();
+    }
+
+    public Vector2 GetCellPosition(Cell cell)
+    {
+        int posX = 0, posY = 0;
+
+        for (int y = 0; y < cell.Y; y++)
+        {
+            posY += _skeleton[y, cell.X].FrameHeight;
+        }
+
+        for (int x = 0; x < cell.X; x++)
+        {
+            posX += _skeleton[cell.Y, x].FrameWidth;
+        }
+
+        return new Vector2(posX, posY);
     }
 
     public void InsertTrap(MazeTrap trap, Cell cell)

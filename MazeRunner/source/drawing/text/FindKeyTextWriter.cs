@@ -1,13 +1,7 @@
 ﻿using MazeRunner.Content;
-using MazeRunner.Drawing;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Drawing;
 
@@ -26,11 +20,11 @@ public class FindKeyTextWriter : TextWriter
 
     private bool _findKeyTextShowed;
 
-    private float _findKeyTextStringLength;
+    private readonly float _findKeyTextStringLength;
 
     private double _findKeyTextShowTimeMs;
 
-    private float _findKeyTextShowDistance;
+    private readonly float _findKeyTextShowDistance;
 
     static FindKeyTextWriter()
     {

@@ -10,12 +10,12 @@ public abstract class Sprite : Components.MazeRunnerGameComponent
 
     protected abstract ISpriteState State { get; set; }
 
-    public virtual float DrawingPriority 
-    { 
+    public virtual float DrawingPriority
+    {
         get
         {
             return 0;
-        } 
+        }
     }
 
     public virtual Texture2D Texture

@@ -1,5 +1,4 @@
 ﻿#region Usings
-using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 #endregion
 

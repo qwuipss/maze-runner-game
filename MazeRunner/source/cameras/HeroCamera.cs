@@ -1,5 +1,4 @@
-﻿using MazeRunner.Cameras;
-using MazeRunner.Components;
+﻿using MazeRunner.Components;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

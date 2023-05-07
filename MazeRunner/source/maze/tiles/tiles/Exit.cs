@@ -9,6 +9,14 @@ public class Exit : MazeTile
 
     public Vector2 OriginFrameRotationVector { get; set; }
 
+    public override float DrawingPriority
+    {
+        get
+        {
+            return .1f;
+        }
+    }
+
     public bool IsOpened
     {
         get
