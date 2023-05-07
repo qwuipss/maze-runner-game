@@ -31,9 +31,9 @@ public class Drawer
         _spriteBatch = new(game.GraphicsDevice);
     }
 
-    public void BeginDraw()
+    public void BeginDraw(Camera camera)
     {
-        _spriteBatch.Begin();
+        _spriteBatch.Begin(transformMatrix: camera.TransformMatrix);
     }
 
     public void EndDraw()

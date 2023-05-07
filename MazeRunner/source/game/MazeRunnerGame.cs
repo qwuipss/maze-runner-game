@@ -21,6 +21,8 @@ public class MazeRunnerGame : Game
     private GraphicsDeviceManager _graphics;
     #endregion
 
+    private Camera _camera;
+
     #region DrawerData
     private Drawer _drawer;
     #endregion
@@ -66,6 +68,7 @@ public class MazeRunnerGame : Game
         InitializeDrawer();
         InitializeMaze();
         InitializeHero();
+        InitializeCamera();
 
         InitializeFindKeyTextData();
     }
@@ -86,6 +89,7 @@ public class MazeRunnerGame : Game
             CheckDebugButtons();
         }
 
+        _camera.Follow(_hero, _heroPosition, WindowWidth, WindowHeight);
         ProcessFindKeyTextDrawing();
 
         base.Update(gameTime);
@@ -95,7 +99,7 @@ public class MazeRunnerGame : Game
     {
         GraphicsDevice.Clear(Color.White);
 
-        _drawer.BeginDraw();
+        _drawer.BeginDraw(_camera);
 
         _drawer.DrawMaze(_maze, gameTime);
         _drawer.DrawSprite(_hero, _heroPosition, gameTime);
@@ -137,6 +141,11 @@ public class MazeRunnerGame : Game
         var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
 
         _heroPosition = new Vector2(heroCell.X * _hero.FrameWidth, heroCell.Y * _hero.FrameHeight);
+    }
+
+    private void InitializeCamera()
+    {
+        _camera = new Camera();
     }
 
     private void InitializeFindKeyTextData()
