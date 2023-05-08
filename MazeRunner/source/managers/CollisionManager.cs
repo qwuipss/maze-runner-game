@@ -79,7 +79,7 @@ public static class CollisionManager
 
     private static Rectangle GetExtendedHitBox(Hero hero, Vector2 position, Vector2 movement)
     {
-        var hitBox = hero.GetHitBox(position);
+        var hitBox = hero.GetHitBox(position);//////////
 
         var x = hitBox.X;
         var y = hitBox.Y;

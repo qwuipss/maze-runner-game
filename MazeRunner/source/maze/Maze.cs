@@ -48,8 +48,8 @@ public class Maze : MazeRunnerGameComponent
     {
         _skeleton = skeleton;
 
-        _traps = new();
-        _items = new();
+        _traps = new Dictionary<Cell, MazeTrap>();
+        _items = new Dictionary<Cell, MazeItem>();
     }
 
     public override void Draw(GameTime gameTime)

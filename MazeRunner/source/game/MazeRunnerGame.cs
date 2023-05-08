@@ -170,6 +170,7 @@ public class MazeRunnerGame : Game
     private void InitializeTextWriters()
     {
         _findKeyTextWriter = FindKeyTextWriter.GetInstance();
+
         TextWritersPositions.Add(_findKeyTextWriter, Vector2.Zero);
 
         _findKeyTextWriter.Initialize(this);

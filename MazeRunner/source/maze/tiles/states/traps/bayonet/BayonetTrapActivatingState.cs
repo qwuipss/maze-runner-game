@@ -1,4 +1,6 @@
-﻿namespace MazeRunner.MazeBase.Tiles.States;
+﻿using Microsoft.Xna.Framework;
+
+namespace MazeRunner.MazeBase.Tiles.States;
 
 public class BayonetTrapActivatingState : BayonetTrapBaseState
 {
@@ -7,7 +9,7 @@ public class BayonetTrapActivatingState : BayonetTrapBaseState
         Trap = trap;
     }
 
-    public override IMazeTileState ProcessState()
+    public override IMazeTileState ProcessState(GameTime gameTime)
     {
         CurrentAnimationFramePointX += FrameWidth;
 

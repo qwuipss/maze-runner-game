@@ -17,5 +17,5 @@ public interface IMazeTileState
 
     public int FrameAnimationDelayMs { get; }
 
-    public IMazeTileState ProcessState();
+    public IMazeTileState ProcessState(GameTime gameTime);
 }

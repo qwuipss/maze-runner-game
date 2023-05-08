@@ -67,7 +67,7 @@ public static class Drawer
         {
             for (int x = 0; x < maze.Skeleton.GetLength(1); x++)
             {
-                DrawMazeTile(maze.Skeleton[y, x], x, y, gameTime);
+                DrawMazeTile(maze.Skeleton[y, x], x, y);
             }
         }
     }
@@ -79,7 +79,7 @@ public static class Drawer
             var trap = trapInfo.Value;
             var trapCoord = trapInfo.Key;
 
-            DrawMazeTile(trap, trapCoord.X, trapCoord.Y, gameTime);
+            DrawMazeTile(trap, trapCoord.X, trapCoord.Y);
         }
     }
 
@@ -90,7 +90,7 @@ public static class Drawer
         var exit = exitInfo.Exit;
         var coords = exitInfo.Coords;
 
-        DrawMazeTile(exit, coords.X, coords.Y, gameTime, exit.FrameRotationAngle, exit.OriginFrameRotationVector);
+        DrawMazeTile(exit, coords.X, coords.Y, exit.FrameRotationAngle, exit.OriginFrameRotationVector);
     }
 
     private static void DrawItems(Maze maze, GameTime gameTime)
@@ -99,16 +99,16 @@ public static class Drawer
         {
             var (coords, item) = itemInfo;
 
-            DrawMazeTile(item, coords.X, coords.Y, gameTime);
+            DrawMazeTile(item, coords.X, coords.Y);
         }
     }
 
-    private static void DrawMazeTile(MazeTile mazeTile, int x, int y, GameTime gameTime, float rotation = 0, Vector2 origin = default)
+    private static void DrawMazeTile(MazeTile mazeTile, int x, int y, float rotation = 0, Vector2 origin = default)
     {
         Draw(
              mazeTile.Texture,
              new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
-             new Rectangle(mazeTile.GetCurrentAnimationFramePoint(gameTime),
+             new Rectangle(mazeTile.CurrentAnimationFramePoint,
                            new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
              mazeTile.DrawingPriority,
              rotation,

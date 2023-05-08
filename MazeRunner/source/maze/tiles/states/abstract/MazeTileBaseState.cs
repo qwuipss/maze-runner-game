@@ -39,5 +39,5 @@ public abstract class MazeTileBaseState : IMazeTileState
 
     protected virtual int CurrentAnimationFramePointX { get; set; }
 
-    public abstract IMazeTileState ProcessState();
+    public abstract IMazeTileState ProcessState(GameTime gameTime);
 }

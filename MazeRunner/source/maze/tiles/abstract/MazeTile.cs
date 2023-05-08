@@ -40,25 +40,20 @@ public abstract class MazeTile
         }
     }
 
-    public virtual IMazeTileState State { get; set; }
+    protected virtual IMazeTileState State { get; set; } //////////////////////////////////
+
+    public virtual Point CurrentAnimationFramePoint
+    {
+        get
+        {
+            return State.CurrentAnimationFramePoint;
+        }
+    }
+
+    public virtual IMazeTileState ProcessState(GameTime gameTime)
+    {
+        return State.ProcessState(gameTime);
+    }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
-
-    public virtual Point GetCurrentAnimationFramePoint(GameTime gameTime)
-    {
-        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        if (ElapsedGameTimeMs >= State.FrameAnimationDelayMs)
-        {
-            State = ProcessState();
-            ElapsedGameTimeMs -= State.FrameAnimationDelayMs;
-        }
-
-        return State.CurrentAnimationFramePoint;
-    }
-
-    public virtual IMazeTileState ProcessState()
-    {
-        return State.ProcessState();
-    }
 }

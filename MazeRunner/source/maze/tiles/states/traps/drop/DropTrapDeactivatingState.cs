@@ -1,4 +1,6 @@
-﻿namespace MazeRunner.MazeBase.Tiles.States;
+﻿using Microsoft.Xna.Framework;
+
+namespace MazeRunner.MazeBase.Tiles.States;
 
 public class DropTrapDeactivatingState : DropTrapBaseState
 {
@@ -9,7 +11,7 @@ public class DropTrapDeactivatingState : DropTrapBaseState
         CurrentAnimationFramePointX = (FramesCount - 1) * FrameWidth;
     }
 
-    public override IMazeTileState ProcessState()
+    public override IMazeTileState ProcessState(GameTime gameTime)
     {
         CurrentAnimationFramePointX -= FrameWidth;
 
