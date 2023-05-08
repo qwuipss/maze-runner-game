@@ -4,8 +4,8 @@ namespace MazeRunner;
 
 internal static class Settings
 {
-    public static int MazeWidth = 15; // odd only
-    public static int MazeHeight = 15; // odd only
+    public static int MazeWidth = 7; // odd only
+    public static int MazeHeight = 7; // odd only
 
     public const double FindKeyTextMaxShowTimeMs = 3000;
 

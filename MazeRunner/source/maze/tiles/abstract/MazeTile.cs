@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase.Tiles.States;
+﻿using MazeRunner.Components;
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,7 +16,7 @@ public abstract class MazeTile
             return 1;
         }
     }
-
+    
     public virtual Texture2D Texture
     {
         get

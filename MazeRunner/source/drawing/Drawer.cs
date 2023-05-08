@@ -45,10 +45,10 @@ public static class Drawer
 
     public static void DrawMaze(Maze maze, GameTime gameTime)
     {
-        DrawMazeSkeleton(maze, gameTime);
-        DrawTraps(maze, gameTime);
-        DrawExit(maze, gameTime);
-        DrawItems(maze, gameTime);
+        DrawMazeSkeleton(maze);
+        DrawTraps(maze);
+        DrawExit(maze);
+        DrawItems(maze);
     }
 
     public static void DrawSprite(Sprite sprite, GameTime gameTime)
@@ -61,53 +61,47 @@ public static class Drawer
              spriteEffects: sprite.FrameEffect);
     }
 
-    private static void DrawMazeSkeleton(Maze maze, GameTime gameTime)
+    private static void DrawMazeSkeleton(Maze maze)
     {
         for (int y = 0; y < maze.Skeleton.GetLength(0); y++)
         {
             for (int x = 0; x < maze.Skeleton.GetLength(1); x++)
             {
-                DrawMazeTile(maze.Skeleton[y, x], x, y);
+                DrawMazeTile(maze.Skeleton[y, x], new Cell(x, y), maze);
             }
         }
     }
 
-    private static void DrawTraps(Maze maze, GameTime gameTime)
+    private static void DrawTraps(Maze maze)
     {
-        foreach (var trapInfo in maze.Traps)
+        foreach (var (coords, trap) in maze.Traps)
         {
-            var trap = trapInfo.Value;
-            var trapCoord = trapInfo.Key;
-
-            DrawMazeTile(trap, trapCoord.X, trapCoord.Y);
+            DrawMazeTile(trap, coords, maze);
         }
     }
 
-    private static void DrawExit(Maze maze, GameTime gameTime)
+    private static void DrawExit(Maze maze)
     {
-        var exitInfo = maze.ExitInfo;
+        var (coords, exit) = maze.ExitInfo;
 
-        var exit = exitInfo.Exit;
-        var coords = exitInfo.Coords;
-
-        DrawMazeTile(exit, coords.X, coords.Y, exit.FrameRotationAngle, exit.OriginFrameRotationVector);
+        DrawMazeTile(exit, coords, maze, exit.FrameRotationAngle, exit.OriginFrameRotationVector);
     }
 
-    private static void DrawItems(Maze maze, GameTime gameTime)
+    private static void DrawItems(Maze maze)
     {
-        foreach (var itemInfo in maze.Items)
+        foreach (var (coords, item) in maze.Items)
         {
-            var (coords, item) = itemInfo;
-
-            DrawMazeTile(item, coords.X, coords.Y);
+            DrawMazeTile(item, coords, maze);
         }
     }
 
-    private static void DrawMazeTile(MazeTile mazeTile, int x, int y, float rotation = 0, Vector2 origin = default)
+    private static void DrawMazeTile(MazeTile mazeTile, Cell cell, Maze maze, float rotation = 0, Vector2 origin = default)
     {
+        var position = maze.GetCellPosition(cell);
+
         Draw(
              mazeTile.Texture,
-             new Vector2(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight),
+             position,
              new Rectangle(mazeTile.CurrentAnimationFramePoint,
                            new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
              mazeTile.DrawingPriority,
