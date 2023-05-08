@@ -56,12 +56,7 @@ public abstract class MazeTile
 
     protected virtual double ElapsedGameTimeMs { get; set; }
 
-    public virtual IMazeTileState ProcessState(GameTime gameTime)
-    {
-        return State.ProcessState(gameTime);
-    }
-
-    public virtual void Update(MazeRunnerGame game, GameTime gameTime)
+    public virtual void Update(GameTime gameTime)
     {
         State = State.ProcessState(gameTime);
     }

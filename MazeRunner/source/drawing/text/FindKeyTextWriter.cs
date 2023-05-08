@@ -23,7 +23,7 @@ public class FindKeyTextWriter : TextWriter
 
     private Maze _maze;
 
-    private Hero _hero;
+    private Sprite _hero;
 
     private WritingSide _writingSide;
 
@@ -102,7 +102,7 @@ public class FindKeyTextWriter : TextWriter
 
     public void Initialize(MazeRunnerGame game)
     {
-        _hero = game.Hero;
+        _hero = game.HeroInfo.Sprite;
         _maze = game.MazeInfo.Maze;
 
         _mazeKeyCollected = game.MazeInfo.IsKeyCollected;

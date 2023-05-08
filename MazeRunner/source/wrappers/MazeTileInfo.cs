@@ -47,6 +47,6 @@ public class MazeTileInfo : MazeRunnerGameComponent
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        MazeTile.Update(game, gameTime);
+        MazeTile.Update(gameTime);
     }
 }

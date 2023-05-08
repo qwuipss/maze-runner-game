@@ -29,7 +29,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        var hero = game.Hero;
+        var hero = game.HeroInfo.Sprite;
 
         Follow(hero, game.SpritesPositions[hero]);
     }

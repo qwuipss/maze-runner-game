@@ -7,9 +7,9 @@ namespace MazeRunner.Wrappers;
 
 public class SpriteInfo : MazeRunnerGameComponent
 {
-    private Sprite Sprite { get; init; }
+    public Sprite Sprite { get; init; }
 
-    private Vector2 Position { get; set; }
+    public Vector2 Position { get; private set; }
 
     public SpriteInfo(Sprite sprite, Vector2 position)
     {

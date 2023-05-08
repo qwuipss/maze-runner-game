@@ -44,8 +44,8 @@ public class Exit : MazeTile
         }
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        base.Update(game, gameTime);
+        base.Update(gameTime);
     }
 }

@@ -14,11 +14,6 @@ public class BayonetTrapActivatedState : BayonetTrapBaseState
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        if (RandomHelper.RollChance(Trap.DeactivateChance))
-        {
-            return new BayonetTrapDeactivatingState(Trap);
-        }
-
         return this;
     }
 }

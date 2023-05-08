@@ -30,8 +30,8 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region HeroData
-    public Hero Hero { get; private set; }
-    private SpriteInfo _heroInfo;
+    private Hero Hero { get; set; }
+    public SpriteInfo HeroInfo { get; private set; }
     #endregion
 
     #region CameraData
@@ -124,14 +124,14 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        //_graphics.ApplyChanges();
+        _graphics.ApplyChanges();
     }
 
     private void InitializeComponentsList()
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            MazeInfo, _heroInfo, _findKeyTextWriterInfo, _heroCamera,
+            MazeInfo, HeroInfo, _findKeyTextWriterInfo, _heroCamera,
         };
     }
 
@@ -165,7 +165,7 @@ public class MazeRunnerGame : Game
 
         SpritesPositions.Add(Hero, heroPosition);
 
-        _heroInfo = new SpriteInfo(Hero, heroPosition);
+        HeroInfo = new SpriteInfo(Hero, heroPosition);
     }
 
     private void InitializeCamera()

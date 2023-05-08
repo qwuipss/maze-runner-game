@@ -4,8 +4,8 @@ namespace MazeRunner;
 
 internal static class Settings
 {
-    public static int MazeWidth = 7; // odd only
-    public static int MazeHeight = 7; // odd only
+    public static int MazeWidth = 201; // odd only
+    public static int MazeHeight = 201; // odd only
 
     #region Controls
     public static Keys MoveForward = Keys.W;
