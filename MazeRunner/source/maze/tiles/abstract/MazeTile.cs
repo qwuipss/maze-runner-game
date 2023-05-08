@@ -1,5 +1,4 @@
-﻿using MazeRunner.Components;
-using MazeRunner.MazeBase.Tiles.States;
+﻿using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -9,6 +8,10 @@ public abstract class MazeTile
 {
     public abstract TileType TileType { get; }
 
+    public virtual float FrameRotationAngle { get; init; }
+
+    public virtual Vector2 OriginFrameRotationVector { get; set; }
+
     public virtual float DrawingPriority
     {
         get
@@ -16,7 +19,7 @@ public abstract class MazeTile
             return 1;
         }
     }
-    
+
     public virtual Texture2D Texture
     {
         get
@@ -41,8 +44,6 @@ public abstract class MazeTile
         }
     }
 
-    protected virtual IMazeTileState State { get; set; } //////////////////////////////////
-
     public virtual Point CurrentAnimationFramePoint
     {
         get
@@ -51,10 +52,17 @@ public abstract class MazeTile
         }
     }
 
+    protected virtual IMazeTileState State { get; set; }
+
+    protected virtual double ElapsedGameTimeMs { get; set; }
+
     public virtual IMazeTileState ProcessState(GameTime gameTime)
     {
         return State.ProcessState(gameTime);
     }
 
-    protected virtual double ElapsedGameTimeMs { get; set; }
+    public virtual void Update(MazeRunnerGame game, GameTime gameTime)
+    {
+        State = State.ProcessState(gameTime);
+    }
 }

@@ -1,4 +1,6 @@
-﻿namespace MazeRunner.MazeBase;
+﻿using MazeRunner.MazeBase;
+
+namespace MazeRunner.Wrappers;
 
 public record class MazeInfo(Maze Maze)
 {

@@ -1,12 +1,10 @@
 ﻿using MazeRunner.Components;
-using MazeRunner.Drawing;
 using MazeRunner.Extensions;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.IO;
 
 namespace MazeRunner.MazeBase;
 
@@ -19,6 +17,8 @@ public class Maze : MazeRunnerGameComponent
     private readonly Dictionary<Cell, MazeItem> _items;
 
     public (Cell Coords, Exit Exit) ExitInfo { get; set; }
+
+    public List<MazeTileInfo> Components { get; init; }
 
     public ImmutableDoubleDimArray<MazeTile> Skeleton
     {
@@ -50,15 +50,32 @@ public class Maze : MazeRunnerGameComponent
 
         _traps = new Dictionary<Cell, MazeTrap>();
         _items = new Dictionary<Cell, MazeItem>();
+
+        Components = new List<MazeTileInfo>();
+    }
+
+    public void InitializeComponentsList()
+    {
+        InitializeSkeletonComponentsList();
+        InitializeTrapsComponentsList();
+        InitializeItemsComponentsList();
+        InitializeExitComponentsList();
     }
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.DrawMaze(this, gameTime);
+        foreach (var component in Components)
+        {
+            component.Draw(gameTime);
+        }
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
+        foreach (var component in Components)
+        {
+            component.Update(game, gameTime);
+        }
     }
 
     public Vector2 GetCellPosition(Cell cell)
@@ -90,7 +107,12 @@ public class Maze : MazeRunnerGameComponent
 
     public void RemoveItem(Cell cell)
     {
+        var cellPosition = GetCellPosition(cell);
+        var itemInfo = new MazeTileInfo(_items[cell], cellPosition);
+
         _items.Remove(cell);
+
+        Components.Remove(itemInfo);
     }
 
     public void InsertExit(Exit exit, Cell coords)
@@ -131,25 +153,44 @@ public class Maze : MazeRunnerGameComponent
         return floorsCount;
     }
 
-    public void LoadToFile(FileInfo fileInfo)
+    private void InitializeSkeletonComponentsList()
     {
-        using var writer = new StreamWriter(fileInfo.FullName);
-
-        for (int y = 0; y < Skeleton.GetLength(0); y++)
+        for (int y = 0; y < _skeleton.GetLength(0); y++)
         {
-            for (int x = 0; x < Skeleton.GetLength(1); x++)
+            for (int x = 0; x < _skeleton.GetLength(1); x++)
             {
-                if (_traps.TryGetValue(new Cell(x, y), out var trap))
-                {
-                    writer.Write((char)trap.TileType);
-                }
-                else
-                {
-                    writer.Write((char)Skeleton[y, x].TileType);
-                }
-            }
+                var tile = _skeleton[y, x];
+                var tilePosition = GetCellPosition(new Cell(x, y));
 
-            writer.Write(Environment.NewLine);
+                Components.Add(new MazeTileInfo(tile, tilePosition));
+            }
         }
+    }
+
+    private void InitializeTrapsComponentsList()
+    {
+        foreach (var (coords, trap) in _traps)
+        {
+            var trapPosition = GetCellPosition(coords);
+
+            Components.Add(new MazeTileInfo(trap, trapPosition));
+        }
+    }
+
+    private void InitializeItemsComponentsList()
+    {
+        foreach (var (coords, item) in _items)
+        {
+            var itemPosition = GetCellPosition(coords);
+
+            Components.Add(new MazeTileInfo(item, itemPosition));
+        }
+    }
+
+    private void InitializeExitComponentsList()
+    {
+        var exitPosition = GetCellPosition(ExitInfo.Coords);
+
+        Components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
     }
 }

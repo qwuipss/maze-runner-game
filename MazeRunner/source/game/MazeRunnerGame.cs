@@ -5,6 +5,7 @@ using MazeRunner.Drawing;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -144,6 +145,8 @@ public class MazeRunnerGame : Game
         MazeGenerator.InsertItem(_maze, new Key());
 
         MazeInfo = new MazeInfo(_maze);
+
+        _maze.InitializeComponentsList();
     }
 
     private void InitializeDrawer()

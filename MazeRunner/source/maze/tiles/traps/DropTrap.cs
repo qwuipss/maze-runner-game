@@ -1,5 +1,4 @@
 ﻿using MazeRunner.MazeBase.Tiles.States;
-using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles;
 

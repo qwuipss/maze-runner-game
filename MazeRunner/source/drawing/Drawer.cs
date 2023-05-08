@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Cameras;
-using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -43,17 +42,10 @@ public static class Drawer
             SpriteEffects.None, textWriter.DrawingPriority);
     }
 
-    public static void DrawMaze(Maze maze, GameTime gameTime)
-    {
-        DrawMazeSkeleton(maze);
-        DrawTraps(maze);
-        DrawExit(maze);
-        DrawItems(maze);
-    }
-
     public static void DrawSprite(Sprite sprite, GameTime gameTime)
     {
-        Draw(sprite.Texture,
+        Draw(
+             sprite.Texture,
              _spritesPositions[sprite],
              new Rectangle(sprite.CurrentAnimationFramePoint,
                            new Point(sprite.FrameWidth, sprite.FrameHeight)),
@@ -61,52 +53,16 @@ public static class Drawer
              spriteEffects: sprite.FrameEffect);
     }
 
-    private static void DrawMazeSkeleton(Maze maze)
+    public static void DrawMazeTile(MazeTile mazeTile, Vector2 position, float rotation = 0, Vector2 origin = default)
     {
-        for (int y = 0; y < maze.Skeleton.GetLength(0); y++)
-        {
-            for (int x = 0; x < maze.Skeleton.GetLength(1); x++)
-            {
-                DrawMazeTile(maze.Skeleton[y, x], new Cell(x, y), maze);
-            }
-        }
-    }
-
-    private static void DrawTraps(Maze maze)
-    {
-        foreach (var (coords, trap) in maze.Traps)
-        {
-            DrawMazeTile(trap, coords, maze);
-        }
-    }
-
-    private static void DrawExit(Maze maze)
-    {
-        var (coords, exit) = maze.ExitInfo;
-
-        DrawMazeTile(exit, coords, maze, exit.FrameRotationAngle, exit.OriginFrameRotationVector);
-    }
-
-    private static void DrawItems(Maze maze)
-    {
-        foreach (var (coords, item) in maze.Items)
-        {
-            DrawMazeTile(item, coords, maze);
-        }
-    }
-
-    private static void DrawMazeTile(MazeTile mazeTile, Cell cell, Maze maze, float rotation = 0, Vector2 origin = default)
-    {
-        var position = maze.GetCellPosition(cell);
-
         Draw(
              mazeTile.Texture,
              position,
              new Rectangle(mazeTile.CurrentAnimationFramePoint,
                            new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
              mazeTile.DrawingPriority,
-             rotation,
-             origin);
+             mazeTile.FrameRotationAngle,
+             mazeTile.OriginFrameRotationVector);
     }
 
     private static void Draw(
