@@ -1,5 +1,4 @@
-﻿using MazeRunner.Components;
-using MazeRunner.Extensions;
+﻿using MazeRunner.Extensions;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -8,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace MazeRunner.MazeBase;
 
-public class Maze : MazeRunnerGameComponent
+public class Maze
 {
     private readonly MazeTile[,] _skeleton;
 
@@ -62,7 +61,7 @@ public class Maze : MazeRunnerGameComponent
         InitializeExitComponentsList();
     }
 
-    public override void Draw(GameTime gameTime)
+    public void Draw(GameTime gameTime)
     {
         foreach (var component in Components)
         {
@@ -70,7 +69,7 @@ public class Maze : MazeRunnerGameComponent
         }
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public void Update(MazeRunnerGame game, GameTime gameTime)
     {
         foreach (var component in Components)
         {

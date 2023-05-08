@@ -3,7 +3,6 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 
 namespace MazeRunner.Drawing;
 
@@ -11,16 +10,9 @@ public static class Drawer
 {
     private static SpriteBatch _spriteBatch;
 
-    private static Dictionary<Sprite, Vector2> _spritesPositions;
-
-    private static Dictionary<TextWriter, Vector2> _textWritersPositions;
-
     public static void Initialize(MazeRunnerGame game)
     {
         _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-
-        _spritesPositions = game.SpritesPositions;
-        _textWritersPositions = game.TextWritersPositions;
     }
 
     public static void BeginDraw(ICamera camera)
@@ -33,27 +25,27 @@ public static class Drawer
         _spriteBatch.End();
     }
 
-    public static void DrawString(TextWriter textWriter)
+    public static void DrawString(TextWriter textWriter, Vector2 position)
     {
         _spriteBatch.DrawString(
             textWriter.Font, textWriter.Text,
-            _textWritersPositions[textWriter], textWriter.Color,
+            position, textWriter.Color,
             0, Vector2.Zero, textWriter.ScaleFactor,
             SpriteEffects.None, textWriter.DrawingPriority);
     }
 
-    public static void DrawSprite(Sprite sprite, GameTime gameTime)
+    public static void DrawSprite(Sprite sprite, Vector2 position)
     {
         Draw(
              sprite.Texture,
-             _spritesPositions[sprite],
+             position,
              new Rectangle(sprite.CurrentAnimationFramePoint,
                            new Point(sprite.FrameWidth, sprite.FrameHeight)),
              sprite.DrawingPriority,
              spriteEffects: sprite.FrameEffect);
     }
 
-    public static void DrawMazeTile(MazeTile mazeTile, Vector2 position, float rotation = 0, Vector2 origin = default)
+    public static void DrawMazeTile(MazeTile mazeTile, Vector2 position)
     {
         Draw(
              mazeTile.Texture,

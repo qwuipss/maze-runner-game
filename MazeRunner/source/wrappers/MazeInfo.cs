@@ -1,8 +1,27 @@
-﻿using MazeRunner.MazeBase;
+﻿using MazeRunner.Components;
+using MazeRunner.MazeBase;
+using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Wrappers;
 
-public record class MazeInfo(Maze Maze)
+public class MazeInfo : MazeRunnerGameComponent
 {
-    public bool KeyCollected { get; set; }
+    public Maze Maze { get; init; }
+
+    public bool IsKeyCollected { get; set; }
+
+    public MazeInfo(Maze maze)
+    {
+        Maze = maze;
+    }
+
+    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    {
+        Maze.Update(game, gameTime);
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Maze.Draw(gameTime);
+    }
 }

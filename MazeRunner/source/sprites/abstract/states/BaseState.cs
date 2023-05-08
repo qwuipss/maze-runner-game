@@ -43,6 +43,10 @@ public abstract class BaseState : ISpriteState
         }
     }
 
+    protected virtual int CurrentAnimationFramePointX { get; set; }
+
+    protected virtual double ElapsedGameTimeMs { get; set; }
+
     public virtual ISpriteState ProcessState(GameTime gameTime)
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -55,8 +59,4 @@ public abstract class BaseState : ISpriteState
 
         return this;
     }
-
-    protected virtual int CurrentAnimationFramePointX { get; set; }
-
-    protected virtual double ElapsedGameTimeMs { get; set; }
 }

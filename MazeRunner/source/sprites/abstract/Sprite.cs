@@ -1,11 +1,10 @@
-﻿using MazeRunner.Components;
-using MazeRunner.Sprites.States;
+﻿using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites;
 
-public abstract class Sprite : MazeRunnerGameComponent
+public abstract class Sprite
 {
     public abstract Vector2 Speed { get; }
 
@@ -55,8 +54,8 @@ public abstract class Sprite : MazeRunnerGameComponent
 
     public abstract Rectangle GetHitBox(Vector2 position);
 
-    public virtual ISpriteState ProcessState(GameTime gameTime)
+    public virtual void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        return State.ProcessState(gameTime);
+        State = State.ProcessState(gameTime);
     }
 }

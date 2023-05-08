@@ -31,6 +31,7 @@ public class MazeRunnerGame : Game
 
     #region HeroData
     public Hero Hero { get; private set; }
+    private SpriteInfo _heroInfo;
     #endregion
 
     #region CameraData
@@ -46,6 +47,7 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region FindKeyTextData
+    private TextWriterInfo _findKeyTextWriterInfo;
     private FindKeyTextWriter _findKeyTextWriter;
     #endregion
 
@@ -129,7 +131,7 @@ public class MazeRunnerGame : Game
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            _maze, Hero, _findKeyTextWriter, _heroCamera,
+            MazeInfo, _heroInfo, _findKeyTextWriterInfo, _heroCamera,
         };
     }
 
@@ -144,9 +146,9 @@ public class MazeRunnerGame : Game
 
         MazeGenerator.InsertItem(_maze, new Key());
 
-        MazeInfo = new MazeInfo(_maze);
-
         _maze.InitializeComponentsList();
+
+        MazeInfo = new MazeInfo(_maze);
     }
 
     private void InitializeDrawer()
@@ -156,13 +158,14 @@ public class MazeRunnerGame : Game
 
     private void InitializeHero()
     {
-        Hero = new Hero(this);
-
         var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
-
         var heroPosition = _maze.GetCellPosition(heroCell);
 
+        Hero = new Hero(this);
+
         SpritesPositions.Add(Hero, heroPosition);
+
+        _heroInfo = new SpriteInfo(Hero, heroPosition);
     }
 
     private void InitializeCamera()
@@ -175,6 +178,8 @@ public class MazeRunnerGame : Game
         _findKeyTextWriter = FindKeyTextWriter.GetInstance();
 
         TextWritersPositions.Add(_findKeyTextWriter, Vector2.Zero);
+
+        _findKeyTextWriterInfo = new TextWriterInfo(_findKeyTextWriter, TextWritersPositions[_findKeyTextWriter]);
 
         _findKeyTextWriter.Initialize(this);
     }
@@ -189,7 +194,7 @@ public class MazeRunnerGame : Game
 
         if (Keyboard.GetState().IsKeyDown(Keys.O)) // open exit
         {
-            if (MazeInfo.KeyCollected)
+            if (MazeInfo.IsKeyCollected)
             {
                 _maze.ExitInfo.Exit.Open();
             }

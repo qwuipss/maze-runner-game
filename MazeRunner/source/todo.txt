@@ -1,0 +1,2 @@
+﻿fix hero walls collisions
+traps near to user only updating

@@ -42,7 +42,7 @@ public class MazeTileInfo : MazeRunnerGameComponent
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.DrawMazeTile(MazeTile, Position, MazeTile.FrameRotationAngle, MazeTile.OriginFrameRotationVector);
+        Drawer.DrawMazeTile(MazeTile, Position);
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)

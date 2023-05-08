@@ -1,5 +1,4 @@
-﻿using MazeRunner.Drawing;
-using MazeRunner.Extensions;
+﻿using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
@@ -52,14 +51,9 @@ public class Hero : Sprite
                 HitBoxHeight);
     }
 
-    public override void Draw(GameTime gameTime)
-    {
-        Drawer.DrawSprite(this, gameTime);
-    }
-
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        State = State.ProcessState(gameTime);
+        base.Update(game, gameTime);
 
         if (!KeyboardManager.IsPollingTimePassed(MovePollingTimeMs, ref _elapsedGameTimeMs, gameTime))
         {
@@ -120,7 +114,7 @@ public class Hero : Sprite
             if (CollisionManager.CollidesWithKey(this, position, coords, key))
             {
                 _mazeInfo.Maze.RemoveItem(coords);
-                _mazeInfo.KeyCollected = true;
+                _mazeInfo.IsKeyCollected = true;
             }
         }
 

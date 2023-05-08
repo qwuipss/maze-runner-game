@@ -76,9 +76,9 @@ public class FindKeyTextWriter : TextWriter
         return _instance.Value;
     }
 
-    public override void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime, Vector2 position)
     {
-        DrawIfNeeded(gameTime);
+        DrawIfNeeded(gameTime, position);
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
@@ -88,7 +88,7 @@ public class FindKeyTextWriter : TextWriter
             return;
         }
 
-        _mazeKeyCollected = game.MazeInfo.KeyCollected;
+        _mazeKeyCollected = game.MazeInfo.IsKeyCollected;
 
         _heroPosition = game.SpritesPositions[_hero];
 
@@ -105,7 +105,7 @@ public class FindKeyTextWriter : TextWriter
         _hero = game.Hero;
         _maze = game.MazeInfo.Maze;
 
-        _mazeKeyCollected = game.MazeInfo.KeyCollected;
+        _mazeKeyCollected = game.MazeInfo.IsKeyCollected;
 
         _textShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
 
@@ -158,7 +158,7 @@ public class FindKeyTextWriter : TextWriter
         }
     }
 
-    private void DrawIfNeeded(GameTime gameTime)
+    private void DrawIfNeeded(GameTime gameTime, Vector2 position)
     {
         if (_needWriting)
         {
@@ -170,7 +170,7 @@ public class FindKeyTextWriter : TextWriter
                 return;
             }
 
-            Drawer.DrawString(this);
+            Drawer.DrawString(this, position);
 
             _textShowTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
         }

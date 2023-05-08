@@ -1,10 +1,9 @@
-﻿using MazeRunner.Components;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Drawing;
 
-public abstract class TextWriter : MazeRunnerGameComponent
+public abstract class TextWriter
 {
     public virtual float DrawingPriority
     {
@@ -21,4 +20,8 @@ public abstract class TextWriter : MazeRunnerGameComponent
     public virtual SpriteFont Font { get; init; }
 
     public virtual Color Color { get; init; }
+
+    public abstract void Update(MazeRunnerGame game, GameTime gameTime);
+
+    public abstract void Draw(GameTime gameTime, Vector2 position);
 }
