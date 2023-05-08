@@ -43,12 +43,20 @@ public abstract class BaseState : ISpriteState
         }
     }
 
-    public virtual ISpriteState ProcessState()
+    public virtual ISpriteState ProcessState(GameTime gameTime)
     {
-        CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameWidth) % (FrameWidth * FramesCount);
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        if (ElapsedGameTimeMs >= FrameAnimationDelayMs)
+        {
+            CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameWidth) % (FrameWidth * FramesCount);
+            ElapsedGameTimeMs -= FrameAnimationDelayMs;
+        }
 
         return this;
     }
 
     protected virtual int CurrentAnimationFramePointX { get; set; }
+
+    protected virtual double ElapsedGameTimeMs { get; set; }
 }

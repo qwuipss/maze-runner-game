@@ -55,7 +55,7 @@ public static class Drawer
     {
         Draw(sprite.Texture,
              _spritesPositions[sprite],
-             new Rectangle(sprite.GetCurrentAnimationFramePoint(gameTime),
+             new Rectangle(sprite.CurrentAnimationFramePoint,
                            new Point(sprite.FrameWidth, sprite.FrameHeight)),
              sprite.DrawingPriority,
              spriteEffects: sprite.FrameEffect);

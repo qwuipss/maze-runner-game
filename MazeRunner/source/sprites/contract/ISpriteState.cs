@@ -19,5 +19,5 @@ public interface ISpriteState
 
     public Point CurrentAnimationFramePoint { get; }
 
-    public ISpriteState ProcessState();
+    public ISpriteState ProcessState(GameTime gameTime);
 }

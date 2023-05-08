@@ -20,4 +20,12 @@ public class HeroIdleState : BaseState
             return 6;
         }
     }
+
+    public override int FrameAnimationDelayMs
+    {
+        get
+        {
+            return 65;
+        }
+    }
 }

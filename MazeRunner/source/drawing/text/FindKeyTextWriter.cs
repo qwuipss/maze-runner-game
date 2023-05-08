@@ -88,7 +88,7 @@ public class FindKeyTextWriter : TextWriter
             return;
         }
 
-        _mazeKeyCollected = game.MazeKeyCollected;
+        _mazeKeyCollected = game.MazeInfo.KeyCollected;
 
         _heroPosition = game.SpritesPositions[_hero];
 
@@ -103,9 +103,9 @@ public class FindKeyTextWriter : TextWriter
     public void Initialize(MazeRunnerGame game)
     {
         _hero = game.Hero;
-        _maze = game.Maze;
+        _maze = game.MazeInfo.Maze;
 
-        _mazeKeyCollected = game.MazeKeyCollected;
+        _mazeKeyCollected = game.MazeInfo.KeyCollected;
 
         _textShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
 

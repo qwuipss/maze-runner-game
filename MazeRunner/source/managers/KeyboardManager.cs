@@ -7,10 +7,6 @@ namespace MazeRunner.Managers;
 
 public static class KeyboardManager
 {
-    private static double _elapsedGameTimeMs;
-
-    private const int KeyboardPollingDelayMs = 50;
-
     public static Vector2 ProcessHeroMovement(Hero hero)
     {
         var movement = Vector2.Zero;
@@ -39,13 +35,13 @@ public static class KeyboardManager
         return movement;
     }
 
-    public static bool IsPollingTimePassed(GameTime gameTime)
+    public static bool IsPollingTimePassed(double pollingTimeMs, ref double elapsedTimeMs, GameTime gameTime)
     {
-        _elapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+        elapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (_elapsedGameTimeMs >= KeyboardPollingDelayMs)
+        if (elapsedTimeMs >= pollingTimeMs)
         {
-            _elapsedGameTimeMs -= KeyboardPollingDelayMs;
+            elapsedTimeMs -= pollingTimeMs;
 
             return true;
         }

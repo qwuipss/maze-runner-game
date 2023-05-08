@@ -1,10 +1,11 @@
-﻿using MazeRunner.Sprites.States;
+﻿using MazeRunner.Components;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites;
 
-public abstract class Sprite : Components.MazeRunnerGameComponent
+public abstract class Sprite : MazeRunnerGameComponent
 {
     public abstract Vector2 Speed { get; }
 
@@ -44,25 +45,18 @@ public abstract class Sprite : Components.MazeRunnerGameComponent
 
     public virtual SpriteEffects FrameEffect { get; set; }
 
-    protected virtual double ElapsedGameTimeMs { get; set; }
-
-    public virtual Point GetCurrentAnimationFramePoint(GameTime gameTime)
+    public virtual Point CurrentAnimationFramePoint
     {
-        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        if (ElapsedGameTimeMs >= State.FrameAnimationDelayMs)
+        get
         {
-            State = ProcessState();
-            ElapsedGameTimeMs -= State.FrameAnimationDelayMs;
+            return State.CurrentAnimationFramePoint;
         }
-
-        return State.CurrentAnimationFramePoint;
     }
 
     public abstract Rectangle GetHitBox(Vector2 position);
 
-    public virtual ISpriteState ProcessState()
+    public virtual ISpriteState ProcessState(GameTime gameTime)
     {
-        return State.ProcessState();
+        return State.ProcessState(gameTime);
     }
 }
