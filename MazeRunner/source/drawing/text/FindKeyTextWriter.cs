@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -7,24 +8,46 @@ namespace MazeRunner.Drawing;
 
 public class FindKeyTextWriter : TextWriter
 {
-    private const double FindKeyTextMaxShowTimeMs = 3000;
+    private enum WritingSide
+    {
+        None,
+        Left,
+        Right,
+    };
+
+    private const double TextMaxShowTimeMs = 3000;
 
     private static readonly Lazy<FindKeyTextWriter> _instance;
 
+    private readonly Vector2 _textStringLength;
+
     private Maze _maze;
 
-    private Vector2 _position;
+    private Hero _hero;
+
+    private WritingSide _writingSide;
+
     private Vector2 _heroPosition;
 
     private bool _mazeKeyCollected;
 
-    private bool _findKeyTextShowed;
+    private bool _textShowed;
 
-    private readonly float _findKeyTextStringLength;
+    private bool _needWriting;
 
-    private double _findKeyTextShowTimeMs;
+    private double _textShowTimeMs;
 
-    private readonly float _findKeyTextShowDistance;
+    private float _textShowDistance;
+
+    private int _mazeWidth;
+
+    public override float ScaleFactor
+    {
+        get
+        {
+            return .2f;
+        }
+    }
 
     static FindKeyTextWriter()
     {
@@ -36,9 +59,11 @@ public class FindKeyTextWriter : TextWriter
         Font = Fonts.BaseFont;
 
         Color = Color.Black;
+
+        _textStringLength = Font.MeasureString(Text) * ScaleFactor;
     }
 
-    protected override string Text
+    public override string Text
     {
         get
         {
@@ -53,67 +78,127 @@ public class FindKeyTextWriter : TextWriter
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.DrawString(Text, _position, Color, DrawingPriority);
+        DrawIfNeeded(gameTime);
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
+        if (_textShowed)
+        {
+            return;
+        }
+
         _mazeKeyCollected = game.MazeKeyCollected;
 
-        _position = GetDrawingPosition();
+        _heroPosition = game.SpritesPositions[_hero];
+
+        if (_needWriting)
+        {
+            game.TextWritersPositions[this] = GetDrawingPosition();
+        }
+
+        ProcessNeedDrawing();
     }
 
     public void Initialize(MazeRunnerGame game)
     {
+        _hero = game.Hero;
         _maze = game.Maze;
 
-        _heroPosition = game.SpritesPositions[game.Hero];
+        _mazeKeyCollected = game.MazeKeyCollected;
+
+        _textShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
+
+        _heroPosition = game.SpritesPositions[_hero];
+
+        _mazeWidth = (int)_maze.GetCellPosition(new Cell(_maze.Skeleton.GetLength(1), 0)).X;
     }
 
     private Vector2 GetDrawingPosition()
     {
-        return Vector2.Zero;
+        var rightUpCorner = (int)_heroPosition.X + _hero.FrameWidth;
+        var leftUpCorner = _heroPosition.X;
+
+        var rightSideTextEndPos = rightUpCorner + _textStringLength.X;
+        var leftSideTextStartPos = leftUpCorner - _textStringLength.X;
+
+        switch (_writingSide)
+        {
+            case WritingSide.None:
+                if (rightSideTextEndPos <= _mazeWidth)
+                {
+                    _writingSide = WritingSide.Right;
+                    goto case WritingSide.Left;
+                }
+                else
+                {
+                    _writingSide = WritingSide.Left;
+                    goto case WritingSide.Right;
+                }
+            case WritingSide.Left:
+                if (leftSideTextStartPos >= 0)
+                {
+                    return new Vector2(leftSideTextStartPos, _heroPosition.Y);
+                }
+                else
+                {
+                    return new Vector2(rightUpCorner, _heroPosition.Y);
+                }
+            case WritingSide.Right:
+                if (rightSideTextEndPos <= _mazeWidth)
+                {
+                    return new Vector2(rightUpCorner, _heroPosition.Y);
+                }
+                else
+                {
+                    return new Vector2(leftSideTextStartPos, _heroPosition.Y);
+                }
+            default:
+                throw new NotImplementedException();
+        }
     }
 
-    private void ProcessFindKeyTextDrawing()
+    private void DrawIfNeeded(GameTime gameTime)
     {
-        if (!_findKeyTextShowed && !_mazeKeyCollected)
+        if (_needWriting)
         {
-            if (CheckHeroExitLocatedNearby())
+            if (_textShowTimeMs > TextMaxShowTimeMs)
             {
-                NeedWriting = true;
-                _findKeyTextShowed = true;
-            }
-        }
+                _needWriting = false;
+                _textShowed = true;
 
-        if (_mazeKeyCollected && NeedWriting)
-        {
-            NeedWriting = false;
-        }
-    }
-
-    private void DrawFindKeyText(GameTime gameTime)
-    {
-        if (NeedWriting)
-        {
-            if (_findKeyTextShowTimeMs > FindKeyTextMaxShowTimeMs)
-            {
-                NeedWriting = false;
                 return;
             }
 
-            Drawer.DrawString(Text, _position, Color.Black, DrawingPriority);
+            Drawer.DrawString(this);
 
-            _findKeyTextShowTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+            _textShowTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
         }
     }
 
-    private bool CheckHeroExitLocatedNearby() //////////////////////////////////
+    private void ProcessNeedDrawing()
     {
-        var (coords, exit) = _maze.ExitInfo;
+        if (!_needWriting && !_mazeKeyCollected)
+        {
+            if (AreHeroExitLocatedNearby())
+            {
+                _needWriting = true;
+            }
+        }
 
-        var coordsAsVector = new Vector2(coords.X * exit.FrameWidth, coords.Y * exit.FrameHeight);
+        if (_mazeKeyCollected && _needWriting)
+        {
+            _needWriting = false;
+            _textShowed = true;
+        }
+    }
 
-        return Vector2.Distance(coordsAsVector, _heroPosition) <= _findKeyTextShowDistance;
+    private bool AreHeroExitLocatedNearby()
+    {
+        var exitPosition = _maze.GetCellPosition(_maze.ExitInfo.Coords);
+
+        var distance = Vector2.Distance(exitPosition, _heroPosition);
+
+        return distance <= _textShowDistance;
     }
 }

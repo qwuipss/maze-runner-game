@@ -12,15 +12,16 @@ public static class Drawer
 {
     private static SpriteBatch _spriteBatch;
 
-    private static SpriteFont _spriteFont;
-
     private static Dictionary<Sprite, Vector2> _spritesPositions;
+
+    private static Dictionary<TextWriter, Vector2> _textWritersPositions;
 
     public static void Initialize(MazeRunnerGame game)
     {
         _spriteBatch = new SpriteBatch(game.GraphicsDevice);
 
         _spritesPositions = game.SpritesPositions;
+        _textWritersPositions = game.TextWritersPositions;
     }
 
     public static void BeginDraw(ICamera camera)
@@ -33,14 +34,13 @@ public static class Drawer
         _spriteBatch.End();
     }
 
-    public static void SetSpriteFont(SpriteFont spriteFont)
+    public static void DrawString(TextWriter textWriter)
     {
-        _spriteFont = spriteFont;
-    }
-
-    public static void DrawString(string text, Vector2 position, Color color, float layerDepth, float rotation = 0)
-    {
-        _spriteBatch.DrawString(_spriteFont, text, position, color, rotation, Vector2.Zero, 1, SpriteEffects.None, layerDepth);
+        _spriteBatch.DrawString(
+            textWriter.Font, textWriter.Text,
+            _textWritersPositions[textWriter], textWriter.Color,
+            0, Vector2.Zero, textWriter.ScaleFactor,
+            SpriteEffects.None, textWriter.DrawingPriority);
     }
 
     public static void DrawMaze(Maze maze, GameTime gameTime)

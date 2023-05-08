@@ -8,7 +8,15 @@ public class DropTrap : MazeTrap
     {
         get
         {
-            return TileType.DropTrap;
+            return TileType.Trap;
+        }
+    }
+
+    public override TrapType TrapType
+    {
+        get
+        {
+            return TrapType.Drop;
         }
     }
 

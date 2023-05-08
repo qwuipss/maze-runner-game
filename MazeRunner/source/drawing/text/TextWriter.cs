@@ -14,11 +14,11 @@ public abstract class TextWriter : MazeRunnerGameComponent
         }
     }
 
-    protected abstract string Text { get; }
+    public abstract float ScaleFactor { get; }
 
-    protected virtual SpriteFont Font { get; init; }
+    public abstract string Text { get; }
 
-    protected virtual Color Color { get; init; }
+    public virtual SpriteFont Font { get; init; }
 
-    protected virtual bool NeedWriting { get; set; }
+    public virtual Color Color { get; init; }
 }

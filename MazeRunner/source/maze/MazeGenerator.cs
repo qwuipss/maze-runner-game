@@ -65,7 +65,8 @@ public static class MazeGenerator
 
     public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, int percentage)
     {
-        var insertionsCount = maze.GetFloorsCount() * percentage / 100;
+        var floorsCount = maze.GetFloorsCount();
+        var insertionsCount = floorsCount * percentage / 100;
 
         for (int i = 0; i < insertionsCount; i++)
         {

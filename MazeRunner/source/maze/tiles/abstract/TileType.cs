@@ -4,8 +4,7 @@ public enum TileType
 {
     Floor,
     Wall,
-    DropTrap,
-    BayonetTrap,
     Exit,
+    Trap,
     Item,
 }

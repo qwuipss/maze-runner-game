@@ -8,7 +8,15 @@ public class BayonetTrap : MazeTrap
     {
         get
         {
-            return TileType.BayonetTrap;
+            return TileType.Trap;
+        }
+    }
+
+    public override TrapType TrapType
+    {
+        get
+        {
+            return TrapType.Bayonet;
         }
     }
 

@@ -40,8 +40,12 @@ public class MazeRunnerGame : Game
     private HeroCamera _heroCamera;
     #endregion
 
-    #region GameComponents
+    #region GameComponentsList
     private List<MazeRunnerGameComponent> _components;
+    #endregion
+
+    #region TextWritersData
+    public Dictionary<TextWriter, Vector2> TextWritersPositions { get; private set; }
     #endregion
 
     #region FindKeyTextData
@@ -57,6 +61,7 @@ public class MazeRunnerGame : Game
         _graphics = new GraphicsDeviceManager(this);
 
         SpritesPositions = new Dictionary<Sprite, Vector2>();
+        TextWritersPositions = new Dictionary<TextWriter, Vector2>();
     }
 
     #region GameBase
@@ -66,7 +71,6 @@ public class MazeRunnerGame : Game
 
         SetFullScreen();
 
-        InitializeDrawer();
         InitializeCamera();
         InitializeMaze();
         InitializeHero();
@@ -74,6 +78,8 @@ public class MazeRunnerGame : Game
         InitializeTextWriters();
 
         InitializeComponentsList();
+
+        InitializeDrawer();
     }
 
     protected override void LoadContent()
@@ -125,7 +131,7 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        //_graphics.ApplyChanges();
+        _graphics.ApplyChanges();
     }
 
     private void InitializeComponentsList()
@@ -151,8 +157,6 @@ public class MazeRunnerGame : Game
     private void InitializeDrawer()
     {
         Drawer.Initialize(this);
-
-        Drawer.SetSpriteFont(Fonts.BaseFont);
     }
 
     private void InitializeHero()
@@ -174,11 +178,9 @@ public class MazeRunnerGame : Game
     private void InitializeTextWriters()
     {
         _findKeyTextWriter = FindKeyTextWriter.GetInstance();
+        TextWritersPositions.Add(_findKeyTextWriter, Vector2.Zero);
 
         _findKeyTextWriter.Initialize(this);
-
-        //_findKeyTextShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
-        //_findKeyTextStringLength = Fonts.BaseFont.MeasureString(FindKeyText).Length();
     }
     #endregion
 
@@ -287,11 +289,6 @@ public class MazeRunnerGame : Game
         if (Keyboard.GetState().IsKeyDown(Keys.Escape)) // exit
         {
             Exit();
-        }
-
-        if (Keyboard.GetState().IsKeyDown(Keys.G)) // generate maze
-        {
-            InitializeMaze();
         }
 
         if (Keyboard.GetState().IsKeyDown(Keys.O)) // open exit
