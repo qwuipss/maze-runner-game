@@ -2,8 +2,13 @@
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
-public class DropTrapActivatingState : DropTrapBaseState
+public class BayonetTrapPostActivatingState : BayonetTrapBaseState
 {
+    public BayonetTrapPostActivatingState()
+    {
+        CurrentAnimationFramePointX = FrameWidth;
+    }
+
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
         var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -16,7 +21,7 @@ public class DropTrapActivatingState : DropTrapBaseState
 
             if (CurrentAnimationFramePointX == (FramesCount - 1) * FrameWidth)
             {
-                return new DropTrapActivatedState();
+                return new BayonetTrapActivatedState();
             }
 
             ElapsedGameTimeMs -= elapsedTime;

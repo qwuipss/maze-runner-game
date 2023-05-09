@@ -4,20 +4,27 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class BayonetTrapDeactivatingState : BayonetTrapBaseState
 {
-    public BayonetTrapDeactivatingState(MazeTrap trap)
+    public BayonetTrapDeactivatingState()
     {
-        Trap = trap;
-
         CurrentAnimationFramePointX = (FramesCount - 1) * FrameWidth;
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        CurrentAnimationFramePointX -= FrameWidth;
+        var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (CurrentAnimationFramePointX is 0)
+        ElapsedGameTimeMs += elapsedTime;
+
+        if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            return new BayonetTrapDeactivatedState(Trap);
+            CurrentAnimationFramePointX -= FrameWidth;
+
+            if (CurrentAnimationFramePointX is 0)
+            {
+                return new BayonetTrapDeactivatedState();
+            }
+
+            ElapsedGameTimeMs -= elapsedTime;
         }
 
         return this;

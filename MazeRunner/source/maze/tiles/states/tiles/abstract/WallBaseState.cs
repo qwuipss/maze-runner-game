@@ -21,7 +21,7 @@ public abstract class WallBaseState : MazeTileBaseState
         }
     }
 
-    public override int FrameAnimationDelayMs
+    protected override int UpdateTimeDelayMs
     {
         get
         {

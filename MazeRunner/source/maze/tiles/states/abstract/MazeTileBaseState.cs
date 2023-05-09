@@ -9,7 +9,7 @@ public abstract class MazeTileBaseState : IMazeTileState
 
     public abstract int FramesCount { get; }
 
-    public abstract int FrameAnimationDelayMs { get; }
+    protected abstract int UpdateTimeDelayMs { get; }
 
     public virtual int FrameWidth
     {
@@ -38,6 +38,8 @@ public abstract class MazeTileBaseState : IMazeTileState
     protected virtual IMazeTileState State { get; set; }
 
     protected virtual int CurrentAnimationFramePointX { get; set; }
+
+    protected virtual double ElapsedGameTimeMs { get; set; }
 
     public abstract IMazeTileState ProcessState(GameTime gameTime);
 }

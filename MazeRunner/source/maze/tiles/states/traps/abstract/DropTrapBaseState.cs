@@ -21,11 +21,11 @@ public abstract class DropTrapBaseState : MazeTrapBaseState
         }
     }
 
-    public override int FrameAnimationDelayMs
+    protected override int UpdateTimeDelayMs
     {
         get
         {
-            return 35;
+            return 50;
         }
     }
 }

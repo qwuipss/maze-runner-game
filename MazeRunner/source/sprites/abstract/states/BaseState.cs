@@ -11,6 +11,14 @@ public abstract class BaseState : ISpriteState
 
     public virtual SpriteEffects FrameEffect { get; set; }
 
+    public virtual int UpdateTimeDelayMs
+    {
+        get
+        {
+            return 50;
+        }
+    }
+
     public virtual int FrameWidth
     {
         get
@@ -24,14 +32,6 @@ public abstract class BaseState : ISpriteState
         get
         {
             return Texture.Height;
-        }
-    }
-
-    public virtual int FrameAnimationDelayMs
-    {
-        get
-        {
-            return 50;
         }
     }
 
@@ -51,10 +51,10 @@ public abstract class BaseState : ISpriteState
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (ElapsedGameTimeMs >= FrameAnimationDelayMs)
+        if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
             CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameWidth) % (FrameWidth * FramesCount);
-            ElapsedGameTimeMs -= FrameAnimationDelayMs;
+            ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 
         return this;

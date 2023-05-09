@@ -21,7 +21,7 @@ public abstract class ExitBaseState : MazeTileBaseState
         }
     }
 
-    public override int FrameAnimationDelayMs
+    protected override int UpdateTimeDelayMs
     {
         get
         {

@@ -15,7 +15,5 @@ public interface IMazeTileState
 
     public Point CurrentAnimationFramePoint { get; }
 
-    public int FrameAnimationDelayMs { get; }
-
     public IMazeTileState ProcessState(GameTime gameTime);
 }

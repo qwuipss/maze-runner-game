@@ -21,11 +21,11 @@ public abstract class BayonetTrapBaseState : MazeTrapBaseState
         }
     }
 
-    public override int FrameAnimationDelayMs
+    protected override int UpdateTimeDelayMs
     {
         get
         {
-            return 75;
+            return 40;
         }
     }
 }

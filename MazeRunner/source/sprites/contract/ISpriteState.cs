@@ -15,8 +15,6 @@ public interface ISpriteState
 
     public SpriteEffects FrameEffect { get; set; }
 
-    public int FrameAnimationDelayMs { get; }
-
     public Point CurrentAnimationFramePoint { get; }
 
     public ISpriteState ProcessState(GameTime gameTime);

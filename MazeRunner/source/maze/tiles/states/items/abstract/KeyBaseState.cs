@@ -21,7 +21,7 @@ public abstract class KeyBaseState : MazeItemBaseState
         }
     }
 
-    public override int FrameAnimationDelayMs
+    protected override int UpdateTimeDelayMs
     {
         get
         {

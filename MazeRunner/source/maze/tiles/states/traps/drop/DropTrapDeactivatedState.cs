@@ -5,16 +5,31 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class DropTrapDeactivatedState : DropTrapBaseState
 {
-    public DropTrapDeactivatedState(MazeTrap trap)
+    private readonly int _updateTimeDelayMs;
+
+    protected override int UpdateTimeDelayMs
     {
-        Trap = trap;
+        get
+        {
+            return _updateTimeDelayMs;
+        }
+    }
+
+    public DropTrapDeactivatedState()
+    {
+        var minUpdateTimeMs = 1000;
+        var maxUpdateTimeMs = 15000;
+
+        _updateTimeDelayMs = RandomHelper.Next(minUpdateTimeMs, maxUpdateTimeMs);
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        if (RandomHelper.RollChance(Trap.ActivateChance))
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            return new DropTrapActivatingState(Trap);
+            return new DropTrapActivatingState();
         }
 
         return this;

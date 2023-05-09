@@ -4,7 +4,7 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class ExitOpeningState : ExitBaseState
 {
-    public override int FrameAnimationDelayMs
+    protected override int UpdateTimeDelayMs
     {
         get
         {

@@ -21,7 +21,7 @@ public class HeroIdleState : BaseState
         }
     }
 
-    public override int FrameAnimationDelayMs
+    public override int UpdateTimeDelayMs
     {
         get
         {
