@@ -7,7 +7,7 @@ namespace MazeRunner.Managers;
 
 public static class CollisionManager
 {
-    public static bool ColidesWithWalls(Hero hero, Vector2 position, Maze maze, Vector2 movement)
+    public static bool ColidesWithWalls(Sprite sprite, Vector2 position, Maze maze, Vector2 movement)
     {
         var mazeSkeleton = maze.Skeleton;
 
@@ -17,12 +17,12 @@ public static class CollisionManager
             {
                 var tile = mazeSkeleton[y, x];
 
-                if (tile.TileType is TileType.Floor)
+                if (tile.TileType is not TileType.Wall)
                 {
                     continue;
                 }
 
-                if (CollidesWithMazeTile(hero, position, movement, tile, x, y))
+                if (CollidesWithMazeTile(sprite, position, movement, tile, x, y))
                 {
                     return true;
                 }
@@ -32,19 +32,19 @@ public static class CollisionManager
         return false;
     }
 
-    public static bool CollidesWithExit(Hero hero, Vector2 position, Maze maze, Vector2 movement)
+    public static bool CollidesWithExit(Sprite sprite, Vector2 position, Maze maze, Vector2 movement)
     {
         var (coords, exit) = maze.ExitInfo;
 
-        return CollidesWithMazeTile(hero, position, movement, exit, coords.X, coords.Y)
+        return CollidesWithMazeTile(sprite, position, movement, exit, coords.X, coords.Y)
            && !exit.IsOpened;
     }
 
-    public static bool CollidesWithItems(Hero hero, Vector2 position, Maze maze, out (Cell Coords, MazeItem Item) itemInfo)
+    public static bool CollidesWithItems(Sprite sprite, Vector2 position, Maze maze, out (Cell Coords, MazeItem Item) itemInfo)
     {
         foreach (var (coords, item) in maze.ItemsInfo)
         {
-            if (CollidesWithMazeTile(hero, position, Vector2.Zero, item, coords.X, coords.Y))
+            if (CollidesWithMazeTile(sprite, position, Vector2.Zero, item, coords.X, coords.Y))
             {
                 itemInfo = (coords, item);
 
@@ -56,9 +56,9 @@ public static class CollisionManager
         return false;
     }
 
-    public static bool CollidesWithKey(Hero hero, Vector2 position, Cell itemCoords, Key key)
+    public static bool CollidesWithKey(Sprite sprite, Vector2 position, Cell itemCoords, Key key)
     {
-        if (CollidesWithMazeTile(hero, position, Vector2.Zero, key, itemCoords.X, itemCoords.Y))
+        if (CollidesWithMazeTile(sprite, position, Vector2.Zero, key, itemCoords.X, itemCoords.Y))
         {
             return true;
         }
@@ -66,9 +66,9 @@ public static class CollisionManager
         return false;
     }
 
-    private static bool CollidesWithMazeTile(Hero hero, Vector2 position, Vector2 movement, MazeTile tile, int x, int y)
+    private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile tile, int x, int y)
     {
-        return GetExtendedHitBox(hero, position, movement).Intersects(GetHitBox(tile, x, y));
+        return GetExtendedHitBox(sprite, position, movement).Intersects(GetHitBox(tile, x, y));
     }
 
     private static Rectangle GetHitBox(MazeTile mazeTile, int x, int y)
@@ -77,9 +77,9 @@ public static class CollisionManager
                              mazeTile.FrameWidth, mazeTile.FrameHeight);
     }
 
-    private static Rectangle GetExtendedHitBox(Hero hero, Vector2 position, Vector2 movement)
+    private static Rectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
     {
-        var hitBox = hero.GetHitBox(position);//////////
+        var hitBox = sprite.GetHitBox(position);//////////
 
         var x = hitBox.X;
         var y = hitBox.Y;

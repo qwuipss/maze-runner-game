@@ -108,22 +108,24 @@ public class Hero : Sprite
     #region Collidings
     private void ProcessItemsColliding(Vector2 position, MazeInfo mazeInfo)
     {
-        void ProcessKeyColliding(Vector2 position, Cell coords, Key key)
+        void ProcessKeyColliding(Vector2 position, Cell cell, Key key)
         {
-            if (CollisionManager.CollidesWithKey(this, position, coords, key))
+            if (CollisionManager.CollidesWithKey(this, position, cell, key))
             {
-                mazeInfo.Maze.RemoveItem(coords);
+                mazeInfo.Maze.RemoveItem(cell);
                 mazeInfo.IsKeyCollected = true;
             }
         }
 
-        if (CollisionManager.CollidesWithItems(this, position, mazeInfo.Maze, out var itemInfo))
+        var maze = mazeInfo.Maze;
+
+        if (CollisionManager.CollidesWithItems(this, position, maze, out var itemInfo))
         {
-            var (coords, item) = itemInfo;
+            var (cell, item) = itemInfo;
 
             if (item is Key key)
             {
-                ProcessKeyColliding(position, coords, key);
+                ProcessKeyColliding(position, cell, key);
             }
         }
     }
