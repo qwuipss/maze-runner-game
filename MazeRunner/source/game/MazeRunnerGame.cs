@@ -155,7 +155,9 @@ public class MazeRunnerGame : Game
 
     private void InitializeHeroCamera()
     {
-        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, 7);
+        var scaleFactor = 7;
+
+        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, scaleFactor);
     }
 
     private void InitializeTextWriters()

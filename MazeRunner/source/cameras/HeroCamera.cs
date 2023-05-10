@@ -15,11 +15,11 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     private Matrix _transformMatrix;
 
-    public HeroCamera(Viewport viewPort, float scaleCoeff = 1)
+    public HeroCamera(Viewport viewPort, float scaleFactor = 1)
     {
         _origin = new Vector3(viewPort.Width / 2, viewPort.Height / 2, 0);
 
-        _scale = Matrix.CreateScale(new Vector3(scaleCoeff, scaleCoeff, 0));
+        _scale = Matrix.CreateScale(new Vector3(scaleFactor, scaleFactor, 0));
         _bordersOffset = Matrix.CreateTranslation(_origin);
 
     }
