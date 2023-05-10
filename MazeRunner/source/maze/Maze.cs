@@ -124,7 +124,6 @@ public class Maze
     public bool IsFloor(Cell cell)
     {
         return _skeleton[cell.Y, cell.X].TileType is TileType.Floor
-           && cell != ExitInfo.Coords
            && !_trapsInfo.ContainsKey(cell)
            && !_itemsInfo.ContainsKey(cell);
     }

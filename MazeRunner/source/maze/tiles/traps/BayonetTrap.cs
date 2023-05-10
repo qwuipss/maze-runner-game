@@ -4,6 +4,14 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class BayonetTrap : MazeTrap
 {
+    public override bool IsActivated
+    {
+        get
+        {
+            return State is BayonetTrapActivatedState;
+        }
+    }
+
     public override TileType TileType
     {
         get

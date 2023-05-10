@@ -4,6 +4,14 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class DropTrap : MazeTrap
 {
+    public override bool IsActivated
+    {
+        get
+        {
+            return State is DropTrapActivatedState;
+        }
+    }
+
     public override TileType TileType
     {
         get

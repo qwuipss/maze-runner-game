@@ -4,9 +4,7 @@ public abstract class MazeTrap : MazeTile
 {
     public abstract TrapType TrapType { get; }
 
-    public virtual bool IsActivated { get; }
-
-    public virtual bool IsDeactivated { get; }
+    public abstract bool IsActivated { get; }
 
     public override float DrawingPriority
     {
