@@ -22,12 +22,14 @@ public class MazeRunnerGame : Game
 
     #region MazeData
     public MazeInfo MazeInfo { get; private set; }
-    private Maze _maze;
     #endregion
 
     #region HeroData
     public SpriteInfo HeroInfo { get; private set; }
-    private Hero _hero;
+    #endregion
+
+    #region FindKeyTextData
+    public TextWriterInfo FindKeyTextWriterInfo { get; private set; }
     #endregion
 
     #region CameraData
@@ -36,11 +38,6 @@ public class MazeRunnerGame : Game
 
     #region GameComponentsList
     private List<MazeRunnerGameComponent> _components;
-    #endregion
-
-    #region FindKeyTextData
-    public TextWriterInfo FindKeyTextWriterInfo { get; private set; }
-    private FindKeyTextWriter _findKeyTextWriter;
     #endregion
 
     public MazeRunnerGame()
@@ -125,18 +122,18 @@ public class MazeRunnerGame : Game
 
     private void InitializeMaze()
     {
-        _maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
+        var maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
-        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), 3);
-        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), 2);
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
 
-        MazeGenerator.InsertExit(_maze);
+        MazeGenerator.InsertExit(maze);
 
-        MazeGenerator.InsertItem(_maze, new Key());
+        MazeGenerator.InsertItem(maze, new Key());
 
-        _maze.InitializeComponentsList();
+        maze.InitializeComponentsList();
 
-        MazeInfo = new MazeInfo(_maze);
+        MazeInfo = new MazeInfo(maze);
     }
 
     private void InitializeDrawer()
@@ -146,12 +143,14 @@ public class MazeRunnerGame : Game
 
     private void InitializeHero()
     {
-        var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
-        var heroPosition = _maze.GetCellPosition(heroCell);
+        var maze = MazeInfo.Maze;
 
-        _hero = new Hero(this);
+        var heroCell = MazeGenerator.GetRandomFloorCell(maze);
+        var heroPosition = maze.GetCellPosition(heroCell);
 
-        HeroInfo = new SpriteInfo(_hero, heroPosition);
+        var hero = new Hero(this);
+
+        HeroInfo = new SpriteInfo(hero, heroPosition);
     }
 
     private void InitializeHeroCamera()
@@ -161,10 +160,10 @@ public class MazeRunnerGame : Game
 
     private void InitializeTextWriters()
     {
-        _findKeyTextWriter = FindKeyTextWriter.GetInstance();
-        _findKeyTextWriter.Initialize(this);
+        var findKeyTextWriter = FindKeyTextWriter.GetInstance();
+        findKeyTextWriter.Initialize(this);
 
-        FindKeyTextWriterInfo = new TextWriterInfo(_findKeyTextWriter);
+        FindKeyTextWriterInfo = new TextWriterInfo(findKeyTextWriter);
     }
     #endregion
 
@@ -179,7 +178,7 @@ public class MazeRunnerGame : Game
         {
             if (MazeInfo.IsKeyCollected)
             {
-                _maze.ExitInfo.Exit.Open();
+                MazeInfo.Maze.ExitInfo.Exit.Open();
             }
         }
     }
