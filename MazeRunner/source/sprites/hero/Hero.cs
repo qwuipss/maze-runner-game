@@ -21,8 +21,6 @@ public class Hero : Sprite
     private const int HitBoxWidth = 9;
     private const int HitBoxHeight = 12;
 
-    private readonly MazeInfo _mazeInfo;
-
     private double _elapsedGameTimeMs;
 
     public override Vector2 Speed
@@ -35,10 +33,8 @@ public class Hero : Sprite
 
     protected override ISpriteState State { get; set; }
 
-    public Hero(MazeRunnerGame game)
+    public Hero()
     {
-        _mazeInfo = game.MazeInfo;
-
         State = new HeroIdleState();
     }
 
@@ -60,19 +56,21 @@ public class Hero : Sprite
             return;
         }
 
-        var heroinfo = game.HeroInfo;
-        var position = heroinfo.Position;
+        var heroInfo = game.HeroInfo;
+        var position = heroInfo.Position;
 
-        var movement = ProcessMovement(position);
+        var mazeInfo = game.MazeInfo;
+
+        var movement = ProcessMovement(position, mazeInfo);
 
         ProcessState(movement);
         ProcessFrameEffect(movement);
 
         position += movement;
 
-        ProcessItemsColliding(position);
+        ProcessItemsColliding(position, mazeInfo);
 
-        heroinfo.Position = position;
+        heroInfo.Position = position;
     }
 
     #region VisualProcessers
@@ -108,18 +106,18 @@ public class Hero : Sprite
     #endregion
 
     #region Collidings
-    private void ProcessItemsColliding(Vector2 position)
+    private void ProcessItemsColliding(Vector2 position, MazeInfo mazeInfo)
     {
         void ProcessKeyColliding(Vector2 position, Cell coords, Key key)
         {
             if (CollisionManager.CollidesWithKey(this, position, coords, key))
             {
-                _mazeInfo.Maze.RemoveItem(coords);
-                _mazeInfo.IsKeyCollected = true;
+                mazeInfo.Maze.RemoveItem(coords);
+                mazeInfo.IsKeyCollected = true;
             }
         }
 
-        if (CollisionManager.CollidesWithItems(this, position, _mazeInfo.Maze, out var itemInfo))
+        if (CollisionManager.CollidesWithItems(this, position, mazeInfo.Maze, out var itemInfo))
         {
             var (coords, item) = itemInfo;
 
@@ -132,11 +130,11 @@ public class Hero : Sprite
     #endregion
 
     #region MovementCalculations
-    private Vector2 ProcessMovement(Vector2 position)
+    private Vector2 ProcessMovement(Vector2 position, MazeInfo mazeInfo)
     {
-        static Vector2 NormalizeDiagonalSpeed(Vector2 speed, Vector2 movement)
+        Vector2 NormalizeDiagonalSpeed(Vector2 movement)
         {
-            if (movement.Abs() == speed)
+            if (movement.Abs() == Speed)
             {
                 return new Vector2((float)(movement.X / Math.Sqrt(2)), (float)(movement.Y / Math.Sqrt(2)));
             }
@@ -144,9 +142,9 @@ public class Hero : Sprite
             return movement;
         }
 
-        Vector2 GetTotalMovement(Vector2 movement, Vector2 position)
+        Vector2 GetTotalMovement(MazeInfo mazeInfo, Vector2 movement, Vector2 position)
         {
-            var maze = _mazeInfo.Maze;
+            var maze = mazeInfo.Maze;
 
             var totalMovement = Vector2.Zero;
 
@@ -165,17 +163,17 @@ public class Hero : Sprite
                 totalMovement += movementY;
             }
 
-            if (ProcessDiagonalMovement(totalMovement, position, movementX, movementY, out totalMovement))
+            if (ProcessDiagonalMovement(mazeInfo, totalMovement, position, movementX, movementY, out totalMovement))
             {
                 return totalMovement;
             }
 
-            return NormalizeDiagonalSpeed(Speed, totalMovement);
+            return NormalizeDiagonalSpeed(totalMovement);
         }
 
-        bool ProcessDiagonalMovement(Vector2 movement, Vector2 position, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement) //
+        bool ProcessDiagonalMovement(MazeInfo mazeInfo, Vector2 movement, Vector2 position, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement) //
         {
-            if (CollisionManager.ColidesWithWalls(this, position, _mazeInfo.Maze, movement))
+            if (CollisionManager.ColidesWithWalls(this, position, mazeInfo.Maze, movement))
             {
                 if (RandomHelper.RandomBoolean())
                 {
@@ -195,7 +193,7 @@ public class Hero : Sprite
         }
 
         var movement = KeyboardManager.ProcessHeroMovement(this);
-        var totalMovement = GetTotalMovement(movement, position);
+        var totalMovement = GetTotalMovement(mazeInfo, movement, position);
 
         return totalMovement;
     }

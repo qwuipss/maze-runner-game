@@ -148,7 +148,7 @@ public class MazeRunnerGame : Game
         var heroCell = MazeGenerator.GetRandomFloorCell(maze);
         var heroPosition = maze.GetCellPosition(heroCell);
 
-        var hero = new Hero(this);
+        var hero = new Hero();
 
         HeroInfo = new SpriteInfo(hero, heroPosition);
     }
