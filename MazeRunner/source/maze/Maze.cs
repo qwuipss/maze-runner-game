@@ -11,9 +11,9 @@ public class Maze
 {
     private readonly MazeTile[,] _skeleton;
 
-    private readonly Dictionary<Cell, MazeTrap> _traps;
+    private readonly Dictionary<Cell, MazeTrap> _trapsInfo;
 
-    private readonly Dictionary<Cell, MazeItem> _items;
+    private readonly Dictionary<Cell, MazeItem> _itemsInfo;
 
     public (Cell Coords, Exit Exit) ExitInfo { get; set; }
 
@@ -27,19 +27,19 @@ public class Maze
         }
     }
 
-    public ImmutableDictionary<Cell, MazeTrap> Traps
+    public ImmutableDictionary<Cell, MazeTrap> TrapsInfo
     {
         get
         {
-            return _traps.ToImmutableDictionary();
+            return _trapsInfo.ToImmutableDictionary();
         }
     }
 
-    public ImmutableDictionary<Cell, MazeItem> Items
+    public ImmutableDictionary<Cell, MazeItem> ItemsInfo
     {
         get
         {
-            return _items.ToImmutableDictionary();
+            return _itemsInfo.ToImmutableDictionary();
         }
     }
 
@@ -47,8 +47,8 @@ public class Maze
     {
         _skeleton = skeleton;
 
-        _traps = new Dictionary<Cell, MazeTrap>();
-        _items = new Dictionary<Cell, MazeItem>();
+        _trapsInfo = new Dictionary<Cell, MazeTrap>();
+        _itemsInfo = new Dictionary<Cell, MazeItem>();
 
         Components = new List<MazeTileInfo>();
     }
@@ -96,20 +96,20 @@ public class Maze
 
     public void InsertTrap(MazeTrap trap, Cell cell)
     {
-        _traps.Add(cell, trap);
+        _trapsInfo.Add(cell, trap);
     }
 
     public void InsertItem(MazeItem item, Cell cell)
     {
-        _items.Add(cell, item);
+        _itemsInfo.Add(cell, item);
     }
 
     public void RemoveItem(Cell cell)
     {
         var cellPosition = GetCellPosition(cell);
-        var itemInfo = new MazeTileInfo(_items[cell], cellPosition);
+        var itemInfo = new MazeTileInfo(_itemsInfo[cell], cellPosition);
 
-        _items.Remove(cell);
+        _itemsInfo.Remove(cell);
 
         Components.Remove(itemInfo);
     }
@@ -123,24 +123,24 @@ public class Maze
 
     public bool IsFloor(Cell cell)
     {
-        return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
-           && !_traps.ContainsKey(cell)
-           && !_items.ContainsKey(cell)
-           && cell != ExitInfo.Coords;
+        return _skeleton[cell.Y, cell.X].TileType is TileType.Floor
+           && cell != ExitInfo.Coords
+           && !_trapsInfo.ContainsKey(cell)
+           && !_itemsInfo.ContainsKey(cell);
     }
 
     public bool IsWall(Cell cell)
     {
-        return Skeleton[cell.Y, cell.X].TileType is TileType.Wall;
+        return _skeleton[cell.Y, cell.X].TileType is TileType.Wall;
     }
 
     public int GetFloorsCount()
     {
         var floorsCount = 0;
 
-        for (int y = 0; y < Skeleton.GetLength(0); y++)
+        for (int y = 0; y < _skeleton.GetLength(0); y++)
         {
-            for (int x = 0; x < Skeleton.GetLength(1); x++)
+            for (int x = 0; x < _skeleton.GetLength(1); x++)
             {
                 if (IsFloor(new Cell(x, y)))
                 {
@@ -168,7 +168,7 @@ public class Maze
 
     private void InitializeTrapsComponentsList()
     {
-        foreach (var (coords, trap) in _traps)
+        foreach (var (coords, trap) in _trapsInfo)
         {
             var trapPosition = GetCellPosition(coords);
 
@@ -178,7 +178,7 @@ public class Maze
 
     private void InitializeItemsComponentsList()
     {
-        foreach (var (coords, item) in _items)
+        foreach (var (coords, item) in _itemsInfo)
         {
             var itemPosition = GetCellPosition(coords);
 

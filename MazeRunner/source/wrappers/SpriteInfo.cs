@@ -20,8 +20,6 @@ public class SpriteInfo : MazeRunnerGameComponent
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
         Sprite.Update(game, gameTime);
-
-        Position = game.HeroInfo.Position;
     }
 
     public override void Draw(GameTime gameTime)

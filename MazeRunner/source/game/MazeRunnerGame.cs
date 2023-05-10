@@ -21,13 +21,13 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region MazeData
-    private Maze _maze;
     public MazeInfo MazeInfo { get; private set; }
+    private Maze _maze;
     #endregion
 
     #region HeroData
-    private Hero Hero { get; set; }
     public SpriteInfo HeroInfo { get; private set; }
+    private Hero _hero;
     #endregion
 
     #region CameraData
@@ -39,14 +39,13 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region FindKeyTextData
-    public TextWriterInfo FindKeyTextWriterInfo;
+    public TextWriterInfo FindKeyTextWriterInfo { get; private set; }
     private FindKeyTextWriter _findKeyTextWriter;
     #endregion
 
     public MazeRunnerGame()
     {
         IsMouseVisible = true;
-
         Content.RootDirectory = "Content";
 
         _graphics = new GraphicsDeviceManager(this);
@@ -150,9 +149,9 @@ public class MazeRunnerGame : Game
         var heroCell = MazeGenerator.GetRandomFloorCell(_maze);
         var heroPosition = _maze.GetCellPosition(heroCell);
 
-        Hero = new Hero(this);
+        _hero = new Hero(this);
 
-        HeroInfo = new SpriteInfo(Hero, heroPosition);
+        HeroInfo = new SpriteInfo(_hero, heroPosition);
     }
 
     private void InitializeHeroCamera()
@@ -163,10 +162,9 @@ public class MazeRunnerGame : Game
     private void InitializeTextWriters()
     {
         _findKeyTextWriter = FindKeyTextWriter.GetInstance();
-
-        FindKeyTextWriterInfo = new TextWriterInfo(_findKeyTextWriter, Vector2.Zero);
-
         _findKeyTextWriter.Initialize(this);
+
+        FindKeyTextWriterInfo = new TextWriterInfo(_findKeyTextWriter);
     }
     #endregion
 

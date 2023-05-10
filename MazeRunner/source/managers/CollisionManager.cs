@@ -42,12 +42,12 @@ public static class CollisionManager
 
     public static bool CollidesWithItems(Hero hero, Vector2 position, Maze maze, out (Cell Coords, MazeItem Item) itemInfo)
     {
-        foreach (var (coords, item) in maze.Items)
+        foreach (var (coords, item) in maze.ItemsInfo)
         {
-            itemInfo = (coords, item);
-
             if (CollidesWithMazeTile(hero, position, Vector2.Zero, item, coords.X, coords.Y))
             {
+                itemInfo = (coords, item);
+
                 return true;
             }
         }

@@ -17,10 +17,11 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public HeroCamera(Viewport viewPort, float scaleCoeff = 1)
     {
-        _scale = Matrix.CreateScale(new Vector3(scaleCoeff, scaleCoeff, 0));
-
         _origin = new Vector3(viewPort.Width / 2, viewPort.Height / 2, 0);
+
+        _scale = Matrix.CreateScale(new Vector3(scaleCoeff, scaleCoeff, 0));
         _bordersOffset = Matrix.CreateTranslation(_origin);
+
     }
 
     public override void Draw(GameTime gameTime)

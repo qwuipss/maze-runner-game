@@ -10,17 +10,14 @@ public class TextWriterInfo : MazeRunnerGameComponent
 
     private TextWriter TextWriter { get; init; }
 
-    public TextWriterInfo(TextWriter textWriter, Vector2 position)
+    public TextWriterInfo(TextWriter textWriter)
     {
         TextWriter = textWriter;
-        Position = position;
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
         TextWriter.Update(game, gameTime);
-
-        Position = game.FindKeyTextWriterInfo.Position;
     }
 
     public override void Draw(GameTime gameTime)
