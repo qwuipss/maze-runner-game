@@ -60,7 +60,7 @@ public class Hero : Sprite
             return;
         }
 
-        var position = game.SpritesPositions[this];
+        var position = game.HeroInfo.Position;
 
         var movement = ProcessMovement(position);
 
@@ -71,7 +71,7 @@ public class Hero : Sprite
 
         ProcessItemsColliding(position);
 
-        game.SpritesPositions[this] = position;
+        game.HeroInfo.Position = position;
     }
 
     #region VisualProcessers

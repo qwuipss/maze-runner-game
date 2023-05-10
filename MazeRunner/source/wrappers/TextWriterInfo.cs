@@ -6,9 +6,9 @@ namespace MazeRunner.Wrappers;
 
 public class TextWriterInfo : MazeRunnerGameComponent
 {
-    private TextWriter TextWriter { get; init; }
+    public Vector2 Position { get; set; }
 
-    private Vector2 Position { get; set; }
+    private TextWriter TextWriter { get; init; }
 
     public TextWriterInfo(TextWriter textWriter, Vector2 position)
     {
@@ -20,7 +20,7 @@ public class TextWriterInfo : MazeRunnerGameComponent
     {
         TextWriter.Update(game, gameTime);
 
-        Position = game.TextWritersPositions[TextWriter];
+        Position = game.FindKeyTextWriterInfo.Position;
     }
 
     public override void Draw(GameTime gameTime)

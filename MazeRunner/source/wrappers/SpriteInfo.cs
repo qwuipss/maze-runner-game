@@ -9,7 +9,7 @@ public class SpriteInfo : MazeRunnerGameComponent
 {
     public Sprite Sprite { get; init; }
 
-    public Vector2 Position { get; private set; }
+    public Vector2 Position { get; set; }
 
     public SpriteInfo(Sprite sprite, Vector2 position)
     {
@@ -21,7 +21,7 @@ public class SpriteInfo : MazeRunnerGameComponent
     {
         Sprite.Update(game, gameTime);
 
-        Position = game.SpritesPositions[Sprite];
+        Position = game.HeroInfo.Position;
     }
 
     public override void Draw(GameTime gameTime)

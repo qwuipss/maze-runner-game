@@ -90,11 +90,11 @@ public class FindKeyTextWriter : TextWriter
 
         _mazeKeyCollected = game.MazeInfo.IsKeyCollected;
 
-        _heroPosition = game.SpritesPositions[_hero];
+        _heroPosition = game.HeroInfo.Position;
 
         if (_needWriting)
         {
-            game.TextWritersPositions[this] = GetDrawingPosition();
+            game.FindKeyTextWriterInfo.Position = GetDrawingPosition();
         }
 
         ProcessNeedDrawing();
@@ -109,7 +109,7 @@ public class FindKeyTextWriter : TextWriter
 
         _textShowDistance = _maze.ExitInfo.Exit.FrameWidth * 2;
 
-        _heroPosition = game.SpritesPositions[_hero];
+        _heroPosition = game.HeroInfo.Position;
 
         _mazeWidth = (int)_maze.GetCellPosition(new Cell(_maze.Skeleton.GetLength(1), 0)).X;
     }

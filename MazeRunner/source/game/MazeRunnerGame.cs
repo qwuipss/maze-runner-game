@@ -25,10 +25,6 @@ public class MazeRunnerGame : Game
     public MazeInfo MazeInfo { get; private set; }
     #endregion
 
-    #region SpritesData
-    public Dictionary<Sprite, Vector2> SpritesPositions { get; init; }
-    #endregion
-
     #region HeroData
     private Hero Hero { get; set; }
     public SpriteInfo HeroInfo { get; private set; }
@@ -42,12 +38,8 @@ public class MazeRunnerGame : Game
     private List<MazeRunnerGameComponent> _components;
     #endregion
 
-    #region TextWritersData
-    public Dictionary<TextWriter, Vector2> TextWritersPositions { get; private set; }
-    #endregion
-
     #region FindKeyTextData
-    private TextWriterInfo _findKeyTextWriterInfo;
+    public TextWriterInfo FindKeyTextWriterInfo;
     private FindKeyTextWriter _findKeyTextWriter;
     #endregion
 
@@ -58,9 +50,6 @@ public class MazeRunnerGame : Game
         Content.RootDirectory = "Content";
 
         _graphics = new GraphicsDeviceManager(this);
-
-        SpritesPositions = new Dictionary<Sprite, Vector2>();
-        TextWritersPositions = new Dictionary<TextWriter, Vector2>();
     }
 
     #region GameBase
@@ -70,7 +59,7 @@ public class MazeRunnerGame : Game
 
         SetFullScreen();
 
-        InitializeCamera();
+        InitializeHeroCamera();
         InitializeMaze();
         InitializeHero();
 
@@ -131,7 +120,7 @@ public class MazeRunnerGame : Game
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            MazeInfo, HeroInfo, _findKeyTextWriterInfo, _heroCamera,
+            MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera,
         };
     }
 
@@ -163,12 +152,10 @@ public class MazeRunnerGame : Game
 
         Hero = new Hero(this);
 
-        SpritesPositions.Add(Hero, heroPosition);
-
         HeroInfo = new SpriteInfo(Hero, heroPosition);
     }
 
-    private void InitializeCamera()
+    private void InitializeHeroCamera()
     {
         _heroCamera = new HeroCamera(GraphicsDevice.Viewport, 7);
     }
@@ -177,9 +164,7 @@ public class MazeRunnerGame : Game
     {
         _findKeyTextWriter = FindKeyTextWriter.GetInstance();
 
-        TextWritersPositions.Add(_findKeyTextWriter, Vector2.Zero);
-
-        _findKeyTextWriterInfo = new TextWriterInfo(_findKeyTextWriter, TextWritersPositions[_findKeyTextWriter]);
+        FindKeyTextWriterInfo = new TextWriterInfo(_findKeyTextWriter, Vector2.Zero);
 
         _findKeyTextWriter.Initialize(this);
     }

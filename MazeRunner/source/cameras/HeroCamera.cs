@@ -31,7 +31,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
     {
         var hero = game.HeroInfo.Sprite;
 
-        Follow(hero, game.SpritesPositions[hero]);
+        Follow(hero, game.HeroInfo.Position);
     }
 
     private void Follow(Sprite sprite, Vector2 spritePosition)
