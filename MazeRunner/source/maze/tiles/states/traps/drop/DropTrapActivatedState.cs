@@ -22,7 +22,7 @@ public class DropTrapActivatedState : DropTrapBaseState
 
         _updateTimeDelayMs = RandomHelper.Next(minUpdateTimeMs, maxUpdateTimeMs);
 
-        CurrentAnimationFramePointX = (FramesCount - 1) * FrameWidth;
+        CurrentAnimationFramePointX = (FramesCount - 1) * FrameSize;
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)

@@ -96,7 +96,7 @@ public class FindKeyTextWriter : TextWriter
         var maze = _mazeInfo.Maze;
         var exit = maze.ExitInfo.Exit;
 
-        _textShowDistance = exit.FrameWidth + exit.FrameHeight;
+        _textShowDistance = exit.FrameSize + exit.FrameSize;
         _mazeWidth = (int)maze.GetCellPosition(new Cell(maze.Skeleton.GetLength(1), 0)).X;
     }
 

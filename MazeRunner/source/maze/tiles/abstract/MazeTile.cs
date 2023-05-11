@@ -28,19 +28,11 @@ public abstract class MazeTile
         }
     }
 
-    public virtual int FrameWidth
+    public virtual int FrameSize
     {
         get
         {
-            return State.FrameWidth;
-        }
-    }
-
-    public virtual int FrameHeight
-    {
-        get
-        {
-            return State.FrameHeight;
+            return State.FrameSize;
         }
     }
 

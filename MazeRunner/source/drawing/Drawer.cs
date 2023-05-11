@@ -51,7 +51,7 @@ public static class Drawer
              mazeTile.Texture,
              position,
              new Rectangle(mazeTile.CurrentAnimationFramePoint,
-                           new Point(mazeTile.FrameWidth, mazeTile.FrameHeight)),
+                           new Point(mazeTile.FrameSize, mazeTile.FrameSize)),
              mazeTile.DrawingPriority,
              mazeTile.FrameRotationAngle,
              mazeTile.OriginFrameRotationVector);

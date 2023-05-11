@@ -83,12 +83,12 @@ public class Maze
 
         for (int y = 0; y < cell.Y; y++)
         {
-            posY += _skeleton[y, cell.X].FrameHeight;
+            posY += _skeleton[y, cell.X].FrameSize;
         }
 
         for (int x = 0; x < cell.X; x++)
         {
-            posX += _skeleton[cell.Y, x].FrameWidth;
+            posX += _skeleton[cell.Y, x].FrameSize;
         }
 
         return new Vector2(posX, posY);

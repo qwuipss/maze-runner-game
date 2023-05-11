@@ -73,8 +73,8 @@ public static class CollisionManager
 
     private static Rectangle GetHitBox(MazeTile mazeTile, int x, int y)
     {
-        return new Rectangle(x * mazeTile.FrameWidth, y * mazeTile.FrameHeight,
-                             mazeTile.FrameWidth, mazeTile.FrameHeight);
+        return new Rectangle(x * mazeTile.FrameSize, y * mazeTile.FrameSize,
+                             mazeTile.FrameSize, mazeTile.FrameSize);
     }
 
     private static Rectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)

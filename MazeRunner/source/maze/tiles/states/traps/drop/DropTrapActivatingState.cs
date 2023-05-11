@@ -12,9 +12,9 @@ public class DropTrapActivatingState : DropTrapBaseState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            CurrentAnimationFramePointX += FrameWidth;
+            CurrentAnimationFramePointX += FrameSize;
 
-            if (CurrentAnimationFramePointX == (FramesCount - 1) * FrameWidth)
+            if (CurrentAnimationFramePointX == (FramesCount - 1) * FrameSize)
             {
                 return new DropTrapActivatedState();
             }

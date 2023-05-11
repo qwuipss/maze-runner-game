@@ -9,9 +9,7 @@ public interface IMazeTileState
 
     public int FramesCount { get; }
 
-    public int FrameWidth { get; }
-
-    public int FrameHeight { get; }
+    public int FrameSize { get; }
 
     public Point CurrentAnimationFramePoint { get; }
 

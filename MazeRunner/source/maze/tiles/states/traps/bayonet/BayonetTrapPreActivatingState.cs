@@ -22,7 +22,7 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 
         _updateTimeDelayMs = RandomHelper.Next(minUpdateTimeMs, maxUpdateTimeMs);
 
-        CurrentAnimationFramePointX = FrameWidth;
+        CurrentAnimationFramePointX = FrameSize;
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)
@@ -33,9 +33,9 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            CurrentAnimationFramePointX += FrameWidth;
+            CurrentAnimationFramePointX += FrameSize;
 
-            if (CurrentAnimationFramePointX == FrameWidth * 2)
+            if (CurrentAnimationFramePointX == FrameSize * 2)
             {
                 return new BayonetTrapPostActivatingState();
             }

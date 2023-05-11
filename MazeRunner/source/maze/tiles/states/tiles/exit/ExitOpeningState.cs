@@ -14,9 +14,9 @@ public class ExitOpeningState : ExitBaseState
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        CurrentAnimationFramePointX += FrameWidth;
+        CurrentAnimationFramePointX += FrameSize;
 
-        if (CurrentAnimationFramePointX == (FramesCount - 1) * FrameWidth)
+        if (CurrentAnimationFramePointX == (FramesCount - 1) * FrameSize)
         {
             return new ExitOpenedState();
         }

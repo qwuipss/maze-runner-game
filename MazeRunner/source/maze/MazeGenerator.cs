@@ -189,12 +189,12 @@ public static class MazeGenerator
 
         if (rotation is MathHelper.PiOver2)
         {
-            return new Vector2(0, exit.FrameHeight);
+            return new Vector2(0, exit.FrameSize);
         }
 
         if (rotation is -MathHelper.PiOver2)
         {
-            return new Vector2(exit.FrameWidth, 0);
+            return new Vector2(exit.FrameSize, 0);
         }
 
         return Vector2.Zero;
