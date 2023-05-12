@@ -120,10 +120,10 @@ public class Maze
     public Vector2 GetCellPosition(Cell cell)
     {
         var tile = _skeleton[cell.Y, cell.X];
-        
+
         var framePosX = tile.FrameSize * cell.X;
         var framePosY = tile.FrameSize * cell.Y;
-        
+
         return new Vector2(framePosX, framePosY);
     }
     #endregion

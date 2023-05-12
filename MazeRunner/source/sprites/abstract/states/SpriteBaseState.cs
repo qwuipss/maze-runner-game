@@ -38,7 +38,21 @@ public abstract class SpriteBaseState : ISpriteState
     protected virtual Point CurrentAnimationFramePoint { get; set; }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
-    
+
+    public static SpriteEffects ProcessFrameEffect(Vector2 movement, SpriteEffects frameEffect)
+    {
+        if (movement.X > 0)
+        {
+            return SpriteEffects.None;
+        }
+        else if (movement.X < 0)
+        {
+            return SpriteEffects.FlipHorizontally;
+        }
+
+        return frameEffect;
+    }
+
     public virtual ISpriteState ProcessState(GameTime gameTime)
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;

@@ -1,7 +1,6 @@
 using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
-using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;

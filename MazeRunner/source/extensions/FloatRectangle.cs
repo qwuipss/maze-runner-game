@@ -1,11 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MazeRunner.Extensions;
+﻿namespace MazeRunner.Extensions;
 
 public readonly record struct FloatRectangle(float X, float Y, float Width, float Height)
 {
@@ -21,7 +14,7 @@ public readonly record struct FloatRectangle(float X, float Y, float Width, floa
     {
         get
         {
-            return X + Width;   
+            return X + Width;
         }
     }
 

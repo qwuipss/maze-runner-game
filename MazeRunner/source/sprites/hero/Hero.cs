@@ -6,7 +6,6 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace MazeRunner.Sprites;
@@ -21,7 +20,7 @@ public class Hero : Sprite
     private const int HitBoxWidth = 9;
     private const int HitBoxHeight = 12;
 
-    private double _elapsedGameTimeMs;
+    private double _movementPollingTimeMs;
 
     public override Vector2 Speed
     {
@@ -49,9 +48,27 @@ public class Hero : Sprite
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
+        void ProcessState(Vector2 movement)
+        {
+            if (movement == Vector2.Zero)
+            {
+                if (State is not HeroIdleState)
+                {
+                    State = new HeroIdleState();
+                }
+            }
+            else
+            {
+                if (State is not HeroRunState)
+                {
+                    State = new HeroRunState();
+                }
+            }
+        }
+
         base.Update(game, gameTime);
 
-        if (!KeyboardManager.IsPollingTimePassed(MovePollingTimeMs, ref _elapsedGameTimeMs, gameTime))
+        if (!KeyboardManager.IsPollingTimePassed(MovePollingTimeMs, ref _movementPollingTimeMs, gameTime))
         {
             return;
         }
@@ -63,8 +80,8 @@ public class Hero : Sprite
 
         var movement = ProcessMovement(position, mazeInfo);
 
+        FrameEffect = SpriteBaseState.ProcessFrameEffect(movement, FrameEffect);
         ProcessState(movement);
-        ProcessFrameEffect(movement);
 
         position += movement;
 
@@ -72,38 +89,6 @@ public class Hero : Sprite
 
         heroInfo.Position = position;
     }
-
-    #region VisualProcessers
-    private void ProcessFrameEffect(Vector2 movement)
-    {
-        if (movement.X > 0)
-        {
-            FrameEffect = SpriteEffects.None;
-        }
-        else if (movement.X < 0)
-        {
-            FrameEffect = SpriteEffects.FlipHorizontally;
-        }
-    }
-
-    private void ProcessState(Vector2 movement)
-    {
-        if (movement == Vector2.Zero)
-        {
-            if (State is not HeroIdleState)
-            {
-                State = new HeroIdleState();
-            }
-        }
-        else
-        {
-            if (State is not HeroRunState)
-            {
-                State = new HeroRunState();
-            }
-        }
-    }
-    #endregion
 
     #region Collidings
     private void ProcessItemsColliding(Vector2 position, MazeInfo mazeInfo)
