@@ -11,7 +11,7 @@ public interface ISpriteState
 
     public SpriteEffects FrameEffect { get; set; }
 
-    public Point CurrentAnimationFramePoint { get; }
+    public Rectangle CurrentAnimationFrame { get; }
 
     public ISpriteState ProcessState(GameTime gameTime);
 }

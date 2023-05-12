@@ -27,11 +27,13 @@ public abstract class SpriteBaseState : ISpriteState
         }
     }
 
-    public Point CurrentAnimationFramePoint
+    public Rectangle CurrentAnimationFrame
     {
         get
         {
-            return new Point(CurrentAnimationFramePointX, 0);
+            return new Rectangle(
+                new Point(CurrentAnimationFramePointX, 0),
+                new Point(FrameSize, FrameSize));
         }
     }
 

@@ -36,11 +36,11 @@ public abstract class Sprite
 
     public virtual SpriteEffects FrameEffect { get; set; }
 
-    public virtual Point CurrentAnimationFramePoint
+    public virtual Rectangle CurrentAnimationFrame
     {
         get
         {
-            return State.CurrentAnimationFramePoint;
+            return State.CurrentAnimationFrame;
         }
     }
 

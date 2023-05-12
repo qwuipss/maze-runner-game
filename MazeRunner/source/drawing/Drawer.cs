@@ -39,8 +39,7 @@ public static class Drawer
         Draw(
              sprite.Texture,
              position,
-             new Rectangle(sprite.CurrentAnimationFramePoint,
-                           new Point(sprite.FrameSize, sprite.FrameSize)),
+             sprite.CurrentAnimationFrame,
              sprite.DrawingPriority,
              spriteEffects: sprite.FrameEffect);
     }
