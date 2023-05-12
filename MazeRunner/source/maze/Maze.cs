@@ -15,7 +15,7 @@ public class Maze
 
     private readonly Dictionary<Cell, MazeItem> _itemsInfo;
 
-    public (Cell Coords, Exit Exit) ExitInfo { get; set; }
+    public (Cell Cell, Exit Exit) ExitInfo { get; set; }
 
     public List<MazeTileInfo> Components { get; init; }
 
@@ -77,53 +77,11 @@ public class Maze
         }
     }
 
-    public Vector2 GetCellPosition(Cell cell)
-    {
-        int posX = 0, posY = 0;
-
-        for (int y = 0; y < cell.Y; y++)
-        {
-            posY += _skeleton[y, cell.X].FrameSize;
-        }
-
-        for (int x = 0; x < cell.X; x++)
-        {
-            posX += _skeleton[cell.Y, x].FrameSize;
-        }
-
-        return new Vector2(posX, posY);
-    }
-
-    public void InsertTrap(MazeTrap trap, Cell cell)
-    {
-        _trapsInfo.Add(cell, trap);
-    }
-
-    public void InsertItem(MazeItem item, Cell cell)
-    {
-        _itemsInfo.Add(cell, item);
-    }
-
-    public void RemoveItem(Cell cell)
-    {
-        var cellPosition = GetCellPosition(cell);
-        var itemInfo = new MazeTileInfo(_itemsInfo[cell], cellPosition);
-
-        _itemsInfo.Remove(cell);
-
-        Components.Remove(itemInfo);
-    }
-
-    public void InsertExit(Exit exit, Cell coords)
-    {
-        ExitInfo = (coords, exit);
-
-        _skeleton[coords.Y, coords.X] = new Floor();
-    }
-
+    #region Utilities
     public bool IsFloor(Cell cell)
     {
         return _skeleton[cell.Y, cell.X].TileType is TileType.Floor
+           && cell != ExitInfo.Cell
            && !_trapsInfo.ContainsKey(cell)
            && !_itemsInfo.ContainsKey(cell);
     }
@@ -151,6 +109,54 @@ public class Maze
         return floorsCount;
     }
 
+    public Vector2 GetCellPosition(Cell cell)
+    {
+        int posX = 0, posY = 0;
+
+        for (int y = 0; y < cell.Y; y++)
+        {
+            posY += _skeleton[y, cell.X].FrameSize;
+        }
+
+        for (int x = 0; x < cell.X; x++)
+        {
+            posX += _skeleton[cell.Y, x].FrameSize;
+        }
+
+        return new Vector2(posX, posY);
+    }
+    #endregion
+
+    #region Inserters
+    public void InsertTrap(MazeTrap trap, Cell cell)
+    {
+        _trapsInfo.Add(cell, trap);
+    }
+
+    public void InsertExit(Exit exit, Cell coords)
+    {
+        ExitInfo = (coords, exit);
+
+        _skeleton[coords.Y, coords.X] = new Floor();
+    }
+
+    public void InsertItem(MazeItem item, Cell cell)
+    {
+        _itemsInfo.Add(cell, item);
+    }
+
+    public void RemoveItem(Cell cell)
+    {
+        var cellPosition = GetCellPosition(cell);
+        var itemInfo = new MazeTileInfo(_itemsInfo[cell], cellPosition);
+
+        _itemsInfo.Remove(cell);
+
+        Components.Remove(itemInfo);
+    }
+    #endregion
+
+    #region ComponentsListInitializers
     private void InitializeSkeletonComponentsList()
     {
         for (int y = 0; y < _skeleton.GetLength(0); y++)
@@ -187,8 +193,9 @@ public class Maze
 
     private void InitializeExitComponentsList()
     {
-        var exitPosition = GetCellPosition(ExitInfo.Coords);
+        var exitPosition = GetCellPosition(ExitInfo.Cell);
 
         Components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
     }
+    #endregion
 }

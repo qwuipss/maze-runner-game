@@ -9,7 +9,7 @@ public class Exit : MazeTile
     {
         get
         {
-            return .1f;
+            return .8f;
         }
     }
 
@@ -29,11 +29,48 @@ public class Exit : MazeTile
         }
     }
 
-    public Exit(float rotation)
+    public Exit()
     {
         State = new ExitClosedState();
+    }
 
-        FrameRotationAngle = rotation;
+    public static Vector2 GetOriginFrameRotationVector(Exit exit)
+    {
+        var rotation = exit.FrameRotationAngle;
+
+        if (rotation is MathHelper.PiOver2)
+        {
+            return new Vector2(0, exit.FrameSize);
+        }
+
+        if (rotation is -MathHelper.PiOver2)
+        {
+            return new Vector2(exit.FrameSize, 0);
+        }
+
+        return Vector2.Zero;
+    }
+
+    public static float GetFrameRotationAngle(Cell cell, Maze maze)
+    {
+        if (cell.X is 0)
+        {
+            return -MathHelper.PiOver2;
+        }
+
+        var skeleton = maze.Skeleton;
+
+        if (cell.X == skeleton.GetLength(1) - 1)
+        {
+            return MathHelper.PiOver2;
+        }
+
+        return 0;
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        base.Update(gameTime);
     }
 
     public void Open()
@@ -42,10 +79,5 @@ public class Exit : MazeTile
         {
             State = new ExitOpeningState();
         }
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        base.Update(gameTime);
     }
 }

@@ -189,7 +189,7 @@ public class FindKeyTextWriter : TextWriter
         var maze = _mazeInfo.Maze;
         var position = _heroInfo.Position;
 
-        var exitPosition = maze.GetCellPosition(maze.ExitInfo.Coords);
+        var exitPosition = maze.GetCellPosition(maze.ExitInfo.Cell);
         var distance = Vector2.Distance(exitPosition, position);
 
         return distance <= _textShowDistance;

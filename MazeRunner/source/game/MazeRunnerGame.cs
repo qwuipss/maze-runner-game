@@ -28,7 +28,7 @@ public class MazeRunnerGame : Game
     public SpriteInfo HeroInfo { get; private set; }
     #endregion
 
-    #region FindKeyTextData
+    #region FindKeyTextWriterData
     public TextWriterInfo FindKeyTextWriterInfo { get; private set; }
     #endregion
 
@@ -58,11 +58,8 @@ public class MazeRunnerGame : Game
         InitializeHeroCamera();
         InitializeMaze();
         InitializeHero();
-
         InitializeTextWriters();
-
         InitializeComponentsList();
-
         InitializeDrawer();
     }
 

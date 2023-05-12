@@ -8,7 +8,7 @@ public abstract class MazeTile
 {
     public abstract TileType TileType { get; }
 
-    public virtual float FrameRotationAngle { get; init; }
+    public virtual float FrameRotationAngle { get; set; }
 
     public virtual Vector2 OriginFrameRotationVector { get; set; }
 
