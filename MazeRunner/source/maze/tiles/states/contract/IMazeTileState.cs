@@ -7,8 +7,6 @@ public interface IMazeTileState
 {
     public Texture2D Texture { get; }
 
-    public int FramesCount { get; }
-
     public int FrameSize { get; }
 
     public Point CurrentAnimationFramePoint { get; }

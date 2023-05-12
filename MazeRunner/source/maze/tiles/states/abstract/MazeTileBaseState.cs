@@ -27,8 +27,6 @@ public abstract class MazeTileBaseState : IMazeTileState
         }
     }
 
-    protected virtual IMazeTileState State { get; set; }
-
     protected virtual int CurrentAnimationFramePointX { get; set; }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
