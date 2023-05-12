@@ -15,9 +15,17 @@ public class Maze
 
     private readonly Dictionary<Cell, MazeItem> _itemsInfo;
 
+    private readonly List<MazeTileInfo> _components;
+
     public (Cell Cell, Exit Exit) ExitInfo { get; set; }
 
-    public List<MazeTileInfo> Components { get; init; }
+    public IReadOnlyCollection<MazeTileInfo> Components
+    {
+        get
+        {
+            return _components.AsReadOnly();
+        }
+    }
 
     public ImmutableDoubleDimArray<MazeTile> Skeleton
     {
@@ -50,7 +58,7 @@ public class Maze
         _trapsInfo = new Dictionary<Cell, MazeTrap>();
         _itemsInfo = new Dictionary<Cell, MazeItem>();
 
-        Components = new List<MazeTileInfo>();
+        _components = new List<MazeTileInfo>();
     }
 
     public void InitializeComponentsList()
@@ -63,7 +71,7 @@ public class Maze
 
     public void Draw(GameTime gameTime)
     {
-        foreach (var component in Components)
+        foreach (var component in _components)
         {
             component.Draw(gameTime);
         }
@@ -71,7 +79,7 @@ public class Maze
 
     public void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        foreach (var component in Components)
+        foreach (var component in _components)
         {
             component.Update(game, gameTime);
         }
@@ -111,19 +119,12 @@ public class Maze
 
     public Vector2 GetCellPosition(Cell cell)
     {
-        int posX = 0, posY = 0;
-
-        for (int y = 0; y < cell.Y; y++)
-        {
-            posY += _skeleton[y, cell.X].FrameSize;
-        }
-
-        for (int x = 0; x < cell.X; x++)
-        {
-            posX += _skeleton[cell.Y, x].FrameSize;
-        }
-
-        return new Vector2(posX, posY);
+        var tile = _skeleton[cell.Y, cell.X];
+        
+        var framePosX = tile.FrameSize * cell.X;
+        var framePosY = tile.FrameSize * cell.Y;
+        
+        return new Vector2(framePosX, framePosY);
     }
     #endregion
 
@@ -152,7 +153,7 @@ public class Maze
 
         _itemsInfo.Remove(cell);
 
-        Components.Remove(itemInfo);
+        _components.Remove(itemInfo);
     }
     #endregion
 
@@ -166,7 +167,7 @@ public class Maze
                 var tile = _skeleton[y, x];
                 var tilePosition = GetCellPosition(new Cell(x, y));
 
-                Components.Add(new MazeTileInfo(tile, tilePosition));
+                _components.Add(new MazeTileInfo(tile, tilePosition));
             }
         }
     }
@@ -177,7 +178,7 @@ public class Maze
         {
             var trapPosition = GetCellPosition(coords);
 
-            Components.Add(new MazeTileInfo(trap, trapPosition));
+            _components.Add(new MazeTileInfo(trap, trapPosition));
         }
     }
 
@@ -187,7 +188,7 @@ public class Maze
         {
             var itemPosition = GetCellPosition(coords);
 
-            Components.Add(new MazeTileInfo(item, itemPosition));
+            _components.Add(new MazeTileInfo(item, itemPosition));
         }
     }
 
@@ -195,7 +196,7 @@ public class Maze
     {
         var exitPosition = GetCellPosition(ExitInfo.Cell);
 
-        Components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
+        _components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
     }
     #endregion
 }

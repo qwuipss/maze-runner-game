@@ -6,7 +6,9 @@ public class DropTrapDeactivatingState : DropTrapBaseState
 {
     public DropTrapDeactivatingState()
     {
-        CurrentAnimationFramePointX = (FramesCount - 1) * FrameSize;
+        var framePosX = (FramesCount - 1) * FrameSize;
+
+        CurrentAnimationFramePoint = new Point(framePosX, 0);
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)
@@ -17,12 +19,16 @@ public class DropTrapDeactivatingState : DropTrapBaseState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            CurrentAnimationFramePointX -= FrameSize;
+            var animationPoint = CurrentAnimationFramePoint;
 
-            if (CurrentAnimationFramePointX is 0)
+            animationPoint.X -= FrameSize;
+
+            if (animationPoint.X is 0)
             {
                 return new DropTrapDeactivatedState();
             }
+
+            CurrentAnimationFramePoint = animationPoint;
 
             ElapsedGameTimeMs -= elapsedTime;
         }

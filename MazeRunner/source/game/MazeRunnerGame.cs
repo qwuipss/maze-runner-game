@@ -126,7 +126,7 @@ public class MazeRunnerGame : Game
 
         MazeGenerator.InsertExit(maze);
 
-        MazeGenerator.InsertItem(maze, new Key());
+        //MazeGenerator.InsertItem(maze, new Key());
 
         maze.InitializeComponentsList();
 

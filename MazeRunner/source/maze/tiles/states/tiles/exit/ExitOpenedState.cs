@@ -6,7 +6,9 @@ public class ExitOpenedState : ExitBaseState
 {
     public ExitOpenedState()
     {
-        CurrentAnimationFramePointX = (FramesCount - 1) * FrameSize;
+        var framePosX = (FramesCount - 1) * FrameSize;
+
+        CurrentAnimationFramePoint = new Point(framePosX, 0);
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)

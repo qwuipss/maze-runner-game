@@ -36,11 +36,11 @@ public abstract class MazeTile
         }
     }
 
-    public virtual Point CurrentAnimationFramePoint
+    public virtual Rectangle CurrentAnimationFrame
     {
         get
         {
-            return State.CurrentAnimationFramePoint;
+            return State.CurrentAnimationFrame;
         }
     }
 

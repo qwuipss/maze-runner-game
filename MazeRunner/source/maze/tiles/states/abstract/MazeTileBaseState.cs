@@ -18,16 +18,16 @@ public abstract class MazeTileBaseState : IMazeTileState
             return Texture.Width / FramesCount;
         }
     }
-    
-    public virtual Point CurrentAnimationFramePoint
+
+    public Rectangle CurrentAnimationFrame
     {
         get
         {
-            return new Point(CurrentAnimationFramePointX, 0);
+            return new Rectangle(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
         }
     }
 
-    protected virtual int CurrentAnimationFramePointX { get; set; }
+    protected virtual Point CurrentAnimationFramePoint { get; set; }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
 

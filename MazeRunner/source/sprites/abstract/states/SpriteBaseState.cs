@@ -31,13 +31,11 @@ public abstract class SpriteBaseState : ISpriteState
     {
         get
         {
-            return new Rectangle(
-                new Point(CurrentAnimationFramePointX, 0),
-                new Point(FrameSize, FrameSize));
+            return new Rectangle(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
         }
     }
 
-    protected virtual int CurrentAnimationFramePointX { get; set; }
+    protected virtual Point CurrentAnimationFramePoint { get; set; }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
     
@@ -47,7 +45,10 @@ public abstract class SpriteBaseState : ISpriteState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameSize) % (FrameSize * FramesCount);
+            var animationPoint = CurrentAnimationFramePoint;
+            var framePosX = (animationPoint.X + FrameSize) % (FrameSize * FramesCount);
+
+            CurrentAnimationFramePoint = new Point(framePosX, 0);
 
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }

@@ -9,7 +9,7 @@ public interface IMazeTileState
 
     public int FrameSize { get; }
 
-    public Point CurrentAnimationFramePoint { get; }
+    public Rectangle CurrentAnimationFrame { get; }
 
     public IMazeTileState ProcessState(GameTime gameTime);
 }
