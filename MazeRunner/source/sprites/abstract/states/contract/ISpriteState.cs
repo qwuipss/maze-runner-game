@@ -7,11 +7,7 @@ public interface ISpriteState
 {
     public Texture2D Texture { get; }
 
-    public int FramesCount { get; }
-
-    public int FrameWidth { get; }
-
-    public int FrameHeight { get; }
+    public int FrameSize { get; }
 
     public SpriteEffects FrameEffect { get; set; }
 

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
 
-public class HeroIdleState : BaseState
+public class HeroIdleState : SpriteBaseState
 {
     public override Texture2D Texture
     {

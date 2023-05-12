@@ -37,9 +37,11 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     private void Follow(Sprite sprite, Vector2 spritePosition)
     {
+        var halfFrameSize = sprite.FrameSize / 2;
+
         var cameraPosition = Matrix.CreateTranslation(
-            -spritePosition.X - (sprite.FrameWidth / 2),
-            -spritePosition.Y - (sprite.FrameHeight / 2),
+            -spritePosition.X - halfFrameSize,
+            -spritePosition.Y - halfFrameSize,
             0);
 
         _transformMatrix = cameraPosition * _scale * _bordersOffset;

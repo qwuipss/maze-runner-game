@@ -40,7 +40,7 @@ public static class Drawer
              sprite.Texture,
              position,
              new Rectangle(sprite.CurrentAnimationFramePoint,
-                           new Point(sprite.FrameWidth, sprite.FrameHeight)),
+                           new Point(sprite.FrameSize, sprite.FrameSize)),
              sprite.DrawingPriority,
              spriteEffects: sprite.FrameEffect);
     }

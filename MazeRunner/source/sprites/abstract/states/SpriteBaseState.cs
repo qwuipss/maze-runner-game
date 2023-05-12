@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
 
-public abstract class BaseState : ISpriteState
+public abstract class SpriteBaseState : ISpriteState
 {
     public abstract Texture2D Texture { get; }
 
@@ -19,19 +19,11 @@ public abstract class BaseState : ISpriteState
         }
     }
 
-    public virtual int FrameWidth
+    public virtual int FrameSize
     {
         get
         {
             return Texture.Width / FramesCount;
-        }
-    }
-
-    public virtual int FrameHeight
-    {
-        get
-        {
-            return Texture.Height;
         }
     }
 
@@ -46,14 +38,15 @@ public abstract class BaseState : ISpriteState
     protected virtual int CurrentAnimationFramePointX { get; set; }
 
     protected virtual double ElapsedGameTimeMs { get; set; }
-
+    
     public virtual ISpriteState ProcessState(GameTime gameTime)
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameWidth) % (FrameWidth * FramesCount);
+            CurrentAnimationFramePointX = (CurrentAnimationFramePointX + FrameSize) % (FrameSize * FramesCount);
+
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

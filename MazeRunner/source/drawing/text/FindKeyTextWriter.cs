@@ -105,7 +105,7 @@ public class FindKeyTextWriter : TextWriter
         var hero = _heroInfo.Sprite;
         var position = _heroInfo.Position;
 
-        var rightUpCorner = position.X + hero.FrameWidth;
+        var rightUpCorner = position.X + hero.FrameSize;
         var leftUpCorner = position.X;
 
         var rightSideTextEndPos = rightUpCorner + _textStringLength.X;

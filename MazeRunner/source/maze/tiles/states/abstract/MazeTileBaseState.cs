@@ -18,15 +18,7 @@ public abstract class MazeTileBaseState : IMazeTileState
             return Texture.Width / FramesCount;
         }
     }
-
-    public virtual int FrameHeight
-    {
-        get
-        {
-            return Texture.Height;
-        }
-    }
-
+    
     public virtual Point CurrentAnimationFramePoint
     {
         get

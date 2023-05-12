@@ -74,6 +74,18 @@ public class Hero : Sprite
     }
 
     #region VisualProcessers
+    private void ProcessFrameEffect(Vector2 movement)
+    {
+        if (movement.X > 0)
+        {
+            FrameEffect = SpriteEffects.None;
+        }
+        else if (movement.X < 0)
+        {
+            FrameEffect = SpriteEffects.FlipHorizontally;
+        }
+    }
+
     private void ProcessState(Vector2 movement)
     {
         if (movement == Vector2.Zero)
@@ -89,18 +101,6 @@ public class Hero : Sprite
             {
                 State = new HeroRunState();
             }
-        }
-    }
-
-    private void ProcessFrameEffect(Vector2 movement)
-    {
-        if (movement.X > 0)
-        {
-            FrameEffect = SpriteEffects.None;
-        }
-        else if (movement.X < 0)
-        {
-            FrameEffect = SpriteEffects.FlipHorizontally;
         }
     }
     #endregion
