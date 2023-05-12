@@ -100,8 +100,9 @@ public class FindKeyTextWriter : TextWriter
 
         var skeleton = maze.Skeleton;
         var sideCell = new Cell(skeleton.GetLength(1) - 1, 0);
+        var sideCellPosX = (int)maze.GetCellPosition(sideCell).X;
 
-        _mazeWidth = (int)maze.GetCellPosition(sideCell).X + skeleton[sideCell.Y, sideCell.X].FrameSize;
+        _mazeWidth = sideCellPosX + skeleton[sideCell.Y, sideCell.X].FrameSize;
     }
 
     private Vector2 GetDrawingPosition()
@@ -121,12 +122,12 @@ public class FindKeyTextWriter : TextWriter
                 if (rightSideTextEndPos <= _mazeWidth)
                 {
                     _writingSide = WritingSide.Right;
-                    goto case WritingSide.Left;
+                    goto case WritingSide.Right;
                 }
                 else
                 {
                     _writingSide = WritingSide.Left;
-                    goto case WritingSide.Right;
+                    goto case WritingSide.Left;
                 }
             case WritingSide.Left:
                 if (leftSideTextStartPos >= 0)
