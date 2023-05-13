@@ -8,8 +8,8 @@ internal static class Settings
     public static int MazeHeight = 7; // odd only
 
     #region Controls
-    public static Keys MoveForward = Keys.W;
-    public static Keys MoveBack = Keys.S;
+    public static Keys MoveUp = Keys.W;
+    public static Keys MoveDown = Keys.S;
     public static Keys MoveLeft = Keys.A;
     public static Keys MoveRight = Keys.D;
     #endregion

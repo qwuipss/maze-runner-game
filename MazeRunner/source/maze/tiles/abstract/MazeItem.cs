@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace MazeRunner.MazeBase.Tiles;
+﻿namespace MazeRunner.MazeBase.Tiles;
 
 public abstract class MazeItem : MazeTile
 {

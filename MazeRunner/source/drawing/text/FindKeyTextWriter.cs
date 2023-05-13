@@ -83,9 +83,12 @@ public class FindKeyTextWriter : TextWriter
             return;
         }
 
-        game.FindKeyTextWriterInfo.Position = GetDrawingPosition();
-
         ProcessNeedDrawing();
+
+        if (_needWriting)
+        {
+            game.FindKeyTextWriterInfo.Position = GetDrawingPosition();
+        }
     }
 
     public void Initialize(MazeRunnerGame game)
@@ -96,7 +99,7 @@ public class FindKeyTextWriter : TextWriter
         var maze = _mazeInfo.Maze;
         var exit = maze.ExitInfo.Exit;
 
-        _textShowDistance = exit.FrameSize + exit.FrameSize;
+        _textShowDistance = exit.FrameSize * 2;
 
         var skeleton = maze.Skeleton;
         var sideCell = new Cell(skeleton.GetLength(1) - 1, 0);

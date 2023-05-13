@@ -1,11 +1,8 @@
-﻿#define DEBUG_MODE
-
-using MazeRunner.Cameras;
+﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
 using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.MazeBase;
-using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -78,9 +75,7 @@ public class MazeRunnerGame : Game
             component.Update(this, gameTime);
         }
 
-#if DEBUG_MODE
         CheckDebugButtons();
-#endif
 
         base.Update(gameTime);
     }
@@ -96,9 +91,7 @@ public class MazeRunnerGame : Game
             component.Draw(gameTime);
         }
 
-#if !DEBUG_MODE
         Drawer.DrawHitBox(HeroInfo, GraphicsDevice);
-#endif
 
         Drawer.EndDraw();
 
@@ -114,7 +107,7 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-       //_graphics.ApplyChanges();
+        _graphics.ApplyChanges();
     }
 
     private void InitializeComponentsList()
@@ -129,8 +122,8 @@ public class MazeRunnerGame : Game
     {
         var maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
+        //MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
+        //MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
 
         MazeGenerator.InsertExit(maze);
 

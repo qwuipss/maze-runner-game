@@ -15,7 +15,7 @@ public abstract class SpriteBaseState : ISpriteState
     {
         get
         {
-            return 50;
+            return 60;
         }
     }
 

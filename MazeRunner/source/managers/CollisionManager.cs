@@ -40,11 +40,11 @@ public static class CollisionManager
            && !exit.IsOpened;
     }
 
-    public static bool CollidesWithItems(Sprite sprite, Vector2 position, Maze maze, out (Cell ItemCell, MazeItem Item) itemInfo)
+    public static bool CollidesWithItems(Sprite sprite, Vector2 position, Vector2 movement, Maze maze, out (Cell ItemCell, MazeItem Item) itemInfo)
     {
         foreach (var (itemCell, item) in maze.ItemsInfo)
         {
-            if (CollidesWithMazeTile(sprite, position, Vector2.Zero, item, itemCell))
+            if (CollidesWithMazeTile(sprite, position, movement, item, itemCell))
             {
                 itemInfo = (itemCell, item);
 
@@ -66,10 +66,10 @@ public static class CollisionManager
         return false;
     }
 
-    private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile tile, Cell tileCell)
+    private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile mazeTile, Cell tileCell)
     {
-        var tilePosition = Maze.GetIndependentCellPosition(tile, tileCell);
-        var tileHitBox = tile.GetHitBox(tilePosition);
+        var tilePosition = Maze.GetIndependentCellPosition(mazeTile, tileCell);
+        var tileHitBox = mazeTile.GetHitBox(tilePosition);
 
         return GetExtendedHitBox(sprite, position, movement).Intersects(tileHitBox);
     }
@@ -87,7 +87,7 @@ public static class CollisionManager
         {
             goto _return;
         }
-        
+
         if (movement.X > 0)
         {
             width += (int)movement.X;

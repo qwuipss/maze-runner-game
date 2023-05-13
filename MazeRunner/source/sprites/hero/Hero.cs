@@ -1,24 +1,21 @@
-﻿using MazeRunner.Extensions;
-using MazeRunner.Helpers;
-using MazeRunner.Managers;
+﻿using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace MazeRunner.Sprites;
 
 public class Hero : Sprite
 {
-    private const double MovePollingTimeMs = 15;
+    private const double MovePollingTimeMs = 20;
 
     private const int HitBoxOffsetX = 3;
-    private const int HitBoxOffsetY = 3;
+    private const int HitBoxOffsetY = 5;
 
     private const int HitBoxWidth = 10;
-    private const int HitBoxHeight = 12;
+    private const int HitBoxHeight = 10;
 
     private double _movementPollingTimeMs;
 
@@ -48,24 +45,6 @@ public class Hero : Sprite
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        void ProcessState(Vector2 movement)
-        {
-            if (movement == Vector2.Zero)
-            {
-                if (State is not HeroIdleState)
-                {
-                    State = new HeroIdleState();
-                }
-            }
-            else
-            {
-                if (State is not HeroRunState)
-                {
-                    State = new HeroRunState();
-                }
-            }
-        }
-
         base.Update(game, gameTime);
 
         if (!KeyboardManager.IsPollingTimePassed(MovePollingTimeMs, ref _movementPollingTimeMs, gameTime))
@@ -83,15 +62,52 @@ public class Hero : Sprite
         FrameEffect = SpriteBaseState.ProcessFrameEffect(movement, FrameEffect);
         ProcessState(movement);
 
-        position += movement;
+        if (movement != Vector2.Zero)
+        {
+            ProcessItemsColliding(position, movement, mazeInfo);
 
-        ProcessItemsColliding(position, mazeInfo);
+            position += movement;
+            heroInfo.Position = position;
+        }
+    }
 
-        heroInfo.Position = position;
+    private void ProcessState(Vector2 movement)
+    {
+        if (movement == Vector2.Zero)
+        {
+            if (State is not HeroIdleState)
+            {
+                State = new HeroIdleState();
+            }
+        }
+        else
+        {
+            if (State is not HeroRunState)
+            {
+                State = new HeroRunState();
+            }
+        }
+    }
+
+    private Vector2 ProcessMovement(Vector2 position, Maze maze)
+    {
+        var totalMovement = Vector2.Zero;
+
+        foreach (var movement in KeyboardManager.ProcessHeroMovement(this))
+        {
+            if (!CollisionManager.CollidesWithWalls(this, position, movement, maze)
+             && !CollisionManager.CollidesWithExit(this, position, movement, maze))
+            {
+                position += movement;
+                totalMovement += movement;
+            }
+        }
+
+        return totalMovement;
     }
 
     #region Collidings
-    private void ProcessItemsColliding(Vector2 position, MazeInfo mazeInfo)
+    private void ProcessItemsColliding(Vector2 position, Vector2 movement, MazeInfo mazeInfo)
     {
         void ProcessKeyColliding(Vector2 position, Cell cell, Key key)
         {
@@ -104,7 +120,7 @@ public class Hero : Sprite
 
         var maze = mazeInfo.Maze;
 
-        if (CollisionManager.CollidesWithItems(this, position, maze, out var itemInfo))
+        if (CollisionManager.CollidesWithItems(this, position, movement, maze, out var itemInfo))
         {
             var (cell, item) = itemInfo;
 
@@ -113,79 +129,6 @@ public class Hero : Sprite
                 ProcessKeyColliding(position, cell, key);
             }
         }
-    }
-    #endregion
-
-    #region MovementCalculations
-    private Vector2 ProcessMovement(Vector2 position, Maze maze)
-    {
-        Vector2 NormalizeDiagonalSpeed(Vector2 movement)
-        {
-            var speed = Speed;
-
-            if (movement.Abs() == speed)
-            {
-                var normalizedSpeed = new Vector2(movement.X / Math.Abs(movement.X) * .7f, movement.Y / Math.Abs(movement.Y) * .7f);
-
-                return normalizedSpeed;
-            }
-
-            return movement;
-        }
-
-        Vector2 GetTotalMovement(Maze maze, Vector2 movement, Vector2 position)
-        {
-            var totalMovement = Vector2.Zero;
-
-            var movementX = new Vector2(movement.X, 0);
-            var movementY = new Vector2(0, movement.Y);
-
-            if (!CollisionManager.CollidesWithWalls(this, position, movementX, maze)
-             && !CollisionManager.CollidesWithExit(this, position, movementX, maze))
-            {
-                totalMovement += movementX;
-            }
-
-            if (!CollisionManager.CollidesWithWalls(this, position, movementY, maze)
-             && !CollisionManager.CollidesWithExit(this, position, movementY, maze))
-            {
-                totalMovement += movementY;
-            }
-
-            if (ProcessDiagonalMovement(maze, totalMovement, position, movementX, movementY, out totalMovement))
-            {
-                return totalMovement;
-            }
-
-            return totalMovement;
-            //return NormalizeDiagonalSpeed(totalMovement);
-        }
-
-        bool ProcessDiagonalMovement(Maze maze, Vector2 movement, Vector2 position, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement) //
-        {
-            if (CollisionManager.CollidesWithWalls(this, position, movement, maze))
-            {
-                if (RandomHelper.RandomBoolean())
-                {
-                    totalMovement = movementX;
-                }
-                else
-                {
-                    totalMovement = movementY;
-                }
-
-                return true;
-            }
-
-            totalMovement = movement;
-
-            return false;
-        }
-
-        var movement = KeyboardManager.ProcessHeroMovement(this);
-        var totalMovement = GetTotalMovement(maze, movement, position);
-
-        return totalMovement;
     }
     #endregion
 }

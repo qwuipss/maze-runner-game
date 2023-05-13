@@ -43,14 +43,14 @@ public static class Drawer
     public static void DrawString(TextWriter textWriter, Vector2 position)
     {
         _spriteBatch.DrawString(
-            textWriter.Font, 
+            textWriter.Font,
             textWriter.Text,
-            position, 
+            position,
             textWriter.Color,
-            0, 
-            Vector2.Zero, 
+            0,
+            Vector2.Zero,
             textWriter.ScaleFactor,
-            SpriteEffects.None, 
+            SpriteEffects.None,
             textWriter.DrawingPriority);
     }
 
@@ -77,10 +77,10 @@ public static class Drawer
 
     private static void Draw(
         Texture2D texture,
-        Vector2 position, 
+        Vector2 position,
         Rectangle sourceRectangle,
-        float layerDepth, 
-        float rotation = 0, 
+        float layerDepth,
+        float rotation = 0,
         Vector2 origin = default,
         SpriteEffects spriteEffects = default)
     {

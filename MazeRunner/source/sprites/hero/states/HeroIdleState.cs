@@ -25,7 +25,7 @@ public class HeroIdleState : SpriteBaseState
     {
         get
         {
-            return 65;
+            return 60;
         }
     }
 }
