@@ -4,6 +4,7 @@ using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 
 namespace MazeRunner.MazeBase;
 
@@ -61,7 +62,8 @@ public class Maze
         _components = new List<MazeTileInfo>();
     }
 
-    public static Vector2 GetCellPosition(MazeTile tile, Cell cell)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Vector2 GetIndependentCellPosition(MazeTile tile, Cell cell)
     {
         var framePosX = tile.FrameSize * cell.X;
         var framePosY = tile.FrameSize * cell.Y;
@@ -129,7 +131,7 @@ public class Maze
     {
         var tile = _skeleton[cell.Y, cell.X];
 
-        return GetCellPosition(tile, cell);
+        return GetIndependentCellPosition(tile, cell);
     }
     #endregion
 
@@ -139,11 +141,11 @@ public class Maze
         _trapsInfo.Add(cell, trap);
     }
 
-    public void InsertExit(Exit exit, Cell coords)
+    public void InsertExit(Exit exit, Cell cell)
     {
-        ExitInfo = (coords, exit);
+        ExitInfo = (cell, exit);
 
-        _skeleton[coords.Y, coords.X] = new Floor();
+        _skeleton[cell.Y, cell.X] = new Floor();
     }
 
     public void InsertItem(MazeItem item, Cell cell)
@@ -179,9 +181,9 @@ public class Maze
 
     private void InitializeTrapsComponentsList()
     {
-        foreach (var (coords, trap) in _trapsInfo)
+        foreach (var (cell, trap) in _trapsInfo)
         {
-            var trapPosition = GetCellPosition(coords);
+            var trapPosition = GetCellPosition(cell);
 
             _components.Add(new MazeTileInfo(trap, trapPosition));
         }
@@ -189,9 +191,9 @@ public class Maze
 
     private void InitializeItemsComponentsList()
     {
-        foreach (var (coords, item) in _itemsInfo)
+        foreach (var (cell, item) in _itemsInfo)
         {
-            var itemPosition = GetCellPosition(coords);
+            var itemPosition = GetCellPosition(cell);
 
             _components.Add(new MazeTileInfo(item, itemPosition));
         }

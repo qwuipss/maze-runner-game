@@ -21,6 +21,4 @@ public abstract class MazeItem : MazeTile
             return TileType.Item;
         }
     }
-
-    public abstract Rectangle GetHitBox(Vector2 position);
 }

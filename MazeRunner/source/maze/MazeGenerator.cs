@@ -46,7 +46,8 @@ public static class MazeGenerator
             {
                 backtrackingCells.Push(currentCell);
 
-                var adjacentCell = adjacentCells[RandomHelper.Next(0, adjacentCells.Count)];
+                var adjacentCellIndex = RandomHelper.Next(0, adjacentCells.Count);
+                var adjacentCell = adjacentCells[adjacentCellIndex];
 
                 RemoveWallBetween(currentCell, adjacentCell, tiles);
 
@@ -105,7 +106,9 @@ public static class MazeGenerator
 
     public static void InsertItem(Maze maze, MazeItem item)
     {
-        maze.InsertItem(item, GetRandomFloorCell(maze));
+        var floorCell = GetRandomFloorCell(maze);
+
+        maze.InsertItem(item, floorCell);
     }
     #endregion
 
@@ -150,9 +153,9 @@ public static class MazeGenerator
                     return currentCell;
                 }
 
-                var adjCells = GetAdjacentCells(currentCell, maze, 1);
+                var adjacentCells = GetAdjacentCells(currentCell, maze, 1);
 
-                AddCellInSearchingQueue(adjCells, visitedCells, searchingQueue);
+                AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
             }
 
             throw new KeyNotFoundException($"cell with type: {nameof(TileType.Floor)} doesn't exist in {nameof(maze)}");
@@ -242,22 +245,22 @@ public static class MazeGenerator
             while (searchingQueue.Count is not 0)
             {
                 var currentCell = searchingQueue.Dequeue();
-                var adjCells = GetAdjacentCells(currentCell, maze, 1);
+                var adjacentCells = GetAdjacentCells(currentCell, maze, 1);
 
-                if (adjCells.Where(cell => !maze.IsWall(cell)).Count() is not 0)
+                if (adjacentCells.Where(cell => !maze.IsWall(cell)).Count() is not 0)
                 {
                     return currentCell;
                 }
 
                 if (currentCell.IsCornerOf(maze.Skeleton))
                 {
-                    AddCellInSearchingQueue(adjCells, visitedCells, searchingQueue);
+                    AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
                 }
                 else
                 {
-                    var sideAdjCells = GetSideAdjacentCells(currentCell, maze);
+                    var sideAdjacentCells = GetSideAdjacentCells(currentCell, maze);
 
-                    AddCellInSearchingQueue(sideAdjCells, visitedCells, searchingQueue);
+                    AddCellInSearchingQueue(sideAdjacentCells, visitedCells, searchingQueue);
                 }
             }
 

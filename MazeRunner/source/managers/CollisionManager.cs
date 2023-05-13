@@ -68,7 +68,7 @@ public static class CollisionManager
 
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile tile, Cell tileCell)
     {
-        var tilePosition = Maze.GetCellPosition(tile, tileCell);
+        var tilePosition = Maze.GetIndependentCellPosition(tile, tileCell);
         var tileHitBox = tile.GetHitBox(tilePosition);
 
         return GetExtendedHitBox(sprite, position, movement).Intersects(tileHitBox);

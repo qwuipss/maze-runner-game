@@ -28,10 +28,15 @@ public static class Drawer
     public static void DrawString(TextWriter textWriter, Vector2 position)
     {
         _spriteBatch.DrawString(
-            textWriter.Font, textWriter.Text,
-            position, textWriter.Color,
-            0, Vector2.Zero, textWriter.ScaleFactor,
-            SpriteEffects.None, textWriter.DrawingPriority);
+            textWriter.Font, 
+            textWriter.Text,
+            position, 
+            textWriter.Color,
+            0, 
+            Vector2.Zero, 
+            textWriter.ScaleFactor,
+            SpriteEffects.None, 
+            textWriter.DrawingPriority);
     }
 
     public static void DrawSprite(Sprite sprite, Vector2 position)
@@ -57,8 +62,11 @@ public static class Drawer
 
     private static void Draw(
         Texture2D texture,
-        Vector2 position, Rectangle sourceRectangle,
-        float layerDepth, float rotation = 0, Vector2 origin = default,
+        Vector2 position, 
+        Rectangle sourceRectangle,
+        float layerDepth, 
+        float rotation = 0, 
+        Vector2 origin = default,
         SpriteEffects spriteEffects = default)
     {
         _spriteBatch.Draw(texture, position, sourceRectangle, Color.White, rotation, origin, Vector2.One, spriteEffects, layerDepth);
