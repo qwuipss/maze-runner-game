@@ -7,7 +7,7 @@ namespace MazeRunner.Managers;
 
 public static class CollisionManager
 {
-    public static bool ColidesWithWalls(Sprite sprite, Vector2 position, Maze maze, Vector2 movement)
+    public static bool CollidesWithWalls(Sprite sprite, Vector2 position, Vector2 movement, Maze maze)
     {
         var mazeSkeleton = maze.Skeleton;
 
@@ -32,7 +32,7 @@ public static class CollisionManager
         return false;
     }
 
-    public static bool CollidesWithExit(Sprite sprite, Vector2 position, Maze maze, Vector2 movement)
+    public static bool CollidesWithExit(Sprite sprite, Vector2 position, Vector2 movement, Maze maze)
     {
         var (exitCell, exit) = maze.ExitInfo;
 
@@ -76,7 +76,7 @@ public static class CollisionManager
 
     private static Rectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
     {
-        var hitBox = sprite.GetHitBox(position);//////////
+        var hitBox = sprite.GetHitBox(position);
 
         var x = hitBox.X;
         var y = hitBox.Y;

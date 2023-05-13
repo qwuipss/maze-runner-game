@@ -1,4 +1,6 @@
-﻿using MazeRunner.Cameras;
+﻿#define DEBUG_MODE
+
+using MazeRunner.Cameras;
 using MazeRunner.Components;
 using MazeRunner.Content;
 using MazeRunner.Drawing;
@@ -76,7 +78,9 @@ public class MazeRunnerGame : Game
             component.Update(this, gameTime);
         }
 
+#if DEBUG_MODE
         CheckDebugButtons();
+#endif
 
         base.Update(gameTime);
     }
@@ -92,6 +96,10 @@ public class MazeRunnerGame : Game
             component.Draw(gameTime);
         }
 
+#if !DEBUG_MODE
+        Drawer.DrawHitBox(HeroInfo, GraphicsDevice);
+#endif
+
         Drawer.EndDraw();
 
         base.Draw(gameTime);
@@ -106,7 +114,7 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        _graphics.ApplyChanges();
+       //_graphics.ApplyChanges();
     }
 
     private void InitializeComponentsList()

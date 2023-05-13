@@ -12,12 +12,12 @@ namespace MazeRunner.Sprites;
 
 public class Hero : Sprite
 {
-    private const double MovePollingTimeMs = 50;
+    private const double MovePollingTimeMs = 15;
 
     private const int HitBoxOffsetX = 3;
-    private const int HitBoxOffsetY = 4;
+    private const int HitBoxOffsetY = 3;
 
-    private const int HitBoxWidth = 9;
+    private const int HitBoxWidth = 10;
     private const int HitBoxHeight = 12;
 
     private double _movementPollingTimeMs;
@@ -26,7 +26,7 @@ public class Hero : Sprite
     {
         get
         {
-            return new Vector2(3, 3);
+            return new Vector2(1, 1);
         }
     }
 
@@ -78,7 +78,7 @@ public class Hero : Sprite
 
         var mazeInfo = game.MazeInfo;
 
-        var movement = ProcessMovement(position, mazeInfo);
+        var movement = ProcessMovement(position, mazeInfo.Maze);
 
         FrameEffect = SpriteBaseState.ProcessFrameEffect(movement, FrameEffect);
         ProcessState(movement);
@@ -117,50 +117,53 @@ public class Hero : Sprite
     #endregion
 
     #region MovementCalculations
-    private Vector2 ProcessMovement(Vector2 position, MazeInfo mazeInfo)
+    private Vector2 ProcessMovement(Vector2 position, Maze maze)
     {
         Vector2 NormalizeDiagonalSpeed(Vector2 movement)
         {
-            if (movement.Abs() == Speed)
+            var speed = Speed;
+
+            if (movement.Abs() == speed)
             {
-                return new Vector2((float)(movement.X / Math.Sqrt(2)), (float)(movement.Y / Math.Sqrt(2)));
+                var normalizedSpeed = new Vector2(movement.X / Math.Abs(movement.X) * .7f, movement.Y / Math.Abs(movement.Y) * .7f);
+
+                return normalizedSpeed;
             }
 
             return movement;
         }
 
-        Vector2 GetTotalMovement(MazeInfo mazeInfo, Vector2 movement, Vector2 position)
+        Vector2 GetTotalMovement(Maze maze, Vector2 movement, Vector2 position)
         {
-            var maze = mazeInfo.Maze;
-
             var totalMovement = Vector2.Zero;
 
             var movementX = new Vector2(movement.X, 0);
             var movementY = new Vector2(0, movement.Y);
 
-            if (!CollisionManager.ColidesWithWalls(this, position, maze, movementX)
-             && !CollisionManager.CollidesWithExit(this, position, maze, movementX))
+            if (!CollisionManager.CollidesWithWalls(this, position, movementX, maze)
+             && !CollisionManager.CollidesWithExit(this, position, movementX, maze))
             {
                 totalMovement += movementX;
             }
 
-            if (!CollisionManager.ColidesWithWalls(this, position, maze, movementY)
-             && !CollisionManager.CollidesWithExit(this, position, maze, movementY))
+            if (!CollisionManager.CollidesWithWalls(this, position, movementY, maze)
+             && !CollisionManager.CollidesWithExit(this, position, movementY, maze))
             {
                 totalMovement += movementY;
             }
 
-            if (ProcessDiagonalMovement(mazeInfo, totalMovement, position, movementX, movementY, out totalMovement))
+            if (ProcessDiagonalMovement(maze, totalMovement, position, movementX, movementY, out totalMovement))
             {
                 return totalMovement;
             }
 
-            return NormalizeDiagonalSpeed(totalMovement);
+            return totalMovement;
+            //return NormalizeDiagonalSpeed(totalMovement);
         }
 
-        bool ProcessDiagonalMovement(MazeInfo mazeInfo, Vector2 movement, Vector2 position, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement) //
+        bool ProcessDiagonalMovement(Maze maze, Vector2 movement, Vector2 position, Vector2 movementX, Vector2 movementY, out Vector2 totalMovement) //
         {
-            if (CollisionManager.ColidesWithWalls(this, position, mazeInfo.Maze, movement))
+            if (CollisionManager.CollidesWithWalls(this, position, movement, maze))
             {
                 if (RandomHelper.RandomBoolean())
                 {
@@ -180,7 +183,7 @@ public class Hero : Sprite
         }
 
         var movement = KeyboardManager.ProcessHeroMovement(this);
-        var totalMovement = GetTotalMovement(mazeInfo, movement, position);
+        var totalMovement = GetTotalMovement(maze, movement, position);
 
         return totalMovement;
     }
