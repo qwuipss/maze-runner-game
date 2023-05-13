@@ -1,4 +1,6 @@
-﻿namespace MazeRunner.MazeBase.Tiles;
+﻿using MazeRunner.Wrappers;
+
+namespace MazeRunner.MazeBase.Tiles;
 
 public abstract class MazeItem : MazeTile
 {
@@ -18,5 +20,10 @@ public abstract class MazeItem : MazeTile
         {
             return TileType.Item;
         }
+    }
+
+    public virtual void ProcessCollecting(MazeInfo mazeInfo, Cell cell)
+    {
+        mazeInfo.Maze.RemoveItem(cell);
     }
 }

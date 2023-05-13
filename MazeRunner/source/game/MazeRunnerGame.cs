@@ -92,8 +92,6 @@ public class MazeRunnerGame : Game
             component.Draw(gameTime);
         }
 
-        Drawer.DrawHitBox(HeroInfo, GraphicsDevice);
-
         Drawer.EndDraw();
 
         base.Draw(gameTime);
@@ -123,8 +121,8 @@ public class MazeRunnerGame : Game
     {
         var maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
-        //MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
-        //MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
 
         MazeGenerator.InsertExit(maze);
 

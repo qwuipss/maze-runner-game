@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Managers;
 using MazeRunner.MazeBase;
-using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -106,26 +105,15 @@ public class Hero : Sprite
         return totalMovement;
     }
 
-    #region Collidings
     private void ProcessItemsColliding(Vector2 position, Vector2 movement, MazeInfo mazeInfo)
     {
-        void ProcessKeyColliding(Vector2 position, Cell cell, Key key)
-        {
-            mazeInfo.Maze.RemoveItem(cell);
-            mazeInfo.IsKeyCollected = true;
-        }
-
         var maze = mazeInfo.Maze;
 
         if (CollisionManager.CollidesWithItems(this, position, movement, maze, out var itemInfo))
         {
             var (cell, item) = itemInfo;
 
-            if (item is Key key)
-            {
-                ProcessKeyColliding(position, cell, key);
-            }
+            item.ProcessCollecting(mazeInfo, cell);
         }
     }
-    #endregion
 }

@@ -1,4 +1,5 @@
 ﻿using MazeRunner.MazeBase.Tiles.States;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles;
@@ -39,5 +40,12 @@ public sealed class Key : MazeItem
             (int)position.Y + HitBoxOffsetY,
             HitBoxWidth,
             HitBoxHeight);
+    }
+
+    public override void ProcessCollecting(MazeInfo mazeInfo, Cell cell)
+    {
+        base.ProcessCollecting(mazeInfo, cell);
+
+        mazeInfo.IsKeyCollected = true;
     }
 }
