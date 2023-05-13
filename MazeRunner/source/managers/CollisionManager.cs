@@ -56,16 +56,6 @@ public static class CollisionManager
         return false;
     }
 
-    public static bool CollidesWithKey(Sprite sprite, Vector2 position, Cell keyCell, Key key)
-    {
-        if (CollidesWithMazeTile(sprite, position, Vector2.Zero, key, keyCell))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile mazeTile, Cell tileCell)
     {
         var tilePosition = Maze.GetIndependentCellPosition(mazeTile, tileCell);

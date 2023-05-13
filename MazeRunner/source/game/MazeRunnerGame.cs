@@ -3,6 +3,7 @@ using MazeRunner.Components;
 using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.MazeBase;
+using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -127,7 +128,7 @@ public class MazeRunnerGame : Game
 
         MazeGenerator.InsertExit(maze);
 
-        //MazeGenerator.InsertItem(maze, new Key());
+        MazeGenerator.InsertItem(maze, new Key());
 
         maze.InitializeComponentsList();
 

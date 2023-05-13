@@ -111,11 +111,8 @@ public class Hero : Sprite
     {
         void ProcessKeyColliding(Vector2 position, Cell cell, Key key)
         {
-            if (CollisionManager.CollidesWithKey(this, position, cell, key))
-            {
-                mazeInfo.Maze.RemoveItem(cell);
-                mazeInfo.IsKeyCollected = true;
-            }
+            mazeInfo.Maze.RemoveItem(cell);
+            mazeInfo.IsKeyCollected = true;
         }
 
         var maze = mazeInfo.Maze;
