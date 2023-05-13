@@ -29,7 +29,7 @@ public static class MazeGenerator
         var backtrackingCells = new Stack<Cell>();
 
         (width, height) = RoundUpToOdd(width, height);
-        var (tiles, floorsInserted) = GetDefaultCells(width, height);
+        var (tiles, floorsInserted) = GetMazeTemplate(width, height);
 
         var maze = new Maze(tiles);
 
@@ -133,13 +133,13 @@ public static class MazeGenerator
     #region CellsGetters
     public static Cell GetRandomFloorCell(Maze maze)
     {
-        static Cell GetRandomFloorCell(Maze maze, Cell cell)
+        static Cell GetRandomFloorCell(Maze maze, Cell floorCell)
         {
             var searchingQueue = new Queue<Cell>();
             var visitedCells = new HashSet<Cell>();
 
-            searchingQueue.Enqueue(cell);
-            visitedCells.Add(cell);
+            searchingQueue.Enqueue(floorCell);
+            visitedCells.Add(floorCell);
 
             while (searchingQueue.Count is not 0)
             {
@@ -159,12 +159,12 @@ public static class MazeGenerator
         }
 
         var skeleton = maze.Skeleton;
-        var cell = new Cell(RandomHelper.Next(0, skeleton.GetLength(1)), RandomHelper.Next(0, skeleton.GetLength(0)));
+        var randomCell = new Cell(RandomHelper.Next(0, skeleton.GetLength(1)), RandomHelper.Next(0, skeleton.GetLength(0)));
 
-        return GetRandomFloorCell(maze, cell);
+        return GetRandomFloorCell(maze, randomCell);
     }
 
-    private static (MazeTile[,] Tiles, int FloorsInserted) GetDefaultCells(int width, int height)
+    private static (MazeTile[,] Template, int FloorsInserted) GetMazeTemplate(int width, int height)
     {
         var floorsInserted = 0;
         var tiles = new MazeTile[height, width];
@@ -223,7 +223,7 @@ public static class MazeGenerator
         }
         else
         {
-            throw new NotImplementedException();
+            throw new ArgumentException($"cell {cell} is not side cell of the {nameof(maze)}");
         }
     }
 
