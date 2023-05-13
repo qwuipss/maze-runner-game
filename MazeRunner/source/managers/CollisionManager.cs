@@ -68,13 +68,10 @@ public static class CollisionManager
 
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile tile, Cell tileCell)
     {
-        return GetExtendedHitBox(sprite, position, movement).Intersects(GetHitBox(tile, tileCell.X, tileCell.Y));
-    }
+        var tilePosition = Maze.GetCellPosition(tile, tileCell);
+        var tileHitBox = tile.GetHitBox(tilePosition);
 
-    private static Rectangle GetHitBox(MazeTile mazeTile, int x, int y)
-    {
-        return new Rectangle(x * mazeTile.FrameSize, y * mazeTile.FrameSize,
-                             mazeTile.FrameSize, mazeTile.FrameSize);
+        return GetExtendedHitBox(sprite, position, movement).Intersects(tileHitBox);
     }
 
     private static Rectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
@@ -90,7 +87,7 @@ public static class CollisionManager
         {
             goto _return;
         }
-
+        
         if (movement.X > 0)
         {
             width += (int)movement.X;

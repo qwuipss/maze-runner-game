@@ -50,4 +50,9 @@ public abstract class MazeTile
     {
         State = State.ProcessState(gameTime);
     }
+
+    public virtual Rectangle GetHitBox(Vector2 position)
+    {
+        return new Rectangle(new Point((int)position.X, (int)position.Y), new Point(FrameSize, FrameSize));
+    }
 }

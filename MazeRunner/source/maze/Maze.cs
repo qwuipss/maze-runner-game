@@ -61,6 +61,14 @@ public class Maze
         _components = new List<MazeTileInfo>();
     }
 
+    public static Vector2 GetCellPosition(MazeTile tile, Cell cell)
+    {
+        var framePosX = tile.FrameSize * cell.X;
+        var framePosY = tile.FrameSize * cell.Y;
+
+        return new Vector2(framePosX, framePosY);
+    }
+
     public void InitializeComponentsList()
     {
         InitializeSkeletonComponentsList();
@@ -121,10 +129,7 @@ public class Maze
     {
         var tile = _skeleton[cell.Y, cell.X];
 
-        var framePosX = tile.FrameSize * cell.X;
-        var framePosY = tile.FrameSize * cell.Y;
-
-        return new Vector2(framePosX, framePosY);
+        return GetCellPosition(tile, cell);
     }
     #endregion
 
