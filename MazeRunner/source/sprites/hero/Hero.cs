@@ -136,7 +136,7 @@ public class Hero : Sprite
     #region CollidingsProcessors
     private void ProcessTrapsColliding(Vector2 position, MazeInfo mazeInfo)
     {
-        if (!_isDead && CollisionManager.CollidesWithTraps(this, position, mazeInfo.Maze, out var trapInfo))
+        if (CollisionManager.CollidesWithTraps(this, position, mazeInfo.Maze, out var trapInfo))
         {
             _isDead = true;
 
