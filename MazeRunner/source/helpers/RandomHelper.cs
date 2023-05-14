@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MazeRunner.Helpers;
 
@@ -14,5 +15,10 @@ public static class RandomHelper
     public static bool RandomBoolean()
     {
         return _random.Next(0, 2) is 0;
+    }
+
+    public static T Choice<T>(IList<T> collection)
+    {
+        return collection[_random.Next(0, collection.Count)];
     }
 }

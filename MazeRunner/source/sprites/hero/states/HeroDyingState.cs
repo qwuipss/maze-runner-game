@@ -1,18 +1,18 @@
 ﻿using Microsoft.Xna.Framework;
 
-namespace MazeRunner.MazeBase.Tiles.States;
+namespace MazeRunner.Sprites.States;
 
-public class ExitOpeningState : ExitBaseState
+public class HeroDyingState : HeroDeathBaseState
 {
-    protected override int UpdateTimeDelayMs
+    public override int UpdateTimeDelayMs
     {
         get
         {
-            return 75;
+            return 100;
         }
     }
 
-    public override IMazeTileState ProcessState(GameTime gameTime)
+    public override ISpriteState ProcessState(GameTime gameTime)
     {
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -20,14 +20,14 @@ public class ExitOpeningState : ExitBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            animationPoint.X += FrameSize;
-
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new ExitOpenedState();
+                return new HeroDeadState();
             }
 
-            CurrentAnimationFramePoint = animationPoint;
+            var framePosX = animationPoint.X + FrameSize;
+
+            CurrentAnimationFramePoint = new Point(framePosX, 0);
 
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }

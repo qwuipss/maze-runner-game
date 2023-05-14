@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 using static MazeRunner.Settings;
 
 namespace MazeRunner;
@@ -37,7 +38,7 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region GameComponentsList
-    private List<MazeRunnerGameComponent> _components;
+    private List<MazeRunnerGameComponent> _gameComponents;
     #endregion
 
     public MazeRunnerGame()
@@ -71,10 +72,17 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        foreach (var component in _components)
+        void RemoveDeadGameComponents()
+        {
+            _gameComponents = _gameComponents.Where(component => !component.IsDead).ToList();
+        }
+
+        foreach (var component in _gameComponents)
         {
             component.Update(this, gameTime);
         }
+
+        RemoveDeadGameComponents();
 
         CheckDebugButtons();
 
@@ -83,11 +91,11 @@ public class MazeRunnerGame : Game
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.White);
+        GraphicsDevice.Clear(Color.Black);
 
         Drawer.BeginDraw(_heroCamera);
 
-        foreach (var component in _components)
+        foreach (var component in _gameComponents)
         {
             component.Draw(gameTime);
         }
@@ -111,7 +119,7 @@ public class MazeRunnerGame : Game
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>()
+        _gameComponents = new List<MazeRunnerGameComponent>()
         {
             MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera,
         };
@@ -121,8 +129,8 @@ public class MazeRunnerGame : Game
     {
         var maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 15);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 15);
 
         MazeGenerator.InsertExit(maze);
 
@@ -145,7 +153,7 @@ public class MazeRunnerGame : Game
         var heroCell = MazeGenerator.GetRandomFloorCell(maze);
         var heroPosition = maze.GetCellPosition(heroCell);
 
-        var hero = new Hero();
+        var hero = Hero.GetInstance();
 
         HeroInfo = new SpriteInfo(hero, heroPosition);
     }

@@ -2,6 +2,7 @@
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
+using System.Collections.Immutable;
 
 namespace MazeRunner.Managers;
 
@@ -40,20 +41,49 @@ public static class CollisionManager
            && !exit.IsOpened;
     }
 
-    public static bool CollidesWithItems(Sprite sprite, Vector2 position, Vector2 movement, Maze maze, out (Cell ItemCell, MazeItem Item) itemInfo)
+    public static bool CollidesWithItems(Sprite sprite, Vector2 position, Maze maze, out (Cell Cell, MazeItem Item) itemInfo)
     {
-        foreach (var (itemCell, item) in maze.ItemsInfo)
+        if (CollidesWith(maze.ItemsInfo, sprite, position, out var tileInfo))
         {
-            if (CollidesWithMazeTile(sprite, position, movement, item, itemCell))
+            itemInfo = (tileInfo.Cell, (MazeItem)tileInfo.Tile);
+            return true;
+        }
+
+        itemInfo = (new Cell(), null);
+        return false;
+    }
+
+    public static bool CollidesWithTraps(Sprite sprite, Vector2 position, Maze maze, out (Cell Cell, MazeTrap Trap) trapInfo)
+    {
+        if (CollidesWith(maze.TrapsInfo, sprite, position, out var tileInfo) && ((MazeTrap)tileInfo.Tile).IsActivated)
+        {
+            trapInfo = (tileInfo.Cell, (MazeTrap)tileInfo.Tile);
+            return true;
+        }
+
+        trapInfo = (new Cell(), null);
+        return false;
+    }
+
+    private static bool CollidesWith(ImmutableDictionary<Cell, MazeTile> sourceInfo, Sprite sprite, Vector2 position, out (Cell Cell, MazeTile Tile) tileInfo)
+    {
+        foreach (var (cell, tile) in sourceInfo)
+        {
+            if (CollidesWithMazeTile(sprite, position, tile, cell))
             {
-                itemInfo = (itemCell, item);
+                tileInfo = (cell, tile);
 
                 return true;
             }
         }
 
-        itemInfo = (new Cell(), null);
+        tileInfo = (new Cell(), null);
         return false;
+    }
+
+    private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, MazeTile mazeTile, Cell tileCell)
+    {
+        return CollidesWithMazeTile(sprite, position, Vector2.Zero, mazeTile, tileCell);
     }
 
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile mazeTile, Cell tileCell)

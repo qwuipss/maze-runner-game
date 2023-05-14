@@ -12,9 +12,9 @@ public class Maze
 {
     private readonly MazeTile[,] _skeleton;
 
-    private readonly Dictionary<Cell, MazeTrap> _trapsInfo;
+    private readonly Dictionary<Cell, MazeTile> _trapsInfo;
 
-    private readonly Dictionary<Cell, MazeItem> _itemsInfo;
+    private readonly Dictionary<Cell, MazeTile> _itemsInfo;
 
     private readonly List<MazeTileInfo> _components;
 
@@ -36,7 +36,7 @@ public class Maze
         }
     }
 
-    public ImmutableDictionary<Cell, MazeTrap> TrapsInfo
+    public ImmutableDictionary<Cell, MazeTile> TrapsInfo
     {
         get
         {
@@ -44,7 +44,7 @@ public class Maze
         }
     }
 
-    public ImmutableDictionary<Cell, MazeItem> ItemsInfo
+    public ImmutableDictionary<Cell, MazeTile> ItemsInfo
     {
         get
         {
@@ -56,8 +56,8 @@ public class Maze
     {
         _skeleton = skeleton;
 
-        _trapsInfo = new Dictionary<Cell, MazeTrap>();
-        _itemsInfo = new Dictionary<Cell, MazeItem>();
+        _trapsInfo = new Dictionary<Cell, MazeTile>();
+        _itemsInfo = new Dictionary<Cell, MazeTile>();
 
         _components = new List<MazeTileInfo>();
     }
@@ -73,6 +73,47 @@ public class Maze
 
     public void InitializeComponentsList()
     {
+        void InitializeSkeletonComponentsList()
+        {
+            for (int y = 0; y < _skeleton.GetLength(0); y++)
+            {
+                for (int x = 0; x < _skeleton.GetLength(1); x++)
+                {
+                    var tile = _skeleton[y, x];
+                    var tilePosition = GetCellPosition(new Cell(x, y));
+
+                    _components.Add(new MazeTileInfo(tile, tilePosition));
+                }
+            }
+        }
+
+        void InitializeTrapsComponentsList()
+        {
+            foreach (var (cell, trap) in _trapsInfo)
+            {
+                var trapPosition = GetCellPosition(cell);
+
+                _components.Add(new MazeTileInfo(trap, trapPosition));
+            }
+        }
+
+        void InitializeItemsComponentsList()
+        {
+            foreach (var (cell, item) in _itemsInfo)
+            {
+                var itemPosition = GetCellPosition(cell);
+
+                _components.Add(new MazeTileInfo(item, itemPosition));
+            }
+        }
+
+        void InitializeExitComponentsList()
+        {
+            var exitPosition = GetCellPosition(ExitInfo.Cell);
+
+            _components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
+        }
+
         InitializeSkeletonComponentsList();
         InitializeTrapsComponentsList();
         InitializeItemsComponentsList();
@@ -161,49 +202,6 @@ public class Maze
         _itemsInfo.Remove(cell);
 
         _components.Remove(itemInfo);
-    }
-    #endregion
-
-    #region ComponentsListInitializers
-    private void InitializeSkeletonComponentsList()
-    {
-        for (int y = 0; y < _skeleton.GetLength(0); y++)
-        {
-            for (int x = 0; x < _skeleton.GetLength(1); x++)
-            {
-                var tile = _skeleton[y, x];
-                var tilePosition = GetCellPosition(new Cell(x, y));
-
-                _components.Add(new MazeTileInfo(tile, tilePosition));
-            }
-        }
-    }
-
-    private void InitializeTrapsComponentsList()
-    {
-        foreach (var (cell, trap) in _trapsInfo)
-        {
-            var trapPosition = GetCellPosition(cell);
-
-            _components.Add(new MazeTileInfo(trap, trapPosition));
-        }
-    }
-
-    private void InitializeItemsComponentsList()
-    {
-        foreach (var (cell, item) in _itemsInfo)
-        {
-            var itemPosition = GetCellPosition(cell);
-
-            _components.Add(new MazeTileInfo(item, itemPosition));
-        }
-    }
-
-    private void InitializeExitComponentsList()
-    {
-        var exitPosition = GetCellPosition(ExitInfo.Cell);
-
-        _components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
     }
     #endregion
 }

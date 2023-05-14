@@ -13,18 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin C:/Users/Ivan/Downloads/exit.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:C:/Users/Ivan/Downloads/exit.png;mazetiles/exit.png
-
 #begin fonts/base.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -80,7 +68,7 @@
 /processorParam:TextureFormat=Color
 /build:mazetiles/tiles/wall.png
 
-#begin mazetiles/traps/bayonetTrap.png
+#begin mazetiles/traps/bayonet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -90,9 +78,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:mazetiles/traps/bayonetTrap.png
+/build:mazetiles/traps/bayonet.png
 
-#begin mazetiles/traps/dropTrap.png
+#begin mazetiles/traps/drop.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -102,7 +90,31 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:mazetiles/traps/dropTrap.png
+/build:mazetiles/traps/drop.png
+
+#begin sprites/hero/dead.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/hero/dead.png
+
+#begin sprites/hero/fall.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:sprites/hero/fall.png
 
 #begin sprites/hero/idle.png
 /importer:TextureImporter

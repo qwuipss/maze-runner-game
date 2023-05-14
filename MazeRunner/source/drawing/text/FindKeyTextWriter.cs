@@ -80,10 +80,12 @@ public class FindKeyTextWriter : TextWriter
     {
         if (_textShowed)
         {
+            game.FindKeyTextWriterInfo.IsDead = true;
+
             return;
         }
 
-        ProcessNeedDrawing();
+        ProcessNeedWriting();
 
         if (_needWriting)
         {
@@ -173,7 +175,7 @@ public class FindKeyTextWriter : TextWriter
         }
     }
 
-    private void ProcessNeedDrawing()
+    private void ProcessNeedWriting()
     {
         var keyCollected = _mazeInfo.IsKeyCollected;
 
@@ -185,7 +187,7 @@ public class FindKeyTextWriter : TextWriter
             }
         }
 
-        if (keyCollected && _needWriting)
+        if (keyCollected)
         {
             _needWriting = false;
             _textShowed = true;

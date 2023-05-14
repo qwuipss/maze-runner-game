@@ -19,13 +19,13 @@ public static class Textures
         {
             private const string ContentDirectory = $"{BaseContentDirectory}/traps";
 
-            public static Texture2D DropTrap { get; private set; }
-            public static Texture2D BayonetTrap { get; private set; }
+            public static Texture2D Drop { get; private set; }
+            public static Texture2D Bayonet { get; private set; }
 
             public static void Load(Game game)
             {
-                DropTrap = game.Content.Load<Texture2D>($"{ContentDirectory}/dropTrap");
-                BayonetTrap = game.Content.Load<Texture2D>($"{ContentDirectory}/bayonetTrap");
+                Drop = game.Content.Load<Texture2D>($"{ContentDirectory}/drop");
+                Bayonet = game.Content.Load<Texture2D>($"{ContentDirectory}/bayonet");
             }
         }
 
@@ -62,13 +62,17 @@ public static class Textures
         {
             private const string ContentDirectory = $"{Sprites.ContentDirectory}/hero";
 
-            public static Texture2D HeroIdle { get; private set; }
-            public static Texture2D HeroRun { get; private set; }
+            public static Texture2D Idle { get; private set; }
+            public static Texture2D Run { get; private set; }
+            public static Texture2D Dead { get; private set; }
+            public static Texture2D Fall { get; private set; }
 
             public static void Load(Game game)
             {
-                HeroIdle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
-                HeroRun = game.Content.Load<Texture2D>($"{ContentDirectory}/run");
+                Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                Run = game.Content.Load<Texture2D>($"{ContentDirectory}/run");
+                Dead = game.Content.Load<Texture2D>($"{ContentDirectory}/dead");
+                Fall = game.Content.Load<Texture2D>($"{ContentDirectory}/fall");
             }
         }
     }

@@ -17,7 +17,7 @@ public abstract class KeyBaseState : MazeItemBaseState
     {
         get
         {
-            return 1;
+            return 8;
         }
     }
 
@@ -25,7 +25,7 @@ public abstract class KeyBaseState : MazeItemBaseState
     {
         get
         {
-            return int.MaxValue;
+            return 150;
         }
     }
 }

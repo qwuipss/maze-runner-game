@@ -9,7 +9,7 @@ public abstract class BayonetTrapBaseState : MazeTrapBaseState
     {
         get
         {
-            return Textures.MazeTiles.MazeTraps.BayonetTrap;
+            return Textures.MazeTiles.MazeTraps.Bayonet;
         }
     }
 

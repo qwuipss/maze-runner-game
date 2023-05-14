@@ -9,7 +9,7 @@ public abstract class DropTrapBaseState : MazeTrapBaseState
     {
         get
         {
-            return Textures.MazeTiles.MazeTraps.DropTrap;
+            return Textures.MazeTiles.MazeTraps.Drop;
         }
     }
 

@@ -11,13 +11,7 @@ public abstract class SpriteBaseState : ISpriteState
 
     public virtual SpriteEffects FrameEffect { get; set; }
 
-    public virtual int UpdateTimeDelayMs
-    {
-        get
-        {
-            return 60;
-        }
-    }
+    public abstract int UpdateTimeDelayMs { get; }
 
     public virtual int FrameSize
     {
