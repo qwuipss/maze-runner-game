@@ -17,7 +17,7 @@ public abstract class BayonetTrapBaseState : MazeTrapBaseState
     {
         get
         {
-            return 5;
+            return 10;
         }
     }
 

@@ -73,7 +73,9 @@ public static class MazeGenerator
 
         var wallCoords = new Cell(moveX + first.X, moveY + first.Y);
 
-        tiles[wallCoords.Y, wallCoords.X] = new Floor();
+        var floor = new Floor();
+
+        tiles[wallCoords.Y, wallCoords.X] = floor;
     }
 
     #region Inserters
@@ -99,7 +101,7 @@ public static class MazeGenerator
             FrameRotationAngle = Exit.GetFrameRotationAngle(sideCell, maze)
         };
 
-        exit.OriginFrameRotationVector = Exit.GetOriginFrameRotationVector(exit);
+        exit.OriginFrameRotationVector = MazeTile.GetOriginFrameRotationVector(exit);
 
         maze.InsertExit(exit, sideCell);
     }
@@ -179,12 +181,16 @@ public static class MazeGenerator
                 if (y % 2 != 0 && x % 2 != 0
                  && y.InRange(0, height - 1) && x.InRange(0, width - 1))
                 {
-                    tiles[y, x] = new Floor();
+                    var floor = new Floor();
+
+                    tiles[y, x] = floor;
                     floorsInserted++;
                 }
                 else
                 {
-                    tiles[y, x] = new Wall();
+                    var wall = new Wall();
+
+                    tiles[y, x] = wall;
                 }
             }
         }

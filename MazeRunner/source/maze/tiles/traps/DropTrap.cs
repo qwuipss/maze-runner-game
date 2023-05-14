@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase.Tiles.States;
+﻿using MazeRunner.Helpers;
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles;
@@ -39,10 +40,6 @@ public class DropTrap : MazeTrap
 
     public override Rectangle GetHitBox(Vector2 position)
     {
-        return new Rectangle(
-            (int)position.X + HitBoxOffset,
-            (int)position.Y + HitBoxOffset,
-            HitBoxSize,
-            HitBoxSize);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 }

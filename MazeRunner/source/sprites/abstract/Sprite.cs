@@ -14,7 +14,7 @@ public abstract class Sprite
     {
         get
         {
-            return 0;
+            return .5f;
         }
     }
 

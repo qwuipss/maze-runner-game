@@ -10,7 +10,7 @@ public abstract class MazeTrap : MazeTile
     {
         get
         {
-            return .9f;
+            return .8f;
         }
     }
 }

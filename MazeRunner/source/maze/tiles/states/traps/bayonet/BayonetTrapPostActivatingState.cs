@@ -6,14 +6,12 @@ public class BayonetTrapPostActivatingState : BayonetTrapBaseState
 {
     public BayonetTrapPostActivatingState()
     {
-        CurrentAnimationFramePoint = new Point(FrameSize, 0);
+        CurrentAnimationFramePoint = new Point(FrameSize * 3, 0);
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        ElapsedGameTimeMs += elapsedTime;
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
@@ -28,7 +26,7 @@ public class BayonetTrapPostActivatingState : BayonetTrapBaseState
 
             CurrentAnimationFramePoint = animationPoint;
 
-            ElapsedGameTimeMs -= elapsedTime;
+            ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 
         return this;

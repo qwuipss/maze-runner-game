@@ -27,9 +27,7 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        ElapsedGameTimeMs += elapsedTime;
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
@@ -37,14 +35,14 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 
             animationPoint.X += FrameSize;
 
-            if (animationPoint.X == FrameSize * 2)
+            if (animationPoint.X == FrameSize * 4)
             {
                 return new BayonetTrapPostActivatingState();
             }
 
             CurrentAnimationFramePoint = animationPoint;
 
-            ElapsedGameTimeMs -= elapsedTime;
+            ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 
         return this;

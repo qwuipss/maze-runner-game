@@ -12,6 +12,14 @@ public class Wall : MazeTile
         }
     }
 
+    public override float DrawingPriority
+    {
+        get
+        {
+            return .9f;
+        }
+    }
+
     public Wall()
     {
         State = new WallIdleState();

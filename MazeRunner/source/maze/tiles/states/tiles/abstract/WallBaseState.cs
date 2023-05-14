@@ -1,16 +1,23 @@
-﻿using MazeRunner.Content;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using static MazeRunner.Content.Textures.MazeTiles;
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
 public abstract class WallBaseState : MazeTileBaseState
 {
-    public override Texture2D Texture
+    protected static readonly IDictionary<Texture2D, float> Textures;
+
+    static WallBaseState()
     {
-        get
+        Textures = new Dictionary<Texture2D, float>
         {
-            return Textures.MazeTiles.Wall;
+            { Wall_1, .7f },
+            { Wall_2, .25f },
+            { Wall_3, .05f },
         }
+        .ToImmutableDictionary();
     }
 
     public override int FramesCount

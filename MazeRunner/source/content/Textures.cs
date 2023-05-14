@@ -11,8 +11,15 @@ public static class Textures
 
         private const string ContentDirectory = "tiles";
 
-        public static Texture2D Floor { get; private set; }
-        public static Texture2D Wall { get; private set; }
+        public static Texture2D Floor_1 { get; private set; }
+        public static Texture2D Floor_2 { get; private set; }
+        public static Texture2D Floor_3 { get; private set; }
+        public static Texture2D Floor_4 { get; private set; }
+
+        public static Texture2D Wall_1 { get; private set; }
+        public static Texture2D Wall_2 { get; private set; }
+        public static Texture2D Wall_3 { get; private set; }
+
         public static Texture2D Exit { get; private set; }
 
         public static class MazeTraps
@@ -45,8 +52,15 @@ public static class Textures
         {
             var dir = $"{BaseContentDirectory}/{ContentDirectory}";
 
-            Floor = game.Content.Load<Texture2D>($"{dir}/floor");
-            Wall = game.Content.Load<Texture2D>($"{dir}/wall");
+            Floor_1 = game.Content.Load<Texture2D>($"{dir}/floor_1");
+            Floor_2 = game.Content.Load<Texture2D>($"{dir}/floor_2");
+            Floor_3 = game.Content.Load<Texture2D>($"{dir}/floor_3");
+            Floor_4 = game.Content.Load<Texture2D>($"{dir}/floor_4");
+
+            Wall_1 = game.Content.Load<Texture2D>($"{dir}/wall_1");
+            Wall_2 = game.Content.Load<Texture2D>($"{dir}/wall_2");
+            Wall_3 = game.Content.Load<Texture2D>($"{dir}/wall_3");
+
             Exit = game.Content.Load<Texture2D>($"{dir}/exit");
 
             MazeTraps.Load(game);

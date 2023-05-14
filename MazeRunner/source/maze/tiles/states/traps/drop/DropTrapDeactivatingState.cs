@@ -13,9 +13,7 @@ public class DropTrapDeactivatingState : DropTrapBaseState
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {
-        var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        ElapsedGameTimeMs += elapsedTime;
+        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
@@ -30,7 +28,7 @@ public class DropTrapDeactivatingState : DropTrapBaseState
 
             CurrentAnimationFramePoint = animationPoint;
 
-            ElapsedGameTimeMs -= elapsedTime;
+            ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 
         return this;

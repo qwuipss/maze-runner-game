@@ -72,7 +72,7 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        void RemoveDeadGameComponents()
+        void RemoveDeadGameComponents() //
         {
             _gameComponents = _gameComponents.Where(component => !component.IsDead).ToList();
         }
@@ -129,8 +129,8 @@ public class MazeRunnerGame : Game
     {
         var maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 15);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 15);
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
 
         MazeGenerator.InsertExit(maze);
 

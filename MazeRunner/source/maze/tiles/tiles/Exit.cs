@@ -5,11 +5,13 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class Exit : MazeTile
 {
+    private float _drawingPriority;
+
     public override float DrawingPriority
     {
         get
         {
-            return .8f;
+            return _drawingPriority;
         }
     }
 
@@ -31,24 +33,9 @@ public class Exit : MazeTile
 
     public Exit()
     {
+        _drawingPriority = .6f;
+
         State = new ExitClosedState();
-    }
-
-    public static Vector2 GetOriginFrameRotationVector(Exit exit)
-    {
-        var rotation = exit.FrameRotationAngle;
-
-        if (rotation is MathHelper.PiOver2)
-        {
-            return new Vector2(0, exit.FrameSize);
-        }
-
-        if (rotation is -MathHelper.PiOver2)
-        {
-            return new Vector2(exit.FrameSize, 0);
-        }
-
-        return Vector2.Zero;
     }
 
     public static float GetFrameRotationAngle(Cell cell, Maze maze)
@@ -77,6 +64,8 @@ public class Exit : MazeTile
     {
         if (State is ExitClosedState)
         {
+            _drawingPriority = .4f;
+
             State = new ExitOpeningState();
         }
     }

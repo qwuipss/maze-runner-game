@@ -55,11 +55,7 @@ public class Hero : Sprite
 
     public override Rectangle GetHitBox(Vector2 position)
     {
-        return new Rectangle(
-                (int)position.X + HitBoxOffsetX,
-                (int)position.Y + HitBoxOffsetY,
-                HitBoxWidth,
-                HitBoxHeight);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffsetX, HitBoxOffsetY, HitBoxWidth, HitBoxHeight);
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
