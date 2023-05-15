@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.Extensions;
+using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
@@ -53,7 +54,7 @@ public class Hero : Sprite
         return _instance.Value;
     }
 
-    public override Rectangle GetHitBox(Vector2 position)
+    public override FloatRectangle GetHitBox(Vector2 position)
     {
         return HitBoxHelper.GetHitBox(position, HitBoxOffsetX, HitBoxOffsetY, HitBoxWidth, HitBoxHeight);
     }
@@ -82,6 +83,8 @@ public class Hero : Sprite
         if (movement != Vector2.Zero)
         {
             ProcessItemsColliding(position, mazeInfo);
+
+            movement.Normalize();
 
             position += movement;
             heroInfo.Position = position;

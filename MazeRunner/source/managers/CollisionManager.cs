@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase;
+﻿using MazeRunner.Extensions;
+using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -94,7 +95,7 @@ public static class CollisionManager
         return GetExtendedHitBox(sprite, position, movement).Intersects(tileHitBox);
     }
 
-    private static Rectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
+    private static FloatRectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
     {
         var hitBox = sprite.GetHitBox(position);
 
@@ -110,23 +111,23 @@ public static class CollisionManager
 
         if (movement.X > 0)
         {
-            width += (int)movement.X;
+            width += movement.X;
         }
         else if (movement.X < 0)
         {
-            x += (int)movement.X;
+            x += movement.X;
         }
 
         if (movement.Y > 0)
         {
-            height += (int)movement.Y;
+            height += movement.Y;
         }
         else if (movement.Y < 0)
         {
-            y += (int)movement.Y;
+            y += movement.Y;
         }
 
     _return:
-        return new Rectangle(x, y, width, height);
+        return new FloatRectangle(x, y, width, height);
     }
 }

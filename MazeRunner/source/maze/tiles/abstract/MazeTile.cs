@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.Extensions;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -71,7 +72,7 @@ public abstract class MazeTile
         State = State.ProcessState(gameTime);
     }
 
-    public virtual Rectangle GetHitBox(Vector2 position)
+    public virtual FloatRectangle GetHitBox(Vector2 position)
     {
         return HitBoxHelper.GetHitBox(position, FrameSize, FrameSize);
     }

@@ -1,4 +1,5 @@
-﻿using MazeRunner.Sprites.States;
+﻿using MazeRunner.Extensions;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -44,7 +45,7 @@ public abstract class Sprite
         }
     }
 
-    public abstract Rectangle GetHitBox(Vector2 position);
+    public abstract FloatRectangle GetHitBox(Vector2 position);
 
     public virtual void Update(MazeRunnerGame game, GameTime gameTime)
     {

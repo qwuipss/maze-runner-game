@@ -26,20 +26,6 @@ public static class Drawer
         _spriteBatch.End();
     }
 
-    public static void DrawHitBox(SpriteInfo spriteInfo, GraphicsDevice graphicsDevice)
-    {
-        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
-
-        var rectangleData = new Color[hitBox.Width * hitBox.Height];
-        using var rectangle = new Texture2D(graphicsDevice, hitBox.Width, hitBox.Height);
-
-        rectangle.SetData(rectangleData);
-
-        var position = new Vector2(hitBox.Left, hitBox.Top);
-
-        _spriteBatch.Draw(rectangle, position, Color.White);
-    }
-
     public static void DrawString(TextWriter textWriter, Vector2 position)
     {
         _spriteBatch.DrawString(

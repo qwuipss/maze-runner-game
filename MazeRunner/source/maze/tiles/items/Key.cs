@@ -1,4 +1,6 @@
-﻿using MazeRunner.MazeBase.Tiles.States;
+﻿using MazeRunner.Extensions;
+using MazeRunner.Helpers;
+using MazeRunner.MazeBase.Tiles.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 
@@ -6,11 +8,9 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public sealed class Key : MazeItem
 {
-    private const int HitBoxOffsetX = 4;
-    private const int HitBoxOffsetY = 4;
+    private const int HitBoxOffset = 4;
+    private const int HitBoxSize = 8;
 
-    private const int HitBoxWidth = 8;
-    private const int HitBoxHeight = 8;
 
     public Key()
     {
@@ -33,13 +33,9 @@ public sealed class Key : MazeItem
         }
     }
 
-    public override Rectangle GetHitBox(Vector2 position)
+    public override FloatRectangle GetHitBox(Vector2 position)
     {
-        return new Rectangle(
-            (int)position.X + HitBoxOffsetX,
-            (int)position.Y + HitBoxOffsetY,
-            HitBoxWidth,
-            HitBoxHeight);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 
     public override void ProcessCollecting(MazeInfo mazeInfo, Cell cell)

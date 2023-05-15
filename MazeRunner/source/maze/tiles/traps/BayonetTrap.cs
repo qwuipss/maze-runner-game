@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.Extensions;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 
@@ -41,7 +42,7 @@ public class BayonetTrap : MazeTrap
         State = new BayonetTrapDeactivatedState();
     }
 
-    public override Rectangle GetHitBox(Vector2 position)
+    public override FloatRectangle GetHitBox(Vector2 position)
     {
         return HitBoxHelper.GetHitBox(position, HitBoxOffsetX, HitBoxOffsetY, HitBoxWidth, HitBoxHeight);
     }
