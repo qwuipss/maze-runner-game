@@ -4,25 +4,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
 
-public class HeroFallingState : HeroBaseState
+public class HeroFallingState : HeroFallBaseState
 {
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Hero.Fall;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 4;
-        }
-    }
-
-    public override int UpdateTimeDelayMs
+    public override double UpdateTimeDelayMs
     {
         get
         {
@@ -40,13 +24,12 @@ public class HeroFallingState : HeroBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return this;
+                return new HeroFalledState();
             }
 
             var framePosX = animationPoint.X + FrameSize;
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);
-
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

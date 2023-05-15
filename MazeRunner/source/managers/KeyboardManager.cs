@@ -8,28 +8,26 @@ namespace MazeRunner.Managers;
 
 public static class KeyboardManager
 {
-    public static IEnumerable<Vector2> ProcessHeroMovement(Sprite hero)
+    public static IEnumerable<Vector2> ProcessHeroMovement()
     {
-        var speed = hero.Speed;
-
         if (Keyboard.GetState().IsKeyDown(MoveUp))
         {
-            yield return new Vector2(0, -speed.Y);
+            yield return -Vector2.UnitY;
         }
 
         if (Keyboard.GetState().IsKeyDown(MoveDown))
         {
-            yield return new Vector2(0, speed.Y);
+            yield return Vector2.UnitY;
         }
 
         if (Keyboard.GetState().IsKeyDown(MoveLeft))
         {
-            yield return new Vector2(-speed.X, 0);
+            yield return -Vector2.UnitX;
         }
 
         if (Keyboard.GetState().IsKeyDown(MoveRight))
         {
-            yield return new Vector2(speed.X, 0);
+            yield return Vector2.UnitX;
         }
     }
 

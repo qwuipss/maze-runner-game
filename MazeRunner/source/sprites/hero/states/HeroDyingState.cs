@@ -4,7 +4,7 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroDyingState : HeroDeathBaseState
 {
-    public override int UpdateTimeDelayMs
+    public override double UpdateTimeDelayMs
     {
         get
         {
@@ -28,7 +28,6 @@ public class HeroDyingState : HeroDeathBaseState
             var framePosX = animationPoint.X + FrameSize;
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);
-
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

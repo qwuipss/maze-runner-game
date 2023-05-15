@@ -21,7 +21,7 @@ public abstract class DropTrapBaseState : MazeTrapBaseState
         }
     }
 
-    protected override int UpdateTimeDelayMs
+    protected override double UpdateTimeDelayMs
     {
         get
         {

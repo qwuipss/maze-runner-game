@@ -19,12 +19,12 @@ public class DropTrapDeactivatingState : DropTrapBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            animationPoint.X -= FrameSize;
-
-            if (animationPoint.X is 0)
+            if (animationPoint.X == FrameSize)
             {
                 return new DropTrapDeactivatedState();
             }
+
+            animationPoint.X -= FrameSize;
 
             CurrentAnimationFramePoint = animationPoint;
 

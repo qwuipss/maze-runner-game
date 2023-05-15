@@ -15,23 +15,19 @@ public class Hero : Sprite
 {
     private static readonly Lazy<Hero> _instance;
 
-    private const double MovementPollingTimeMs = 20;
-
-    private const int HitBoxOffsetX = 4;
+    private const int HitBoxOffsetX = 5;
     private const int HitBoxOffsetY = 5;
 
-    private const int HitBoxWidth = 8;
+    private const int HitBoxWidth = 7;
     private const int HitBoxHeight = 10;
 
     private bool _isDead;
-
-    private double _movementPollingElapsedTimeMs;
 
     public override Vector2 Speed
     {
         get
         {
-            return new Vector2(1, 1);
+            return new Vector2(40, 40);
         }
     }
 
@@ -44,9 +40,10 @@ public class Hero : Sprite
 
     private Hero()
     {
-        FrameEffect = RandomHelper.Choice(new[] { SpriteEffects.None, SpriteEffects.FlipHorizontally });
-
-        State = new HeroIdleState();
+        State = new HeroIdleState
+        {
+            FrameEffect = RandomHelper.Choice(new[] { SpriteEffects.None, SpriteEffects.FlipHorizontally })
+        };
     }
 
     public static Hero GetInstance()
@@ -63,7 +60,7 @@ public class Hero : Sprite
     {
         base.Update(game, gameTime);
 
-        if (_isDead || !KeyboardManager.IsPollingTimePassed(MovementPollingTimeMs, ref _movementPollingElapsedTimeMs, gameTime))
+        if (_isDead)
         {
             return;
         }
@@ -75,7 +72,7 @@ public class Hero : Sprite
 
         var movement = ProcessMovement(position, mazeInfo.Maze);
 
-        FrameEffect = SpriteBaseState.ProcessFrameEffect(movement, FrameEffect);
+        State.FrameEffect = SpriteBaseState.ProcessFrameEffect(movement, FrameEffect);//
         ProcessState(movement);
 
         ProcessTrapsColliding(position, mazeInfo);
@@ -86,7 +83,7 @@ public class Hero : Sprite
 
             movement.Normalize();
 
-            position += movement;
+            position += movement * (float)gameTime.ElapsedGameTime.TotalSeconds * Speed;
             heroInfo.Position = position;
         }
     }
@@ -123,7 +120,7 @@ public class Hero : Sprite
     {
         var totalMovement = Vector2.Zero;
 
-        foreach (var movement in KeyboardManager.ProcessHeroMovement(this))
+        foreach (var movement in KeyboardManager.ProcessHeroMovement())
         {
             if (!CollisionManager.CollidesWithWalls(this, position, movement, maze)
              && !CollisionManager.CollidesWithExit(this, position, movement, maze))

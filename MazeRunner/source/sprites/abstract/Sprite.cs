@@ -35,7 +35,13 @@ public abstract class Sprite
         }
     }
 
-    public virtual SpriteEffects FrameEffect { get; set; }
+    public virtual SpriteEffects FrameEffect
+    {
+        get
+        {
+            return State.FrameEffect;
+        }
+    }
 
     public virtual Rectangle CurrentAnimationFrame
     {

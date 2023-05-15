@@ -7,11 +7,11 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public abstract class FloorBaseState : MazeTileBaseState
 {
-    protected static readonly IDictionary<Texture2D, float> Textures;
+    protected static readonly IDictionary<Texture2D, float> TextureChancePairs;
 
     static FloorBaseState()
     {
-        Textures = new Dictionary<Texture2D, float>
+        TextureChancePairs = new Dictionary<Texture2D, float>
         {
             { Floor_1, .25f },
             { Floor_2, .30f },
@@ -29,11 +29,11 @@ public abstract class FloorBaseState : MazeTileBaseState
         }
     }
 
-    protected override int UpdateTimeDelayMs
+    protected override double UpdateTimeDelayMs
     {
         get
         {
-            return int.MaxValue;
+            return double.MaxValue;
         }
     }
 }

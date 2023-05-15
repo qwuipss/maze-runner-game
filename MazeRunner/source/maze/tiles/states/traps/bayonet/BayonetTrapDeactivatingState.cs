@@ -19,15 +19,14 @@ public class BayonetTrapDeactivatingState : BayonetTrapBaseState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            animationPoint.X -= FrameSize;
-
             if (animationPoint.X is 0)
             {
                 return new BayonetTrapDeactivatedState();
             }
 
-            CurrentAnimationFramePoint = animationPoint;
+            animationPoint.X -= FrameSize;
 
+            CurrentAnimationFramePoint = animationPoint;
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

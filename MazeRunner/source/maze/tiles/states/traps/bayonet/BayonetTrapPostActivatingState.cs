@@ -17,15 +17,14 @@ public class BayonetTrapPostActivatingState : BayonetTrapBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            animationPoint.X += FrameSize;
-
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
                 return new BayonetTrapActivatedState();
             }
 
-            CurrentAnimationFramePoint = animationPoint;
+            animationPoint.X += FrameSize;
 
+            CurrentAnimationFramePoint = animationPoint;
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

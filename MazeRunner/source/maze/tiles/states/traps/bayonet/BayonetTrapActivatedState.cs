@@ -5,9 +5,9 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class BayonetTrapActivatedState : BayonetTrapBaseState
 {
-    private readonly int _updateTimeDelayMs;
+    private readonly double _updateTimeDelayMs;
 
-    protected override int UpdateTimeDelayMs
+    protected override double UpdateTimeDelayMs
     {
         get
         {

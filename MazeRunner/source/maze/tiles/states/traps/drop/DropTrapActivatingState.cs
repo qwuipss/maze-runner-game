@@ -12,15 +12,14 @@ public class DropTrapActivatingState : DropTrapBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            animationPoint.X += FrameSize;
-
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
                 return new DropTrapActivatedState();
             }
 
-            CurrentAnimationFramePoint = animationPoint;
+            animationPoint.X += FrameSize;
 
+            CurrentAnimationFramePoint = animationPoint;
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

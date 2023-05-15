@@ -3,13 +3,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
 
-public class HeroIdleState : HeroBaseState
+public abstract class HeroFallBaseState : HeroBaseState
 {
     public override Texture2D Texture
     {
         get
         {
-            return Textures.Sprites.Hero.Idle;
+            return Textures.Sprites.Hero.Fall;
         }
     }
 
@@ -17,15 +17,7 @@ public class HeroIdleState : HeroBaseState
     {
         get
         {
-            return 2;
-        }
-    }
-
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 300;
+            return 4;
         }
     }
 }

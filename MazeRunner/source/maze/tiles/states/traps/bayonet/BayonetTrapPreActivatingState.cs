@@ -5,9 +5,9 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 {
-    private readonly int _updateTimeDelayMs;
+    private readonly double _updateTimeDelayMs;
 
-    protected override int UpdateTimeDelayMs
+    protected override double UpdateTimeDelayMs
     {
         get
         {
@@ -33,15 +33,14 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            animationPoint.X += FrameSize;
-
             if (animationPoint.X == FrameSize * 4)
             {
                 return new BayonetTrapPostActivatingState();
             }
 
-            CurrentAnimationFramePoint = animationPoint;
+            animationPoint.X += FrameSize;
 
+            CurrentAnimationFramePoint = animationPoint;
             ElapsedGameTimeMs -= UpdateTimeDelayMs;
         }
 

@@ -10,7 +10,7 @@ public class WallIdleState : WallBaseState
 
     public WallIdleState()
     {
-        _texture = RandomHelper.Choice(Textures);
+        _texture = RandomHelper.Choice(TextureChancePairs);
     }
 
     public override Texture2D Texture

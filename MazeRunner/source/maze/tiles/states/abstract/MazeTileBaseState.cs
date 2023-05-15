@@ -9,7 +9,7 @@ public abstract class MazeTileBaseState : IMazeTileState
 
     public abstract int FramesCount { get; }
 
-    protected abstract int UpdateTimeDelayMs { get; }
+    protected abstract double UpdateTimeDelayMs { get; }
 
     public virtual int FrameSize
     {

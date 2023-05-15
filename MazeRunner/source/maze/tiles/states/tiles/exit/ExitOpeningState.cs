@@ -4,7 +4,7 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class ExitOpeningState : ExitBaseState
 {
-    protected override int UpdateTimeDelayMs
+    protected override double UpdateTimeDelayMs
     {
         get
         {
@@ -20,12 +20,12 @@ public class ExitOpeningState : ExitBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            animationPoint.X += FrameSize;
-
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
                 return new ExitOpenedState();
             }
+
+            animationPoint.X += FrameSize;
 
             CurrentAnimationFramePoint = animationPoint;
 

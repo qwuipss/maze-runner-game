@@ -21,7 +21,7 @@ public class HeroRunState : HeroBaseState
         }
     }
 
-    public override int UpdateTimeDelayMs
+    public override double UpdateTimeDelayMs
     {
         get
         {

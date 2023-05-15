@@ -21,11 +21,11 @@ public abstract class ExitBaseState : MazeTileBaseState
         }
     }
 
-    protected override int UpdateTimeDelayMs
+    protected override double UpdateTimeDelayMs
     {
         get
         {
-            return int.MaxValue;
+            return double.MaxValue;
         }
     }
 }
