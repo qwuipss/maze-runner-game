@@ -4,7 +4,7 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroDeadState : HeroDeathBaseState
 {
-    public HeroDeadState()
+    public HeroDeadState(ISpriteState previousState) : base(previousState)
     {
         var framePosX = (FramesCount - 1) * FrameSize;
 

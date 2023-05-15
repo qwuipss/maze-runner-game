@@ -156,6 +156,8 @@ public class MazeRunnerGame : Game
         var hero = Hero.GetInstance();
 
         HeroInfo = new SpriteInfo(hero, heroPosition);
+
+        hero.Initialize(this);
     }
 
     private void InitializeHeroCamera()

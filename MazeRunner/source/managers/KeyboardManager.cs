@@ -1,5 +1,4 @@
-﻿using MazeRunner.Sprites;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using static MazeRunner.Settings;
@@ -29,19 +28,5 @@ public static class KeyboardManager
         {
             yield return Vector2.UnitX;
         }
-    }
-
-    public static bool IsPollingTimePassed(double pollingTimeMs, ref double elapsedTime, GameTime gameTime)
-    {
-        elapsedTime += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-        if (elapsedTime >= pollingTimeMs)
-        {
-            elapsedTime -= pollingTimeMs;
-
-            return true;
-        }
-
-        return false;
     }
 }

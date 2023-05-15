@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.MazeBase.Tiles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
@@ -33,19 +34,7 @@ public abstract class SpriteBaseState : ISpriteState
 
     protected virtual double ElapsedGameTimeMs { get; set; }
 
-    public static SpriteEffects ProcessFrameEffect(Vector2 movement, SpriteEffects frameEffect)
-    {
-        if (movement.X > 0)
-        {
-            return SpriteEffects.None;
-        }
-        else if (movement.X < 0)
-        {
-            return SpriteEffects.FlipHorizontally;
-        }
-
-        return frameEffect;
-    }
+    protected abstract ISpriteState GetTrapCollidingState(TrapType trapType, ISpriteState previousState);
 
     public virtual ISpriteState ProcessState(GameTime gameTime)
     {
@@ -62,5 +51,17 @@ public abstract class SpriteBaseState : ISpriteState
         }
 
         return this;
+    }
+
+    protected void ProcessFrameEffect(Vector2 movement)
+    {
+        if (movement.X > 0)
+        {
+            FrameEffect = SpriteEffects.None;
+        }
+        else if (movement.X < 0)
+        {
+            FrameEffect = SpriteEffects.FlipHorizontally;
+        }
     }
 }

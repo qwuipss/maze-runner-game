@@ -1,11 +1,13 @@
-﻿using MazeRunner.Content;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
 
 public class HeroFallingState : HeroFallBaseState
 {
+    public HeroFallingState(ISpriteState previousState) : base(previousState)
+    {
+    }
+
     public override double UpdateTimeDelayMs
     {
         get
@@ -24,7 +26,7 @@ public class HeroFallingState : HeroFallBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new HeroFalledState();
+                return new HeroFalledState(this);
             }
 
             var framePosX = animationPoint.X + FrameSize;

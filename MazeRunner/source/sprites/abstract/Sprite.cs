@@ -9,7 +9,9 @@ public abstract class Sprite
 {
     public abstract Vector2 Speed { get; }
 
-    protected abstract ISpriteState State { get; set; }
+    public abstract ISpriteState State { get; set; }
+
+    public virtual bool IsDead { get; set; }
 
     public virtual float DrawingPriority
     {
@@ -52,6 +54,11 @@ public abstract class Sprite
     }
 
     public abstract FloatRectangle GetHitBox(Vector2 position);
+
+    public virtual Vector2 GetTravelledDistance(Vector2 direction, GameTime gameTime)
+    {
+        return direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+    }
 
     public virtual void Update(MazeRunnerGame game, GameTime gameTime)
     {

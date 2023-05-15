@@ -1,16 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Sprites.States;
 
 public class HeroFalledState : HeroFallBaseState
 {
-    public HeroFalledState()
+    public HeroFalledState(ISpriteState previousState) : base(previousState)
     {
         var framePosX = (FramesCount - 1) * FrameSize;
 

@@ -4,6 +4,10 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroDyingState : HeroDeathBaseState
 {
+    public HeroDyingState(ISpriteState previousState) : base(previousState)
+    {
+    }
+
     public override double UpdateTimeDelayMs
     {
         get
@@ -22,7 +26,7 @@ public class HeroDyingState : HeroDeathBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new HeroDeadState();
+                return new HeroDeadState(this);
             }
 
             var framePosX = animationPoint.X + FrameSize;
