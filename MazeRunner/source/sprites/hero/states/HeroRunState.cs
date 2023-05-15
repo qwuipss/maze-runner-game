@@ -72,7 +72,7 @@ public class HeroRunState : HeroBaseState
 
     private static void ProcessItemsColliding(SpriteInfo heroInfo, MazeInfo mazeInfo)
     {
-        if (CollisionManager.CollidesWithItems(heroInfo, mazeInfo.Maze, out var itemInfo))
+        if (CollisionManager.CollidesWithItems(heroInfo.Sprite, heroInfo.Position, mazeInfo.Maze, out var itemInfo))
         {
             var (cell, item) = itemInfo;
 

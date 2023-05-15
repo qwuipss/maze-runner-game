@@ -25,7 +25,7 @@ public abstract class HeroBaseState : SpriteBaseState
 
     protected static bool CollidesWithTraps(SpriteInfo heroInfo, MazeInfo mazeInfo, out TrapType trapType)
     {
-        if (CollisionManager.CollidesWithTraps(heroInfo, mazeInfo.Maze, out var trapInfo))
+        if (CollisionManager.CollidesWithTraps(heroInfo.Sprite, heroInfo.Position, mazeInfo.Maze, out var trapInfo))
         {
             trapType = trapInfo.Trap.TrapType;
 
@@ -41,21 +41,24 @@ public abstract class HeroBaseState : SpriteBaseState
         var hero = heroInfo.Sprite;
         var position = heroInfo.Position;
 
-        var totalMovement = Vector2.Zero;
+        var directions = Vector2.Zero;
 
         foreach (var movementDirection in KeyboardManager.ProcessHeroMovement())
         {
-            if (!CollisionManager.CollidesWithWalls(heroInfo, movementDirection, maze)
-             && !CollisionManager.CollidesWithExit(heroInfo, movementDirection, maze))
+            if (!CollisionManager.CollidesWithWalls(hero, position, movementDirection, maze)
+             && !CollisionManager.CollidesWithExit(hero, position, movementDirection, maze))
             {
-                var travelledDistance = hero.GetTravelledDistance(movementDirection, gameTime);
-
-                position += travelledDistance;
-                totalMovement += travelledDistance;
+                directions += movementDirection;
+                position += hero.GetTravelledDistance(movementDirection, gameTime);
             }
         }
 
-        return totalMovement == Vector2.Zero ? totalMovement : Vector2.Normalize(totalMovement);
+        if (directions != Vector2.Zero)
+        {
+            directions.Normalize();
+        }
+
+        return hero.GetTravelledDistance(directions, gameTime);
     }
 
     protected override HeroBaseState GetTrapCollidingState(TrapType trapType)
