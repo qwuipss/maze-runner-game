@@ -58,7 +58,7 @@ public class HeroRunState : HeroBaseState
 
         if (CollidesWithTraps(_heroInfo, _mazeInfo, out var trapType))
         {
-            var deathState = GetTrapCollidingState(trapType, _heroInfo.Sprite.State);
+            var deathState = GetTrapCollidingState(trapType);
 
             _heroInfo.Sprite.IsDead = true;
 

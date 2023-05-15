@@ -58,12 +58,12 @@ public abstract class HeroBaseState : SpriteBaseState
         return totalMovement == Vector2.Zero ? totalMovement : Vector2.Normalize(totalMovement);
     }
 
-    protected override HeroBaseState GetTrapCollidingState(TrapType trapType, ISpriteState previousState)
+    protected override HeroBaseState GetTrapCollidingState(TrapType trapType)
     {
         return trapType switch
         {
-            TrapType.Bayonet => new HeroDyingState(previousState),
-            TrapType.Drop => new HeroFallingState(previousState),
+            TrapType.Bayonet => new HeroDyingState(this),
+            TrapType.Drop => new HeroFallingState(this),
             _ => throw new NotImplementedException()
         };
     }

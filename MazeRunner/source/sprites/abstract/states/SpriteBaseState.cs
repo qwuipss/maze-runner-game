@@ -34,7 +34,7 @@ public abstract class SpriteBaseState : ISpriteState
 
     protected virtual double ElapsedGameTimeMs { get; set; }
 
-    protected abstract ISpriteState GetTrapCollidingState(TrapType trapType, ISpriteState previousState);
+    protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
 
     public virtual ISpriteState ProcessState(GameTime gameTime)
     {
