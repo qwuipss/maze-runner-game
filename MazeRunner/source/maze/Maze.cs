@@ -1,5 +1,4 @@
-﻿using MazeRunner.Extensions;
-using MazeRunner.MazeBase.Tiles;
+﻿using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;

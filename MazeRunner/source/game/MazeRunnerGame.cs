@@ -9,10 +9,8 @@ using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using static MazeRunner.Settings;
 
 namespace MazeRunner;
@@ -41,7 +39,7 @@ public class MazeRunnerGame : Game
 
     #region GameComponentsData
     private HashSet<MazeRunnerGameComponent> _gameComponents;
-    private HashSet<MazeRunnerGameComponent> _deadGameComponents;
+    private List<MazeRunnerGameComponent> _deadGameComponents;
     #endregion
 
     public MazeRunnerGame()
@@ -117,7 +115,7 @@ public class MazeRunnerGame : Game
 
     private void InitializeComponentsList()
     {
-        _deadGameComponents = new HashSet<MazeRunnerGameComponent>();
+        _deadGameComponents = new List<MazeRunnerGameComponent>();
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
@@ -126,7 +124,7 @@ public class MazeRunnerGame : Game
 
         foreach (var component in _gameComponents)
         {
-            component.NeedDisposeNotify += AddComponentToDisposeList;
+            component.NeedDisposeNotify += AddGameComponentToDisposeList;
         }
     }
 
@@ -183,7 +181,7 @@ public class MazeRunnerGame : Game
     }
     #endregion
 
-    private void AddComponentToDisposeList(MazeRunnerGameComponent component)
+    private void AddGameComponentToDisposeList(MazeRunnerGameComponent component)
     {
         _deadGameComponents.Add(component);
     }
@@ -197,6 +195,8 @@ public class MazeRunnerGame : Game
                 _gameComponents.Remove(component);
             }
         }
+
+        _deadGameComponents.Clear();
     }
 
     private void CheckDebugButtons()

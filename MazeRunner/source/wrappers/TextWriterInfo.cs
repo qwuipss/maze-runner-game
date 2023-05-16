@@ -1,7 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace MazeRunner.Wrappers;
 
