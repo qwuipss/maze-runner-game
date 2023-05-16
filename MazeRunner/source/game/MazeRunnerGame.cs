@@ -129,6 +129,8 @@ public class MazeRunnerGame : Game
     {
         var maze = MazeGenerator.GenerateMaze(MazeWidth, MazeHeight);
 
+        //MazeGenerator.MakeCyclic(maze);
+
         MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
         MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
 
@@ -150,7 +152,7 @@ public class MazeRunnerGame : Game
     {
         var maze = MazeInfo.Maze;
 
-        var heroCell = MazeGenerator.GetRandomFloorCell(maze);
+        var heroCell = MazeGenerator.GetRandomCell(maze, maze.IsFloor);
         var heroPosition = maze.GetCellPosition(heroCell);
 
         var hero = Hero.GetInstance();

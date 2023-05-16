@@ -10,8 +10,6 @@ namespace MazeRunner.MazeBase;
 
 public class Maze
 {
-    private readonly MazeTile[,] _skeleton;
-
     private readonly Dictionary<Cell, MazeTile> _trapsInfo;
 
     private readonly Dictionary<Cell, MazeTile> _itemsInfo;
@@ -28,13 +26,7 @@ public class Maze
         }
     }
 
-    public ImmutableDoubleDimArray<MazeTile> Skeleton
-    {
-        get
-        {
-            return _skeleton.ToImmutableDoubleDimArray();
-        }
-    }
+    public MazeTile[,] Skeleton { get; init; }
 
     public ImmutableDictionary<Cell, MazeTile> TrapsInfo
     {
@@ -54,7 +46,7 @@ public class Maze
 
     public Maze(MazeTile[,] skeleton)
     {
-        _skeleton = skeleton;
+        Skeleton = skeleton;
 
         _trapsInfo = new Dictionary<Cell, MazeTile>();
         _itemsInfo = new Dictionary<Cell, MazeTile>();
@@ -75,11 +67,11 @@ public class Maze
     {
         void InitializeSkeletonComponentsList()
         {
-            for (int y = 0; y < _skeleton.GetLength(0); y++)
+            for (int y = 0; y < Skeleton.GetLength(0); y++)
             {
-                for (int x = 0; x < _skeleton.GetLength(1); x++)
+                for (int x = 0; x < Skeleton.GetLength(1); x++)
                 {
-                    var tile = _skeleton[y, x];
+                    var tile = Skeleton[y, x];
                     var tilePosition = GetCellPosition(new Cell(x, y));
 
                     _components.Add(new MazeTileInfo(tile, tilePosition));
@@ -139,7 +131,7 @@ public class Maze
     #region Utilities
     public bool IsFloor(Cell cell)
     {
-        return _skeleton[cell.Y, cell.X].TileType is TileType.Floor
+        return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
            && cell != ExitInfo.Cell
            && !_trapsInfo.ContainsKey(cell)
            && !_itemsInfo.ContainsKey(cell);
@@ -147,16 +139,16 @@ public class Maze
 
     public bool IsWall(Cell cell)
     {
-        return _skeleton[cell.Y, cell.X].TileType is TileType.Wall;
+        return Skeleton[cell.Y, cell.X].TileType is TileType.Wall;
     }
 
     public int GetFloorsCount()
     {
         var floorsCount = 0;
 
-        for (int y = 0; y < _skeleton.GetLength(0); y++)
+        for (int y = 0; y < Skeleton.GetLength(0); y++)
         {
-            for (int x = 0; x < _skeleton.GetLength(1); x++)
+            for (int x = 0; x < Skeleton.GetLength(1); x++)
             {
                 if (IsFloor(new Cell(x, y)))
                 {
@@ -170,7 +162,7 @@ public class Maze
 
     public Vector2 GetCellPosition(Cell cell)
     {
-        var tile = _skeleton[cell.Y, cell.X];
+        var tile = Skeleton[cell.Y, cell.X];
 
         return GetIndependentCellPosition(tile, cell);
     }
@@ -186,7 +178,7 @@ public class Maze
     {
         ExitInfo = (cell, exit);
 
-        _skeleton[cell.Y, cell.X] = new Floor();
+        Skeleton[cell.Y, cell.X] = new Floor();
     }
 
     public void InsertItem(MazeItem item, Cell cell)

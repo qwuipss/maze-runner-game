@@ -45,13 +45,11 @@ public abstract class HeroBaseState : SpriteBaseState
 
         foreach (var movementDirection in KeyboardManager.ProcessHeroMovement())
         {
-            var travelledDistance = hero.GetTravelledDistance(movementDirection, gameTime);
-
-            if (!CollisionManager.CollidesWithWalls(hero, position, travelledDistance, maze)
-             && !CollisionManager.CollidesWithExit(hero, position, travelledDistance, maze))
+            if (!CollisionManager.CollidesWithWalls(hero, position, movementDirection, maze)
+             && !CollisionManager.CollidesWithExit(hero, position, movementDirection, maze))
             {
                 directions += movementDirection;
-                position += travelledDistance;
+                position += hero.GetTravelledDistance(movementDirection, gameTime);
             }
         }
 

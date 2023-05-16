@@ -4,12 +4,12 @@ namespace MazeRunner.MazeBase;
 
 public readonly record struct Cell(int X, int Y)
 {
-    public bool InBoundsOf<T>(ImmutableDoubleDimArray<T> mazeSkeleton)
+    public bool InBoundsOf<T>(T[,] mazeSkeleton)
     {
         return X.InRange(0, mazeSkeleton.GetLength(1) - 1) && Y.InRange(0, mazeSkeleton.GetLength(0) - 1);
     }
 
-    public bool IsCornerOf<T>(ImmutableDoubleDimArray<T> mazeSkeleton)
+    public bool IsCornerOf<T>(T[,] mazeSkeleton)
     {
         var width = mazeSkeleton.GetLength(1);
         var height = mazeSkeleton.GetLength(0);
