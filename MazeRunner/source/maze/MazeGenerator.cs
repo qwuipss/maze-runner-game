@@ -33,7 +33,7 @@ public static class MazeGenerator
 
         var maze = new Maze(tiles);
 
-        var currentFloorCell = GetRandomCell(maze, maze.IsFloor);
+        var currentFloorCell = GetRandomCell(maze, maze.IsFloor).First();
         visitedCells.Add(currentFloorCell);
 
         while (visitedCells.Count != floorsInserted)
@@ -63,21 +63,49 @@ public static class MazeGenerator
         return maze;
     }
 
-    public static void MakeCyclic(Maze maze)
+    public static void MakeCyclic(Maze maze, int deadEndsRemovePercentage)
     {
-        static bool IsDeadEndFloorCell(Maze maze, Cell cell)
+        bool IsDeadEnd(Cell cell)
         {
-            return maze.IsFloor(cell) && GetAdjacentCells(cell, maze, 1, maze.IsFloor).Count() is 1;
+            if (maze.IsWall(cell))
+            {
+                return false;
+            }
+
+            var skeleton = maze.Skeleton;
+            var isDeadEnd = GetAdjacentCells(cell, maze, 1, adjacentCell => !maze.IsWall(adjacentCell)).Count() is 1;
+
+            return isDeadEnd;
         }
 
-        var wallInsertions = 10;
-
-        for (int i = 0; i < wallInsertions; i++)
+        static void RemoveDeadEnds(Maze maze, int deadEndsRemovePercentage, Func<Cell, bool> deadEndSelector)
         {
-            var wallCell = GetRandomCell(maze, maze.IsWall);
+            var deadEndsCount = maze.GetTileCount(deadEndSelector);
+            var deadEndsRemoveCount = deadEndsCount * deadEndsRemovePercentage / 100;
 
-            maze.Skeleton[wallCell.Y, wallCell.X] = new Floor();
+            var counter = 0;
+
+            var skeleton = maze.Skeleton;
+            var deadEndsCellsList = new List<Cell>();
+
+            foreach (var deadEndCell in GetRandomCell(maze, deadEndSelector))
+            {
+                if (counter == deadEndsRemoveCount)
+                {
+                    break;
+                }
+
+                var adjacentWallsCells = GetAdjacentCells(deadEndCell, maze, 1,
+                    cell => maze.IsWall(cell) && !IsHorizontalSideCell(cell, maze) && !IsVerticalSideCell(cell, maze)).ToArray();
+
+                var adjacentWallCell = RandomHelper.Choice(adjacentWallsCells);
+
+                skeleton[adjacentWallCell.Y, adjacentWallCell.X] = new Floor();
+                counter++;
+            }
         }
+
+        RemoveDeadEnds(maze, deadEndsRemovePercentage, IsDeadEnd);
     }
 
     private static (MazeTile[,] Template, int FloorsInserted) GetMazeTemplate(int width, int height)
@@ -112,12 +140,12 @@ public static class MazeGenerator
     #region Inserters
     public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, int percentage)
     {
-        var floorsCount = maze.GetFloorsCount();
+        var floorsCount = maze.GetTileCount(maze.IsFloor);
         var insertionsCount = floorsCount * percentage / 100;
 
         for (int i = 0; i < insertionsCount; i++)
         {
-            var floorCell = GetRandomCell(maze, maze.IsFloor);
+            var floorCell = GetRandomCell(maze, maze.IsFloor).First();
 
             maze.InsertTrap(trapSource.Invoke(), floorCell);
         }
@@ -139,7 +167,7 @@ public static class MazeGenerator
 
     public static void InsertItem(Maze maze, MazeItem item)
     {
-        var floorCell = GetRandomCell(maze, maze.IsFloor);
+        var floorCell = GetRandomCell(maze, maze.IsFloor).First();
 
         maze.InsertItem(item, floorCell);
     }
@@ -167,39 +195,36 @@ public static class MazeGenerator
     #endregion
 
     #region CellsGetters
-    public static Cell GetRandomCell(Maze maze, Func<Cell, bool> cellSelector)
+    public static IEnumerable<Cell> GetRandomCell(Maze maze, Func<Cell, bool> cellSelector)
     {
-        static Cell GetRandomCell(Maze maze, Cell floorCell, Func<Cell, bool> cellSelector)
-        {
-            var searchingQueue = new Queue<Cell>();
-            var visitedCells = new HashSet<Cell>();
-
-            searchingQueue.Enqueue(floorCell);
-            visitedCells.Add(floorCell);
-
-            while (searchingQueue.Count is not 0)
-            {
-                var currentCell = searchingQueue.Dequeue();
-
-                if (cellSelector.Invoke(currentCell))
-                {
-                    return currentCell;
-                }
-
-                var adjacentCells = GetAdjacentCells(currentCell, maze, 1);
-
-                AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
-            }
-
-            throw new KeyNotFoundException($"cell with specified {nameof(cellSelector)} doesn't exist in {nameof(maze)}");
-        }
-
         var skeleton = maze.Skeleton;
         var randomCell = new Cell(RandomHelper.Next(0, skeleton.GetLength(1)), RandomHelper.Next(0, skeleton.GetLength(0)));
 
         return GetRandomCell(maze, randomCell, cellSelector);
     }
 
+    private static IEnumerable<Cell> GetRandomCell(Maze maze, Cell floorCell, Func<Cell, bool> cellSelector)
+    {
+        var searchingQueue = new Queue<Cell>();
+        var visitedCells = new HashSet<Cell>();
+
+        searchingQueue.Enqueue(floorCell);
+        visitedCells.Add(floorCell);
+
+        while (searchingQueue.Count is not 0)
+        {
+            var currentCell = searchingQueue.Dequeue();
+
+            if (cellSelector.Invoke(currentCell))
+            {
+                yield return currentCell;
+            }
+
+            var adjacentCells = GetAdjacentCells(currentCell, maze, 1);
+
+            AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
+        }
+    }
 
     private static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset)
     {
@@ -219,61 +244,13 @@ public static class MazeGenerator
               .Where(cell => cellSelector.Invoke(cell));
     }
 
-    private static IEnumerable<Cell> GetSideAdjacentCells(Cell cell, Maze maze)
-    {
-        var (width, height) = GetMazeDimensions(maze);
-
-        if ((cell.X is 0 || cell.X == width - 1) && cell.Y.InRange(1, height - 1))
-        {
-            yield return cell with { Y = cell.Y - 1 };
-            yield return cell with { Y = cell.Y + 1 };
-        }
-        else if ((cell.Y is 0 || cell.Y == height - 1) && cell.X.InRange(1, width - 1))
-        {
-            yield return cell with { X = cell.X - 1 };
-            yield return cell with { X = cell.X + 1 };
-        }
-        else
-        {
-            throw new ArgumentException($"cell {cell} is not side cell of the {nameof(maze)}");
-        }
-    }
-
     private static Cell GetRandomSideCell(Maze maze)
     {
-        static Cell GetRandomSideCell(Maze maze, Cell sideCell)
+        bool IsSideCell(Cell cell)
         {
-            var (width, height) = GetMazeDimensions(maze);
+            var isReachable = GetAdjacentCells(cell, maze, 1).Where(cell => !maze.IsWall(cell)).Count() is not 0;
 
-            var searchingQueue = new Queue<Cell>();
-            var visitedCells = new HashSet<Cell>();
-
-            searchingQueue.Enqueue(sideCell);
-            visitedCells.Add(sideCell);
-
-            while (searchingQueue.Count is not 0)
-            {
-                var currentCell = searchingQueue.Dequeue();
-                var adjacentCells = GetAdjacentCells(currentCell, maze, 1);
-
-                if (adjacentCells.Where(cell => !maze.IsWall(cell)).Count() is not 0)
-                {
-                    return currentCell;
-                }
-
-                if (currentCell.IsCornerOf(maze.Skeleton))
-                {
-                    AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
-                }
-                else
-                {
-                    var sideAdjacentCells = GetSideAdjacentCells(currentCell, maze);
-
-                    AddCellInSearchingQueue(sideAdjacentCells, visitedCells, searchingQueue);
-                }
-            }
-
-            throw new KeyNotFoundException($"unable to find appropriate cell in {nameof(maze)}");
+            return !cell.IsCornerOf(maze.Skeleton) && (IsVerticalSideCell(cell, maze) || IsHorizontalSideCell(cell, maze)) && isReachable;
         }
 
         var (width, height) = GetMazeDimensions(maze);
@@ -291,9 +268,23 @@ public static class MazeGenerator
             coordX = RandomHelper.RandomBoolean() ? 0 : width - 1;
         }
 
-        return GetRandomSideCell(maze, new Cell(coordX, coordY));
+        return GetRandomCell(maze, new Cell(coordX, coordY), IsSideCell).First();
     }
     #endregion
+
+    private static bool IsVerticalSideCell(Cell cell, Maze maze)
+    {
+        var (width, height) = GetMazeDimensions(maze);
+
+        return (cell.X is 0 || cell.X == width - 1) && cell.Y.InRange(1, height - 1);
+    }
+
+    private static bool IsHorizontalSideCell(Cell cell, Maze maze)
+    {
+        var (width, height) = GetMazeDimensions(maze);
+
+        return (cell.Y is 0 || cell.Y == height - 1) && cell.X.InRange(1, width - 1);
+    }
 
     private static void RemoveWallBetween(Cell first, Cell second, Maze maze)
     {

@@ -2,6 +2,7 @@
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
@@ -142,22 +143,22 @@ public class Maze
         return Skeleton[cell.Y, cell.X].TileType is TileType.Wall;
     }
 
-    public int GetFloorsCount()
+    public int GetTileCount(Func<Cell, bool> tileSelector)
     {
-        var floorsCount = 0;
+        var tileCount = 0;
 
         for (int y = 0; y < Skeleton.GetLength(0); y++)
         {
             for (int x = 0; x < Skeleton.GetLength(1); x++)
             {
-                if (IsFloor(new Cell(x, y)))
+                if (tileSelector.Invoke(new Cell(x, y)))
                 {
-                    floorsCount++;
+                    tileCount++;
                 }
             }
         }
 
-        return floorsCount;
+        return tileCount;
     }
 
     public Vector2 GetCellPosition(Cell cell)
