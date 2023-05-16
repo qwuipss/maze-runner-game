@@ -11,8 +11,6 @@ public abstract class Sprite
 
     public abstract ISpriteState State { get; set; }
 
-    public virtual bool IsDead { get; set; }
-
     public virtual float DrawingPriority
     {
         get

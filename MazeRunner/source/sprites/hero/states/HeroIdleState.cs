@@ -54,8 +54,6 @@ public class HeroIdleState : HeroBaseState
         {
             var deathState = GetTrapCollidingState(trapType);
 
-            _heroInfo.Sprite.IsDead = true;
-
             return deathState;
         }
 
