@@ -1,10 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace MazeRunner.Components;
 
 public abstract class MazeRunnerGameComponent
 {
-    public virtual bool IsDead { get; set; }
+    public delegate void GameComponentProvider(MazeRunnerGameComponent component);
+
+    public abstract event GameComponentProvider NeedDisposeNotify;
 
     public abstract void Update(MazeRunnerGame game, GameTime gameTime);
 

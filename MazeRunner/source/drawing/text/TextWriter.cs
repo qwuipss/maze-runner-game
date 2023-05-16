@@ -5,6 +5,10 @@ namespace MazeRunner.Drawing;
 
 public abstract class TextWriter
 {
+    public abstract float ScaleFactor { get; }
+
+    public abstract string Text { get; }
+
     public virtual float DrawingPriority
     {
         get
@@ -13,13 +17,11 @@ public abstract class TextWriter
         }
     }
 
-    public abstract float ScaleFactor { get; }
-
-    public abstract string Text { get; }
-
     public virtual SpriteFont Font { get; init; }
 
     public virtual Color Color { get; init; }
+
+    public virtual bool IsDead { get; protected set; }
 
     public abstract void Update(MazeRunnerGame game, GameTime gameTime);
 

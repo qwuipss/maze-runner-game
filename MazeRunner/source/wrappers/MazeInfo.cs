@@ -1,11 +1,14 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace MazeRunner.Wrappers;
 
 public class MazeInfo : MazeRunnerGameComponent
 {
+    public override event GameComponentProvider NeedDisposeNotify;
+
     public Maze Maze { get; init; }
 
     public bool IsKeyCollected { get; set; }

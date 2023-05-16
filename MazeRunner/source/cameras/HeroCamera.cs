@@ -2,11 +2,14 @@
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MazeRunner.Cameras;
 
 public class HeroCamera : MazeRunnerGameComponent, ICamera
 {
+    public override event GameComponentProvider NeedDisposeNotify;
+
     private readonly Vector3 _origin;
 
     private readonly Matrix _scale;

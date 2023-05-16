@@ -9,8 +9,10 @@ using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using static MazeRunner.Settings;
 
 namespace MazeRunner;
@@ -37,8 +39,9 @@ public class MazeRunnerGame : Game
     private HeroCamera _heroCamera;
     #endregion
 
-    #region GameComponentsList
-    private List<MazeRunnerGameComponent> _gameComponents;
+    #region GameComponentsData
+    private HashSet<MazeRunnerGameComponent> _gameComponents;
+    private HashSet<MazeRunnerGameComponent> _deadGameComponents;
     #endregion
 
     public MazeRunnerGame()
@@ -72,17 +75,12 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        void RemoveDeadGameComponents() //
-        {
-            _gameComponents = _gameComponents.Where(component => !component.IsDead).ToList();
-        }
-
         foreach (var component in _gameComponents)
         {
             component.Update(this, gameTime);
         }
 
-        RemoveDeadGameComponents();
+        DisposeDeadGameComponents();
 
         CheckDebugButtons();
 
@@ -119,10 +117,17 @@ public class MazeRunnerGame : Game
 
     private void InitializeComponentsList()
     {
-        _gameComponents = new List<MazeRunnerGameComponent>()
+        _deadGameComponents = new HashSet<MazeRunnerGameComponent>();
+
+        _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
             MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera,
         };
+
+        foreach (var component in _gameComponents)
+        {
+            component.NeedDisposeNotify += AddComponentToDisposeList;
+        }
     }
 
     private void InitializeMaze()
@@ -177,6 +182,22 @@ public class MazeRunnerGame : Game
         FindKeyTextWriterInfo = new TextWriterInfo(findKeyTextWriter);
     }
     #endregion
+
+    private void AddComponentToDisposeList(MazeRunnerGameComponent component)
+    {
+        _deadGameComponents.Add(component);
+    }
+
+    private void DisposeDeadGameComponents()
+    {
+        if (_deadGameComponents.Count is not 0)
+        {
+            foreach (var component in _deadGameComponents)
+            {
+                _gameComponents.Remove(component);
+            }
+        }
+    }
 
     private void CheckDebugButtons()
     {

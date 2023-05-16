@@ -80,7 +80,7 @@ public class FindKeyTextWriter : TextWriter
     {
         if (_textShowed)
         {
-            game.FindKeyTextWriterInfo.IsDead = true;
+            IsDead = true;
 
             return;
         }

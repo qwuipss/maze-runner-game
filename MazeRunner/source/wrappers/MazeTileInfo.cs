@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -8,6 +9,8 @@ namespace MazeRunner.Wrappers;
 
 public class MazeTileInfo : MazeRunnerGameComponent
 {
+    public override event GameComponentProvider NeedDisposeNotify;
+
     public MazeTile MazeTile { get; init; }
 
     public Vector2 Position { get; init; }

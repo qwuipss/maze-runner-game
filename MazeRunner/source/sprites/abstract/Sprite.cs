@@ -51,6 +51,8 @@ public abstract class Sprite
         }
     }
 
+    public virtual bool IsDead { get; protected set; }
+
     public abstract FloatRectangle GetHitBox(Vector2 position);
 
     public virtual Vector2 GetTravelledDistance(Vector2 direction, GameTime gameTime)
