@@ -1,9 +1,9 @@
-﻿using MazeRunner.Extensions;
-using MazeRunner.MazeBase;
+﻿using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System.Collections.Immutable;
+using System.Drawing;
 
 namespace MazeRunner.Managers;
 
@@ -92,17 +92,12 @@ public static class CollisionManager
         var tilePosition = Maze.GetIndependentCellPosition(mazeTile, tileCell);
         var tileHitBox = mazeTile.GetHitBox(tilePosition);
 
-        return GetExtendedHitBox(sprite, position, movement).Intersects(tileHitBox);
+        return GetExtendedHitBox(sprite, position, movement).IntersectsWith(tileHitBox);
     }
 
-    private static FloatRectangle GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
+    private static RectangleF GetExtendedHitBox(Sprite sprite, Vector2 position, Vector2 movement)
     {
         var hitBox = sprite.GetHitBox(position);
-
-        var x = hitBox.X;
-        var y = hitBox.Y;
-        var width = hitBox.Width;
-        var height = hitBox.Height;
 
         if (movement == Vector2.Zero)
         {
@@ -111,23 +106,23 @@ public static class CollisionManager
 
         if (movement.X > 0)
         {
-            width += movement.X;
+            hitBox.Width += movement.X;
         }
         else if (movement.X < 0)
         {
-            x += movement.X;
+            hitBox.X += movement.X;
         }
 
         if (movement.Y > 0)
         {
-            height += movement.Y;
+            hitBox.Height += movement.Y;
         }
         else if (movement.Y < 0)
         {
-            y += movement.Y;
+            hitBox.Y += movement.Y;
         }
 
     _return:
-        return new FloatRectangle(x, y, width, height);
+        return hitBox;
     }
 }

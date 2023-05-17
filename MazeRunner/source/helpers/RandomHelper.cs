@@ -31,14 +31,14 @@ public static class RandomHelper
 
         if (chances.Any(chance => chance <= 0))
         {
-            throw new ArgumentOutOfRangeException(nameof(chances), $"numbers in {nameof(chances)} should be more than 0");
+            throw new ArgumentOutOfRangeException(nameof(itemChancePairs), $"numbers in {nameof(chances)} should be more than 0");
         }
 
         var chancesSum = chances.Sum();
 
         if (chancesSum - 1 > float.Epsilon)
         {
-            throw new ArgumentOutOfRangeException(nameof(chances), $"sum of {nameof(chances)} should be equal to 1 but was {chancesSum}");
+            throw new ArgumentOutOfRangeException(nameof(itemChancePairs), $"sum of {nameof(chances)} should be equal to 1 but was {chancesSum}");
         }
 
         var rangedChances = new List<float>() { 0 };

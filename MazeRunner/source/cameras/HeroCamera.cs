@@ -11,21 +11,36 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
     public override event GameComponentProvider NeedDisposeNotify;
 #pragma warning disable
 
-    private readonly Vector3 _origin;
-
     private readonly Matrix _scale;
 
     private readonly Matrix _bordersOffset;
 
     private Matrix _transformMatrix;
 
+    private Vector2 _position;
+
+    public Vector2 Position
+    {
+        get
+        {
+            return _position;
+        }
+    }
+
+    public Matrix TransformMatrix
+    {
+        get
+        {
+            return _transformMatrix;
+        }
+    }
+
     public HeroCamera(Viewport viewPort, float scaleFactor = 1)
     {
-        _origin = new Vector3(viewPort.Width / 2, viewPort.Height / 2, 0);
+        var origin = new Vector2(viewPort.Width / 2, viewPort.Height / 2);
 
+        _bordersOffset = Matrix.CreateTranslation(new Vector3(origin, 0));
         _scale = Matrix.CreateScale(new Vector3(scaleFactor, scaleFactor, 0));
-        _bordersOffset = Matrix.CreateTranslation(_origin);
-
     }
 
     public override void Draw(GameTime gameTime)
@@ -48,11 +63,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
             -spritePosition.Y - halfFrameSize,
             0);
 
+        _position = spritePosition;
         _transformMatrix = cameraPosition * _scale * _bordersOffset;
-    }
-
-    public Matrix GetTransformMatrix()
-    {
-        return _transformMatrix;
     }
 }

@@ -1,8 +1,12 @@
 ﻿using MazeRunner.Cameras;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Drawing;
+using ColorXna = Microsoft.Xna.Framework.Color;
+using RectagleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.Drawing;
 
@@ -10,14 +14,26 @@ public static class Drawer
 {
     private static SpriteBatch _spriteBatch;
 
+    private static RectangleF _viewBox;
+
+    private static int _viewWidth;
+    private static int _viewHeight;
+
     public static void Initialize(MazeRunnerGame game)
     {
         _spriteBatch = new SpriteBatch(game.GraphicsDevice);
+
+        var graphics = game.Graphics;
+
+        _viewWidth = graphics.GraphicsDevice.Viewport.Width;
+        _viewHeight = graphics.GraphicsDevice.Viewport.Height;
     }
 
     public static void BeginDraw(ICamera camera)
     {
-        _spriteBatch.Begin(transformMatrix: camera.GetTransformMatrix(), samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
+        _viewBox = DrawHelper.GetViewBox(camera.Position, _viewWidth, _viewHeight);
+
+        _spriteBatch.Begin(transformMatrix: camera.TransformMatrix, samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
     }
 
     public static void EndDraw()
@@ -63,12 +79,15 @@ public static class Drawer
     private static void Draw(
         Texture2D texture,
         Vector2 position,
-        Rectangle sourceRectangle,
+        RectagleXna sourceRectangle,
         float layerDepth,
         float rotation = 0,
         Vector2 origin = default,
         SpriteEffects spriteEffects = default)
     {
-        _spriteBatch.Draw(texture, position, sourceRectangle, Color.White, rotation, origin, Vector2.One, spriteEffects, layerDepth);
+        if (DrawHelper.IsInViewBox(position, sourceRectangle, _viewBox))
+        {
+            _spriteBatch.Draw(texture, position, sourceRectangle, ColorXna.White, rotation, origin, Vector2.One, spriteEffects, layerDepth);
+        }
     }
 }

@@ -6,5 +6,7 @@ namespace MazeRunner.Cameras;
 
 public interface ICamera
 {
-    public Matrix GetTransformMatrix();
+    public Vector2 Position { get; }
+
+    public Matrix TransformMatrix { get; }
 }

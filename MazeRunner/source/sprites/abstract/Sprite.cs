@@ -1,7 +1,8 @@
-﻿using MazeRunner.Extensions;
-using MazeRunner.Sprites.States;
+﻿using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Drawing;
+using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.Sprites;
 
@@ -43,7 +44,7 @@ public abstract class Sprite
         }
     }
 
-    public virtual Rectangle CurrentAnimationFrame
+    public virtual RectangleXna CurrentAnimationFrame
     {
         get
         {
@@ -53,7 +54,7 @@ public abstract class Sprite
 
     public virtual bool IsDead { get; protected set; }
 
-    public abstract FloatRectangle GetHitBox(Vector2 position);
+    public abstract RectangleF GetHitBox(Vector2 position);
 
     public virtual Vector2 GetTravelledDistance(Vector2 direction, GameTime gameTime)
     {

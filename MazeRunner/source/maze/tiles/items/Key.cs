@@ -1,8 +1,8 @@
-﻿using MazeRunner.Extensions;
-using MazeRunner.Helpers;
+﻿using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
+using System.Drawing;
 
 namespace MazeRunner.MazeBase.Tiles;
 
@@ -33,9 +33,9 @@ public sealed class Key : MazeItem
         }
     }
 
-    public override FloatRectangle GetHitBox(Vector2 position)
+    public override RectangleF GetHitBox(Vector2 position)
     {
-        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxSize);
     }
 
     public override void ProcessCollecting(MazeInfo mazeInfo, Cell cell)

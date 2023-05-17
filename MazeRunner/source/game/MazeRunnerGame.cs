@@ -18,7 +18,7 @@ namespace MazeRunner;
 public class MazeRunnerGame : Game
 {
     #region GraphicsData
-    private readonly GraphicsDeviceManager _graphics;
+    public GraphicsDeviceManager Graphics { get; init; }
     #endregion
 
     #region MazeData
@@ -44,10 +44,11 @@ public class MazeRunnerGame : Game
 
     public MazeRunnerGame()
     {
+        IsFixedTimeStep = false;
         IsMouseVisible = true;
         Content.RootDirectory = "Content";
 
-        _graphics = new GraphicsDeviceManager(this);
+        Graphics = new GraphicsDeviceManager(this);
     }
 
     #region GameBase
@@ -73,6 +74,8 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
+        Window.Title = $"{1 / gameTime.ElapsedGameTime.TotalSeconds}";
+
         foreach (var component in _gameComponents)
         {
             component.Update(this, gameTime);
@@ -105,12 +108,12 @@ public class MazeRunnerGame : Game
     #region Initializers
     private void SetFullScreen()
     {
-        _graphics.IsFullScreen = true;
+        Graphics.IsFullScreen = true;
 
-        _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
-        _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
+        Graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
+        Graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        _graphics.ApplyChanges();
+        //Graphics.ApplyChanges();
     }
 
     private void InitializeComponentsList()
@@ -156,7 +159,8 @@ public class MazeRunnerGame : Game
         var maze = MazeInfo.Maze;
 
         var heroCell = MazeGenerator.GetRandomCell(maze, maze.IsFloor).First();
-        var heroPosition = maze.GetCellPosition(heroCell);
+        var heroPosition = maze.GetCellPosition(new Cell(0, 0));
+        //var heroPosition = maze.GetCellPosition(heroCell);
 
         var hero = Hero.GetInstance();
 
