@@ -7,7 +7,7 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class DropTrap : MazeTrap
 {
-    private const int HitBoxOffset = 6;
+    private const int HitBoxOffset = 4;
     private const int HitBoxSize = 4;
 
     public override bool IsActivated
@@ -41,6 +41,6 @@ public class DropTrap : MazeTrap
 
     public override RectangleF GetHitBox(Vector2 position)
     {
-        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxSize);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 }
