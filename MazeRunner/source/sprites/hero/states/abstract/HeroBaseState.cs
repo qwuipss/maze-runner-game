@@ -6,6 +6,7 @@ using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Linq;
 
 namespace MazeRunner.Sprites.States;
 
@@ -38,29 +39,36 @@ public abstract class HeroBaseState : SpriteBaseState
 
     protected static Vector2 ProcessMovement(SpriteInfo heroInfo, Maze maze, GameTime gameTime)
     {
-        var hero = heroInfo.Sprite;
+        static bool IsMovementAccepted(Hero hero, Vector2 position, Vector2 movement, Maze maze)
+        {
+            return !CollisionManager.CollidesWithWalls(hero, position, movement, maze)
+                && !CollisionManager.CollidesWithExit(hero, position, movement, maze);
+        }
+
+        var hero = (Hero)heroInfo.Sprite;
         var position = heroInfo.Position;
 
-        var directions = Vector2.Zero;
+        var totalMovement = Vector2.Zero;
 
-        foreach (var movementDirection in KeyboardManager.ProcessHeroMovement())
+        var movementDirection = KeyboardManager.ProcessHeroMovement();
+        var movement = hero.GetTravelledDistance(movementDirection, gameTime);
+
+        var movementX = new Vector2(movement.X, 0);
+        var movementY = new Vector2(0, movement.Y);
+
+        if (IsMovementAccepted(hero, position, movementX, maze))
         {
-            var travelledDistance = hero.GetTravelledDistance(movementDirection, gameTime);
-
-            if (!CollisionManager.CollidesWithWalls(hero, position, travelledDistance, maze)
-             && !CollisionManager.CollidesWithExit(hero, position, travelledDistance, maze))
-            {
-                directions += movementDirection;
-                position += travelledDistance;
-            }
+            totalMovement += movementX;
+            position += movementX;
         }
 
-        if (directions != Vector2.Zero)
+        if (IsMovementAccepted(hero, position, movementY, maze))
         {
-            directions.Normalize();
+            totalMovement += movementY;
+            position += movementY;
         }
 
-        return hero.GetTravelledDistance(directions, gameTime);
+        return totalMovement;
     }
 
     protected override HeroBaseState GetTrapCollidingState(TrapType trapType)

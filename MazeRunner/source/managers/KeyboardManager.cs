@@ -7,28 +7,31 @@ namespace MazeRunner.Managers;
 
 public static class KeyboardManager
 {
-    public static IEnumerable<Vector2> ProcessHeroMovement()
+    public static Vector2 ProcessHeroMovement()
     {
+        var movementDirection = Vector2.Zero;
         var keyboardState = Keyboard.GetState();
 
         if (keyboardState.IsKeyDown(MoveUp))
         {
-            yield return -Vector2.UnitY;
+            movementDirection -= Vector2.UnitY;
         }
 
         if (keyboardState.IsKeyDown(MoveDown))
         {
-            yield return Vector2.UnitY;
+            movementDirection += Vector2.UnitY;
         }
 
         if (keyboardState.IsKeyDown(MoveLeft))
         {
-            yield return -Vector2.UnitX;
+            movementDirection -= Vector2.UnitX;
         }
 
         if (keyboardState.IsKeyDown(MoveRight))
         {
-            yield return Vector2.UnitX;
+            movementDirection += Vector2.UnitX;
         }
+
+        return movementDirection;
     }
 }
