@@ -6,7 +6,6 @@ using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Linq;
 
 namespace MazeRunner.Sprites.States;
 
@@ -48,27 +47,37 @@ public abstract class HeroBaseState : SpriteBaseState
         var hero = (Hero)heroInfo.Sprite;
         var position = heroInfo.Position;
 
-        var totalMovement = Vector2.Zero;
-
         var movementDirection = KeyboardManager.ProcessHeroMovement();
-        var movement = hero.GetTravelledDistance(movementDirection, gameTime);
+        var movement = hero.GetMovement(movementDirection, gameTime);
+
+        if (movementDirection == Vector2.Zero)
+        {
+            return Vector2.Zero;
+        }
+
+        if (IsMovementAccepted(hero, position, movement, maze))
+        {
+            movementDirection.Normalize();
+            movement = hero.GetMovement(movementDirection, gameTime);
+
+            return movement;
+        }
 
         var movementX = new Vector2(movement.X, 0);
-        var movementY = new Vector2(0, movement.Y);
 
         if (IsMovementAccepted(hero, position, movementX, maze))
         {
-            totalMovement += movementX;
-            position += movementX;
+            return movementX;
         }
+
+        var movementY = new Vector2(0, movement.Y);
 
         if (IsMovementAccepted(hero, position, movementY, maze))
         {
-            totalMovement += movementY;
-            position += movementY;
+            return movementY;
         }
 
-        return totalMovement;
+        return Vector2.Zero;
     }
 
     protected override HeroBaseState GetTrapCollidingState(TrapType trapType)

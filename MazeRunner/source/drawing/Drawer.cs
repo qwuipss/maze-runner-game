@@ -16,22 +16,14 @@ public static class Drawer
 
     private static RectangleF _viewBox;
 
-    private static int _viewWidth;
-    private static int _viewHeight;
-
     public static void Initialize(MazeRunnerGame game)
     {
         _spriteBatch = new SpriteBatch(game.GraphicsDevice);
-
-        var graphics = game.Graphics;
-
-        _viewWidth = graphics.GraphicsDevice.Viewport.Width;
-        _viewHeight = graphics.GraphicsDevice.Viewport.Height;
     }
 
     public static void BeginDraw(ICamera camera)
     {
-        _viewBox = DrawHelper.GetViewBox(camera.Position, _viewWidth, _viewHeight);
+        _viewBox = DrawHelper.GetViewBox(camera);
 
         _spriteBatch.Begin(transformMatrix: camera.TransformMatrix, samplerState: SamplerState.PointClamp, sortMode: SpriteSortMode.BackToFront);
     }

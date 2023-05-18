@@ -44,6 +44,7 @@ public class MazeRunnerGame : Game
 
     public MazeRunnerGame()
     {
+        IsFixedTimeStep = false;
         IsMouseVisible = true;
         Content.RootDirectory = "Content";
 

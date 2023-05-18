@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.Cameras;
+using Microsoft.Xna.Framework;
 using System.Drawing;
 using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
@@ -13,15 +14,17 @@ public static class DrawHelper
         return viewBox.IntersectsWith(drawBox);
     }
 
-    public static RectangleF GetViewBox(Vector2 cameraPositon, int viewWidth, int viewHeight)
+    public static RectangleF GetViewBox(ICamera camera)
     {
-        var halfViewWidth = viewWidth / 2;
-        var halfViewHeight = viewHeight / 2;
+        var position = camera.Position;
+
+        var halfViewWidth = camera.ViewWidth / 2;
+        var halfViewHeight = camera.ViewHeight / 2;
 
         return new RectangleF(
-            cameraPositon.X - halfViewWidth,
-            cameraPositon.Y - halfViewHeight,
-            viewWidth,
-            viewHeight);
+            position.X - halfViewWidth,
+            position.Y - halfViewHeight,
+            camera.ViewWidth,
+            camera.ViewHeight);
     }
 }

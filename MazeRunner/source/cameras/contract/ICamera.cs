@@ -8,5 +8,9 @@ public interface ICamera
 {
     public Vector2 Position { get; }
 
+    public int ViewWidth { get; }
+
+    public int ViewHeight { get; }
+
     public Matrix TransformMatrix { get; }
 }

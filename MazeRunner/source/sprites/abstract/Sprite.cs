@@ -56,7 +56,7 @@ public abstract class Sprite
 
     public abstract RectangleF GetHitBox(Vector2 position);
 
-    public virtual Vector2 GetTravelledDistance(Vector2 direction, GameTime gameTime)
+    public virtual Vector2 GetMovement(Vector2 direction, GameTime gameTime)
     {
         return direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }

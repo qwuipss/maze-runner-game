@@ -15,6 +15,10 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     private readonly Matrix _bordersOffset;
 
+    private readonly int _viewWidth;
+
+    private readonly int _viewHeight;
+
     private Matrix _transformMatrix;
 
     private Vector2 _position;
@@ -24,6 +28,22 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         get
         {
             return _position;
+        }
+    }
+
+    public int ViewWidth
+    {
+        get
+        {
+            return _viewWidth;
+        }
+    }
+
+    public int ViewHeight
+    {
+        get
+        {
+            return _viewHeight;
         }
     }
 
@@ -37,7 +57,10 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public HeroCamera(Viewport viewPort, float scaleFactor = 1)
     {
-        var origin = new Vector2(viewPort.Width / 2, viewPort.Height / 2);
+        _viewWidth = viewPort.Width;
+        _viewHeight = viewPort.Height;
+
+        var origin = new Vector2(_viewWidth / 2, _viewHeight / 2);
 
         _bordersOffset = Matrix.CreateTranslation(new Vector3(origin, 0));
         _scale = Matrix.CreateScale(new Vector3(scaleFactor, scaleFactor, 0));
