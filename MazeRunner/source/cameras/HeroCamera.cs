@@ -63,7 +63,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
             -spritePosition.Y - halfFrameSize,
             0);
 
-        _position = spritePosition;
+        _position = new Vector2(spritePosition.X + halfFrameSize, spritePosition.Y + halfFrameSize);
         _transformMatrix = cameraPosition * _scale * _bordersOffset;
     }
 }

@@ -9,8 +9,6 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public abstract class MazeTile
 {
-    private static readonly float[] FrameRotationAngles = new[] { MathHelper.PiOver2, -MathHelper.PiOver2 };
-
     public abstract TileType TileType { get; }
 
     public virtual float FrameRotationAngle { get; set; }

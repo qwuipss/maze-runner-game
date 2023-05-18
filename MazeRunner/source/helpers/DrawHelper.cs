@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
 using System.Drawing;
 using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
@@ -14,14 +13,14 @@ public static class DrawHelper
         return viewBox.IntersectsWith(drawBox);
     }
 
-    public static RectangleF GetViewBox(Vector2 offset, int viewWidth, int viewHeight)
+    public static RectangleF GetViewBox(Vector2 cameraPositon, int viewWidth, int viewHeight)
     {
         var halfViewWidth = viewWidth / 2;
         var halfViewHeight = viewHeight / 2;
 
         return new RectangleF(
-            offset.X - halfViewWidth,
-            offset.Y - halfViewHeight,
+            cameraPositon.X - halfViewWidth,
+            cameraPositon.Y - halfViewHeight,
             viewWidth,
             viewHeight);
     }

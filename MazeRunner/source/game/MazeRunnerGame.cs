@@ -44,7 +44,6 @@ public class MazeRunnerGame : Game
 
     public MazeRunnerGame()
     {
-        IsFixedTimeStep = false;
         IsMouseVisible = true;
         Content.RootDirectory = "Content";
 
@@ -74,8 +73,6 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        Window.Title = $"{1 / gameTime.ElapsedGameTime.TotalSeconds}";
-
         foreach (var component in _gameComponents)
         {
             component.Update(this, gameTime);
@@ -113,7 +110,7 @@ public class MazeRunnerGame : Game
         Graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         Graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        //Graphics.ApplyChanges();
+        Graphics.ApplyChanges();
     }
 
     private void InitializeComponentsList()
@@ -159,8 +156,7 @@ public class MazeRunnerGame : Game
         var maze = MazeInfo.Maze;
 
         var heroCell = MazeGenerator.GetRandomCell(maze, maze.IsFloor).First();
-        var heroPosition = maze.GetCellPosition(new Cell(0, 0));
-        //var heroPosition = maze.GetCellPosition(heroCell);
+        var heroPosition = maze.GetCellPosition(heroCell);
 
         var hero = Hero.GetInstance();
 

@@ -25,7 +25,7 @@ public abstract class DropTrapBaseState : MazeTrapBaseState
     {
         get
         {
-            return 10;
+            return 20;
         }
     }
 }

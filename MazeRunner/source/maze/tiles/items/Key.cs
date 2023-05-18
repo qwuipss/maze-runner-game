@@ -11,7 +11,6 @@ public sealed class Key : MazeItem
     private const int HitBoxOffset = 4;
     private const int HitBoxSize = 8;
 
-
     public Key()
     {
         State = new KeyIdleState();
@@ -35,7 +34,7 @@ public sealed class Key : MazeItem
 
     public override RectangleF GetHitBox(Vector2 position)
     {
-        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxSize);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 
     public override void ProcessCollecting(MazeInfo mazeInfo, Cell cell)

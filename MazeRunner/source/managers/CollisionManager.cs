@@ -89,7 +89,15 @@ public static class CollisionManager
 
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile mazeTile, Cell tileCell)
     {
+        const float distanceCoeff = 1.5f;
+
         var tilePosition = Maze.GetIndependentCellPosition(mazeTile, tileCell);
+
+        if (Vector2.Distance(tilePosition, position) > sprite.FrameSize * distanceCoeff)
+        {
+            return false;
+        }
+
         var tileHitBox = mazeTile.GetHitBox(tilePosition);
 
         return GetExtendedHitBox(sprite, position, movement).IntersectsWith(tileHitBox);
