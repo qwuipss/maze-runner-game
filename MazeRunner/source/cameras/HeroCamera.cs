@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -26,13 +27,13 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     private Matrix _transformMatrix;
 
-    private Vector2 _position;
+    private Vector2 _viewPosition;
 
-    public Vector2 Position
+    public Vector2 ViewPosition
     {
         get
         {
-            return _position;
+            return _viewPosition;
         }
     }
 
@@ -60,7 +61,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         }
     }
 
-    public HeroCamera(Viewport viewPort, GraphicsDevice graphicsDevice, float scaleFactor = 1)
+    public HeroCamera(Viewport viewPort, float shadowTreshold, GraphicsDevice graphicsDevice, float scaleFactor = 1)
     {
         _viewWidth = viewPort.Width;
         _viewHeight = viewPort.Height;
@@ -70,7 +71,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         _bordersOffset = Matrix.CreateTranslation(new Vector3(origin, 0));
         _scale = Matrix.CreateScale(new Vector3(scaleFactor, scaleFactor, 0));
 
-        _effect = CreateEffect(graphicsDevice);
+        _effect = CreateEffect(shadowTreshold, graphicsDevice);
     }
 
     public override void Draw(GameTime gameTime)
@@ -97,14 +98,12 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
             -spritePosition.Y - halfFrameSize,
             0);
 
-        _position = new Vector2(spritePosition.X + halfFrameSize, spritePosition.Y + halfFrameSize);
+        _viewPosition = new Vector2(spritePosition.X + halfFrameSize, spritePosition.Y + halfFrameSize);
         _transformMatrix = cameraPosition * _scale * _bordersOffset;
     }
 
-    private Texture2D CreateEffect(GraphicsDevice graphicsDevice)
+    private Texture2D CreateEffect(float shadowTreshold, GraphicsDevice graphicsDevice)
     {
-        var dataSize = _viewHeight * _viewWidth;
-
         var effectData = new Color[_viewHeight, _viewWidth];
         var centerPixel = new Vector2(_viewWidth / 2, _viewHeight / 2);
 
@@ -113,30 +112,23 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
             for (int x = 0; x < effectData.GetLength(1); x++)
             {
                 var currentPixel = new Vector2(x, y);
+                var distance = Vector2.Distance(centerPixel, currentPixel);
 
-                if (Vector2.Distance(centerPixel, currentPixel) <= 32)
+                if (distance >= shadowTreshold)
                 {
-                    effectData[y, x] = Color.Transparent;
+                    effectData[y, x] = Color.Black;
                 }
                 else
                 {
-                    effectData[y, x] = Color.Black;
+                    var transparentCoeff = distance / shadowTreshold;
+                    effectData[y, x] = Color.Black * transparentCoeff;
                 }
             }
         }
 
         var effectTexture = new Texture2D(graphicsDevice, _viewWidth, _viewHeight);
 
-        var counter = 0;
-        var linear = new Color[dataSize];
-
-        foreach (var color in effectData)
-        {
-            linear[counter] = color;
-            counter++;
-        }
-
-        effectTexture.SetData(linear);
+        effectTexture.SetData(effectData.ToLinear());
 
         return effectTexture;
     }

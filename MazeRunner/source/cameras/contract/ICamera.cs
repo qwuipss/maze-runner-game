@@ -6,7 +6,7 @@ namespace MazeRunner.Cameras;
 
 public interface ICamera
 {
-    public Vector2 Position { get; }
+    public Vector2 ViewPosition { get; }
 
     public int ViewWidth { get; }
 

@@ -58,9 +58,9 @@ public class MazeRunnerGame : Game
 
         SetFullScreen();
 
-        InitializeHeroCamera();
         InitializeMaze();
         InitializeHero();
+        InitializeHeroCamera();
         InitializeTextWriters();
         InitializeComponentsList();
         InitializeDrawer();
@@ -169,8 +169,9 @@ public class MazeRunnerGame : Game
     private void InitializeHeroCamera()
     {
         var scaleFactor = 7;
+        var heroFrameSize = HeroInfo.Sprite.FrameSize;
 
-        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, GraphicsDevice, scaleFactor);
+        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, heroFrameSize * 2.5f, GraphicsDevice, scaleFactor);
     }
 
     private void InitializeTextWriters()

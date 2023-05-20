@@ -16,7 +16,7 @@ public static class DrawHelper
 
     public static RectangleF GetViewBox(ICamera camera)
     {
-        var position = camera.Position;
+        var position = camera.ViewPosition;
 
         var halfViewWidth = camera.ViewWidth / 2;
         var halfViewHeight = camera.ViewHeight / 2;
