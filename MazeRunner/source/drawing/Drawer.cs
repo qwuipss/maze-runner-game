@@ -68,7 +68,7 @@ public static class Drawer
              mazeTile.OriginFrameRotationVector);
     }
 
-    private static void Draw(
+    public static void Draw(
         Texture2D texture,
         Vector2 position,
         RectagleXna sourceRectangle,

@@ -170,7 +170,7 @@ public class MazeRunnerGame : Game
     {
         var scaleFactor = 7;
 
-        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, scaleFactor);
+        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, GraphicsDevice, scaleFactor);
     }
 
     private void InitializeTextWriters()
