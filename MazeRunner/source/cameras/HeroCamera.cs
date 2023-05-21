@@ -5,7 +5,6 @@ using MazeRunner.Helpers;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.ComponentModel.DataAnnotations;
 
 namespace MazeRunner.Cameras;
 
@@ -121,7 +120,10 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
                 else
                 {
                     var transparentCoeff = distance / shadowTreshold;
-                    effectData[y, x] = Color.Black * transparentCoeff;
+                    var transparency = (byte)((float)byte.MaxValue * transparentCoeff);
+
+                    effectData[y, x] = Color.Black;
+                    effectData[y, x].A = transparency;
                 }
             }
         }

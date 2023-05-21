@@ -170,8 +170,9 @@ public class MazeRunnerGame : Game
     {
         var scaleFactor = 7;
         var heroFrameSize = HeroInfo.Sprite.FrameSize;
+        var shadowTreshold = heroFrameSize * 2.4f;
 
-        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, heroFrameSize * 2.5f, GraphicsDevice, scaleFactor);
+        _heroCamera = new HeroCamera(GraphicsDevice.Viewport, shadowTreshold, GraphicsDevice, scaleFactor);
     }
 
     private void InitializeTextWriters()
