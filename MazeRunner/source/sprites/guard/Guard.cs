@@ -17,7 +17,7 @@ public class Guard : Sprite
     {
         get
         {
-            return new Vector2(25, 25);
+            return new Vector2(15, 15);
         }
     }
 

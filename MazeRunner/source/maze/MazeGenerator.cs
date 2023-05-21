@@ -193,6 +193,18 @@ public static class MazeGenerator
     #endregion
 
     #region CellsGetters
+    public static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset)
+    {
+        return new List<Cell>()
+        {
+            cell with { X = cell.X + cellOffset },
+            cell with { X = cell.X - cellOffset },
+            cell with { Y = cell.Y + cellOffset },
+            cell with { Y = cell.Y - cellOffset },
+        }
+        .Where(cell => cell.InBoundsOf(maze.Skeleton));
+    }
+
     public static IEnumerable<Cell> GetRandomCell(Maze maze, Func<Cell, bool> cellSelector)
     {
         var skeleton = maze.Skeleton;
@@ -222,18 +234,6 @@ public static class MazeGenerator
 
             AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
         }
-    }
-
-    private static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset)
-    {
-        return new List<Cell>()
-        {
-            cell with { X = cell.X + cellOffset },
-            cell with { X = cell.X - cellOffset },
-            cell with { Y = cell.Y + cellOffset },
-            cell with { Y = cell.Y - cellOffset },
-        }
-        .Where(cell => cell.InBoundsOf(maze.Skeleton));
     }
 
     private static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset, Func<Cell, bool> cellSelector)

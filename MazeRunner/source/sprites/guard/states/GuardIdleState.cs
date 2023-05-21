@@ -66,7 +66,8 @@ public class GuardIdleState : GuardBaseState
 
             if (IsHeroNearby(_heroInfo, _guardInfo))
             {
-                return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
+                return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
+                //return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
             }
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);

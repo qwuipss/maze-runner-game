@@ -220,7 +220,7 @@ public class MazeRunnerGame : Game
 
         _enemiesInfo = new HashSet<SpriteInfo>();
 
-        var guardsCount = 3;
+        var guardsCount = 1;
 
         InitializeGuards(MazeInfo.Maze, guardsCount);
     }

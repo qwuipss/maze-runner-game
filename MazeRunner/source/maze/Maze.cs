@@ -166,6 +166,15 @@ public class Maze
 
         return GetIndependentCellPosition(tile, cell);
     }
+
+    public Cell GetCellByPosition(Vector2 position)
+    {
+        var cellSize = Skeleton[0, 0].FrameSize;
+
+        var cell = new Cell((int)position.X / cellSize, (int)position.Y / cellSize);
+
+        return cell;
+    }
     #endregion
 
     #region Inserters
