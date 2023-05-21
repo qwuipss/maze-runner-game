@@ -1,10 +1,8 @@
-﻿using MazeRunner.Helpers;
-using MazeRunner.Managers;
+﻿using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace MazeRunner.Sprites.States;

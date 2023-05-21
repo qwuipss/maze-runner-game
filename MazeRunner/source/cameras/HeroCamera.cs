@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Components;
-using MazeRunner.Drawing;
 using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
@@ -14,7 +13,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
     public override event GameComponentProvider NeedDisposeNotify;
 #pragma warning disable
 
-    private const float DrawingPriority = .1f; 
+    private const float DrawingPriority = .1f;
 
     private readonly Texture2D _effect;
 

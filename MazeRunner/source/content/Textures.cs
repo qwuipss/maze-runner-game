@@ -95,10 +95,12 @@ public static class Textures
             private const string ContentDirectory = $"{Sprites.ContentDirectory}/guard";
 
             public static Texture2D Idle { get; private set; }
+            public static Texture2D Run { get; private set; }
 
             public static void Load(Game game)
             {
                 Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                Run = game.Content.Load<Texture2D>($"{ContentDirectory}/run");
             }
         }
 

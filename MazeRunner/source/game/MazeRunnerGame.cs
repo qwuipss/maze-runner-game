@@ -30,7 +30,7 @@ public class MazeRunnerGame : Game
     #endregion
 
     #region EnemiesData
-    private List<SpriteInfo> _enemiesInfo;
+    private HashSet<SpriteInfo> _enemiesInfo;
     #endregion
 
     #region FindKeyTextWriterData
@@ -125,7 +125,7 @@ public class MazeRunnerGame : Game
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera, 
+            MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera,
         };
 
         foreach (var enemyInfo in _enemiesInfo)
@@ -182,10 +182,25 @@ public class MazeRunnerGame : Game
         {
             bool IsEnemyFreeFloorCell(Cell cell)
             {
-                var cellPosition = maze.GetCellPosition(cell);
-                var isEnemyFree = _enemiesInfo.Where(enemyInfo => enemyInfo.Position == cellPosition).Count() is 0;
+                const float spawnDistanceCoeff = 3;
 
-                return maze.IsFloor(cell) && isEnemyFree;
+                if (!maze.IsFloor(cell))
+                {
+                    return false;
+                }
+
+                var cellPosition = maze.GetCellPosition(cell);
+                var distanceToHero = Vector2.Distance(HeroInfo.Position, cellPosition);
+
+                if (distanceToHero <= spawnDistanceCoeff)
+                {
+                    return false;
+                }
+
+                var noSpawnRadius = maze.Skeleton[cell.Y, cell.X].FrameSize * spawnDistanceCoeff;
+                var isEnemyFree = _enemiesInfo.Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) <= noSpawnRadius).Count() is 0;
+
+                return isEnemyFree;
             }
 
             for (int i = 0; i < guardsCount; i++)
@@ -197,13 +212,15 @@ public class MazeRunnerGame : Game
 
                 var guardInfo = new SpriteInfo(guard, guardPosition);
 
+                guard.Initialize(this, guardInfo);
+
                 _enemiesInfo.Add(guardInfo);
             }
         }
 
-        var guardsCount = 1;
+        _enemiesInfo = new HashSet<SpriteInfo>();
 
-        _enemiesInfo = new List<SpriteInfo>();
+        var guardsCount = 3;
 
         InitializeGuards(MazeInfo.Maze, guardsCount);
     }

@@ -84,9 +84,7 @@ public static class MazeGenerator
             var deadEndsRemoveCount = deadEndsCount * deadEndsRemovePercentage / 100;
 
             var counter = 0;
-
             var skeleton = maze.Skeleton;
-            var deadEndsCellsList = new List<Cell>();
 
             foreach (var deadEndCell in GetRandomCell(maze, deadEndSelector))
             {
@@ -248,9 +246,19 @@ public static class MazeGenerator
     {
         bool IsSideCell(Cell cell)
         {
+            if (cell.IsCornerOf(maze.Skeleton))
+            {
+                return false;
+            }
+
+            if (!(IsVerticalSideCell(cell, maze) || IsHorizontalSideCell(cell, maze)))
+            {
+                return false;
+            }
+
             var isReachable = GetAdjacentCells(cell, maze, 1).Where(cell => !maze.IsWall(cell)).Count() is not 0;
 
-            return !cell.IsCornerOf(maze.Skeleton) && (IsVerticalSideCell(cell, maze) || IsHorizontalSideCell(cell, maze)) && isReachable;
+            return isReachable;
         }
 
         var (width, height) = GetMazeDimensions(maze);

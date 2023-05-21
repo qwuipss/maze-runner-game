@@ -1,32 +1,33 @@
 ﻿using MazeRunner.Helpers;
 using MazeRunner.Sprites.States;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Sprites;
 
 public class Guard : Sprite
 {
-    public Guard()
-    {
-        State = new GuardIdleState(null);
-    }
+    private const int HitBoxOffset = 6;
+
+    private const int HitBoxSizeX = 5;
+    private const int HitBoxSizeY = 11;
 
     public override Vector2 Speed
     {
         get
         {
-            return new Vector2(30, 30);
+            return new Vector2(25, 25);
         }
     }
 
     public override RectangleF GetHitBox(Vector2 position)
     {
-        return HitBoxHelper.GetHitBox(position, 16, 16); //
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSizeX, HitBoxSizeY);
+    }
+
+    public void Initialize(MazeRunnerGame game, SpriteInfo selfInfo)
+    {
+        State = new GuardIdleState(game.HeroInfo, selfInfo, game.MazeInfo);
     }
 }

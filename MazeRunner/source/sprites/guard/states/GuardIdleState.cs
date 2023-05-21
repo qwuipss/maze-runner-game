@@ -1,21 +1,29 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Helpers;
-using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Sprites.States;
 
 public class GuardIdleState : GuardBaseState
 {
-    public GuardIdleState(ISpriteState previousState) : base(previousState)
+    private readonly SpriteInfo _heroInfo;
+
+    private readonly SpriteInfo _guardInfo;
+    private readonly MazeInfo _mazeInfo;
+
+    public GuardIdleState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
     {
+        _heroInfo = heroInfo;
+
+        _guardInfo = guardInfo;
+        _mazeInfo = mazeInfo;
+    }
+
+    public GuardIdleState(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : this(null, heroInfo, guardInfo, mazeInfo)
+    {
+
     }
 
     public override Texture2D Texture
@@ -53,7 +61,12 @@ public class GuardIdleState : GuardBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize && framePosX is 0 && RandomHelper.RandomBoolean())
             {
-                return ;
+                return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
+            }
+
+            if (IsHeroNearby(_heroInfo, _guardInfo))
+            {
+                return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
             }
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);
@@ -62,10 +75,5 @@ public class GuardIdleState : GuardBaseState
         }
 
         return this;
-    }
-
-    private static bool IsHeroNearby(SpriteInfo heroInfo)
-    {
-        var distance = Vector2.Distance(heroInfo.Position, );
     }
 }
