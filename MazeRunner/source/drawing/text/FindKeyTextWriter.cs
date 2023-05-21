@@ -53,7 +53,7 @@ public class FindKeyTextWriter : TextWriter
     private FindKeyTextWriter()
     {
         Font = Fonts.BaseFont;
-        Color = Color.Black;
+        Color = Color.White;
 
         _textStringLength = Font.MeasureString(Text) * ScaleFactor;
     }

@@ -14,6 +14,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
     public override event GameComponentProvider NeedDisposeNotify;
 #pragma warning disable
 
+    private const float DrawingPriority = .1f; 
+
     private readonly Texture2D _effect;
 
     private readonly Matrix _scale;
@@ -78,7 +80,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         var viewBox = DrawHelper.GetViewBox(this);
         var position = new Vector2(viewBox.X, viewBox.Y);
 
-        Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), 0);
+        Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
