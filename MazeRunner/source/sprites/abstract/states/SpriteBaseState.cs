@@ -1,4 +1,7 @@
-﻿using MazeRunner.MazeBase.Tiles;
+﻿using MazeRunner.Helpers;
+using MazeRunner.Managers;
+using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -6,6 +9,20 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class SpriteBaseState : ISpriteState
 {
+    private static readonly SpriteEffects[] FrameEffects = new[] { SpriteEffects.None, SpriteEffects.FlipHorizontally };
+
+    protected SpriteBaseState(ISpriteState previousState)
+    {
+        if (previousState is null)
+        {
+            FrameEffect = RandomHelper.Choice(FrameEffects);
+        }
+        else
+        {
+            FrameEffect = previousState.FrameEffect;
+        }
+    }
+
     public abstract Texture2D Texture { get; }
 
     public abstract int FramesCount { get; }
@@ -35,6 +52,19 @@ public abstract class SpriteBaseState : ISpriteState
     protected virtual double ElapsedGameTimeMs { get; set; }
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
+
+    protected static bool CollidesWithTraps(SpriteInfo spriteInfo, MazeInfo mazeInfo, out TrapType trapType)
+    {
+        if (CollisionManager.CollidesWithTraps(spriteInfo.Sprite, spriteInfo.Position, mazeInfo.Maze, out var trapInfo))
+        {
+            trapType = trapInfo.Trap.TrapType;
+
+            return true;
+        }
+
+        trapType = TrapType.None;
+        return false;
+    }
 
     public virtual ISpriteState ProcessState(GameTime gameTime)
     {

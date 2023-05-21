@@ -24,7 +24,13 @@ public class Hero : Sprite
         }
     }
 
-    public override ISpriteState State { get; set; }
+    public override float DrawingPriority
+    {
+        get
+        {
+            return .5f;
+        }
+    }
 
     static Hero()
     {

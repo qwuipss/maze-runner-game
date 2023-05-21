@@ -11,40 +11,19 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class HeroBaseState : SpriteBaseState
 {
-    protected HeroBaseState(ISpriteState previousState)
+    protected HeroBaseState(ISpriteState previousState) : base(previousState)
     {
-        if (previousState is null)
-        {
-            FrameEffect = RandomHelper.Choice(new[] { SpriteEffects.None, SpriteEffects.FlipHorizontally });
-        }
-        else
-        {
-            FrameEffect = previousState.FrameEffect;
-        }
-    }
-
-    protected static bool CollidesWithTraps(SpriteInfo heroInfo, MazeInfo mazeInfo, out TrapType trapType)
-    {
-        if (CollisionManager.CollidesWithTraps(heroInfo.Sprite, heroInfo.Position, mazeInfo.Maze, out var trapInfo))
-        {
-            trapType = trapInfo.Trap.TrapType;
-
-            return true;
-        }
-
-        trapType = TrapType.None;
-        return false;
     }
 
     protected static Vector2 ProcessMovement(SpriteInfo heroInfo, Maze maze, GameTime gameTime)
     {
-        static bool IsMovementAccepted(Hero hero, Vector2 position, Vector2 movement, Maze maze)
+        static bool IsMovementAccepted(Sprite hero, Vector2 position, Vector2 movement, Maze maze)
         {
             return !CollisionManager.CollidesWithWalls(hero, position, movement, maze)
                 && !CollisionManager.CollidesWithExit(hero, position, movement, maze);
         }
 
-        var hero = (Hero)heroInfo.Sprite;
+        var hero = heroInfo.Sprite;
         var position = heroInfo.Position;
 
         var movementDirection = KeyboardManager.ProcessHeroMovement();

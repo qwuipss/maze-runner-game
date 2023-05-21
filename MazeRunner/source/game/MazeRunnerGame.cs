@@ -29,6 +29,10 @@ public class MazeRunnerGame : Game
     public SpriteInfo HeroInfo { get; private set; }
     #endregion
 
+    #region EnemiesData
+    private List<SpriteInfo> _enemiesInfo;
+    #endregion
+
     #region FindKeyTextWriterData
     public TextWriterInfo FindKeyTextWriterInfo { get; private set; }
     #endregion
@@ -61,6 +65,7 @@ public class MazeRunnerGame : Game
         InitializeMaze();
         InitializeHero();
         InitializeHeroCamera();
+        InitializeEnemies();
         InitializeTextWriters();
         InitializeComponentsList();
         InitializeDrawer();
@@ -120,8 +125,13 @@ public class MazeRunnerGame : Game
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera,
+            MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera, 
         };
+
+        foreach (var enemyInfo in _enemiesInfo)
+        {
+            _gameComponents.Add(enemyInfo);
+        }
 
         foreach (var component in _gameComponents)
         {
@@ -164,6 +174,38 @@ public class MazeRunnerGame : Game
         HeroInfo = new SpriteInfo(hero, heroPosition);
 
         hero.Initialize(this);
+    }
+
+    private void InitializeEnemies()
+    {
+        void InitializeGuards(Maze maze, int guardsCount)
+        {
+            bool IsEnemyFreeFloorCell(Cell cell)
+            {
+                var cellPosition = maze.GetCellPosition(cell);
+                var isEnemyFree = _enemiesInfo.Where(enemyInfo => enemyInfo.Position == cellPosition).Count() is 0;
+
+                return maze.IsFloor(cell) && isEnemyFree;
+            }
+
+            for (int i = 0; i < guardsCount; i++)
+            {
+                var guard = new Guard();
+
+                var guardCell = MazeGenerator.GetRandomCell(maze, IsEnemyFreeFloorCell).First();
+                var guardPosition = maze.GetCellPosition(guardCell);
+
+                var guardInfo = new SpriteInfo(guard, guardPosition);
+
+                _enemiesInfo.Add(guardInfo);
+            }
+        }
+
+        var guardsCount = 1;
+
+        _enemiesInfo = new List<SpriteInfo>();
+
+        InitializeGuards(MazeInfo.Maze, guardsCount);
     }
 
     private void InitializeHeroCamera()

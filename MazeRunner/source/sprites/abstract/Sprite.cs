@@ -10,13 +10,11 @@ public abstract class Sprite
 {
     public abstract Vector2 Speed { get; }
 
-    public abstract ISpriteState State { get; set; }
-
     public virtual float DrawingPriority
     {
         get
         {
-            return .5f;
+            return .45f;
         }
     }
 
@@ -51,6 +49,8 @@ public abstract class Sprite
             return State.CurrentAnimationFrame;
         }
     }
+
+    public virtual ISpriteState State { get; set; }
 
     public virtual bool IsDead { get; protected set; }
 

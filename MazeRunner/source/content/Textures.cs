@@ -89,11 +89,29 @@ public static class Textures
                 Fall = game.Content.Load<Texture2D>($"{ContentDirectory}/fall");
             }
         }
+
+        public static class Guard
+        {
+            private const string ContentDirectory = $"{Sprites.ContentDirectory}/guard";
+
+            public static Texture2D Idle { get; private set; }
+
+            public static void Load(Game game)
+            {
+                Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+            }
+        }
+
+        public static void Load(Game game)
+        {
+            Hero.Load(game);
+            Guard.Load(game);
+        }
     }
 
     public static void Load(Game game)
     {
         MazeTiles.Load(game);
-        Sprites.Hero.Load(game);
+        Sprites.Load(game);
     }
 }
