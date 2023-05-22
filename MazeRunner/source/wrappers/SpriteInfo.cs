@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 
@@ -21,6 +22,22 @@ public class SpriteInfo : MazeRunnerGameComponent
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
+        const float updateDistanceCoeff = 20;
+
+
+        if (Sprite is not Hero)
+        {
+            var heroInfo = game.HeroInfo;
+
+            var hero = heroInfo.Sprite;
+            var heroPosition = heroInfo.Position;
+
+            if (Vector2.Distance(Position, heroPosition) >= hero.FrameSize * updateDistanceCoeff)
+            {
+                return;
+            }
+        }
+
         Sprite.Update(game, gameTime);
 
         if (Sprite.IsDead)

@@ -59,7 +59,7 @@ public class GuardIdleState : GuardBaseState
             var animationPoint = CurrentAnimationFramePoint;
             var framePosX = (animationPoint.X + FrameSize) % (FrameSize * FramesCount);
 
-            if (animationPoint.X == (FramesCount - 1) * FrameSize && framePosX is 0 && RandomHelper.RandomBoolean())
+            if (framePosX is 0 && animationPoint.X == (FramesCount - 1) * FrameSize && RandomHelper.RandomBoolean())
             {
                 return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
             }
