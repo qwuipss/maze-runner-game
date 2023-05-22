@@ -172,14 +172,7 @@ public static class MazeGenerator
     #endregion
 
     #region Utilities
-    private static (int Width, int Height) GetMazeDimensions(Maze maze)
-    {
-        var skeleton = maze.Skeleton;
-
-        return (skeleton.GetLength(1), skeleton.GetLength(0));
-    }
-
-    private static void AddCellInSearchingQueue(IEnumerable<Cell> cells, HashSet<Cell> visitedCells, Queue<Cell> searchingQueue)
+    public static void AddCellsInSearchingQueue(IEnumerable<Cell> cells, HashSet<Cell> visitedCells, Queue<Cell> searchingQueue)
     {
         foreach (var cell in cells)
         {
@@ -189,6 +182,13 @@ public static class MazeGenerator
                 visitedCells.Add(cell);
             }
         }
+    }
+
+    private static (int Width, int Height) GetMazeDimensions(Maze maze)
+    {
+        var skeleton = maze.Skeleton;
+
+        return (skeleton.GetLength(1), skeleton.GetLength(0));
     }
     #endregion
 
@@ -232,7 +232,7 @@ public static class MazeGenerator
 
             var adjacentCells = GetAdjacentCells(currentCell, maze, 1);
 
-            AddCellInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
+            AddCellsInSearchingQueue(adjacentCells, visitedCells, searchingQueue);
         }
     }
 
