@@ -37,9 +37,9 @@ public class GuardWalkState : GuardMoveBaseState
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
-    { 
-        base.ProcessState(gameTime); 
-        
+    {
+        base.ProcessState(gameTime);
+
         if (IsHeroNearby(_heroInfo, _guardInfo))
         {
             return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
@@ -55,16 +55,9 @@ public class GuardWalkState : GuardMoveBaseState
 
         ProcessFrameEffect(movement);
 
-        var newPosition = guardPosition + movement;
+        _guardInfo.Position += movement;
 
-        if (CollisionManager.CollidesWithWalls(guard, guardPosition, movement, _mazeInfo.Maze)) //
-        {
-            throw new Exception();
-        }
-
-        _guardInfo.Position = newPosition;
-
-        if (IsWalkPositionReached(walkPosition, newPosition))
+        if (IsPositionReached(walkPosition, _guardInfo))
         {
             _walkPath.RemoveFirst();
         }
@@ -90,7 +83,7 @@ public class GuardWalkState : GuardMoveBaseState
         
         var exitCell = maze.ExitInfo.Cell;
 
-        var movingPosition = maze.GetCellPosition(currentCell);
+        var movingPosition = GetMovingPosition(currentCell, maze);
 
         path.AddLast(movingPosition);
 
@@ -104,7 +97,7 @@ public class GuardWalkState : GuardMoveBaseState
             }
 
             currentCell = RandomHelper.Choice(adjacentCells);
-            movingPosition = maze.GetCellPosition(currentCell);
+            movingPosition = GetMovingPosition(currentCell, maze);
 
             path.AddLast(movingPosition);
             visitedCells.Add(currentCell);

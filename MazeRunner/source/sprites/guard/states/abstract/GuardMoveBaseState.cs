@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 
 namespace MazeRunner.Sprites.States;
@@ -44,25 +45,18 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
     protected static Cell GetSpriteCell(SpriteInfo spriteInfo, Maze maze)
     {
-        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
-
-        var heroStartPosition = new Vector2((hitBox.X + hitBox.Right) / 2, (hitBox.Y + hitBox.Bottom) / 2);
-
-        var cell = maze.GetCellByPosition(heroStartPosition);
+        var position = GetSpriteNormalizedPosition(spriteInfo);
+        var cell = maze.GetCellByPosition(position);
 
         return cell;
     }
 
-    protected static bool IsWalkPositionReached(Vector2 walkPosition, Vector2 position)
+    protected static Vector2 GetSpriteNormalizedPosition(SpriteInfo spriteInfo)
     {
-        return MathF.Abs(walkPosition.X - position.X) < MoveNormalizationAdditive
-            && MathF.Abs(walkPosition.Y - position.Y) < MoveNormalizationAdditive;
-    }
+        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
+        var position = new Vector2((hitBox.X + hitBox.Right) / 2, (hitBox.Y + hitBox.Bottom) / 2);
 
-    protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Cell exitCell, Maze maze, HashSet<Cell> visitedCells)
-    {
-        return MazeGenerator.GetAdjacentCells(cell, maze, 1)
-            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && cell != exitCell && !visitedCells.Contains(cell));
+        return position;
     }
 
     protected static Vector2 GetMovementDirection(Vector2 from, Vector2 to)
@@ -77,8 +71,25 @@ public abstract class GuardMoveBaseState : GuardBaseState
         return delta;
     }
 
-    protected static Vector2 GetNormalizedPosition(Vector2 position)
+    protected static Vector2 GetMovingPosition(Cell cell, Maze maze)
     {
-        return new Vector2(position.X + MoveNormalizationAdditive, position.Y + MoveNormalizationAdditive);
+        var frameSize = maze.Skeleton[cell.Y, cell.X].FrameSize;
+        var position = maze.GetCellPosition(cell);
+
+        return new Vector2(position.X + frameSize, position.Y + frameSize);
+    }
+
+    protected static bool IsPositionReached(Vector2 position, SpriteInfo spriteInfo)
+    {
+        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
+        var positionMaterialBox = new RectangleF(position.X, position.Y, float.Epsilon, float.Epsilon);
+
+        return hitBox.IntersectsWith(positionMaterialBox);
+    }
+
+    protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Cell exitCell, Maze maze, HashSet<Cell> visitedCells)
+    {
+        return MazeGenerator.GetAdjacentCells(cell, maze, 1)
+            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && cell != exitCell && !visitedCells.Contains(cell));
     }
 }

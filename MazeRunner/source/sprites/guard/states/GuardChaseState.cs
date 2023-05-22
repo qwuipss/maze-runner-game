@@ -72,25 +72,17 @@ public class GuardChaseState : GuardMoveBaseState
 
         var maze = _mazeInfo.Maze;
 
-        var pathHeadNode = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo);
-        
-        var movingPositions = new List<Vector2>();
-
-        foreach (var cell in pathHeadNode)
-        {
-            var movingPosition = maze.GetCellPosition(cell);
-
-            movingPositions.Add(movingPosition);
-        }
+        var cellsPath = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo);
+        var movingPositions = cellsPath.Select(cell => maze.GetCellPosition(cell));
 
         var position = _guardInfo.Position;
         var direction = Vector2.Zero;
 
-        foreach (var targetPosition in movingPositions)
+        foreach (var movingPosition in movingPositions)
         {
-            if (!IsWalkPositionReached(targetPosition, position))
+            if (!IsPositionReached(movingPosition, _guardInfo))
             {
-                direction = GetMovementDirection(position, targetPosition);
+                direction = GetMovementDirection(position, movingPosition);
                 break;
             }
         }
@@ -108,7 +100,7 @@ public class GuardChaseState : GuardMoveBaseState
     {
         var heroCell = GetSpriteCell(heroInfo, maze);
 
-        var guardStartPosition = GetNormalizedPosition(guardInfo.Position);
+        var guardStartPosition = GetSpriteNormalizedPosition(guardInfo);
         var guardCell = maze.GetCellByPosition(guardStartPosition);
 
         var visitedCells = new HashSet<Cell>() { guardCell };
@@ -139,6 +131,6 @@ public class GuardChaseState : GuardMoveBaseState
             }
         }
 
-        throw new ArgumentNullException("unable to find the path");
+        throw new ArgumentNullException("unable to find the path");//
     }
 }
