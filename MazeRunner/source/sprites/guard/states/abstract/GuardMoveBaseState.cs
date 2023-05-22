@@ -54,7 +54,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
     protected static Vector2 GetSpriteNormalizedPosition(SpriteInfo spriteInfo)
     {
         var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
-        var position = new Vector2((hitBox.X + hitBox.Right) / 2, (hitBox.Y + hitBox.Bottom) / 2);
+        var position = new Vector2(hitBox.X + hitBox.Width / 2, hitBox.Y + hitBox.Height / 2);
 
         return position;
     }
@@ -73,10 +73,10 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
     protected static Vector2 GetMovingPosition(Cell cell, Maze maze)
     {
-        var frameSize = maze.Skeleton[cell.Y, cell.X].FrameSize;
+        var halfFrameSize = maze.Skeleton[cell.Y, cell.X].FrameSize / 2;
         var position = maze.GetCellPosition(cell);
 
-        return new Vector2(position.X + frameSize, position.Y + frameSize);
+        return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
     }
 
     protected static bool IsPositionReached(Vector2 position, SpriteInfo spriteInfo)

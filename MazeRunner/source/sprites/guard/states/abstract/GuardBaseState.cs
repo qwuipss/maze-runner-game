@@ -12,7 +12,7 @@ public abstract class GuardBaseState : SpriteBaseState
 
     protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo)
     {
-        const float detectionDistanceCoeff = 15f;
+        const float detectionDistanceCoeff = 13.5f;
 
         var distance = Vector2.Distance(heroInfo.Position, guardInfo.Position);
 

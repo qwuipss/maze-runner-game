@@ -72,17 +72,17 @@ public class GuardChaseState : GuardMoveBaseState
 
         var maze = _mazeInfo.Maze;
 
-        var cellsPath = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo);
-        var movingPositions = cellsPath.Select(cell => maze.GetCellPosition(cell));
+        var cellsPath = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo).ToList(); //
+        var chasePath = cellsPath.Select(cell => GetMovingPosition(cell, maze)).ToList(); //
 
-        var position = _guardInfo.Position;
         var direction = Vector2.Zero;
+        var guardPosition = GetSpriteNormalizedPosition(_guardInfo);
 
-        foreach (var movingPosition in movingPositions)
+        foreach (var movingPosition in chasePath)
         {
             if (!IsPositionReached(movingPosition, _guardInfo))
             {
-                direction = GetMovementDirection(position, movingPosition);
+                direction = GetMovementDirection(guardPosition, movingPosition);
                 break;
             }
         }
@@ -99,9 +99,7 @@ public class GuardChaseState : GuardMoveBaseState
     private static IEnumerable<Cell> FindPathToHero(Maze maze, SpriteInfo heroInfo, SpriteInfo guardInfo)
     {
         var heroCell = GetSpriteCell(heroInfo, maze);
-
-        var guardStartPosition = GetSpriteNormalizedPosition(guardInfo);
-        var guardCell = maze.GetCellByPosition(guardStartPosition);
+        var guardCell = GetSpriteCell(guardInfo, maze);
 
         var visitedCells = new HashSet<Cell>() { guardCell };
 
@@ -119,7 +117,17 @@ public class GuardChaseState : GuardMoveBaseState
 
             if (currentCell == heroCell)
             {
-                return currentNode.Reverse().Skip(1);
+                foreach (var cell in currentNode.Reverse().Skip(1))
+                {
+                    if ((cell.X - guardCell.X) * (cell.Y - guardCell.Y) is 0)
+                    {
+                        yield return cell;
+                    }
+                    else
+                    {
+                        yield break;
+                    }
+                }
             }
 
             var adjacentCells = GetAdjacentMovingCells(currentCell, exitCell, maze, visitedCells);
@@ -130,7 +138,5 @@ public class GuardChaseState : GuardMoveBaseState
                 visitedCells.Add(cell);
             }
         }
-
-        throw new ArgumentNullException("unable to find the path");//
     }
 }

@@ -8,11 +8,11 @@ namespace MazeRunner.Sprites;
 
 public class Guard : Sprite
 {
-    private const int HitBoxOffsetX = 6;
-    private const int HitBoxOffsetY = 4;
+    private const int HitBoxOffsetX = 7;
+    private const int HitBoxOffsetY = 7;
 
-    private const int HitBoxSizeX = 5;
-    private const int HitBoxSizeY = 11;
+    private const int HitBoxSizeX = 1;
+    private const int HitBoxSizeY = 1;
 
     public override Vector2 Speed
     {

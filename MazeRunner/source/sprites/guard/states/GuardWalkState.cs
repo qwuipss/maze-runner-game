@@ -47,8 +47,8 @@ public class GuardWalkState : GuardMoveBaseState
 
         var walkPosition = _walkPath.First();
 
-        var guardPosition = _guardInfo.Position;
-        var direction = GetMovementDirection(guardPosition, walkPosition);
+        var position = GetSpriteNormalizedPosition(_guardInfo);
+        var direction = GetMovementDirection(position, walkPosition);
 
         var guard = _guardInfo.Sprite;
         var movement = guard.GetMovement(direction, gameTime);
@@ -79,13 +79,13 @@ public class GuardWalkState : GuardMoveBaseState
         var currentCell = startCell;
 
         var visitedCells = new HashSet<Cell>() { currentCell };
-        var path = new LinkedList<Vector2>(); 
+        var walkPath = new LinkedList<Vector2>(); 
         
         var exitCell = maze.ExitInfo.Cell;
 
         var movingPosition = GetMovingPosition(currentCell, maze);
 
-        path.AddLast(movingPosition);
+        walkPath.AddLast(movingPosition);
 
         for (int i = 0; i < pathLength; i++)
         {
@@ -99,10 +99,10 @@ public class GuardWalkState : GuardMoveBaseState
             currentCell = RandomHelper.Choice(adjacentCells);
             movingPosition = GetMovingPosition(currentCell, maze);
 
-            path.AddLast(movingPosition);
+            walkPath.AddLast(movingPosition);
             visitedCells.Add(currentCell);
         }
 
-        return path;
+        return walkPath;
     }
 }
