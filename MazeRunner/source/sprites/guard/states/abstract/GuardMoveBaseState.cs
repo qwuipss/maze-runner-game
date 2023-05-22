@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -41,6 +42,17 @@ public abstract class GuardMoveBaseState : GuardBaseState
         }
     }
 
+    protected static Cell GetSpriteCell(SpriteInfo spriteInfo, Maze maze)
+    {
+        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
+
+        var heroStartPosition = new Vector2((hitBox.X + hitBox.Right) / 2, (hitBox.Y + hitBox.Bottom) / 2);
+
+        var cell = maze.GetCellByPosition(heroStartPosition);
+
+        return cell;
+    }
+
     protected static bool IsWalkPositionReached(Vector2 walkPosition, Vector2 position)
     {
         return MathF.Abs(walkPosition.X - position.X) < MoveNormalizationAdditive
@@ -50,7 +62,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
     protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Cell exitCell, Maze maze, HashSet<Cell> visitedCells)
     {
         return MazeGenerator.GetAdjacentCells(cell, maze, 1)
-            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && exitCell != cell && !visitedCells.Contains(cell));
+            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && cell != exitCell && !visitedCells.Contains(cell));
     }
 
     protected static Vector2 GetMovementDirection(Vector2 from, Vector2 to)

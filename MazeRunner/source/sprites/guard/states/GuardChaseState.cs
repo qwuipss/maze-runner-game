@@ -72,7 +72,7 @@ public class GuardChaseState : GuardMoveBaseState
 
         var maze = _mazeInfo.Maze;
 
-        var pathHeadNode = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo).Reverse().Skip(1);
+        var pathHeadNode = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo);
         
         var movingPositions = new List<Vector2>();
 
@@ -99,52 +99,46 @@ public class GuardChaseState : GuardMoveBaseState
 
         ProcessFrameEffect(movement);
 
-        var newPosition = _guardInfo.Position + movement;
-
-        _guardInfo.Position = newPosition;
+        _guardInfo.Position += movement;
 
         return this;
     }
 
-    private static LinkNode<Cell> FindPathToHero(Maze maze, SpriteInfo heroInfo, SpriteInfo guardInfo)
+    private static IEnumerable<Cell> FindPathToHero(Maze maze, SpriteInfo heroInfo, SpriteInfo guardInfo)
     {
-        var heroStartPosition = GetNormalizedPosition(heroInfo.Position);
-        var heroCell = maze.GetCellByPosition(heroStartPosition);
+        var heroCell = GetSpriteCell(heroInfo, maze);
 
         var guardStartPosition = GetNormalizedPosition(guardInfo.Position);
         var guardCell = maze.GetCellByPosition(guardStartPosition);
 
         var visitedCells = new HashSet<Cell>() { guardCell };
 
-        var headNode = new LinkNode<Cell>(guardCell, null);
+        var startNode = new LinkNode<Cell>(guardCell, null);
         var searchingQueue = new Queue<LinkNode<Cell>>();
 
-        searchingQueue.Enqueue(headNode);
+        searchingQueue.Enqueue(startNode);
 
         var exitCell = maze.ExitInfo.Cell;
 
         while (searchingQueue.Count is not 0)
         {
-            var currentCellNode = searchingQueue.Dequeue();
-            var currentCell = currentCellNode.Value;
+            var currentNode = searchingQueue.Dequeue();
+            var currentCell = currentNode.Value;
 
             if (currentCell == heroCell)
             {
-                return currentCellNode;
+                return currentNode.Reverse().Skip(1);
             }
 
             var adjacentCells = GetAdjacentMovingCells(currentCell, exitCell, maze, visitedCells);
 
             foreach (var cell in adjacentCells)
             {
-                if (!visitedCells.Contains(cell))
-                {
-                    searchingQueue.Enqueue(new LinkNode<Cell>(cell, currentCellNode));
-                    visitedCells.Add(cell);
-                }
+                searchingQueue.Enqueue(new LinkNode<Cell>(cell, currentNode));
+                visitedCells.Add(cell);
             }
         }
 
-        return new LinkNode<Cell>();
+        throw new ArgumentNullException("unable to find the path");
     }
 }

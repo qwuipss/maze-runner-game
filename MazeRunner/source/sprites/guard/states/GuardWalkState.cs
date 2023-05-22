@@ -79,17 +79,15 @@ public class GuardWalkState : GuardMoveBaseState
 
     private LinkedList<Vector2> GetRandomWalkPath(int pathLength)
     {
-        var guardPosition = _guardInfo.Position;
+        var maze = _mazeInfo.Maze;
 
-        var startPosition = GetNormalizedPosition(guardPosition);
-        var startCell = _mazeInfo.Maze.GetCellByPosition(startPosition);
+        var startCell = GetSpriteCell(_guardInfo, maze);
 
         var currentCell = startCell;
 
         var visitedCells = new HashSet<Cell>() { currentCell };
         var path = new LinkedList<Vector2>(); 
         
-        var maze = _mazeInfo.Maze;
         var exitCell = maze.ExitInfo.Cell;
 
         var movingPosition = maze.GetCellPosition(currentCell);
