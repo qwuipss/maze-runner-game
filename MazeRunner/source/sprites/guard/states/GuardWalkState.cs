@@ -45,8 +45,7 @@ public class GuardWalkState : GuardMoveBaseState
         var position = GetSpriteNormalizedPosition(_guardInfo);
         var direction = GetMovementDirection(position, walkPosition);
 
-        var guard = _guardInfo.Sprite;
-        var movement = guard.GetMovement(direction, gameTime);
+        var movement = _guardInfo.Sprite.GetMovement(direction, gameTime);
 
         ProcessFrameEffect(movement);
 
@@ -97,6 +96,8 @@ public class GuardWalkState : GuardMoveBaseState
             walkPath.AddLast(movingPosition);
             visitedCells.Add(currentCell);
         }
+
+        walkPath.RemoveFirst();
 
         return walkPath;
     }
