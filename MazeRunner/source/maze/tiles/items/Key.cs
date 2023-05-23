@@ -8,8 +8,8 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public sealed class Key : MazeItem
 {
-    private const int HitBoxOffset = 4;
-    private const int HitBoxSize = 8;
+    private const float HitBoxOffset = 4;
+    private const float HitBoxSize = 8;
 
     public Key()
     {

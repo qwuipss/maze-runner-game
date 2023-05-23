@@ -4,7 +4,6 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -43,12 +42,12 @@ public abstract class GuardMoveBaseState : GuardBaseState
         }
     }
 
-    protected static Cell GetSpriteCell(SpriteInfo spriteInfo, Maze maze)
+    protected static bool IsPositionReached(Vector2 position, SpriteInfo spriteInfo)
     {
-        var position = GetSpriteNormalizedPosition(spriteInfo);
-        var cell = maze.GetCellByPosition(position);
+        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
+        var positionMaterialBox = new RectangleF(position.X, position.Y, float.Epsilon, float.Epsilon);
 
-        return cell;
+        return hitBox.IntersectsWith(positionMaterialBox);
     }
 
     protected static Vector2 GetSpriteNormalizedPosition(SpriteInfo spriteInfo)
@@ -57,6 +56,14 @@ public abstract class GuardMoveBaseState : GuardBaseState
         var position = new Vector2(hitBox.X + hitBox.Width / 2, hitBox.Y + hitBox.Height / 2);
 
         return position;
+    }
+
+    protected static Vector2 GetCellNormalizedPosition(Cell cell, Maze maze)
+    {
+        var halfFrameSize = maze.Skeleton[cell.Y, cell.X].FrameSize / 2;
+        var position = maze.GetCellPosition(cell);
+
+        return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
     }
 
     protected static Vector2 GetMovementDirection(Vector2 from, Vector2 to)
@@ -71,21 +78,14 @@ public abstract class GuardMoveBaseState : GuardBaseState
         return delta;
     }
 
-    protected static Vector2 GetMovingPosition(Cell cell, Maze maze)
+    protected static Cell GetSpriteCell(SpriteInfo spriteInfo, Maze maze)
     {
-        var halfFrameSize = maze.Skeleton[cell.Y, cell.X].FrameSize / 2;
-        var position = maze.GetCellPosition(cell);
+        var position = GetSpriteNormalizedPosition(spriteInfo);
+        var cell = maze.GetCellByPosition(position);
 
-        return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
+        return cell;
     }
 
-    protected static bool IsPositionReached(Vector2 position, SpriteInfo spriteInfo)
-    {
-        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
-        var positionMaterialBox = new RectangleF(position.X, position.Y, float.Epsilon, float.Epsilon);
-
-        return hitBox.IntersectsWith(positionMaterialBox);
-    }
 
     protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Cell exitCell, Maze maze, HashSet<Cell> visitedCells)
     {

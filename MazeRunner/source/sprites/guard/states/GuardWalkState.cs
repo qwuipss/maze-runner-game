@@ -1,14 +1,9 @@
 ﻿using MazeRunner.Helpers;
-using MazeRunner.Managers;
 using MazeRunner.MazeBase;
-using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
-using System.Threading;
 
 namespace MazeRunner.Sprites.States;
 
@@ -79,11 +74,11 @@ public class GuardWalkState : GuardMoveBaseState
         var currentCell = startCell;
 
         var visitedCells = new HashSet<Cell>() { currentCell };
-        var walkPath = new LinkedList<Vector2>(); 
-        
+        var walkPath = new LinkedList<Vector2>();
+
         var exitCell = maze.ExitInfo.Cell;
 
-        var movingPosition = GetMovingPosition(currentCell, maze);
+        var movingPosition = GetCellNormalizedPosition(currentCell, maze);
 
         walkPath.AddLast(movingPosition);
 
@@ -97,7 +92,7 @@ public class GuardWalkState : GuardMoveBaseState
             }
 
             currentCell = RandomHelper.Choice(adjacentCells);
-            movingPosition = GetMovingPosition(currentCell, maze);
+            movingPosition = GetCellNormalizedPosition(currentCell, maze);
 
             walkPath.AddLast(movingPosition);
             visitedCells.Add(currentCell);

@@ -10,11 +10,11 @@ public class Hero : Sprite
 {
     private static readonly Lazy<Hero> _instance;
 
-    private const int HitBoxOffsetX = 5;
-    private const int HitBoxOffsetY = 5;
+    private const float HitBoxOffsetX = 5;
+    private const float HitBoxOffsetY = 5;
 
-    private const int HitBoxWidth = 7;
-    private const int HitBoxHeight = 10;
+    private const float HitBoxWidth = 7;
+    private const float HitBoxHeight = 10;
 
     public override Vector2 Speed
     {

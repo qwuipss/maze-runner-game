@@ -7,11 +7,11 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class BayonetTrap : MazeTrap
 {
-    private const int HitBoxOffsetX = 1;
-    private const int HitBoxOffsetY = 4;
+    private const float HitBoxOffsetX = 1;
+    private const float HitBoxOffsetY = 4;
 
-    private const int HitBoxWidth = 14;
-    private const int HitBoxHeight = 12;
+    private const float HitBoxWidth = 14;
+    private const float HitBoxHeight = 12;
 
     public override bool IsActivated
     {

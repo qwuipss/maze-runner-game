@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
-using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 
