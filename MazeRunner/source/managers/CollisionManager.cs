@@ -54,12 +54,16 @@ public static class CollisionManager
         return false;
     }
 
-    public static bool CollidesWithTraps(Sprite sprite, Vector2 position, Maze maze, out (Cell Cell, MazeTrap Trap) trapInfo)
+    public static bool CollidesWithTraps(Sprite sprite, Vector2 position, Maze maze, bool needActivating, out (Cell Cell, MazeTrap Trap) trapInfo)
     {
-        if (CollidesWith(maze.TrapsInfo, sprite, position, out var tileInfo) && ((MazeTrap)tileInfo.Tile).IsActivated)
+        if (CollidesWith(maze.TrapsInfo, sprite, position, out var tileInfo))
         {
-            trapInfo = (tileInfo.Cell, (MazeTrap)tileInfo.Tile);
-            return true;
+            if (((MazeTrap)tileInfo.Tile).IsActivated == needActivating)
+            {
+                trapInfo = (tileInfo.Cell, (MazeTrap)tileInfo.Tile);
+
+                return true;
+            }
         }
 
         trapInfo = (new Cell(), null);

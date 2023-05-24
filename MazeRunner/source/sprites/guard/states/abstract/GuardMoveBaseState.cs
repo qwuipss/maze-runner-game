@@ -174,7 +174,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
     {
         var possiblePosition = guardInfo.Position + movement;
 
-        return !CollisionManager.CollidesWithTraps(guardInfo.Sprite, possiblePosition, maze, out var _);
+        return !CollisionManager.CollidesWithTraps(guardInfo.Sprite, possiblePosition, maze, true, out var _);
     }
 
     protected bool ProcessMovement(SpriteInfo guardInfo, Vector2 direction, Maze maze, GameTime gameTime)

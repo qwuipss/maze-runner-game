@@ -45,7 +45,7 @@ public class GuardWalkState : GuardMoveBaseState
 
         if (!ProcessMovement(_guardInfo, direction, _mazeInfo.Maze, gameTime))
         {
-            return new GuardChaseAwaitState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
         if (IsPositionReached(walkPosition, _guardInfo))

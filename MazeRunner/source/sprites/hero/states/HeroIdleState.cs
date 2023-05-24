@@ -48,11 +48,9 @@ public class HeroIdleState : HeroBaseState
     {
         var movement = ProcessMovement(_heroInfo, _mazeInfo.Maze, gameTime);
 
-        if (CollidesWithTraps(_heroInfo, _mazeInfo, out var trapType))
+        if (CollidesWithTraps(_heroInfo, _mazeInfo, true, out var trapType))
         {
-            var deathState = GetTrapCollidingState(trapType);
-
-            return deathState;
+            return GetTrapCollidingState(trapType);
         }
 
         if (movement != Vector2.Zero)

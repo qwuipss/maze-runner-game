@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Helpers;
-using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -57,10 +56,7 @@ public class GuardIdleState : GuardBaseState
             return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
-        var maze = _mazeInfo.Maze;
-        var guardCell = GetSpriteCell(_guardInfo, maze);
-
-        if (maze.Skeleton[guardCell.Y, guardCell.X].TileType is TileType.Trap)
+        if (CollidesWithTraps(_guardInfo, _mazeInfo, false, out var _))
         {
             return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
         }

@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
 using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
@@ -79,7 +80,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         var viewBox = DrawHelper.GetViewBox(this);
         var position = new Vector2(viewBox.X, viewBox.Y);
 
-        //Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
+        Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
     }
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)

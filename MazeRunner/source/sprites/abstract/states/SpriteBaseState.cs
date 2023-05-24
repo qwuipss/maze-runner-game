@@ -53,9 +53,9 @@ public abstract class SpriteBaseState : ISpriteState
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
 
-    protected static bool CollidesWithTraps(SpriteInfo spriteInfo, MazeInfo mazeInfo, out TrapType trapType)
+    protected static bool CollidesWithTraps(SpriteInfo spriteInfo, MazeInfo mazeInfo, bool needActivating, out TrapType trapType)
     {
-        if (CollisionManager.CollidesWithTraps(spriteInfo.Sprite, spriteInfo.Position, mazeInfo.Maze, out var trapInfo))
+        if (CollisionManager.CollidesWithTraps(spriteInfo.Sprite, spriteInfo.Position, mazeInfo.Maze, needActivating, out var trapInfo))
         {
             trapType = trapInfo.Trap.TrapType;
 

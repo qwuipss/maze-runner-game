@@ -1,10 +1,5 @@
-﻿using MazeRunner.Extensions;
-using MazeRunner.MazeBase;
-using MazeRunner.Wrappers;
+﻿using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MazeRunner.Sprites.States;
 
@@ -30,7 +25,7 @@ public class GuardChaseState : GuardMoveBaseState
             return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
-        if (CollidesWithTraps(_guardInfo, _mazeInfo, out var trapType))
+        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }

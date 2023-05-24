@@ -2,11 +2,6 @@
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Sprites.States;
 
@@ -51,6 +46,11 @@ public class GuardAttackState : GuardBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
+        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
+        {
+            return GetTrapCollidingState(trapType);
+        }
+
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
@@ -72,7 +72,7 @@ public class GuardAttackState : GuardBaseState
 
         return this;
     }
-    
+
     private void FaceToHero()
     {
         var turnDirectionX = (_heroInfo.Position - _guardInfo.Position).X;

@@ -54,11 +54,9 @@ public class HeroRunState : HeroBaseState
 
         ProcessFrameEffect(movement);
 
-        if (CollidesWithTraps(_heroInfo, _mazeInfo, out var trapType))
+        if (CollidesWithTraps(_heroInfo, _mazeInfo, true, out var trapType))
         {
-            var deathState = GetTrapCollidingState(trapType);
-
-            return deathState;
+            return GetTrapCollidingState(trapType);
         }
 
         ProcessItemsColliding(_heroInfo, _mazeInfo);
