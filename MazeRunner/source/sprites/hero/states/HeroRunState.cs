@@ -43,8 +43,6 @@ public class HeroRunState : HeroBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        base.ProcessState(gameTime);
-
         var movement = ProcessMovement(_heroInfo, _mazeInfo.Maze, gameTime);
 
         if (movement == Vector2.Zero)
@@ -64,6 +62,8 @@ public class HeroRunState : HeroBaseState
         }
 
         ProcessItemsColliding(_heroInfo, _mazeInfo);
+
+        base.ProcessState(gameTime);
 
         return this;
     }

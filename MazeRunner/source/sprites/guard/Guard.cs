@@ -8,8 +8,10 @@ namespace MazeRunner.Sprites;
 
 public class Guard : Sprite
 {
-    private const float HitBoxOffset = 8;
-    private const float HitBoxSize = .5f;
+    private const float HitBoxOffset = 5;
+
+    private const float HitBoxSizeX = 5;
+    private const float HitBoxSizeY = 11;
 
     public override Vector2 Speed
     {
@@ -21,7 +23,7 @@ public class Guard : Sprite
 
     public override RectangleF GetHitBox(Vector2 position)
     {
-        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
+        return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSizeX, HitBoxSizeY);
     }
 
     public void Initialize(MazeRunnerGame game, SpriteInfo selfInfo)

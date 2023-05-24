@@ -13,8 +13,8 @@ public class GuardWalkState : GuardMoveBaseState
     private const int WalkPathMaxLength = 6;
 
     private readonly SpriteInfo _heroInfo;
-
     private readonly SpriteInfo _guardInfo;
+
     private readonly MazeInfo _mazeInfo;
 
     private readonly LinkedList<Vector2> _walkPath;
@@ -22,8 +22,8 @@ public class GuardWalkState : GuardMoveBaseState
     public GuardWalkState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
     {
         _heroInfo = heroInfo;
-
         _guardInfo = guardInfo;
+
         _mazeInfo = mazeInfo;
 
         var walkPathLength = RandomHelper.Next(WalkPathMinLength, WalkPathMaxLength);
@@ -33,8 +33,6 @@ public class GuardWalkState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        base.ProcessState(gameTime);
-
         if (IsHeroNearby(_heroInfo, _guardInfo))
         {
             return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
@@ -45,11 +43,10 @@ public class GuardWalkState : GuardMoveBaseState
         var position = GetSpriteNormalizedPosition(_guardInfo);
         var direction = GetMovementDirection(position, walkPosition);
 
-        var movement = _guardInfo.Sprite.GetMovement(direction, gameTime);
-
-        ProcessFrameEffect(movement);
-
-        _guardInfo.Position += movement;
+        if (!ProcessMovement(_guardInfo, direction, _mazeInfo.Maze, gameTime))
+        {
+            return new GuardChaseAwaitState(this, _heroInfo, _guardInfo, _mazeInfo);
+        }
 
         if (IsPositionReached(walkPosition, _guardInfo))
         {
@@ -60,6 +57,8 @@ public class GuardWalkState : GuardMoveBaseState
         {
             return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
+
+        base.ProcessState(gameTime);
 
         return this;
     }

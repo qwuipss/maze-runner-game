@@ -23,7 +23,6 @@ public class SpriteInfo : MazeRunnerGameComponent
     {
         const float updateDistanceCoeff = 20;
 
-
         if (Sprite is not Hero)
         {
             var heroInfo = game.HeroInfo;

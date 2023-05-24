@@ -46,8 +46,6 @@ public class HeroIdleState : HeroBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        base.ProcessState(gameTime);
-
         var movement = ProcessMovement(_heroInfo, _mazeInfo.Maze, gameTime);
 
         if (CollidesWithTraps(_heroInfo, _mazeInfo, out var trapType))
@@ -65,6 +63,8 @@ public class HeroIdleState : HeroBaseState
 
             return new HeroRunState(this, _heroInfo, _mazeInfo);
         }
+
+        base.ProcessState(gameTime);
 
         return this;
     }

@@ -5,6 +5,8 @@ namespace MazeRunner.Extensions;
 
 public class LinkNode<T> : IEnumerable<T>
 {
+    public int LinkNumber { get; init; }
+
     public T Value { get; init; }
 
 #nullable enable
@@ -14,6 +16,7 @@ public class LinkNode<T> : IEnumerable<T>
     {
         Value = item;
         Previous = previous;
+        LinkNumber = previous?.LinkNumber ?? 0;
     }
 #nullable disable
 
