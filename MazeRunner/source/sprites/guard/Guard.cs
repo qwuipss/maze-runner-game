@@ -15,11 +15,21 @@ public class Guard : Enemy
 
     private readonly int _halfHeartsDamage;
 
+    private float _drawingPriority;
+
     public override bool IsDead
     {
         get
         {
             return State is GuardDeadState || State is GuardFalledState;
+        }
+    }
+
+    public override float DrawingPriority
+    {
+        get
+        {
+            return _drawingPriority;
         }
     }
 
@@ -41,6 +51,8 @@ public class Guard : Enemy
 
     public Guard(int halfHeartsDamage)
     {
+        _drawingPriority = base.DrawingPriority;
+
         _halfHeartsDamage = halfHeartsDamage;
     }
 
@@ -52,5 +64,15 @@ public class Guard : Enemy
     public void Initialize(MazeRunnerGame game, SpriteInfo selfInfo)
     {
         State = new GuardIdleState(game.HeroInfo, selfInfo, game.MazeInfo);
+    }
+
+    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    {
+        base.Update(game, gameTime);
+
+        if (_drawingPriority == base.DrawingPriority && IsDead)
+        {
+            _drawingPriority += .1f;
+        }
     }
 }

@@ -125,7 +125,7 @@ public class MazeRunnerGame : Game
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            MazeInfo, HeroInfo, FindKeyTextWriterInfo, _heroCamera,
+            MazeInfo, FindKeyTextWriterInfo, _heroCamera,
         };
 
         foreach (var enemyInfo in _enemiesInfo)
@@ -135,11 +135,10 @@ public class MazeRunnerGame : Game
 
         foreach (var component in _gameComponents)
         {
-            if (component != HeroInfo)
-            {
-                component.NeedDisposeNotify += AddGameComponentToDisposeList;
-            }
+            component.NeedDisposeNotify += AddGameComponentToDisposeList;
         }
+
+        _gameComponents.Add(HeroInfo);
     }
 
     private void InitializeMaze()
