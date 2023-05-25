@@ -51,12 +51,7 @@ public class MazeTileInfo : MazeRunnerGameComponent
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-        var heroInfo = game.HeroInfo;
-
-        var hero = heroInfo.Sprite;
-        var heroPosition = heroInfo.Position;
-
-        if (Vector2.Distance(Position, heroPosition) < hero.FrameSize * OptimizationConstants.MazeTileUpdateDistanceCoeff)
+        if (Vector2.Distance(Position, game.HeroInfo.Position) < Optimization.GetMazeTileUpdateDistance(MazeTile))
         {
             MazeTile.Update(gameTime);
         }

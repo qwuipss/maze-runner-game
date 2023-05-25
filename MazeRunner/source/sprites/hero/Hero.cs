@@ -18,6 +18,14 @@ public class Hero : Sprite
 
     private int _halfHeartsHealth;
 
+    public override bool IsDead
+    {
+        get
+        {
+            return State is HeroDeadState || State is HeroFalledState;
+        }
+    }
+
     public override Vector2 Speed
     {
         get

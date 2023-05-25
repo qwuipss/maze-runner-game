@@ -135,7 +135,10 @@ public class MazeRunnerGame : Game
 
         foreach (var component in _gameComponents)
         {
-            component.NeedDisposeNotify += AddGameComponentToDisposeList;
+            if (component != HeroInfo)
+            {
+                component.NeedDisposeNotify += AddGameComponentToDisposeList;
+            }
         }
     }
 
@@ -187,16 +190,18 @@ public class MazeRunnerGame : Game
                     return false;
                 }
 
+                var mazeTile = maze.Skeleton[cell.Y, cell.X];
                 var cellPosition = maze.GetCellPosition(cell);
                 var distanceToHero = Vector2.Distance(HeroInfo.Position, cellPosition);
 
-                if (distanceToHero <= HeroInfo.Sprite.FrameSize * OptimizationConstants.EnemySpawnDistanceCoeff)
+                var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
+
+                if (distanceToHero < spawnDistance)
                 {
                     return false;
                 }
 
-                var noSpawnRadius = maze.Skeleton[cell.Y, cell.X].FrameSize * OptimizationConstants.EnemySpawnDistanceCoeff;
-                var isEnemyFree = _enemiesInfo.Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) <= noSpawnRadius).Count() is 0;
+                var isEnemyFree = _enemiesInfo.Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) < spawnDistance).Count() is 0;
 
                 return isEnemyFree;
             }

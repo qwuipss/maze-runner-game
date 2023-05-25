@@ -28,13 +28,13 @@ public class SpriteInfo : MazeRunnerGameComponent
             var hero = heroInfo.Sprite;
             var heroPosition = heroInfo.Position;
 
-            if (Vector2.Distance(Position, heroPosition) > hero.FrameSize * OptimizationConstants.EnemiesUpdateDistanceCoeff)
+            if (Vector2.Distance(Position, heroPosition) > Optimization.GetEnemyUpdateDistance(this))
             {
                 return;
             }
 
-            if (Sprite.IsDead 
-             && Vector2.Distance(Position, heroPosition) > hero.FrameSize * OptimizationConstants.GuardDisposingDistanceCoeff)
+            if (Sprite.IsDead
+             && Vector2.Distance(Position, heroPosition) > Optimization.GetEnemyDisposingDistance(this))
             {
                 NeedDisposeNotify.Invoke(this);
             }

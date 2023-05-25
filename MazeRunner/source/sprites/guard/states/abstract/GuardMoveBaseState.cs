@@ -106,7 +106,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
             if (currentCell == heroCell)
             {
-                if (currentNode.LinkNumber > OptimizationConstants.GuardHeroMaxPathLength)
+                if (currentNode.LinkNumber > Optimization.GuardHeroMaxPathLength)
                 {
                     return Array.Empty<Vector2>();
                 }

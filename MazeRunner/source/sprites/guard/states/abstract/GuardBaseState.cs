@@ -15,9 +15,16 @@ public abstract class GuardBaseState : SpriteBaseState
 
     protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> pathToHero)
     {
+        if (heroInfo.Sprite.IsDead)
+        {
+            pathToHero = null;
+
+            return false;
+        }
+
         var distance = Vector2.Distance(heroInfo.Position, guardInfo.Position);
 
-        if (distance > guardInfo.Sprite.FrameSize * OptimizationConstants.GuardHeroDetectionDistanceCoeff)
+        if (distance > Optimization.GetGuardHeroDetectionDistance(guardInfo))
         {
             pathToHero = null;
 

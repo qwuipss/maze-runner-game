@@ -51,6 +51,6 @@ public class GuardChaseState : GuardMoveBaseState
     {
         var distance = Vector2.Distance(heroInfo.Position, guardInfo.Position);
 
-        return distance < guardInfo.Sprite.FrameSize * OptimizationConstants.GuardAttackDistanceCoeff;
+        return distance < Optimization.GetGuardAttackDistance(guardInfo);
     }
 }
