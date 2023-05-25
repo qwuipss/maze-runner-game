@@ -20,14 +20,14 @@ public class GuardChaseState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (!IsHeroNearby(_heroInfo, _guardInfo))
-        {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
-        }
-
         if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
+        }
+
+        if (!IsHeroNearby(_heroInfo, _guardInfo, _mazeInfo, out var pathToHero))
+        {
+            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
         if (CanAttack(_heroInfo, _guardInfo))
@@ -35,12 +35,7 @@ public class GuardChaseState : GuardMoveBaseState
             return new GuardAttackState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
-        var direction = GetMovementDirection(_heroInfo, _guardInfo, _mazeInfo);
-
-        if (direction == Vector2.Zero)
-        {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
-        }
+        var direction = GetMovementDirection(_guardInfo, pathToHero);
 
         if (!ProcessMovement(_guardInfo, direction, _mazeInfo.Maze, gameTime))
         {
@@ -54,10 +49,8 @@ public class GuardChaseState : GuardMoveBaseState
 
     private static bool CanAttack(SpriteInfo heroInfo, SpriteInfo guardInfo)
     {
-        const float attackDistanceCoeff = .8f;
-
         var distance = Vector2.Distance(heroInfo.Position, guardInfo.Position);
 
-        return distance < guardInfo.Sprite.FrameSize * attackDistanceCoeff;
+        return distance < guardInfo.Sprite.FrameSize * OptimizationConstants.GuardAttackDistanceCoeff;
     }
 }

@@ -50,9 +50,9 @@ public abstract class Sprite
         }
     }
 
-    public virtual ISpriteState State { get; set; }
-
     public virtual bool IsDead { get; protected set; }
+
+    public virtual ISpriteState State { get; set; }
 
     public abstract RectangleF GetHitBox(Vector2 position);
 

@@ -7,10 +7,14 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardAttackState : GuardBaseState
 {
+    private const double AttackDelayMs = 550;
+
     private readonly SpriteInfo _heroInfo;
     private readonly SpriteInfo _guardInfo;
 
     private readonly MazeInfo _mazeInfo;
+
+    private bool _isAttacking;
 
     public GuardAttackState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
     {
@@ -53,22 +57,41 @@ public class GuardAttackState : GuardBaseState
 
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (ElapsedGameTimeMs > UpdateTimeDelayMs)
+        if (!_isAttacking && ElapsedGameTimeMs > AttackDelayMs)
         {
-            var animationPoint = CurrentAnimationFramePoint;
-
-            if (animationPoint.X == (FramesCount - 1) * FrameSize)
-            {
-                return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
-            }
-
-            var framePosX = animationPoint.X + FrameSize;
-
-            CurrentAnimationFramePoint = new Point(framePosX, 0);
-            ElapsedGameTimeMs -= UpdateTimeDelayMs;
+            _isAttacking = true;
+            ElapsedGameTimeMs -= AttackDelayMs;
         }
 
-        FaceToHero();
+        if (_isAttacking)
+        {
+            ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (ElapsedGameTimeMs > UpdateTimeDelayMs)
+            {
+                var animationPoint = CurrentAnimationFramePoint;
+
+                if (animationPoint.X == (FramesCount - 1) * FrameSize)
+                {
+                    return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
+                }
+
+                var framePosX = animationPoint.X + FrameSize;
+
+                CurrentAnimationFramePoint = new Point(framePosX, 0);
+                ElapsedGameTimeMs -= UpdateTimeDelayMs;
+            }
+
+            var hero = (Hero)_heroInfo.Sprite;
+
+            if (!hero.IsTakingDamage 
+              && Vector2.Distance(_heroInfo.Position, _guardInfo.Position) < _guardInfo.Sprite.FrameSize * OptimizationConstants.GuardAttackDistanceCoeff)
+            {
+                hero.TakeDamage(((Enemy)_guardInfo.Sprite).HalfHeartsDamage);
+            }
+
+            FaceToHero();
+        }
 
         return this;
     }

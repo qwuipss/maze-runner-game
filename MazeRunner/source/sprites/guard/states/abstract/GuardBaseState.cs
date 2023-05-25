@@ -3,6 +3,7 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
+using System.Collections.Generic;
 
 namespace MazeRunner.Sprites.States;
 
@@ -12,13 +13,20 @@ public abstract class GuardBaseState : SpriteBaseState
     {
     }
 
-    protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo)
+    protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> pathToHero)
     {
-        const float detectionDistanceCoeff = 3;
-
         var distance = Vector2.Distance(heroInfo.Position, guardInfo.Position);
 
-        return distance <= guardInfo.Sprite.FrameSize * detectionDistanceCoeff;
+        if (distance > guardInfo.Sprite.FrameSize * OptimizationConstants.GuardHeroDetectionDistanceCoeff)
+        {
+            pathToHero = null;
+
+            return false;
+        }
+
+        var pathExist = GuardMoveBaseState.PathToHeroExist(heroInfo, guardInfo, mazeInfo, out pathToHero);
+
+        return pathExist;
     }
 
     protected override GuardBaseState GetTrapCollidingState(TrapType trapType)

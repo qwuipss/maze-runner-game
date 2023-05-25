@@ -16,7 +16,7 @@ public class LinkNode<T> : IEnumerable<T>
     {
         Value = item;
         Previous = previous;
-        LinkNumber = previous?.LinkNumber ?? 0;
+        LinkNumber = previous?.LinkNumber + 1 ?? 0;
     }
 #nullable disable
 

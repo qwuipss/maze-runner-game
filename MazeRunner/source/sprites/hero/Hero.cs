@@ -16,6 +16,8 @@ public class Hero : Sprite
     private const float HitBoxWidth = 7;
     private const float HitBoxHeight = 10;
 
+    private int _halfHeartsHealth;
+
     public override Vector2 Speed
     {
         get
@@ -32,6 +34,14 @@ public class Hero : Sprite
         }
     }
 
+    public bool IsTakingDamage
+    {
+        get
+        {
+            return State is HeroDamageTakingState;
+        }
+    }
+
     static Hero()
     {
         _instance = new Lazy<Hero>(() => new Hero());
@@ -39,6 +49,7 @@ public class Hero : Sprite
 
     private Hero()
     {
+        _halfHeartsHealth = 6;
     }
 
     public static Hero GetInstance()
@@ -59,5 +70,17 @@ public class Hero : Sprite
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
         base.Update(game, gameTime);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        _halfHeartsHealth -= damage;
+
+        if (_halfHeartsHealth <= 0)
+        {
+            State = new HeroDyingState(State);
+        }
+
+        State = new HeroDamageTakingState(State);
     }
 }

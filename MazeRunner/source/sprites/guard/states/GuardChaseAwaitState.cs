@@ -2,7 +2,6 @@
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Linq;
 
 namespace MazeRunner.Sprites.States;
 
@@ -47,19 +46,17 @@ public class GuardChaseAwaitState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        var pathToHero = FindPathToHero(_mazeInfo.Maze, _heroInfo, _guardInfo);
+        if (CollidesWithTraps(_guardInfo, _mazeInfo, false, out var _))
+        {
+            return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
+        }
 
-        if (!pathToHero.Any())
+        if (!PathToHeroExist(_heroInfo, _guardInfo, _mazeInfo, out var pathToHero))
         {
             return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
-        var direction = GetMovementDirection(_heroInfo, _guardInfo, _mazeInfo);
-
-        if (direction == Vector2.Zero)
-        {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
-        }
+        var direction = GetMovementDirection(_guardInfo, pathToHero);
 
         if (ProcessMovement(_guardInfo, direction, _mazeInfo.Maze, gameTime))
         {

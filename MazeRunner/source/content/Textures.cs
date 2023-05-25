@@ -78,6 +78,7 @@ public static class Textures
 
             public static Texture2D Idle { get; private set; }
             public static Texture2D Run { get; private set; }
+            public static Texture2D DamageTaking { get; private set; }
             public static Texture2D Dead { get; private set; }
             public static Texture2D Fall { get; private set; }
 
@@ -85,6 +86,7 @@ public static class Textures
             {
                 Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
                 Run = game.Content.Load<Texture2D>($"{ContentDirectory}/run");
+                DamageTaking = game.Content.Load<Texture2D>($"{ContentDirectory}/damageTaking");
                 Dead = game.Content.Load<Texture2D>($"{ContentDirectory}/dead");
                 Fall = game.Content.Load<Texture2D>($"{ContentDirectory}/fall");
             }

@@ -43,19 +43,24 @@ public abstract class GuardMoveBaseState : GuardBaseState
         }
     }
 
-    protected static Vector2 GetMovementDirection(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo)
+    public static bool PathToHeroExist(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> path)
     {
-        var pathToHero = FindPathToHero(mazeInfo.Maze, heroInfo, guardInfo);
+        path = FindPathToHero(mazeInfo.Maze, heroInfo, guardInfo);
 
-        if (!pathToHero.Any())
+        if (!path.Any())
         {
-            return Vector2.Zero;
+            return false;
         }
 
+        return true;
+    }
+
+    protected static Vector2 GetMovementDirection(SpriteInfo guardInfo, IEnumerable<Vector2> path)
+    {
         var direction = Vector2.Zero;
         var guardPosition = GetSpriteNormalizedPosition(guardInfo);
 
-        foreach (var movingPosition in pathToHero)
+        foreach (var movingPosition in path)
         {
             if (!IsPositionReached(movingPosition, guardInfo))
             {
@@ -82,8 +87,6 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
     protected static IEnumerable<Vector2> FindPathToHero(Maze maze, SpriteInfo heroInfo, SpriteInfo guardInfo)
     {
-        const int maxPathLength = 7;
-
         var heroCell = GetSpriteCell(heroInfo, maze);
         var guardCell = GetSpriteCell(guardInfo, maze);
 
@@ -103,7 +106,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
             if (currentCell == heroCell)
             {
-                if (currentNode.LinkNumber > maxPathLength)
+                if (currentNode.LinkNumber > OptimizationConstants.GuardHeroMaxPathLength)
                 {
                     return Array.Empty<Vector2>();
                 }

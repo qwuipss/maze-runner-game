@@ -33,7 +33,12 @@ public class GuardWalkState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (IsHeroNearby(_heroInfo, _guardInfo))
+        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
+        {
+            return GetTrapCollidingState(trapType);
+        }
+
+        if (IsHeroNearby(_heroInfo, _guardInfo, _mazeInfo, out var _))
         {
             return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
         }

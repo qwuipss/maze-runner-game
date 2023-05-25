@@ -182,8 +182,6 @@ public class MazeRunnerGame : Game
         {
             bool IsEnemyFreeFloorCell(Cell cell)
             {
-                const float spawnDistanceCoeff = 3;
-
                 if (!maze.IsFloor(cell))
                 {
                     return false;
@@ -192,12 +190,12 @@ public class MazeRunnerGame : Game
                 var cellPosition = maze.GetCellPosition(cell);
                 var distanceToHero = Vector2.Distance(HeroInfo.Position, cellPosition);
 
-                if (distanceToHero <= spawnDistanceCoeff)
+                if (distanceToHero <= HeroInfo.Sprite.FrameSize * OptimizationConstants.EnemySpawnDistanceCoeff)
                 {
                     return false;
                 }
 
-                var noSpawnRadius = maze.Skeleton[cell.Y, cell.X].FrameSize * spawnDistanceCoeff;
+                var noSpawnRadius = maze.Skeleton[cell.Y, cell.X].FrameSize * OptimizationConstants.EnemySpawnDistanceCoeff;
                 var isEnemyFree = _enemiesInfo.Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) <= noSpawnRadius).Count() is 0;
 
                 return isEnemyFree;
@@ -205,7 +203,7 @@ public class MazeRunnerGame : Game
 
             for (int i = 0; i < guardsCount; i++)
             {
-                var guard = new Guard();
+                var guard = new Guard(1);
 
                 var guardCell = MazeGenerator.GetRandomCell(maze, IsEnemyFreeFloorCell).First();
                 var guardPosition = maze.GetCellPosition(guardCell);
@@ -220,7 +218,7 @@ public class MazeRunnerGame : Game
 
         _enemiesInfo = new HashSet<SpriteInfo>();
 
-        var guardsCount = 1;
+        var guardsCount = 35;
 
         InitializeGuards(MazeInfo.Maze, guardsCount);
     }

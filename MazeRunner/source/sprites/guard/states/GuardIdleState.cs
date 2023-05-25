@@ -51,14 +51,19 @@ public class GuardIdleState : GuardBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (IsHeroNearby(_heroInfo, _guardInfo))
+        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
         {
-            return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return GetTrapCollidingState(trapType);
         }
 
         if (CollidesWithTraps(_guardInfo, _mazeInfo, false, out var _))
         {
             return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
+        }
+
+        if (IsHeroNearby(_heroInfo, _guardInfo, _mazeInfo, out var _))
+        {
+            return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
         }
 
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
