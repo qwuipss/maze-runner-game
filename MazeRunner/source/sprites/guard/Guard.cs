@@ -15,6 +15,14 @@ public class Guard : Enemy
 
     private readonly int _halfHeartsDamage;
 
+    public override bool IsDead
+    {
+        get
+        {
+            return State is GuardDeadState || State is GuardFalledState;
+        }
+    }
+
     public override int HalfHeartsDamage
     {
         get

@@ -50,7 +50,7 @@ public abstract class Sprite
         }
     }
 
-    public virtual bool IsDead { get; protected set; }
+    public virtual bool IsDead { get; }
 
     public virtual ISpriteState State { get; set; }
 

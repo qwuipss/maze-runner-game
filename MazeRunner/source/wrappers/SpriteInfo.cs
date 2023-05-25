@@ -21,7 +21,6 @@ public class SpriteInfo : MazeRunnerGameComponent
 
     public override void Update(MazeRunnerGame game, GameTime gameTime)
     {
-
         if (Sprite is not Hero)
         {
             var heroInfo = game.HeroInfo;
@@ -29,18 +28,19 @@ public class SpriteInfo : MazeRunnerGameComponent
             var hero = heroInfo.Sprite;
             var heroPosition = heroInfo.Position;
 
-            if (Vector2.Distance(Position, heroPosition) >= hero.FrameSize * OptimizationConstants.EnemiesUpdateDistanceCoeff)
+            if (Vector2.Distance(Position, heroPosition) > hero.FrameSize * OptimizationConstants.EnemiesUpdateDistanceCoeff)
             {
                 return;
+            }
+
+            if (Sprite.IsDead 
+             && Vector2.Distance(Position, heroPosition) > hero.FrameSize * OptimizationConstants.GuardDisposingDistanceCoeff)
+            {
+                NeedDisposeNotify.Invoke(this);
             }
         }
 
         Sprite.Update(game, gameTime);
-
-        if (Sprite.IsDead)
-        {
-            NeedDisposeNotify.Invoke(this);
-        }
     }
 
     public override void Draw(GameTime gameTime)

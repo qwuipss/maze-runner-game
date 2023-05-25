@@ -145,8 +145,8 @@ public class MazeRunnerGame : Game
 
         MazeGenerator.MakeCyclic(maze, 50);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 7);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 7);
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), 3);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), 2);
 
         MazeGenerator.InsertExit(maze);
 
