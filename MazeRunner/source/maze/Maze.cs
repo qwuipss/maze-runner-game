@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase.Tiles;
+﻿using MazeRunner.GameBase.States;
+using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
@@ -120,7 +121,7 @@ public class Maze
         }
     }
 
-    public void Update(MazeRunnerGame game, GameTime gameTime)
+    public void Update(GameRunningState game, GameTime gameTime)
     {
         foreach (var component in _components)
         {

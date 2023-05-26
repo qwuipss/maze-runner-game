@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.GameBase.States;
+using MazeRunner.Helpers;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using System;
@@ -16,7 +17,7 @@ public class Hero : Sprite
     private const float HitBoxWidth = 7;
     private const float HitBoxHeight = 10;
 
-    private int _halfHeartsHealth;
+    public int HalfHeartsHealth { get; set; }
 
     public override bool IsDead
     {
@@ -57,7 +58,7 @@ public class Hero : Sprite
 
     private Hero()
     {
-        _halfHeartsHealth = 6;
+        HalfHeartsHealth = 6;
     }
 
     public static Hero GetInstance()
@@ -65,7 +66,7 @@ public class Hero : Sprite
         return _instance.Value;
     }
 
-    public void Initialize(MazeRunnerGame game)
+    public void Initialize(GameRunningState game)
     {
         State = new HeroIdleState(game.HeroInfo, game.MazeInfo);
     }
@@ -75,16 +76,16 @@ public class Hero : Sprite
         return HitBoxHelper.GetHitBox(position, HitBoxOffsetX, HitBoxOffsetY, HitBoxWidth, HitBoxHeight);
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameRunningState game, GameTime gameTime)
     {
         base.Update(game, gameTime);
     }
 
     public void TakeDamage(int damage)
     {
-        _halfHeartsHealth -= damage;
+        HalfHeartsHealth -= damage;
 
-        if (_halfHeartsHealth <= 0)
+        if (HalfHeartsHealth <= 0)
         {
             State = new HeroDyingState(State);
         }

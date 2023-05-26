@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.GameBase.States;
+using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Components;
 
@@ -8,7 +9,7 @@ public abstract class MazeRunnerGameComponent
 
     public abstract event GameComponentProvider NeedDisposeNotify;
 
-    public abstract void Update(MazeRunnerGame game, GameTime gameTime);
+    public abstract void Update(GameRunningState game, GameTime gameTime);
 
     public abstract void Draw(GameTime gameTime);
 }

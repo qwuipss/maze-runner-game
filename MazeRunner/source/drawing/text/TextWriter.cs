@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.GameBase.States;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Drawing;
@@ -23,7 +24,7 @@ public abstract class TextWriter
 
     public virtual bool IsDead { get; protected set; }
 
-    public abstract void Update(MazeRunnerGame game, GameTime gameTime);
+    public abstract void Update(GameRunningState game, GameTime gameTime);
 
     public abstract void Draw(GameTime gameTime, Vector2 position);
 }

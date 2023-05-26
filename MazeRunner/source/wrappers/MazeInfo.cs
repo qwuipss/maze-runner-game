@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Components;
+using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 
@@ -19,7 +20,7 @@ public class MazeInfo : MazeRunnerGameComponent
         Maze = maze;
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameRunningState game, GameTime gameTime)
     {
         Maze.Update(game, gameTime);
     }

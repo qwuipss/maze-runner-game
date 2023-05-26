@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using System;
@@ -49,7 +50,7 @@ public class MazeTileInfo : MazeRunnerGameComponent
         Drawer.DrawMazeTile(MazeTile, Position);
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameRunningState game, GameTime gameTime)
     {
         if (Vector2.Distance(Position, game.HeroInfo.Position) < Optimization.GetMazeTileUpdateDistance(MazeTile))
         {

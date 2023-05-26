@@ -1,4 +1,5 @@
-﻿using MazeRunner.Sprites.States;
+﻿using MazeRunner.GameBase.States;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;
@@ -61,7 +62,7 @@ public abstract class Sprite
         return direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
-    public virtual void Update(MazeRunnerGame game, GameTime gameTime)
+    public virtual void Update(GameRunningState game, GameTime gameTime)
     {
         State = State.ProcessState(gameTime);
     }

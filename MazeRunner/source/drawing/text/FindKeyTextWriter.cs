@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -76,7 +77,7 @@ public class FindKeyTextWriter : TextWriter
         DrawIfNeeded(gameTime, position);
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameRunningState game, GameTime gameTime)
     {
         if (_textShowed)
         {
@@ -93,7 +94,7 @@ public class FindKeyTextWriter : TextWriter
         }
     }
 
-    public void Initialize(MazeRunnerGame game)
+    public void Initialize(GameRunningState game)
     {
         _heroInfo = game.HeroInfo;
         _mazeInfo = game.MazeInfo;

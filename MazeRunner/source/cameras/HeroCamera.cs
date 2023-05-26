@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Extensions;
+using MazeRunner.GameBase.States;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -82,7 +83,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         //Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameRunningState game, GameTime gameTime)
     {
         var hero = game.HeroInfo.Sprite;
 

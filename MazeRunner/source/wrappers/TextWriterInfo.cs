@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.GameBase.States;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Wrappers;
@@ -17,7 +18,7 @@ public class TextWriterInfo : MazeRunnerGameComponent
         TextWriter = textWriter;
     }
 
-    public override void Update(MazeRunnerGame game, GameTime gameTime)
+    public override void Update(GameRunningState game, GameTime gameTime)
     {
         TextWriter.Update(game, gameTime);
 
