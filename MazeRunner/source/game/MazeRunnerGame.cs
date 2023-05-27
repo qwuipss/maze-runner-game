@@ -1,10 +1,8 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Drawing;
-using MazeRunner.GameBase;
 using MazeRunner.GameBase.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace MazeRunner.GameBase;
 
@@ -29,7 +27,7 @@ public class MazeRunnerGame : Game
 
         SetFullScreen();
         InitializeDrawer();
-        
+
         _gameState = new GameRunningState(new GameParameters()
         {
             MazeWidth = 9,

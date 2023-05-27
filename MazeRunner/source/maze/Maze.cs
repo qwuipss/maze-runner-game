@@ -1,5 +1,4 @@
-﻿using MazeRunner.GameBase.States;
-using MazeRunner.MazeBase.Tiles;
+﻿using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
@@ -130,7 +129,7 @@ public class Maze
         }
     }
 
-    #region Utilities
+
     public bool IsFloor(Cell cell)
     {
         return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
@@ -177,9 +176,7 @@ public class Maze
 
         return cell;
     }
-    #endregion
 
-    #region Inserters
     public void InsertTrap(MazeTrap trap, Cell cell)
     {
         _trapsInfo.Add(cell, trap);
@@ -201,11 +198,9 @@ public class Maze
     {
         var cellPosition = GetCellPosition(cell);
 
+        var itemInfo = _components.Where(mti => mti.Position == cellPosition && mti.MazeTile is MazeItem).Single();
+
         _itemsInfo.Remove(cell);
-
-        var x = _components.Where(mti => mti.Position == cellPosition).Single();
-
-        _components.Remove(x);
+        _components.Remove(itemInfo);
     }
-    #endregion
 }

@@ -1,5 +1,4 @@
-﻿using MazeRunner.GameBase.States;
-using MazeRunner.Helpers;
+﻿using MazeRunner.Helpers;
 using MazeRunner.Sprites.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -62,9 +61,9 @@ public class Guard : Enemy
         return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSizeX, HitBoxSizeY);
     }
 
-    public void Initialize(GameRunningState game, SpriteInfo selfInfo)
+    public void Initialize(SpriteInfo selfInfo, SpriteInfo heroInfo, MazeInfo mazeInfo)
     {
-        State = new GuardIdleState(game.HeroInfo, selfInfo, game.MazeInfo);
+        State = new GuardIdleState(heroInfo, selfInfo, mazeInfo);
     }
 
     public override void Update(GameTime gameTime)

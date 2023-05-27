@@ -1,17 +1,14 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
-using MazeRunner.GameBase.States;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Wrappers;
 
 public class TextWriterInfo : MazeRunnerGameComponent
 {
-    public override event GameComponentProvider NeedDisposeNotify;
+    public TextWriter TextWriter { get; init; }
 
     public Vector2 Position { get; set; }
-
-    private TextWriter TextWriter { get; init; }
 
     public TextWriterInfo(TextWriter textWriter)
     {
@@ -21,11 +18,6 @@ public class TextWriterInfo : MazeRunnerGameComponent
     public override void Update(GameTime gameTime)
     {
         TextWriter.Update(gameTime);
-
-        if (TextWriter.IsDead)
-        {
-            NeedDisposeNotify.Invoke(this);
-        }
     }
 
     public override void Draw(GameTime gameTime)

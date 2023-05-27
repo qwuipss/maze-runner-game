@@ -1,7 +1,5 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
-using MazeRunner.GameBase;
-using MazeRunner.GameBase.States;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 
@@ -9,8 +7,6 @@ namespace MazeRunner.Wrappers;
 
 public class SpriteInfo : MazeRunnerGameComponent
 {
-    public override event GameComponentProvider NeedDisposeNotify;
-
     public Sprite Sprite { get; init; }
 
     public Vector2 Position { get; set; }

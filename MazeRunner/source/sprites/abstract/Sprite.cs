@@ -1,5 +1,4 @@
-﻿using MazeRunner.GameBase.States;
-using MazeRunner.Sprites.States;
+﻿using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;

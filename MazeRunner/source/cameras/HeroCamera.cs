@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Extensions;
-using MazeRunner.GameBase.States;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
@@ -11,10 +10,6 @@ namespace MazeRunner.Cameras;
 
 public class HeroCamera : MazeRunnerGameComponent, ICamera
 {
-#pragma warning disable CS0067
-    public override event GameComponentProvider NeedDisposeNotify;
-#pragma warning disable
-
     private const float DrawingPriority = .1f;
 
     private readonly SpriteInfo _heroInfo;
@@ -125,7 +120,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
                 else
                 {
                     var transparentCoeff = distance / shadowTreshold;
-                    var transparency = (byte)((float)byte.MaxValue * transparentCoeff);
+                    var transparency = (byte)(byte.MaxValue * transparentCoeff);
 
                     effectData[y, x] = Color.Black;
                     effectData[y, x].A = transparency;

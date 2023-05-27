@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Content;
-using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -21,6 +20,8 @@ public class FindKeyTextWriter : TextWriter
     private static readonly Lazy<FindKeyTextWriter> _instance;
 
     private readonly Vector2 _textStringLength;
+
+    private TextWriterInfo _selfInfo;
 
     private MazeInfo _mazeInfo;
 
@@ -90,19 +91,19 @@ public class FindKeyTextWriter : TextWriter
 
         if (_needWriting)
         {
-            //FindKeyTextWriterInfo.Position = GetDrawingPosition();
+            _selfInfo.Position = GetDrawingPosition();
         }
     }
 
-    public void Initialize(GameRunningState game)
+    public void Initialize(SpriteInfo heroInfo, MazeInfo mazeInfo, TextWriterInfo selfInfo)
     {
-        _heroInfo = game.HeroInfo;
-        _mazeInfo = game.MazeInfo;
+        _heroInfo = heroInfo;
+        _mazeInfo = mazeInfo;
+        _selfInfo = selfInfo;
 
         var maze = _mazeInfo.Maze;
-        var exit = maze.ExitInfo.Exit;
 
-        _textShowDistance = exit.FrameSize * 2;
+        _textShowDistance = maze.ExitInfo.Exit.FrameSize * 2;
 
         var skeleton = maze.Skeleton;
         var sideCell = new Cell(skeleton.GetLength(1) - 1, 0);

@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Components;
-using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 
@@ -7,10 +6,6 @@ namespace MazeRunner.Wrappers;
 
 public class MazeInfo : MazeRunnerGameComponent
 {
-#pragma warning disable CS0067
-    public override event GameComponentProvider NeedDisposeNotify;
-#pragma warning restore
-
     public Maze Maze { get; init; }
 
     public bool IsKeyCollected { get; set; }

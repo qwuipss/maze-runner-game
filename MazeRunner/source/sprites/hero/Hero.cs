@@ -1,6 +1,6 @@
-﻿using MazeRunner.GameBase.States;
-using MazeRunner.Helpers;
+﻿using MazeRunner.Helpers;
 using MazeRunner.Sprites.States;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Drawing;
@@ -66,9 +66,9 @@ public class Hero : Sprite
         return _instance.Value;
     }
 
-    public void Initialize(GameRunningState game)
+    public void Initialize(SpriteInfo selfInfo, MazeInfo mazeInfo)
     {
-        State = new HeroIdleState(game.HeroInfo, game.MazeInfo);
+        State = new HeroIdleState(selfInfo, mazeInfo);
     }
 
     public override RectangleF GetHitBox(Vector2 position)
