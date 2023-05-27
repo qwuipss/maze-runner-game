@@ -9,6 +9,8 @@ public interface IButtonState
 
     public int FrameWidth { get; }
 
+    public int FrameHeight { get; }
+
     public Rectangle CurrentAnimationFrame { get; }
 
     public IButtonState ProcessState(GameTime gameTime);

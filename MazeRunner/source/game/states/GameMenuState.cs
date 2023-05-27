@@ -93,26 +93,39 @@ public class GameMenuState : IGameState
 
     private void InitializeMenuButtons()
     {
-        var startButton = new Button(() => GameStateChanged.Invoke(new GameRunningState(GameModes.Easy)));
+        void InitializeGameStartButton(int windowWidth, int windowHeight)
+        {
+            var startButton = new Button(() => GameStateChanged.Invoke(new GameRunningState(GameModes.Easy)));
 
-        _startButtonInfo = new ButtonInfo(startButton, new Vector2(800, 450), 5,
-            new ButtonStateInfo
-            {
-                Texture = Textures.Gui.Buttons.Start.Idle,
-                FramesCount = 1,
-            },
-            new ButtonStateInfo
-            {
-                Texture = Textures.Gui.Buttons.Start.Hover,
-                FramesCount = 1,
-            },
-            new ButtonStateInfo
-            {
-                Texture = Textures.Gui.Buttons.Start.Click,
-                FramesCount = 5,
-            });
+            var startButtonBoxScale = 5;
 
-        startButton.Initialize(_startButtonInfo);
+            _startButtonInfo = new ButtonInfo(startButton, startButtonBoxScale,
+                new ButtonStateInfo
+                {
+                    Texture = Textures.Gui.Buttons.Start.Idle,
+                    FramesCount = 1,
+                },
+                new ButtonStateInfo
+                {
+                    Texture = Textures.Gui.Buttons.Start.Hover,
+                    FramesCount = 1,
+                },
+                new ButtonStateInfo
+                {
+                    Texture = Textures.Gui.Buttons.Start.Click,
+                    FramesCount = 5,
+                });
+
+            startButton.Initialize(_startButtonInfo);
+
+            var startButtonPosition = new Vector2((windowWidth - startButton.Width) / 2, (windowHeight - startButton.Height) / 2);
+            _startButtonInfo.Position = startButtonPosition;
+        }
+
+        var windowWidth = _graphicsDevice.Adapter.CurrentDisplayMode.Width;
+        var windowHeight = _graphicsDevice.Adapter.CurrentDisplayMode.Height;
+
+        InitializeGameStartButton(windowWidth, windowHeight);
     }
 
     private void InitializeMenuCamera()

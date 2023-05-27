@@ -10,7 +10,7 @@ public class ButtonInfo : MazeRunnerGameComponent
 {
     public Button Button { get; init; }
 
-    public Vector2 Position { get; init; }
+    public Vector2 Position { get; set; }
 
     public float BoxScale { get; init; }
 
@@ -20,10 +20,9 @@ public class ButtonInfo : MazeRunnerGameComponent
 
     public ButtonStateInfo OnClickStateInfo { get; init; }
 
-    public ButtonInfo(Button button, Vector2 position, float boxScale, ButtonStateInfo idleStateInfo, ButtonStateInfo hoverStateInfo, ButtonStateInfo onClickStateInfo)
+    public ButtonInfo(Button button, float boxScale, ButtonStateInfo idleStateInfo, ButtonStateInfo hoverStateInfo, ButtonStateInfo onClickStateInfo)
     {
         Button = button;
-        Position = position;
         BoxScale = boxScale;
 
         IdleStateInfo = idleStateInfo;

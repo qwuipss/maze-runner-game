@@ -10,7 +10,17 @@ public class Button
 {
     public Action OnClick { get; init; }
 
+    private ButtonInfo _selfInfo;
+
     private IButtonState _state;
+
+    public static float DrawingPriority
+    {
+        get
+        {
+            return .15f;
+        }
+    }
 
     public Texture2D Texture
     {
@@ -28,11 +38,19 @@ public class Button
         }
     }
 
-    public static float DrawingPriority
+    public float Width
     {
         get
         {
-            return .15f;
+            return _state.FrameWidth * _selfInfo.BoxScale;
+        }
+    }
+
+    public float Height
+    {
+        get
+        {
+            return _state.FrameHeight * _selfInfo.BoxScale;
         }
     }
 
@@ -43,7 +61,9 @@ public class Button
 
     public void Initialize(ButtonInfo buttonInfo)
     {
-        _state = new ButtonIdleState(buttonInfo);
+        _selfInfo = buttonInfo;
+
+        _state = new ButtonIdleState(_selfInfo);
     }
 
     public void Update(GameTime gameTime)
