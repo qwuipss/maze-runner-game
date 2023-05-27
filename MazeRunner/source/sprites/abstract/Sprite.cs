@@ -62,7 +62,7 @@ public abstract class Sprite
         return direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
-    public virtual void Update(GameRunningState game, GameTime gameTime)
+    public virtual void Update(GameTime gameTime)
     {
         State = State.ProcessState(gameTime);
     }

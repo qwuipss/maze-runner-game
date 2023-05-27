@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.GameBase;
 using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
@@ -23,38 +24,13 @@ public class MazeTileInfo : MazeRunnerGameComponent
         Position = position;
     }
 
-    public override bool Equals(object other)
-    {
-        if (other is null)
-        {
-            return false;
-        }
-
-        var tileInfo = other as MazeTileInfo;
-
-        if (tileInfo.MazeTile == MazeTile && tileInfo.Position == Position)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(MazeTile, Position);
-    }
-
     public override void Draw(GameTime gameTime)
     {
         Drawer.DrawMazeTile(MazeTile, Position);
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        if (Vector2.Distance(Position, game.HeroInfo.Position) < Optimization.GetMazeTileUpdateDistance(MazeTile))
-        {
-            MazeTile.Update(gameTime);
-        }
+        MazeTile.Update(gameTime);
     }
 }

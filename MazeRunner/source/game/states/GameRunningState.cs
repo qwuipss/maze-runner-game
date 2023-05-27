@@ -57,7 +57,34 @@ public class GameRunningState : IGameState
     {
         foreach (var component in _gameComponents)
         {
-            component.Update(this, gameTime);
+            if (component is MazeTileInfo tileInfo 
+             && Vector2.Distance(tileInfo.Position, HeroInfo.Position) < Optimization.GetMazeTileUpdateDistance(tileInfo.MazeTile))
+            {
+                continue;
+            }
+
+            if (component is SpriteInfo spriteInfo)
+            {
+                var sprite = spriteInfo.Sprite;
+
+                if (sprite is not Hero)
+                {
+                    var distance = Vector2.Distance(spriteInfo.Position, HeroInfo.Position);
+
+                    if (distance > Optimization.GetEnemyUpdateDistance(spriteInfo))
+                    {
+                        continue;
+                    }
+
+                    if (sprite.IsDead
+                     && distance > Optimization.GetEnemyDisposingDistance(spriteInfo))
+                    {
+                        _deadGameComponents.Add(component);
+                    }
+                }
+            }
+
+            component.Update(gameTime);
         }
 
         DisposeDeadGameComponents();
@@ -176,7 +203,7 @@ public class GameRunningState : IGameState
         var shadowTreshold = heroFrameSize * _gameParameters.HeroCameraShadowTresholdCoeff;
 
         _heroCamera = new HeroCamera(_gameParameters.GraphicsDevice.Viewport, shadowTreshold, 
-                                     _gameParameters.GraphicsDevice, _gameParameters.HeroCameraScaleFactor);
+                                     _gameParameters.GraphicsDevice, HeroInfo, _gameParameters.HeroCameraScaleFactor);
     }
 
     private void InitializeTextWriters()

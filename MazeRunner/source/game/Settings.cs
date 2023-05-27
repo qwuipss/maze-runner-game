@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 
-namespace MazeRunner;
+namespace MazeRunner.GameBase;
 
 internal static class Settings
 {

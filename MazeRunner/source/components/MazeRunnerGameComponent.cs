@@ -9,7 +9,7 @@ public abstract class MazeRunnerGameComponent
 
     public abstract event GameComponentProvider NeedDisposeNotify;
 
-    public abstract void Update(GameRunningState game, GameTime gameTime);
+    public abstract void Update(GameTime gameTime);
 
     public abstract void Draw(GameTime gameTime);
 }

@@ -1,4 +1,5 @@
-﻿using MazeRunner.Wrappers;
+﻿using MazeRunner.GameBase;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;

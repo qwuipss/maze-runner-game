@@ -1,4 +1,6 @@
-﻿namespace MazeRunner;
+﻿using MazeRunner.GameBase;
+
+namespace MazeRunner;
 
 internal class Program
 {

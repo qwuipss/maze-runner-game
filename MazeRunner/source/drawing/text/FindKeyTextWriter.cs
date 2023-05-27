@@ -77,7 +77,7 @@ public class FindKeyTextWriter : TextWriter
         DrawIfNeeded(gameTime, position);
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         if (_textShowed)
         {
@@ -90,7 +90,7 @@ public class FindKeyTextWriter : TextWriter
 
         if (_needWriting)
         {
-            game.FindKeyTextWriterInfo.Position = GetDrawingPosition();
+            //FindKeyTextWriterInfo.Position = GetDrawingPosition();
         }
     }
 

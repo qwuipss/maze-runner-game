@@ -20,9 +20,9 @@ public class MazeInfo : MazeRunnerGameComponent
         Maze = maze;
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        Maze.Update(game, gameTime);
+        Maze.Update(gameTime);
     }
 
     public override void Draw(GameTime gameTime)

@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Extensions;
+using MazeRunner.GameBase;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;

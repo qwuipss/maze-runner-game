@@ -76,9 +76,9 @@ public class Hero : Sprite
         return HitBoxHelper.GetHitBox(position, HitBoxOffsetX, HitBoxOffsetY, HitBoxWidth, HitBoxHeight);
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        base.Update(game, gameTime);
+        base.Update(gameTime);
     }
 
     public void TakeDamage(int damage)

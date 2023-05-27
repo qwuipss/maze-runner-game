@@ -3,6 +3,7 @@ using MazeRunner.Extensions;
 using MazeRunner.GameBase.States;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
+using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -15,6 +16,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 #pragma warning disable
 
     private const float DrawingPriority = .1f;
+
+    private readonly SpriteInfo _heroInfo;
 
     private readonly Texture2D _effect;
 
@@ -62,7 +65,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         }
     }
 
-    public HeroCamera(Viewport viewPort, float shadowTreshold, GraphicsDevice graphicsDevice, float scaleFactor = 1)
+    public HeroCamera(Viewport viewPort, float shadowTreshold, GraphicsDevice graphicsDevice, SpriteInfo heroInfo, float scaleFactor = 1)
     {
         _viewWidth = viewPort.Width;
         _viewHeight = viewPort.Height;
@@ -73,6 +76,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         _scale = Matrix.CreateScale(new Vector3(scaleFactor, scaleFactor, 0));
 
         _effect = CreateEffect(shadowTreshold, graphicsDevice);
+
+        _heroInfo = heroInfo;
     }
 
     public override void Draw(GameTime gameTime)
@@ -83,11 +88,9 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         //Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        var hero = game.HeroInfo.Sprite;
-
-        Follow(hero, game.HeroInfo.Position);
+        Follow(_heroInfo.Sprite, _heroInfo.Position);
     }
 
     private void Follow(Sprite sprite, Vector2 spritePosition)

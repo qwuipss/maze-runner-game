@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace MazeRunner.MazeBase;
@@ -121,11 +122,11 @@ public class Maze
         }
     }
 
-    public void Update(GameRunningState game, GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
         foreach (var component in _components)
         {
-            component.Update(game, gameTime);
+            component.Update(gameTime);
         }
     }
 
@@ -199,11 +200,12 @@ public class Maze
     public void RemoveItem(Cell cell)
     {
         var cellPosition = GetCellPosition(cell);
-        var itemInfo = new MazeTileInfo(_itemsInfo[cell], cellPosition);
 
         _itemsInfo.Remove(cell);
 
-        _components.Remove(itemInfo);
+        var x = _components.Where(mti => mti.Position == cellPosition).Single();
+
+        _components.Remove(x);
     }
     #endregion
 }

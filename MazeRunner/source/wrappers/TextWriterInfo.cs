@@ -18,9 +18,9 @@ public class TextWriterInfo : MazeRunnerGameComponent
         TextWriter = textWriter;
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        TextWriter.Update(game, gameTime);
+        TextWriter.Update(gameTime);
 
         if (TextWriter.IsDead)
         {

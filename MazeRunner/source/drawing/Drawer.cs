@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Cameras;
+using MazeRunner.GameBase;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;

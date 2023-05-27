@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.GameBase;
 using MazeRunner.GameBase.States;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -20,28 +21,9 @@ public class SpriteInfo : MazeRunnerGameComponent
         Position = position;
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        if (Sprite is not Hero)
-        {
-            var heroInfo = game.HeroInfo;
-
-            var hero = heroInfo.Sprite;
-            var heroPosition = heroInfo.Position;
-
-            if (Vector2.Distance(Position, heroPosition) > Optimization.GetEnemyUpdateDistance(this))
-            {
-                return;
-            }
-
-            if (Sprite.IsDead
-             && Vector2.Distance(Position, heroPosition) > Optimization.GetEnemyDisposingDistance(this))
-            {
-                NeedDisposeNotify?.Invoke(this);
-            }
-        }
-
-        Sprite.Update(game, gameTime);
+        Sprite.Update(gameTime);
     }
 
     public override void Draw(GameTime gameTime)

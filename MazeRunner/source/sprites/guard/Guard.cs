@@ -67,9 +67,9 @@ public class Guard : Enemy
         State = new GuardIdleState(game.HeroInfo, selfInfo, game.MazeInfo);
     }
 
-    public override void Update(GameRunningState game, GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
-        base.Update(game, gameTime);
+        base.Update(gameTime);
 
         if (_drawingPriority == base.DrawingPriority && IsDead)
         {

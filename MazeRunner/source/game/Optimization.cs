@@ -1,7 +1,7 @@
 ﻿using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 
-namespace MazeRunner;
+namespace MazeRunner.GameBase;
 
 internal static class Optimization
 {
