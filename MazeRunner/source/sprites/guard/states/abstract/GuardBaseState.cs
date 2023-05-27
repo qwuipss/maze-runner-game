@@ -14,6 +14,16 @@ public abstract class GuardBaseState : SpriteBaseState
     {
     }
 
+    protected override GuardBaseState GetTrapCollidingState(TrapType trapType)
+    {
+        return trapType switch
+        {
+            TrapType.Drop => new GuardFallingState(this),
+            TrapType.Bayonet => new GuardDyingState(this),
+            _ => throw new NotImplementedException()
+        };
+    }
+
     protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> pathToHero)
     {
         if (heroInfo.Sprite.IsDead)
@@ -35,16 +45,6 @@ public abstract class GuardBaseState : SpriteBaseState
         var pathExist = GuardMoveBaseState.PathToHeroExist(heroInfo, guardInfo, mazeInfo, out pathToHero);
 
         return pathExist;
-    }
-
-    protected override GuardBaseState GetTrapCollidingState(TrapType trapType)
-    {
-        return trapType switch
-        {
-            TrapType.Drop => new GuardFallingState(this),
-            TrapType.Bayonet => new GuardDyingState(this),
-            _ => throw new NotImplementedException()
-        };
     }
 
     protected static Vector2 GetSpriteNormalizedPosition(SpriteInfo spriteInfo)

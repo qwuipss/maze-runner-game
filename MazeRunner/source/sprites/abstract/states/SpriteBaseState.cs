@@ -29,9 +29,9 @@ public abstract class SpriteBaseState : ISpriteState
 
     public abstract double UpdateTimeDelayMs { get; }
 
-    public virtual SpriteEffects FrameEffect { get; set; }
+    public SpriteEffects FrameEffect { get; set; }
 
-    public virtual int FrameSize
+    public int FrameSize
     {
         get
         {
@@ -47,9 +47,9 @@ public abstract class SpriteBaseState : ISpriteState
         }
     }
 
-    protected virtual Point CurrentAnimationFramePoint { get; set; }
+    protected Point CurrentAnimationFramePoint { get; set; }
 
-    protected virtual double ElapsedGameTimeMs { get; set; }
+    protected double ElapsedGameTimeMs { get; set; }
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
 

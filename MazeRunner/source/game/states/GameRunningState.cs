@@ -6,6 +6,8 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +15,11 @@ namespace MazeRunner.GameBase.States;
 
 public class GameRunningState : IGameState
 {
+    public event Action<IGameState> GameStateChanged;
+
     private readonly GameParameters _gameParameters;
+
+    private GraphicsDevice _graphicsDevice;
 
     private MazeInfo _mazeInfo;
 
@@ -23,7 +29,7 @@ public class GameRunningState : IGameState
 
     private HeroCamera _heroCamera;
 
-    private HashSet<SpriteInfo> _enemiesInfo;
+    private List<SpriteInfo> _enemiesInfo;
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
 
@@ -32,6 +38,11 @@ public class GameRunningState : IGameState
     public GameRunningState(GameParameters gameParameters)
     {
         _gameParameters = gameParameters;
+    }
+
+    public void Initialize(GraphicsDevice graphicsDevice)
+    {
+        _graphicsDevice = graphicsDevice;
 
         InitializeMaze();
         InitializeHero();
@@ -53,7 +64,7 @@ public class GameRunningState : IGameState
         Drawer.EndDraw();
     }
 
-    public IGameState ProcessState(GameTime gameTime)
+    public void ProcessState(GameTime gameTime)
     {
         foreach (var component in _gameComponents)
         {
@@ -96,8 +107,6 @@ public class GameRunningState : IGameState
         }
 
         DisposeDeadGameComponents();
-
-        return this;
     }
 
     private void InitializeComponentsList()
@@ -144,16 +153,14 @@ public class GameRunningState : IGameState
 
         var hero = Hero.GetInstance();
 
-        hero.HalfHeartsHealth = _gameParameters.HeroHalfHeartsHealth;
-
         _heroInfo = new SpriteInfo(hero, heroPosition);
 
-        hero.Initialize(_heroInfo, _mazeInfo);
+        hero.Initialize(_heroInfo, _mazeInfo, _gameParameters.HeroHalfHeartsHealth);
     }
 
     private void InitializeEnemies()
     {
-        void InitializeGuards(Maze maze, int guardsCount)
+        void InitializeGuards(Maze maze)
         {
             bool IsEnemyFreeFloorCell(Cell cell)
             {
@@ -180,7 +187,7 @@ public class GameRunningState : IGameState
                 return isEnemyFree;
             }
 
-            for (int i = 0; i < guardsCount; i++)
+            for (int i = 0; i < _gameParameters.GuardSpawnCount; i++)
             {
                 var guard = new Guard(_gameParameters.GuardHalfHeartsDamage);
 
@@ -195,9 +202,9 @@ public class GameRunningState : IGameState
             }
         }
 
-        _enemiesInfo = new HashSet<SpriteInfo>();
+        _enemiesInfo = new List<SpriteInfo>();
 
-        InitializeGuards(_mazeInfo.Maze, _gameParameters.GuardSpawnCount);
+        InitializeGuards(_mazeInfo.Maze);
     }
 
     private void InitializeHeroCamera()
@@ -205,8 +212,7 @@ public class GameRunningState : IGameState
         var heroFrameSize = _heroInfo.Sprite.FrameSize;
         var shadowTreshold = heroFrameSize * _gameParameters.HeroCameraShadowTresholdCoeff;
 
-        _heroCamera = new HeroCamera(_gameParameters.GraphicsDevice.Viewport, shadowTreshold,
-                                     _gameParameters.GraphicsDevice, _heroInfo, _gameParameters.HeroCameraScaleFactor);
+        _heroCamera = new HeroCamera(_graphicsDevice, shadowTreshold, _heroInfo, _gameParameters.HeroCameraScaleFactor);
     }
 
     private void InitializeTextWriters()

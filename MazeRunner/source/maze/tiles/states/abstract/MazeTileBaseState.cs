@@ -11,7 +11,7 @@ public abstract class MazeTileBaseState : IMazeTileState
 
     protected abstract double UpdateTimeDelayMs { get; }
 
-    public virtual int FrameSize
+    public int FrameSize
     {
         get
         {
@@ -27,9 +27,9 @@ public abstract class MazeTileBaseState : IMazeTileState
         }
     }
 
-    protected virtual Point CurrentAnimationFramePoint { get; set; }
+    protected Point CurrentAnimationFramePoint { get; set; }
 
-    protected virtual double ElapsedGameTimeMs { get; set; }
+    protected double ElapsedGameTimeMs { get; set; }
 
     public abstract IMazeTileState ProcessState(GameTime gameTime);
 }

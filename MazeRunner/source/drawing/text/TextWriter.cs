@@ -9,19 +9,19 @@ public abstract class TextWriter
 
     public abstract string Text { get; }
 
+    public SpriteFont Font { get; init; }
+
+    public Color Color { get; init; }
+
     public virtual float DrawingPriority
     {
         get
         {
-            return 0;
+            return 0.05f;
         }
     }
 
-    public virtual SpriteFont Font { get; init; }
-
-    public virtual Color Color { get; init; }
-
-    public virtual bool IsDead { get; protected set; }
+    public bool IsDead { get; protected set; }
 
     public abstract void Update(GameTime gameTime);
 

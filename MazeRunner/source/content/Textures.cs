@@ -119,9 +119,46 @@ public static class Textures
         }
     }
 
+    public static class Gui
+    {
+        private const string ContentDirectory = "gui";
+
+        public static class Buttons
+        {
+            private const string ContentDirectory = $"{Gui.ContentDirectory}/buttons";
+
+            public static class Start
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/start";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
+            public static void Load(Game game)
+            {
+                Start.Load(game);
+            }
+        }
+
+        public static void Load(Game game)
+        {
+            Buttons.Load(game);
+        }
+    }
+
     public static void Load(Game game)
     {
         MazeTiles.Load(game);
         Sprites.Load(game);
+        Gui.Load(game);
     }
 }

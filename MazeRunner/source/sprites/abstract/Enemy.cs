@@ -2,5 +2,5 @@
 
 public abstract class Enemy : Sprite
 {
-    public abstract int HalfHeartsDamage { get; }
+    public int HalfHeartsDamage { get; init; }
 }

@@ -13,8 +13,6 @@ public class Guard : Enemy
     private const float HitBoxSizeX = 5;
     private const float HitBoxSizeY = 11;
 
-    private readonly int _halfHeartsDamage;
-
     private float _drawingPriority;
 
     public override bool IsDead
@@ -33,14 +31,6 @@ public class Guard : Enemy
         }
     }
 
-    public override int HalfHeartsDamage
-    {
-        get
-        {
-            return _halfHeartsDamage;
-        }
-    }
-
     public override Vector2 Speed
     {
         get
@@ -53,7 +43,7 @@ public class Guard : Enemy
     {
         _drawingPriority = base.DrawingPriority;
 
-        _halfHeartsDamage = halfHeartsDamage;
+        HalfHeartsDamage = halfHeartsDamage;
     }
 
     public override RectangleF GetHitBox(Vector2 position)

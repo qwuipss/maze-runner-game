@@ -60,15 +60,16 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         }
     }
 
-    public HeroCamera(Viewport viewPort, float shadowTreshold, GraphicsDevice graphicsDevice, SpriteInfo heroInfo, float scaleFactor = 1)
+    public HeroCamera(GraphicsDevice graphicsDevice, float shadowTreshold, SpriteInfo heroInfo, float scaleFactor = 1)
     {
+        var viewPort = graphicsDevice.Viewport;
+
         _viewWidth = viewPort.Width;
         _viewHeight = viewPort.Height;
 
-        var origin = new Vector2(_viewWidth / 2, _viewHeight / 2);
+        _bordersOffset = Matrix.CreateTranslation(_viewWidth / 2, _viewHeight / 2, 0);
 
-        _bordersOffset = Matrix.CreateTranslation(new Vector3(origin, 0));
-        _scale = Matrix.CreateScale(new Vector3(scaleFactor, scaleFactor, 0));
+        _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
         _effect = CreateEffect(shadowTreshold, graphicsDevice);
 

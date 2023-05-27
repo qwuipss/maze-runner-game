@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.GameBase;
+using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
@@ -32,6 +33,16 @@ public static class Drawer
     public static void EndDraw()
     {
         _spriteBatch.End();
+    }
+
+    public static void DrawButton(Button button, Vector2 position, float boxScale)
+    {
+        Draw(
+            button.Texture,
+            position,
+            button.CurrentAnimationFrame,
+            Button.DrawingPriority,
+            scale: boxScale);
     }
 
     public static void DrawString(TextWriter textWriter, Vector2 position)
@@ -76,11 +87,12 @@ public static class Drawer
         float layerDepth,
         float rotation = 0,
         Vector2 origin = default,
+        float scale = 1,
         SpriteEffects spriteEffects = default)
     {
         if (DrawHelper.IsInViewBox(position, sourceRectangle, _viewBox))
         {
-            _spriteBatch.Draw(texture, position, sourceRectangle, ColorXna.White, rotation, origin, Vector2.One, spriteEffects, layerDepth);
+            _spriteBatch.Draw(texture, position, sourceRectangle, ColorXna.White, rotation, origin, scale, spriteEffects, layerDepth);
         }
     }
 }

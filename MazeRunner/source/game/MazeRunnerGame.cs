@@ -15,7 +15,7 @@ public class MazeRunnerGame : Game
     public MazeRunnerGame()
     {
         IsFixedTimeStep = false;
-        IsMouseVisible = false;
+        IsMouseVisible = true;
         Content.RootDirectory = "Content";
 
         _graphics = new GraphicsDeviceManager(this);
@@ -28,26 +28,11 @@ public class MazeRunnerGame : Game
         SetFullScreen();
         InitializeDrawer();
 
-        _gameState = new GameRunningState(new GameParameters()
-        {
-            MazeWidth = 9,
-            MazeHeight = 9,
+        _gameState = new GameMenuState();
 
-            MazeDeadEndsRemovePercentage = 50,
+        _gameState.Initialize(GraphicsDevice);
 
-            MazeBayonetTrapInsertingPercentage = 3,
-            MazeDropTrapInsertingPercentage = 2,
-
-            HeroCameraScaleFactor = 7,
-            HeroCameraShadowTresholdCoeff = 2.4f,
-
-            GuardSpawnCount = 1,
-            GuardHalfHeartsDamage = 1,
-
-            HeroHalfHeartsHealth = 6,
-
-            GraphicsDevice = GraphicsDevice,
-        });
+        _gameState.GameStateChanged += GameStateChangedHandler;
     }
 
     protected override void LoadContent()
@@ -85,5 +70,12 @@ public class MazeRunnerGame : Game
     private void InitializeDrawer()
     {
         Drawer.Initialize(this);
+    }
+
+    private void GameStateChangedHandler(IGameState gameState)
+    {
+        _gameState = gameState;
+
+        _gameState.Initialize(GraphicsDevice);
     }
 }

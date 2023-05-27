@@ -17,7 +17,9 @@ public class Hero : Sprite
     private const float HitBoxWidth = 7;
     private const float HitBoxHeight = 10;
 
-    public int HalfHeartsHealth { get; set; }
+    private bool _initialized;
+
+    private int _halfHeartsHealth;
 
     public override bool IsDead
     {
@@ -58,7 +60,7 @@ public class Hero : Sprite
 
     private Hero()
     {
-        HalfHeartsHealth = 6;
+        _halfHeartsHealth = 6;
     }
 
     public static Hero GetInstance()
@@ -66,8 +68,16 @@ public class Hero : Sprite
         return _instance.Value;
     }
 
-    public void Initialize(SpriteInfo selfInfo, MazeInfo mazeInfo)
+    public void Initialize(SpriteInfo selfInfo, MazeInfo mazeInfo, int halfHeartsHealth)
     {
+        if (_initialized)
+        {
+            throw new InvalidOperationException();
+        }
+
+        _initialized = true;
+        _halfHeartsHealth = halfHeartsHealth;
+
         State = new HeroIdleState(selfInfo, mazeInfo);
     }
 
@@ -83,9 +93,9 @@ public class Hero : Sprite
 
     public void TakeDamage(int damage)
     {
-        HalfHeartsHealth -= damage;
+        _halfHeartsHealth -= damage;
 
-        if (HalfHeartsHealth <= 0)
+        if (_halfHeartsHealth <= 0)
         {
             State = new HeroDyingState(State);
         }

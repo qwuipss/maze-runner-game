@@ -50,13 +50,13 @@ public abstract class Sprite
         }
     }
 
-    public virtual bool IsDead { get; }
+    public abstract bool IsDead { get; }
 
-    public virtual ISpriteState State { get; set; }
+    public ISpriteState State { get; set; }
 
     public abstract RectangleF GetHitBox(Vector2 position);
 
-    public virtual Vector2 GetMovement(Vector2 direction, GameTime gameTime)
+    public Vector2 GetMovement(Vector2 direction, GameTime gameTime)
     {
         return direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
