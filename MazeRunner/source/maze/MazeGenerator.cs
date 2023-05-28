@@ -135,7 +135,6 @@ public static class MazeGenerator
         return (tiles, floorsInserted);
     }
 
-    #region Inserters
     public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, int percentage)
     {
         var floorsCount = maze.GetTileCount(maze.IsFloor);
@@ -169,9 +168,7 @@ public static class MazeGenerator
 
         maze.InsertItem(item, floorCell);
     }
-    #endregion
 
-    #region Utilities
     public static void AddCellsInSearchingQueue(IEnumerable<Cell> cells, HashSet<Cell> visitedCells, Queue<Cell> searchingQueue)
     {
         foreach (var cell in cells)
@@ -190,9 +187,7 @@ public static class MazeGenerator
 
         return (skeleton.GetLength(1), skeleton.GetLength(0));
     }
-    #endregion
 
-    #region CellsGetters
     public static IEnumerable<Cell> GetAdjacentCells(Cell cell, Maze maze, int cellOffset)
     {
         return new List<Cell>()
@@ -203,6 +198,20 @@ public static class MazeGenerator
             cell with { Y = cell.Y - cellOffset },
         }
         .Where(cell => cell.InBoundsOf(maze.Skeleton));
+    }
+
+    public static bool IsVerticalSideCell(Cell cell, Maze maze)
+    {
+        var (width, height) = GetMazeDimensions(maze);
+
+        return (cell.X is 0 || cell.X == width - 1) && cell.Y.InRange(1, height - 1);
+    }
+
+    public static bool IsHorizontalSideCell(Cell cell, Maze maze)
+    {
+        var (width, height) = GetMazeDimensions(maze);
+
+        return (cell.Y is 0 || cell.Y == height - 1) && cell.X.InRange(1, width - 1);
     }
 
     public static IEnumerable<Cell> GetRandomCell(Maze maze, Func<Cell, bool> cellSelector)
@@ -277,21 +286,6 @@ public static class MazeGenerator
         }
 
         return GetRandomCell(maze, new Cell(coordX, coordY), IsSideCell).First();
-    }
-    #endregion
-
-    private static bool IsVerticalSideCell(Cell cell, Maze maze)
-    {
-        var (width, height) = GetMazeDimensions(maze);
-
-        return (cell.X is 0 || cell.X == width - 1) && cell.Y.InRange(1, height - 1);
-    }
-
-    private static bool IsHorizontalSideCell(Cell cell, Maze maze)
-    {
-        var (width, height) = GetMazeDimensions(maze);
-
-        return (cell.Y is 0 || cell.Y == height - 1) && cell.X.InRange(1, width - 1);
     }
 
     private static void RemoveWallBetween(Cell first, Cell second, Maze maze)

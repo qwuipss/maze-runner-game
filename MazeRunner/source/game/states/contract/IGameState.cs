@@ -10,7 +10,7 @@ public interface IGameState
 
     public void Initialize(GraphicsDevice graphicsDevice);
 
-    public void ProcessState(GameTime gameTime);
+    public void Update(GameTime gameTime);
 
     public void Draw(GameTime gameTime);
 }

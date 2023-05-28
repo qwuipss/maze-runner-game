@@ -17,8 +17,6 @@ public class Hero : Sprite
     private const float HitBoxWidth = 7;
     private const float HitBoxHeight = 10;
 
-    private bool _initialized;
-
     private int _halfHeartsHealth;
 
     public override bool IsDead
@@ -70,12 +68,6 @@ public class Hero : Sprite
 
     public void Initialize(SpriteInfo selfInfo, MazeInfo mazeInfo, int halfHeartsHealth)
     {
-        if (_initialized)
-        {
-            throw new InvalidOperationException();
-        }
-
-        _initialized = true;
         _halfHeartsHealth = halfHeartsHealth;
 
         State = new HeroIdleState(selfInfo, mazeInfo);

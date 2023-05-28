@@ -4,6 +4,8 @@ using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Gui.Buttons.States;
+using MazeRunner.MazeBase;
+using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -54,9 +56,15 @@ public class GameMenuState : IGameState
 
     public event Action<IGameState> GameStateChanged;
 
+    private int _windowWidth;
+
+    private int _windowHeight;
+
     private GraphicsDevice _graphicsDevice;
 
     private ButtonInfo _startButtonInfo;
+
+    private MazeInfo _mazeInfo;
 
     private MenuCamera _menuCamera;
 
@@ -66,8 +74,12 @@ public class GameMenuState : IGameState
     {
         _graphicsDevice = graphicsDevice;
 
+        _windowWidth = _graphicsDevice.Adapter.CurrentDisplayMode.Width;
+        _windowHeight = _graphicsDevice.Adapter.CurrentDisplayMode.Height;
+
         InitializeMenuButtons();
         InitializeMenuCamera();
+        InitializeBackgroundMaze();
         InitializeComponentsList();
     }
 
@@ -83,7 +95,7 @@ public class GameMenuState : IGameState
         Drawer.EndDraw();
     }
 
-    public void ProcessState(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
         foreach (var component in _components)
         {
@@ -93,11 +105,11 @@ public class GameMenuState : IGameState
 
     private void InitializeMenuButtons()
     {
-        void InitializeGameStartButton(int windowWidth, int windowHeight)
+        void InitializeGameStartButton()
         {
             var startButton = new Button(() => GameStateChanged.Invoke(new GameRunningState(GameModes.Easy)));
 
-            var startButtonBoxScale = 5;
+            var startButtonBoxScale = _windowWidth / 360;
 
             _startButtonInfo = new ButtonInfo(startButton, startButtonBoxScale,
                 new ButtonStateInfo
@@ -118,14 +130,36 @@ public class GameMenuState : IGameState
 
             startButton.Initialize(_startButtonInfo);
 
-            var startButtonPosition = new Vector2((windowWidth - startButton.Width) / 2, (windowHeight - startButton.Height) / 2);
+            var startButtonPosition = new Vector2((_windowWidth - startButton.Width) / 2, (_windowHeight - startButton.Height) / 2);
             _startButtonInfo.Position = startButtonPosition;
         }
 
-        var windowWidth = _graphicsDevice.Adapter.CurrentDisplayMode.Width;
-        var windowHeight = _graphicsDevice.Adapter.CurrentDisplayMode.Height;
+        InitializeGameStartButton();
+    }
 
-        InitializeGameStartButton(windowWidth, windowHeight);
+    private void InitializeBackgroundMaze()
+    {
+        var bayonetTrapInsertingPercentage = 2;
+        var dropTrapInsertingPercentage = 2;
+
+        var deadEndsRemovePercentage = 75;
+
+        var frameSize = (double)Textures.MazeTiles.Floor_1.Width;
+
+        var maze = MazeGenerator.GenerateMaze((int)Math.Ceiling(_windowWidth / frameSize) + 1, (int)Math.Ceiling(_windowHeight / frameSize) + 1);
+
+        MazeGenerator.MakeCyclic(maze, deadEndsRemovePercentage);
+
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), bayonetTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), dropTrapInsertingPercentage);
+
+        MazeGenerator.InsertExit(maze);
+
+        MazeGenerator.InsertItem(maze, new Key());
+
+        maze.InitializeComponentsList();
+
+        _mazeInfo = new MazeInfo(maze);
     }
 
     private void InitializeMenuCamera()
@@ -137,7 +171,7 @@ public class GameMenuState : IGameState
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            _startButtonInfo
+            _startButtonInfo, _mazeInfo, _menuCamera,
         };
     }
 }

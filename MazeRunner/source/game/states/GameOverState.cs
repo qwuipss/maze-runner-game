@@ -18,7 +18,7 @@ public class GameOverState : IGameState
         throw new NotImplementedException();
     }
 
-    public void ProcessState(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
         throw new NotImplementedException();
     }

@@ -7,6 +7,7 @@ using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,8 @@ public class GameRunningState : IGameState
 
     private TextWriterInfo _findKeyTextWriterInfo;
 
+    private readonly TextWriterInfo _openExitTextWriterInfo;
+
     private HeroCamera _heroCamera;
 
     private List<SpriteInfo> _enemiesInfo;
@@ -44,8 +47,9 @@ public class GameRunningState : IGameState
     {
         _graphicsDevice = graphicsDevice;
 
-        InitializeMaze();
+        PreInitializeMaze();
         InitializeHero();
+        PostInitializeMaze();
         InitializeHeroCamera();
         InitializeEnemies();
         InitializeTextWriters();
@@ -64,7 +68,7 @@ public class GameRunningState : IGameState
         Drawer.EndDraw();
     }
 
-    public void ProcessState(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
         foreach (var component in _gameComponents)
         {
@@ -106,6 +110,8 @@ public class GameRunningState : IGameState
             component.Update(gameTime);
         }
 
+        HandleSecondaryButtons();
+
         DisposeDeadGameComponents();
     }
 
@@ -126,7 +132,7 @@ public class GameRunningState : IGameState
         _gameComponents.Add(_heroInfo);
     }
 
-    private void InitializeMaze()
+    private void PreInitializeMaze()
     {
         var maze = MazeGenerator.GenerateMaze(_gameParameters.MazeWidth, _gameParameters.MazeHeight);
 
@@ -142,6 +148,11 @@ public class GameRunningState : IGameState
         maze.InitializeComponentsList();
 
         _mazeInfo = new MazeInfo(maze);
+    }
+
+    private void PostInitializeMaze()
+    {
+        _mazeInfo.HeroInfo = _heroInfo;
     }
 
     private void InitializeHero()
@@ -217,11 +228,16 @@ public class GameRunningState : IGameState
 
     private void InitializeTextWriters()
     {
-        var findKeyTextWriter = FindKeyTextWriter.GetInstance();
+        void InitializeFindKeyTextWriter()
+        {
+            var findKeyTextWriter = FindKeyTextWriter.GetInstance();
 
-        _findKeyTextWriterInfo = new TextWriterInfo(findKeyTextWriter);
+            _findKeyTextWriterInfo = new TextWriterInfo(findKeyTextWriter);
 
-        findKeyTextWriter.Initialize(_heroInfo, _mazeInfo, _findKeyTextWriterInfo);
+            findKeyTextWriter.Initialize(_heroInfo, _mazeInfo, _findKeyTextWriterInfo);
+        }
+
+        InitializeFindKeyTextWriter();
     }
 
     private void DisposeDeadGameComponents()
@@ -235,5 +251,20 @@ public class GameRunningState : IGameState
         }
 
         _deadGameComponents.Clear();
+    }
+
+    private void HandleSecondaryButtons()
+    {
+        var keyboardState = Keyboard.GetState();
+
+        if (keyboardState.IsKeyDown(Keys.Escape))
+        {
+            GameStateChanged.Invoke(new GameMenuState());
+        }
+
+        if (keyboardState.IsKeyDown(Keys.Tab))
+        {
+            Environment.Exit(0);
+        }
     }
 }

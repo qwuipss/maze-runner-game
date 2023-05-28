@@ -43,7 +43,7 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        _gameState.ProcessState(gameTime);
+        _gameState.Update(gameTime);
 
         base.Update(gameTime);
     }
@@ -77,5 +77,7 @@ public class MazeRunnerGame : Game
         _gameState = gameState;
 
         _gameState.Initialize(GraphicsDevice);
+
+        _gameState.GameStateChanged += GameStateChangedHandler;
     }
 }

@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Components;
-using MazeRunner.Extensions;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
@@ -71,7 +70,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
-        _effect = CreateEffect(shadowTreshold, graphicsDevice);
+        _effect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, graphicsDevice);
 
         _heroInfo = heroInfo;
     }
@@ -100,39 +99,5 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
         _viewPosition = new Vector2(spritePosition.X + halfFrameSize, spritePosition.Y + halfFrameSize);
         _transformMatrix = cameraPosition * _scale * _bordersOffset;
-    }
-
-    private Texture2D CreateEffect(float shadowTreshold, GraphicsDevice graphicsDevice)
-    {
-        var effectData = new Color[_viewHeight, _viewWidth];
-        var centerPixel = new Vector2(_viewWidth / 2, _viewHeight / 2);
-
-        for (int y = 0; y < effectData.GetLength(0); y++)
-        {
-            for (int x = 0; x < effectData.GetLength(1); x++)
-            {
-                var currentPixel = new Vector2(x, y);
-                var distance = Vector2.Distance(centerPixel, currentPixel);
-
-                if (distance >= shadowTreshold)
-                {
-                    effectData[y, x] = Color.Black;
-                }
-                else
-                {
-                    var transparentCoeff = distance / shadowTreshold;
-                    var transparency = (byte)(byte.MaxValue * transparentCoeff);
-
-                    effectData[y, x] = Color.Black;
-                    effectData[y, x].A = transparency;
-                }
-            }
-        }
-
-        var effectTexture = new Texture2D(graphicsDevice, _viewWidth, _viewHeight);
-
-        effectTexture.SetData(effectData.ToLinear());
-
-        return effectTexture;
     }
 }

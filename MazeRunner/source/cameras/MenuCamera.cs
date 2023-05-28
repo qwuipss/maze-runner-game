@@ -1,9 +1,12 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
+using MazeRunner.Helpers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Cameras;
 
-public class MenuCamera : ICamera
+public class MenuCamera : MazeRunnerGameComponent, ICamera
 {
     private readonly int _viewWidth;
 
@@ -12,6 +15,8 @@ public class MenuCamera : ICamera
     private Matrix _transformMatrix;
 
     private Vector2 _viewPosition;
+
+    private readonly Texture2D _effect;
 
     public Vector2 ViewPosition
     {
@@ -56,8 +61,21 @@ public class MenuCamera : ICamera
 
         var position = Matrix.CreateTranslation(0, 0, 0);
 
-        _viewPosition = Vector2.Zero;
+        _viewPosition = new Vector2(_viewWidth / 2, _viewHeight / 2);
+
+        var shadowTreshold = _viewHeight / 2.1f;
+
+        _effect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, graphicsDevice);
 
         _transformMatrix = position * bordersOffset;
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Drawer.Draw(_effect, Vector2.Zero, new Rectangle(0, 0, _viewWidth, _viewHeight), 0);
     }
 }
