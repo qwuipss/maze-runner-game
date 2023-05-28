@@ -6,13 +6,13 @@ using System;
 
 namespace MazeRunner.Gui.Buttons;
 
-public class Button
+public abstract class Button
 {
     public Action OnClick { get; init; }
 
-    private ButtonInfo _selfInfo;
+    protected IButtonState State { get; set; }
 
-    private IButtonState _state;
+    protected ButtonInfo SelfInfo { get; set; }
 
     public static float DrawingPriority
     {
@@ -26,7 +26,7 @@ public class Button
     {
         get
         {
-            return _state.Texture;
+            return State.Texture;
         }
     }
 
@@ -34,7 +34,7 @@ public class Button
     {
         get
         {
-            return _state.CurrentAnimationFrame;
+            return State.CurrentAnimationFrame;
         }
     }
 
@@ -42,7 +42,7 @@ public class Button
     {
         get
         {
-            return _state.FrameWidth * _selfInfo.BoxScale;
+            return State.FrameWidth * SelfInfo.BoxScale;
         }
     }
 
@@ -50,7 +50,7 @@ public class Button
     {
         get
         {
-            return _state.FrameHeight * _selfInfo.BoxScale;
+            return State.FrameHeight * SelfInfo.BoxScale;
         }
     }
 
@@ -59,15 +59,13 @@ public class Button
         OnClick = onClick;
     }
 
-    public void Initialize(ButtonInfo buttonInfo)
+    public virtual void Initialize(ButtonInfo buttonInfo)
     {
-        _selfInfo = buttonInfo;
-
-        _state = new ButtonIdleState(_selfInfo);
+        SelfInfo = buttonInfo;
     }
 
-    public void Update(GameTime gameTime)
+    public virtual void Update(GameTime gameTime)
     {
-        _state = _state.ProcessState(gameTime);
+        State = State.ProcessState(gameTime);
     }
 }

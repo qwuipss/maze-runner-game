@@ -3,7 +3,6 @@ using MazeRunner.Components;
 using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
-using MazeRunner.Gui.Buttons.States;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
@@ -107,30 +106,16 @@ public class GameMenuState : IGameState
     {
         void InitializeGameStartButton()
         {
-            var startButton = new Button(() => GameStateChanged.Invoke(new GameRunningState(GameModes.Easy)));
+            var startButton = new StartButton(() => GameStateChanged.Invoke(new GameRunningState(GameModes.Easy)));
 
             var startButtonBoxScale = _windowWidth / 360;
 
-            _startButtonInfo = new ButtonInfo(startButton, startButtonBoxScale,
-                new ButtonStateInfo
-                {
-                    Texture = Textures.Gui.Buttons.Start.Idle,
-                    FramesCount = 1,
-                },
-                new ButtonStateInfo
-                {
-                    Texture = Textures.Gui.Buttons.Start.Hover,
-                    FramesCount = 1,
-                },
-                new ButtonStateInfo
-                {
-                    Texture = Textures.Gui.Buttons.Start.Click,
-                    FramesCount = 5,
-                });
+            _startButtonInfo = new ButtonInfo(startButton, startButtonBoxScale);
 
             startButton.Initialize(_startButtonInfo);
 
             var startButtonPosition = new Vector2((_windowWidth - startButton.Width) / 2, (_windowHeight - startButton.Height) / 2);
+
             _startButtonInfo.Position = startButtonPosition;
         }
 

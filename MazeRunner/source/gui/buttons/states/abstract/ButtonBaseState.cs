@@ -14,6 +14,13 @@ public abstract class ButtonBaseState : IButtonState
 
     public abstract int FramesCount { get; }
 
+    protected ButtonInfo ButtonInfo { get; init; }
+
+    public ButtonBaseState(ButtonInfo buttonInfo)
+    {
+        ButtonInfo = buttonInfo;
+    }
+
     public int FrameWidth
     {
         get
