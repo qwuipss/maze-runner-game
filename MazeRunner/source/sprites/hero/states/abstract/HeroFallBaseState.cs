@@ -5,7 +5,7 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class HeroFallBaseState : HeroBaseState
 {
-    public HeroFallBaseState(ISpriteState previousState) : base(previousState)
+    protected HeroFallBaseState(ISpriteState previousState) : base(previousState)
     {
     }
 

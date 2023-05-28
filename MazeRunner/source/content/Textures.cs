@@ -143,9 +143,61 @@ public static class Textures
                 }
             }
 
+            public static class EasyModeSelect
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/easy";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
+            public static class NormalModeSelect
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/normal";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
+            public static class HardModeSelect
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/hard";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
             public static void Load(Game game)
             {
                 Start.Load(game);
+
+                EasyModeSelect.Load(game);
+                NormalModeSelect.Load(game);
+                HardModeSelect.Load(game);
             }
         }
 

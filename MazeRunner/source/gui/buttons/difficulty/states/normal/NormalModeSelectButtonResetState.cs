@@ -5,17 +5,20 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Gui.Buttons.States;
 
-public class StartButtonClickedState : ButtonPushBaseState
+public class NormalModeSelectButtonResetState : ButtonPushBaseState
 {
-    public StartButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public NormalModeSelectButtonResetState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
+        var framePosX = (FramesCount - 1) * FrameWidth;
+
+        CurrentAnimationFramePoint = new Point(framePosX, 0);
     }
 
     public override Texture2D Texture
     {
         get
         {
-            return Textures.Gui.Buttons.Start.Click;
+            return Textures.Gui.Buttons.NormalModeSelect.Click;
         }
     }
 
@@ -35,14 +38,12 @@ public class StartButtonClickedState : ButtonPushBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            if (animationPoint.X == (FramesCount - 1) * FrameWidth)
+            if (animationPoint.X is 0)
             {
-                ButtonInfo.Button.OnClick.Invoke();
-
-                return new StartButtonIdleState(ButtonInfo);
+                return new NormalModeSelectButtonIdleState(ButtonInfo);
             }
 
-            var framePosX = animationPoint.X + FrameWidth;
+            var framePosX = animationPoint.X - FrameWidth;
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);
             ElapsedGameTimeMs -= UpdateTimeDelayMs;

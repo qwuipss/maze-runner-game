@@ -5,9 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Gui.Buttons.States;
 
-public class StartButtonClickedState : ButtonPushBaseState
+public class HardModeSelectButtonClickedState : ButtonPushBaseState
 {
-    public StartButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public HardModeSelectButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
     }
 
@@ -15,7 +15,7 @@ public class StartButtonClickedState : ButtonPushBaseState
     {
         get
         {
-            return Textures.Gui.Buttons.Start.Click;
+            return Textures.Gui.Buttons.HardModeSelect.Click;
         }
     }
 
@@ -39,7 +39,7 @@ public class StartButtonClickedState : ButtonPushBaseState
             {
                 ButtonInfo.Button.OnClick.Invoke();
 
-                return new StartButtonIdleState(ButtonInfo);
+                return new HardModeSelectButtonSelectedState(ButtonInfo);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

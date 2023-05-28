@@ -36,6 +36,8 @@ public class GameRunningState : IGameState
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
 
+    private List<SpriteInfo> _respawnEnemies;
+
     private List<MazeRunnerGameComponent> _deadGameComponents;
 
     public GameRunningState(GameParameters gameParameters)
@@ -95,6 +97,8 @@ public class GameRunningState : IGameState
                      && distance > Optimization.GetEnemyDisposingDistance(spriteInfo))
                     {
                         _deadGameComponents.Add(component);
+
+                        AddEnemyToRespawnList(spriteInfo);
                     }
                 }
             }
@@ -112,11 +116,14 @@ public class GameRunningState : IGameState
 
         HandleSecondaryButtons();
 
+        RespawnEnemies();
         DisposeDeadGameComponents();
     }
 
     private void InitializeComponentsList()
     {
+        _respawnEnemies = new List<SpriteInfo>();
+
         _deadGameComponents = new List<MazeRunnerGameComponent>();
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
@@ -171,51 +178,17 @@ public class GameRunningState : IGameState
 
     private void InitializeEnemies()
     {
-        void InitializeGuards(Maze maze)
+        void InitializeGuards()
         {
-            bool IsEnemyFreeFloorCell(Cell cell)
-            {
-                if (!maze.IsFloor(cell))
-                {
-                    return false;
-                }
-
-                var mazeTile = maze.Skeleton[cell.Y, cell.X];
-                var cellPosition = maze.GetCellPosition(cell);
-                var distanceToHero = Vector2.Distance(_heroInfo.Position, cellPosition);
-
-                var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
-
-                if (distanceToHero < spawnDistance)
-                {
-                    return false;
-                }
-
-                var isEnemyFree = _enemiesInfo
-                    .Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) < spawnDistance)
-                    .Count() is 0;
-
-                return isEnemyFree;
-            }
-
             for (int i = 0; i < _gameParameters.GuardSpawnCount; i++)
             {
-                var guard = new Guard(_gameParameters.GuardHalfHeartsDamage);
-
-                var guardCell = MazeGenerator.GetRandomCell(maze, IsEnemyFreeFloorCell).First();
-                var guardPosition = maze.GetCellPosition(guardCell);
-
-                var guardInfo = new SpriteInfo(guard, guardPosition);
-
-                guard.Initialize(guardInfo, _heroInfo, _mazeInfo);
-
-                _enemiesInfo.Add(guardInfo);
+                _enemiesInfo.Add(CreateGuard());
             }
         }
 
         _enemiesInfo = new List<SpriteInfo>();
 
-        InitializeGuards(_mazeInfo.Maze);
+        InitializeGuards();
     }
 
     private void InitializeHeroCamera()
@@ -240,6 +213,49 @@ public class GameRunningState : IGameState
         InitializeFindKeyTextWriter();
     }
 
+    private SpriteInfo CreateGuard()
+    {
+        var guard = new Guard(_gameParameters.GuardHalfHeartsDamage);
+
+        var maze = _mazeInfo.Maze;
+
+        var guardCell = MazeGenerator.GetRandomCell(maze, IsEnemyFreeFloorCell).First();
+        var guardPosition = maze.GetCellPosition(guardCell);
+
+        var guardInfo = new SpriteInfo(guard, guardPosition);
+
+        guard.Initialize(guardInfo, _heroInfo, _mazeInfo);
+
+        return guardInfo;
+    }
+
+    private bool IsEnemyFreeFloorCell(Cell cell)
+    {
+        var maze = _mazeInfo.Maze;
+
+        if (!maze.IsFloor(cell))
+        {
+            return false;
+        }
+
+        var mazeTile = maze.Skeleton[cell.Y, cell.X];
+        var cellPosition = maze.GetCellPosition(cell);
+        var distanceToHero = Vector2.Distance(_heroInfo.Position, cellPosition);
+
+        var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
+
+        if (distanceToHero < spawnDistance)
+        {
+            return false;
+        }
+
+        var isEnemyFree = _enemiesInfo
+            .Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) < spawnDistance)
+            .Count() is 0;
+
+        return isEnemyFree;
+    }
+
     private void DisposeDeadGameComponents()
     {
         if (_deadGameComponents.Count is not 0)
@@ -251,6 +267,28 @@ public class GameRunningState : IGameState
         }
 
         _deadGameComponents.Clear();
+    }
+
+    private void AddEnemyToRespawnList(SpriteInfo enemyInfo)
+    {
+        if (enemyInfo.Sprite is Guard)
+        {
+            _respawnEnemies.Add(CreateGuard());
+        }
+        else
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    private void RespawnEnemies()
+    {
+        foreach (var enemyInfo in _respawnEnemies)
+        {
+            _gameComponents.Add(enemyInfo);
+        }
+
+        _respawnEnemies.Clear();
     }
 
     private void HandleSecondaryButtons()

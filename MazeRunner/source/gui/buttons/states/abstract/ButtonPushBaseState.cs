@@ -2,7 +2,7 @@
 
 namespace MazeRunner.Gui.Buttons.States;
 
-public abstract class ButtonClickedBaseState : ButtonBaseState
+public abstract class ButtonPushBaseState : ButtonBaseState
 {
     protected double ElapsedGameTimeMs { get; set; }
 
@@ -14,7 +14,7 @@ public abstract class ButtonClickedBaseState : ButtonBaseState
         }
     }
 
-    protected ButtonClickedBaseState(ButtonInfo buttonInfo) : base(buttonInfo)
+    protected ButtonPushBaseState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
     }
 }

@@ -8,7 +8,7 @@ namespace MazeRunner.MazeBase.Tiles;
 public class DropTrap : MazeTrap
 {
     private const float HitBoxOffset = 3;
-    private const float HitBoxSize = 6;
+    private const float HitBoxSize = 10;
 
     public override bool IsActivated
     {
