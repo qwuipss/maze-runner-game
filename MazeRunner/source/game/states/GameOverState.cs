@@ -123,11 +123,16 @@ public class GameOverState : IGameState
 
     private void InitializeCameras()
     {
-        if (_cameraEffect is null)
+        void InitializeCameraEffect()
         {
             var transparency = (byte)(byte.MaxValue / 1.35);
 
             _cameraEffect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, transparency, _graphicsDevice);
+        }
+
+        if (_cameraEffect is null)
+        {
+            InitializeCameraEffect();
         }
 
         _runningState.HeroCamera.Effect = _cameraEffect;

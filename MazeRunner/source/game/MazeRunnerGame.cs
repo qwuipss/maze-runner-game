@@ -16,6 +16,7 @@ public class MazeRunnerGame : Game
     {
         IsFixedTimeStep = false;
         IsMouseVisible = true;
+
         Content.RootDirectory = "Content";
 
         _graphics = new GraphicsDeviceManager(this);

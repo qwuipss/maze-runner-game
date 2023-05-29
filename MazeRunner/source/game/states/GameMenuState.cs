@@ -275,11 +275,16 @@ public class GameMenuState : IGameState
 
     private void InitializeStaticCamera()
     {
-        if (_cameraEffect is null)
+        void InitializeCameraEffect()
         {
             var shadowTreshold = _viewHeight / 2.1f;
 
             _cameraEffect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, _graphicsDevice);
+        }
+
+        if (_cameraEffect is null)
+        {
+            InitializeCameraEffect();
         }
 
         _staticCamera = new StaticCamera(_graphicsDevice)

@@ -201,7 +201,7 @@ public class GameRunningState : IGameState
 
     private void InitializeHeroCamera()
     {
-        if (_cameraEffect is null)
+        void InitializeCameraEffect()
         {
             var viewPort = _graphicsDevice.Viewport;
 
@@ -212,6 +212,11 @@ public class GameRunningState : IGameState
             var shadowTreshold = heroFrameSize * GameParameters.HeroCameraShadowTresholdCoeff;
 
             _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, _graphicsDevice);
+        }
+
+        if (_cameraEffect is null)
+        {
+            InitializeCameraEffect();
         }
 
         HeroCamera = new HeroCamera(_graphicsDevice, HeroInfo, GameParameters.HeroCameraScaleFactor)

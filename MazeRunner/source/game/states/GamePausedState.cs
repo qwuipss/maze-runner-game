@@ -152,11 +152,16 @@ public class GamePausedState : IGameState
 
     private void InitializeStaticCamera()
     {
-        if (_cameraEffect is null)
+        void InitializeCameraEffect()
         {
             var transparency = (byte)(byte.MaxValue / 4.25);
 
             _cameraEffect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, transparency, _graphicsDevice);
+        }
+
+        if (_cameraEffect is null)
+        {
+            InitializeCameraEffect();
         }
 
         _staticCamera = new StaticCamera(_graphicsDevice)

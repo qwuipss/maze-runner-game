@@ -275,10 +275,23 @@ public static class Textures
         }
     }
 
+    public static class Marks
+    {
+        private const string ContentDirectory = $"marks";
+
+        public static Texture2D Heart { get; private set; }
+
+        public static void Load(Game game)
+        {
+            Heart = game.Content.Load<Texture2D>($"{ContentDirectory}/heart");
+        }
+    }
+
     public static void Load(Game game)
     {
         MazeTiles.Load(game);
         Sprites.Load(game);
         Gui.Load(game);
+        Marks.Load(game);
     }
 }
