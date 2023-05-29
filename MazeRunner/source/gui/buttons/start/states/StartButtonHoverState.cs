@@ -8,24 +8,12 @@ namespace MazeRunner.Gui.Buttons.States;
 
 public class StartButtonHoverState : ButtonBaseState
 {
+    public override Texture2D Texture => Textures.Gui.Buttons.Start.Hover;
+
+    public override int FramesCount => 1;
+
     public StartButtonHoverState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Gui.Buttons.Start.Hover;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 1;
-        }
     }
 
     public override IButtonState ProcessState(GameTime gameTime)

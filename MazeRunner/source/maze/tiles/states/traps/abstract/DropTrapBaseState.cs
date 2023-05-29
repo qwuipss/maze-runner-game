@@ -5,27 +5,9 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public abstract class DropTrapBaseState : MazeTrapBaseState
 {
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.MazeTiles.MazeTraps.Drop;
-        }
-    }
+    public override Texture2D Texture => Textures.MazeTiles.MazeTraps.Drop;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 8;
-        }
-    }
+    public override int FramesCount => 8;
 
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 20;
-        }
-    }
+    protected override double UpdateTimeDelayMs => 20;
 }

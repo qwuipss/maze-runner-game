@@ -5,8 +5,12 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Gui.Buttons.States;
 
-internal class EasyModeSelectButtonSelectedState : ButtonBaseState
+public class EasyModeSelectButtonSelectedState : ButtonBaseState
 {
+    public override Texture2D Texture => Textures.Gui.Buttons.EasyModeSelect.Click;
+
+    public override int FramesCount => 5;
+
     public EasyModeSelectButtonSelectedState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
         var radioButton = (RadioButton)buttonInfo.Button;
@@ -15,22 +19,6 @@ internal class EasyModeSelectButtonSelectedState : ButtonBaseState
         var framePosX = (FramesCount - 1) * FrameWidth;
 
         CurrentAnimationFramePoint = new Point(framePosX, 0);
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Gui.Buttons.EasyModeSelect.Click;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 5;
-        }
     }
 
     public override IButtonState ProcessState(GameTime gameTime)

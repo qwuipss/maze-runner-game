@@ -10,9 +10,11 @@ namespace MazeRunner.Sprites.States;
 public class GuardWalkState : GuardMoveBaseState
 {
     private const int WalkPathMinLength = 3;
+
     private const int WalkPathMaxLength = 6;
 
     private readonly SpriteInfo _heroInfo;
+
     private readonly SpriteInfo _guardInfo;
 
     private readonly MazeInfo _mazeInfo;

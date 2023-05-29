@@ -8,17 +8,11 @@ public class WallIdleState : WallBaseState
 {
     private readonly Texture2D _texture;
 
+    public override Texture2D Texture => _texture;
+
     public WallIdleState()
     {
         _texture = RandomHelper.Choice(TextureChancePairs);
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return _texture;
-        }
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)

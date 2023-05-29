@@ -4,13 +4,7 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class ExitOpeningState : ExitBaseState
 {
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 75;
-        }
-    }
+    protected override double UpdateTimeDelayMs => 75;
 
     public override IMazeTileState ProcessState(GameTime gameTime)
     {

@@ -4,13 +4,7 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class Floor : MazeTile
 {
-    public override TileType TileType
-    {
-        get
-        {
-            return TileType.Floor;
-        }
-    }
+    public override TileType TileType => TileType.Floor;
 
     public Floor()
     {

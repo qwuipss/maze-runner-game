@@ -6,6 +6,12 @@ namespace MazeRunner.Managers;
 
 public static class KeyboardManager
 {
+    private const double PauseSwitchPressDelayMs = 250;
+
+    private static double _pauseSwitchLastPressElapsedTimeMs;
+
+    private static bool _isPauseSwitchOnCooldown;
+
     public static Vector2 ProcessHeroMovement()
     {
         var movementDirection = Vector2.Zero;
@@ -32,5 +38,31 @@ public static class KeyboardManager
         }
 
         return movementDirection;
+    }
+
+    public static bool IsGamePauseSwitched(GameTime gameTime)
+    {
+        var keyboardState = Keyboard.GetState();
+
+        if (_isPauseSwitchOnCooldown)
+        {
+            _pauseSwitchLastPressElapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (_pauseSwitchLastPressElapsedTimeMs > PauseSwitchPressDelayMs)
+            {
+                _isPauseSwitchOnCooldown = false;
+
+                _pauseSwitchLastPressElapsedTimeMs -= PauseSwitchPressDelayMs;
+            }
+        }
+
+        if (!_isPauseSwitchOnCooldown && keyboardState.IsKeyDown(PauseSwitchButton))
+        {
+            _isPauseSwitchOnCooldown = true;
+
+            return true;
+        }
+
+        return false;
     }
 }

@@ -4,13 +4,10 @@ namespace MazeRunner.GameBase;
 
 internal static class Settings
 {
-    public static int MazeWidth = 51; // odd only
-    public static int MazeHeight = 51; // odd only
+    public static Keys PauseSwitchButton => Keys.Escape;
 
-    #region Controls
-    public static Keys MoveUp = Keys.W;
-    public static Keys MoveDown = Keys.S;
-    public static Keys MoveLeft = Keys.A;
-    public static Keys MoveRight = Keys.D;
-    #endregion
+    public static Keys MoveUp => Keys.W;
+    public static Keys MoveDown => Keys.S;
+    public static Keys MoveLeft => Keys.A;
+    public static Keys MoveRight => Keys.D;
 }

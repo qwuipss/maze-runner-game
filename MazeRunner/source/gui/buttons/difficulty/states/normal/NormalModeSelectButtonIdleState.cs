@@ -8,6 +8,10 @@ namespace MazeRunner.Gui.Buttons.States;
 
 public class NormalModeSelectButtonIdleState : ButtonBaseState
 {
+    public override Texture2D Texture => Textures.Gui.Buttons.NormalModeSelect.Idle;
+
+    public override int FramesCount => 1;
+
     public NormalModeSelectButtonIdleState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
         var radionButton = (RadioButton)buttonInfo.Button;
@@ -15,22 +19,6 @@ public class NormalModeSelectButtonIdleState : ButtonBaseState
         if (radionButton.IsSelected)
         {
             radionButton.IsSelected = false;
-        }
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Gui.Buttons.NormalModeSelect.Idle;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 1;
         }
     }
 

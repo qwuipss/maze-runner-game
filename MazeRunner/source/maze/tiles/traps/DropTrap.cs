@@ -8,31 +8,14 @@ namespace MazeRunner.MazeBase.Tiles;
 public class DropTrap : MazeTrap
 {
     private const float HitBoxOffset = 3;
+
     private const float HitBoxSize = 10;
 
-    public override bool IsActivated
-    {
-        get
-        {
-            return State is DropTrapActivatedState;
-        }
-    }
+    public override bool IsActivated => State is DropTrapActivatedState;
 
-    public override TileType TileType
-    {
-        get
-        {
-            return TileType.Trap;
-        }
-    }
+    public override TileType TileType => TileType.Trap;
 
-    public override TrapType TrapType
-    {
-        get
-        {
-            return TrapType.Drop;
-        }
-    }
+    public override TrapType TrapType => TrapType.Drop;
 
     public DropTrap()
     {

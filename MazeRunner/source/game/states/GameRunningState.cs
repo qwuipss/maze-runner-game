@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
@@ -18,19 +19,17 @@ public class GameRunningState : IGameState
 {
     public event Action<IGameState> GameStateChanged;
 
-    private readonly GameParameters _gameParameters;
+    private const double StateSwitchAfterHeroDeadDelayMs = 2000;
+
+    private double _heroAfterDeadElapsedTimeMs;
+
+    private bool _isGameOver;
 
     private GraphicsDevice _graphicsDevice;
 
     private MazeInfo _mazeInfo;
 
-    private SpriteInfo _heroInfo;
-
     private TextWriterInfo _findKeyTextWriterInfo;
-
-    private readonly TextWriterInfo _openExitTextWriterInfo;
-
-    private HeroCamera _heroCamera;
 
     private List<SpriteInfo> _enemiesInfo;
 
@@ -40,13 +39,28 @@ public class GameRunningState : IGameState
 
     private List<MazeRunnerGameComponent> _deadGameComponents;
 
+    public GameParameters GameParameters { get; init; }
+
+    public bool IsControlling { get; set; }
+
+    public SpriteInfo HeroInfo { get; private set; }
+
+    public HeroCamera HeroCamera { get; private set; }
+
     public GameRunningState(GameParameters gameParameters)
     {
-        _gameParameters = gameParameters;
+        GameParameters = gameParameters;
+
+        IsControlling = true;
     }
 
     public void Initialize(GraphicsDevice graphicsDevice)
     {
+        if (_graphicsDevice is not null)
+        {
+            return;
+        }
+
         _graphicsDevice = graphicsDevice;
 
         PreInitializeMaze();
@@ -60,7 +74,7 @@ public class GameRunningState : IGameState
 
     public void Draw(GameTime gameTime)
     {
-        Drawer.BeginDraw(_heroCamera);
+        Drawer.BeginDraw(HeroCamera);
 
         foreach (var component in _gameComponents)
         {
@@ -74,47 +88,33 @@ public class GameRunningState : IGameState
     {
         foreach (var component in _gameComponents)
         {
-            if (component is MazeTileInfo tileInfo
-             && Vector2.Distance(tileInfo.Position, _heroInfo.Position) < Optimization.GetMazeTileUpdateDistance(tileInfo.MazeTile))
+            if (component is MazeTileInfo tileInfo)
             {
+                UpdateMazeTileInfo(tileInfo, gameTime);
                 continue;
             }
 
             if (component is SpriteInfo spriteInfo)
             {
-                var sprite = spriteInfo.Sprite;
-
-                if (sprite is not Hero)
-                {
-                    var distance = Vector2.Distance(spriteInfo.Position, _heroInfo.Position);
-
-                    if (distance > Optimization.GetEnemyUpdateDistance(spriteInfo))
-                    {
-                        continue;
-                    }
-
-                    if (sprite.IsDead
-                     && distance > Optimization.GetEnemyDisposingDistance(spriteInfo))
-                    {
-                        _deadGameComponents.Add(component);
-
-                        AddEnemyToRespawnList(spriteInfo);
-                    }
-                }
+                UpdateSpriteInfo(spriteInfo, gameTime);
+                continue;
             }
 
             if (component is TextWriterInfo textWriterInfo)
             {
-                if (textWriterInfo.TextWriter.IsDead)
-                {
-                    _deadGameComponents.Add(component);
-                }
+                UpdateTextWriterInfo(textWriterInfo, gameTime);
+                continue;
             }
 
             component.Update(gameTime);
         }
 
-        HandleSecondaryButtons();
+        if (!IsControlling)
+        {
+            return;
+        }
+
+        HandleSecondaryButtons(gameTime);
 
         RespawnEnemies();
         DisposeDeadGameComponents();
@@ -128,7 +128,7 @@ public class GameRunningState : IGameState
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            _mazeInfo, _findKeyTextWriterInfo, _heroCamera,
+            _mazeInfo, _findKeyTextWriterInfo, HeroCamera,
         };
 
         foreach (var enemyInfo in _enemiesInfo)
@@ -136,17 +136,17 @@ public class GameRunningState : IGameState
             _gameComponents.Add(enemyInfo);
         }
 
-        _gameComponents.Add(_heroInfo);
+        _gameComponents.Add(HeroInfo);
     }
 
     private void PreInitializeMaze()
     {
-        var maze = MazeGenerator.GenerateMaze(_gameParameters.MazeWidth, _gameParameters.MazeHeight);
+        var maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
 
-        MazeGenerator.MakeCyclic(maze, _gameParameters.MazeDeadEndsRemovePercentage);
+        MazeGenerator.MakeCyclic(maze, GameParameters.MazeDeadEndsRemovePercentage);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), _gameParameters.MazeBayonetTrapInsertingPercentage);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), _gameParameters.MazeDropTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(maze, () => new DropTrap(), GameParameters.MazeDropTrapInsertingPercentage);
 
         MazeGenerator.InsertExit(maze);
 
@@ -159,7 +159,7 @@ public class GameRunningState : IGameState
 
     private void PostInitializeMaze()
     {
-        _mazeInfo.HeroInfo = _heroInfo;
+        _mazeInfo.HeroInfo = HeroInfo;
     }
 
     private void InitializeHero()
@@ -171,16 +171,16 @@ public class GameRunningState : IGameState
 
         var hero = Hero.GetInstance();
 
-        _heroInfo = new SpriteInfo(hero, heroPosition);
+        HeroInfo = new SpriteInfo(hero, heroPosition);
 
-        hero.Initialize(_heroInfo, _mazeInfo, _gameParameters.HeroHalfHeartsHealth);
+        hero.Initialize(HeroInfo, _mazeInfo, GameParameters.HeroHalfHeartsHealth);
     }
 
     private void InitializeEnemies()
     {
         void InitializeGuards()
         {
-            for (int i = 0; i < _gameParameters.GuardSpawnCount; i++)
+            for (int i = 0; i < GameParameters.GuardSpawnCount; i++)
             {
                 _enemiesInfo.Add(CreateGuard());
             }
@@ -193,10 +193,10 @@ public class GameRunningState : IGameState
 
     private void InitializeHeroCamera()
     {
-        var heroFrameSize = _heroInfo.Sprite.FrameSize;
-        var shadowTreshold = heroFrameSize * _gameParameters.HeroCameraShadowTresholdCoeff;
+        var heroFrameSize = HeroInfo.Sprite.FrameSize;
+        var shadowTreshold = heroFrameSize * GameParameters.HeroCameraShadowTresholdCoeff;
 
-        _heroCamera = new HeroCamera(_graphicsDevice, shadowTreshold, _heroInfo, _gameParameters.HeroCameraScaleFactor);
+        HeroCamera = new HeroCamera(_graphicsDevice, shadowTreshold, HeroInfo, GameParameters.HeroCameraScaleFactor);
     }
 
     private void InitializeTextWriters()
@@ -207,7 +207,7 @@ public class GameRunningState : IGameState
 
             _findKeyTextWriterInfo = new TextWriterInfo(findKeyTextWriter);
 
-            findKeyTextWriter.Initialize(_heroInfo, _mazeInfo, _findKeyTextWriterInfo);
+            findKeyTextWriter.Initialize(HeroInfo, _mazeInfo, _findKeyTextWriterInfo);
         }
 
         InitializeFindKeyTextWriter();
@@ -215,7 +215,7 @@ public class GameRunningState : IGameState
 
     private SpriteInfo CreateGuard()
     {
-        var guard = new Guard(_gameParameters.GuardHalfHeartsDamage);
+        var guard = new Guard(GameParameters.GuardHalfHeartsDamage);
 
         var maze = _mazeInfo.Maze;
 
@@ -224,7 +224,7 @@ public class GameRunningState : IGameState
 
         var guardInfo = new SpriteInfo(guard, guardPosition);
 
-        guard.Initialize(guardInfo, _heroInfo, _mazeInfo);
+        guard.Initialize(guardInfo, HeroInfo, _mazeInfo);
 
         return guardInfo;
     }
@@ -240,7 +240,7 @@ public class GameRunningState : IGameState
 
         var mazeTile = maze.Skeleton[cell.Y, cell.X];
         var cellPosition = maze.GetCellPosition(cell);
-        var distanceToHero = Vector2.Distance(_heroInfo.Position, cellPosition);
+        var distanceToHero = Vector2.Distance(HeroInfo.Position, cellPosition);
 
         var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
 
@@ -291,18 +291,82 @@ public class GameRunningState : IGameState
         _respawnEnemies.Clear();
     }
 
-    private void HandleSecondaryButtons()
+    private void HandleSecondaryButtons(GameTime gameTime)
     {
         var keyboardState = Keyboard.GetState();
 
-        if (keyboardState.IsKeyDown(Keys.Escape))
+        if (KeyboardManager.IsGamePauseSwitched(gameTime))
         {
-            GameStateChanged.Invoke(new GameMenuState());
+            GameStateChanged.Invoke(new GamePausedState(this));
+
+            GameStateChanged = null;
+        }
+    }
+
+    private void UpdateSpriteInfo(SpriteInfo spriteInfo, GameTime gameTime)
+    {
+        void ProcessStateControl(Sprite hero, GameTime gameTime)
+        {
+            if (hero.IsDead && !_isGameOver)
+            {
+                _isGameOver = true;
+            }
+
+            if (_isGameOver && IsControlling)
+            {
+                _heroAfterDeadElapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (_heroAfterDeadElapsedTimeMs > StateSwitchAfterHeroDeadDelayMs)
+                {
+                    GameStateChanged.Invoke(new GameOverState(this));
+                }
+            }
         }
 
-        if (keyboardState.IsKeyDown(Keys.Tab))
+        var sprite = spriteInfo.Sprite;
+
+        if (sprite is not Hero)
         {
-            Environment.Exit(0);
+            var distance = Vector2.Distance(spriteInfo.Position, HeroInfo.Position);
+
+            if (distance > Optimization.GetEnemyUpdateDistance(spriteInfo))
+            {
+                return;
+            }
+
+            if (sprite.IsDead
+             && distance > Optimization.GetEnemyDisposingDistance(spriteInfo))
+            {
+                _deadGameComponents.Add(spriteInfo);
+
+                AddEnemyToRespawnList(spriteInfo);
+            }
         }
+        else
+        {
+            ProcessStateControl(sprite, gameTime);
+        }
+
+        spriteInfo.Update(gameTime);
+    }
+
+    private void UpdateMazeTileInfo(MazeTileInfo tileInfo, GameTime gameTime)
+    {
+        var distance = Vector2.Distance(tileInfo.Position, HeroInfo.Position);
+
+        if (distance < Optimization.GetMazeTileUpdateDistance(tileInfo.MazeTile))
+        {
+            tileInfo.Update(gameTime);
+        }
+    }
+
+    private void UpdateTextWriterInfo(TextWriterInfo writerInfo, GameTime gameTime)
+    {
+        if (writerInfo.TextWriter.IsDead)
+        {
+            _deadGameComponents.Add(writerInfo);
+        }
+
+        writerInfo.Update(gameTime);
     }
 }

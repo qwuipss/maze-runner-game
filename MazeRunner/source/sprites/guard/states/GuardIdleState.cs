@@ -9,9 +9,16 @@ namespace MazeRunner.Sprites.States;
 public class GuardIdleState : GuardBaseState
 {
     private readonly SpriteInfo _heroInfo;
+
     private readonly SpriteInfo _guardInfo;
 
     private readonly MazeInfo _mazeInfo;
+
+    public override Texture2D Texture => Textures.Sprites.Guard.Idle;
+
+    public override int FramesCount => 4;
+
+    public override double UpdateTimeDelayMs => 650;
 
     public GuardIdleState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
     {
@@ -23,30 +30,6 @@ public class GuardIdleState : GuardBaseState
 
     public GuardIdleState(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : this(null, heroInfo, guardInfo, mazeInfo)
     {
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Guard.Idle;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 4;
-        }
-    }
-
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 650;
-        }
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

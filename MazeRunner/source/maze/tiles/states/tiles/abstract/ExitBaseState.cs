@@ -5,27 +5,9 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public abstract class ExitBaseState : MazeTileBaseState
 {
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.MazeTiles.Exit;
-        }
-    }
+    public override Texture2D Texture => Textures.MazeTiles.Exit;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 14;
-        }
-    }
+    public override int FramesCount => 14;
 
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return double.MaxValue;
-        }
-    }
+    protected override double UpdateTimeDelayMs => double.MaxValue;
 }

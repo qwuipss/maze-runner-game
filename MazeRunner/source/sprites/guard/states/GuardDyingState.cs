@@ -8,13 +8,7 @@ public class GuardDyingState : GuardDeathBaseState
     {
     }
 
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 100;
-        }
-    }
+    public override double UpdateTimeDelayMs => 100;
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {

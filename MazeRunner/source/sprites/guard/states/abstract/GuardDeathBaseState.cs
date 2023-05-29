@@ -9,13 +9,7 @@ public abstract class GuardDeathBaseState : GuardBaseState
     {
     }
 
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Guard.Dead;
-        }
-    }
+    public override Texture2D Texture => Textures.Sprites.Guard.Dead;
 
     public override int FramesCount
     {

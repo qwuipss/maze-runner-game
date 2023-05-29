@@ -10,47 +10,17 @@ public abstract class Sprite
 {
     public abstract Vector2 Speed { get; }
 
-    public virtual float DrawingPriority
-    {
-        get
-        {
-            return .45f;
-        }
-    }
-
-    public virtual Texture2D Texture
-    {
-        get
-        {
-            return State.Texture;
-        }
-    }
-
-    public virtual int FrameSize
-    {
-        get
-        {
-            return State.FrameSize;
-        }
-    }
-
-    public virtual SpriteEffects FrameEffect
-    {
-        get
-        {
-            return State.FrameEffect;
-        }
-    }
-
-    public virtual RectangleXna CurrentAnimationFrame
-    {
-        get
-        {
-            return State.CurrentAnimationFrame;
-        }
-    }
-
     public abstract bool IsDead { get; }
+
+    public virtual float DrawingPriority => .45f;
+
+    public virtual Texture2D Texture => State.Texture;
+
+    public virtual int FrameSize => State.FrameSize;
+
+    public virtual SpriteEffects FrameEffect => State.FrameEffect;
+
+    public virtual RectangleXna CurrentAnimationFrame => State.CurrentAnimationFrame;
 
     public ISpriteState State { get; set; }
 

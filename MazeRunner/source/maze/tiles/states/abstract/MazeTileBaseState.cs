@@ -11,21 +11,9 @@ public abstract class MazeTileBaseState : IMazeTileState
 
     protected abstract double UpdateTimeDelayMs { get; }
 
-    public int FrameSize
-    {
-        get
-        {
-            return Texture.Width / FramesCount;
-        }
-    }
+    public int FrameSize => Texture.Width / FramesCount;
 
-    public Rectangle CurrentAnimationFrame
-    {
-        get
-        {
-            return new Rectangle(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
-        }
-    }
+    public Rectangle CurrentAnimationFrame => new Rectangle(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
 
     protected Point CurrentAnimationFramePoint { get; set; }
 

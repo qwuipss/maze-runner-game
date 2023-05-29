@@ -4,16 +4,10 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroDyingState : HeroDeathBaseState
 {
+    public override double UpdateTimeDelayMs => 100;
+
     public HeroDyingState(ISpriteState previousState) : base(previousState)
     {
-    }
-
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 100;
-        }
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

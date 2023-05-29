@@ -13,13 +13,7 @@ public abstract class TextWriter
 
     public Color Color { get; init; }
 
-    public virtual float DrawingPriority
-    {
-        get
-        {
-            return 0.05f;
-        }
-    }
+    public virtual float DrawingPriority => 0.05f;
 
     public bool IsDead { get; protected set; }
 

@@ -11,34 +11,16 @@ public class HeroRunState : HeroBaseState
     private readonly SpriteInfo _heroInfo;
     private readonly MazeInfo _mazeInfo;
 
+    public override Texture2D Texture => Textures.Sprites.Hero.Run;
+
+    public override int FramesCount => 4;
+
+    public override double UpdateTimeDelayMs => 85;
+
     public HeroRunState(ISpriteState previousState, SpriteInfo heroInfo, MazeInfo mazeInfo) : base(previousState)
     {
         _heroInfo = heroInfo;
         _mazeInfo = mazeInfo;
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Hero.Run;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 4;
-        }
-    }
-
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 85;
-        }
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

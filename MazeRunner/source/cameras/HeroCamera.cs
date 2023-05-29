@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
@@ -13,8 +14,6 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     private readonly SpriteInfo _heroInfo;
 
-    private readonly Texture2D _effect;
-
     private readonly Matrix _scale;
 
     private readonly Matrix _bordersOffset;
@@ -27,37 +26,15 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     private Vector2 _viewPosition;
 
-    public Vector2 ViewPosition
-    {
-        get
-        {
-            return _viewPosition;
-        }
-    }
+    public Vector2 ViewPosition => _viewPosition;
 
-    public int ViewWidth
-    {
-        get
-        {
-            return _viewWidth;
-        }
-    }
+    public int ViewWidth => _viewWidth;
 
-    public int ViewHeight
-    {
-        get
-        {
-            return _viewHeight;
-        }
-    }
+    public int ViewHeight => _viewHeight;
 
-    public Matrix TransformMatrix
-    {
-        get
-        {
-            return _transformMatrix;
-        }
-    }
+    public Matrix TransformMatrix => _transformMatrix;
+
+    public Texture2D Effect { get; set; }
 
     public HeroCamera(GraphicsDevice graphicsDevice, float shadowTreshold, SpriteInfo heroInfo, float scaleFactor = 1)
     {
@@ -70,7 +47,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
-        _effect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, graphicsDevice);
+        Effect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, graphicsDevice);
 
         _heroInfo = heroInfo;
     }
@@ -80,7 +57,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         var viewBox = DrawHelper.GetViewBox(this);
         var position = new Vector2(viewBox.X, viewBox.Y);
 
-        //Drawer.Draw(_effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
+        Drawer.Draw(Effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
     }
 
     public override void Update(GameTime gameTime)

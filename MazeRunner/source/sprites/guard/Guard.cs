@@ -15,29 +15,11 @@ public class Guard : Enemy
 
     private float _drawingPriority;
 
-    public override bool IsDead
-    {
-        get
-        {
-            return State is GuardDeadState || State is GuardFalledState;
-        }
-    }
+    public override bool IsDead => State is GuardDeadState or GuardFalledState;
 
-    public override float DrawingPriority
-    {
-        get
-        {
-            return _drawingPriority;
-        }
-    }
+    public override float DrawingPriority => _drawingPriority;
 
-    public override Vector2 Speed
-    {
-        get
-        {
-            return new Vector2(15, 15);
-        }
-    }
+    public override Vector2 Speed => new(15, 15);
 
     public Guard(int halfHeartsDamage)
     {

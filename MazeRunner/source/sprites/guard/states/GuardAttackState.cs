@@ -11,6 +11,7 @@ public class GuardAttackState : GuardBaseState
     private const double AttackDelayMs = 550;
 
     private readonly SpriteInfo _heroInfo;
+
     private readonly SpriteInfo _guardInfo;
 
     private readonly MazeInfo _mazeInfo;
@@ -25,29 +26,11 @@ public class GuardAttackState : GuardBaseState
         _mazeInfo = mazeInfo;
     }
 
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Guard.Attack;
-        }
-    }
+    public override Texture2D Texture => Textures.Sprites.Guard.Attack;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 7;
-        }
-    }
+    public override int FramesCount => 7;
 
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 100;
-        }
-    }
+    public override double UpdateTimeDelayMs => 100;
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {

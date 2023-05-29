@@ -7,7 +7,12 @@ namespace MazeRunner.Helpers;
 
 public static class RandomHelper
 {
-    private static readonly Random _random = new();
+    private static readonly Random _random;
+
+    static RandomHelper()
+    {
+        _random = new Random(1); //
+    }
 
     public static int Next(int minValue, int maxValue)
     {

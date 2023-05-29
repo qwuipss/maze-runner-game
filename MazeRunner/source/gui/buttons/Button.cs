@@ -8,51 +8,21 @@ namespace MazeRunner.Gui.Buttons;
 
 public abstract class Button
 {
+    public static float DrawingPriority => .15f;
+
+    public Texture2D Texture => State.Texture;
+
+    public Rectangle CurrentAnimationFrame => State.CurrentAnimationFrame;
+
+    public float Width => State.FrameWidth * SelfInfo.BoxScale;
+
+    public float Height => State.FrameHeight * SelfInfo.BoxScale;
+
     public Action OnClick { get; init; }
 
     protected IButtonState State { get; set; }
 
     protected ButtonInfo SelfInfo { get; set; }
-
-    public static float DrawingPriority
-    {
-        get
-        {
-            return .15f;
-        }
-    }
-
-    public Texture2D Texture
-    {
-        get
-        {
-            return State.Texture;
-        }
-    }
-
-    public Rectangle CurrentAnimationFrame
-    {
-        get
-        {
-            return State.CurrentAnimationFrame;
-        }
-    }
-
-    public float Width
-    {
-        get
-        {
-            return State.FrameWidth * SelfInfo.BoxScale;
-        }
-    }
-
-    public float Height
-    {
-        get
-        {
-            return State.FrameHeight * SelfInfo.BoxScale;
-        }
-    }
 
     public Button(Action onClick)
     {

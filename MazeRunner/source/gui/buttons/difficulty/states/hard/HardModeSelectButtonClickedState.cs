@@ -7,24 +7,12 @@ namespace MazeRunner.Gui.Buttons.States;
 
 public class HardModeSelectButtonClickedState : ButtonPushBaseState
 {
+    public override Texture2D Texture => Textures.Gui.Buttons.HardModeSelect.Click;
+
+    public override int FramesCount => 5;
+
     public HardModeSelectButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Gui.Buttons.HardModeSelect.Click;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 5;
-        }
     }
 
     public override IButtonState ProcessState(GameTime gameTime)

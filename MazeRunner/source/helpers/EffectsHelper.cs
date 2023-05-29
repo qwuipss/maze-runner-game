@@ -6,6 +6,23 @@ namespace MazeRunner.Helpers;
 
 public static class EffectsHelper
 {
+    public static Texture2D CreateTransparentBackground(int width, int height, byte transparency, GraphicsDevice graphicsDevice)
+    {
+        var effectData = new Color[height, width];
+
+        for (int y = 0; y < effectData.GetLength(0); y++)
+        {
+            for (int x = 0; x < effectData.GetLength(1); x++)
+            {
+                effectData[y, x] = Color.Black;
+
+                effectData[y, x].A = transparency;
+            }
+        }
+
+        return GetTexture(effectData, width, height, graphicsDevice);
+    }
+
     public static Texture2D CreateGradientCircleEffect(int width, int height, float shadowTreshold, GraphicsDevice graphicsDevice)
     {
         var effectData = new Color[height, width];
@@ -33,6 +50,11 @@ public static class EffectsHelper
             }
         }
 
+        return GetTexture(effectData, width, height, graphicsDevice);
+    }
+
+    private static Texture2D GetTexture(Color[,] effectData, int width, int height, GraphicsDevice graphicsDevice)
+    {
         var effectTexture = new Texture2D(graphicsDevice, width, height);
 
         effectTexture.SetData(effectData.ToLinear());

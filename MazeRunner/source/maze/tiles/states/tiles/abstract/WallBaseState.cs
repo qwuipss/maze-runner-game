@@ -20,19 +20,7 @@ public abstract class WallBaseState : MazeTileBaseState
         .ToImmutableDictionary();
     }
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 1;
-        }
-    }
+    public override int FramesCount => 1;
 
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return double.MaxValue;
-        }
-    }
+    protected override double UpdateTimeDelayMs => double.MaxValue;
 }

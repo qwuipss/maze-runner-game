@@ -17,39 +17,17 @@ public class Hero : Sprite
     private const float HitBoxWidth = 7;
     private const float HitBoxHeight = 10;
 
+    private SpriteInfo _selfInfo;
+
     private int _halfHeartsHealth;
 
-    public override bool IsDead
-    {
-        get
-        {
-            return State is HeroDeadState || State is HeroFalledState;
-        }
-    }
+    public override bool IsDead => State is HeroDeadState or HeroFalledState;
 
-    public override Vector2 Speed
-    {
-        get
-        {
-            return new Vector2(40, 40);
-        }
-    }
+    public override Vector2 Speed => new(40, 40);
 
-    public override float DrawingPriority
-    {
-        get
-        {
-            return .5f;
-        }
-    }
+    public override float DrawingPriority => .5f;
 
-    public bool IsTakingDamage
-    {
-        get
-        {
-            return State is HeroDamageTakingState;
-        }
-    }
+    public bool IsTakingDamage => State is HeroDamageTakingState;
 
     static Hero()
     {
@@ -70,7 +48,9 @@ public class Hero : Sprite
     {
         _halfHeartsHealth = halfHeartsHealth;
 
-        State = new HeroIdleState(selfInfo, mazeInfo);
+        _selfInfo = selfInfo;
+
+        State = new HeroIdleState(_selfInfo, mazeInfo);
     }
 
     public override RectangleF GetHitBox(Vector2 position)

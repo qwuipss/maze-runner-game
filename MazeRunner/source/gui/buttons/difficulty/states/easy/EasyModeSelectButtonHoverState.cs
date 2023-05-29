@@ -8,24 +8,12 @@ namespace MazeRunner.Gui.Buttons.States;
 
 public class EasyModeSelectButtonHoverState : ButtonBaseState
 {
+    public override Texture2D Texture => Textures.Gui.Buttons.EasyModeSelect.Hover;
+
+    public override int FramesCount => 1;
+
     public EasyModeSelectButtonHoverState(ButtonInfo buttonInfo) : base(buttonInfo)
     {
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Gui.Buttons.EasyModeSelect.Hover;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 1;
-        }
     }
 
     public override IButtonState ProcessState(GameTime gameTime)

@@ -9,19 +9,7 @@ public abstract class GuardFallBaseState : GuardBaseState
     {
     }
 
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Guard.Fall;
-        }
-    }
+    public override Texture2D Texture => Textures.Sprites.Guard.Fall;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 4;
-        }
-    }
+    public override int FramesCount => 4;
 }

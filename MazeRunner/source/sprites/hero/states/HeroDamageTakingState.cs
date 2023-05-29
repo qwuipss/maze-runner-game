@@ -6,35 +6,17 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroDamageTakingState : HeroBaseState
 {
+    public override double UpdateTimeDelayMs => 75;
+
+    public override Texture2D Texture => Textures.Sprites.Hero.DamageTaking;
+
+    public override int FramesCount => 5;
+
     private readonly ISpriteState _previousState;
 
     public HeroDamageTakingState(ISpriteState previousState) : base(previousState)
     {
         _previousState = previousState;
-    }
-
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 75;
-        }
-    }
-
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Hero.DamageTaking;
-        }
-    }
-
-    public override int FramesCount
-    {
-        get
-        {
-            return 5;
-        }
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

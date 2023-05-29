@@ -21,29 +21,11 @@ public abstract class ButtonBaseState : IButtonState
         ButtonInfo = buttonInfo;
     }
 
-    public int FrameWidth
-    {
-        get
-        {
-            return Texture.Width / FramesCount;
-        }
-    }
+    public int FrameWidth => Texture.Width / FramesCount;
 
-    public int FrameHeight
-    {
-        get
-        {
-            return Texture.Height;
-        }
-    }
+    public int FrameHeight => Texture.Height;
 
-    public RectangleXna CurrentAnimationFrame
-    {
-        get
-        {
-            return new RectangleXna(CurrentAnimationFramePoint, new PointXna(FrameWidth, FrameHeight));
-        }
-    }
+    public RectangleXna CurrentAnimationFrame => new RectangleXna(CurrentAnimationFramePoint, new PointXna(FrameWidth, FrameHeight));
 
     protected PointXna CurrentAnimationFramePoint { get; set; }
 

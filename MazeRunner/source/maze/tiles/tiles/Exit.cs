@@ -7,29 +7,11 @@ public class Exit : MazeTile
 {
     private float _drawingPriority;
 
-    public override float DrawingPriority
-    {
-        get
-        {
-            return _drawingPriority;
-        }
-    }
+    public override float DrawingPriority => _drawingPriority;
 
-    public bool IsOpened
-    {
-        get
-        {
-            return State is ExitOpenedState;
-        }
-    }
+    public bool IsOpened => State is ExitOpenedState;
 
-    public override TileType TileType
-    {
-        get
-        {
-            return TileType.Exit;
-        }
-    }
+    public override TileType TileType => TileType.Exit;
 
     public Exit()
     {

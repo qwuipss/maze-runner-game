@@ -7,6 +7,7 @@ namespace MazeRunner.Sprites.States;
 public class GuardChaseState : GuardMoveBaseState
 {
     private readonly SpriteInfo _heroInfo;
+
     private readonly SpriteInfo _guardInfo;
 
     private readonly MazeInfo _mazeInfo;

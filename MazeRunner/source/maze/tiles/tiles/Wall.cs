@@ -4,21 +4,9 @@ namespace MazeRunner.MazeBase.Tiles;
 
 public class Wall : MazeTile
 {
-    public override TileType TileType
-    {
-        get
-        {
-            return TileType.Wall;
-        }
-    }
+    public override TileType TileType => TileType.Wall;
 
-    public override float DrawingPriority
-    {
-        get
-        {
-            return .9f;
-        }
-    }
+    public override float DrawingPriority => .9f;
 
     public Wall()
     {

@@ -39,13 +39,7 @@ public class FindKeyTextWriter : TextWriter
 
     private int _mazeWidth;
 
-    public override float ScaleFactor
-    {
-        get
-        {
-            return .2f;
-        }
-    }
+    public override float ScaleFactor => .2f;
 
     static FindKeyTextWriter()
     {

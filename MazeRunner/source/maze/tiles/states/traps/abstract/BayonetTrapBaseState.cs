@@ -5,27 +5,9 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public abstract class BayonetTrapBaseState : MazeTrapBaseState
 {
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.MazeTiles.MazeTraps.Bayonet;
-        }
-    }
+    public override Texture2D Texture => Textures.MazeTiles.MazeTraps.Bayonet;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 10;
-        }
-    }
+    public override int FramesCount => 10;
 
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 40;
-        }
-    }
+    protected override double UpdateTimeDelayMs => 40;
 }

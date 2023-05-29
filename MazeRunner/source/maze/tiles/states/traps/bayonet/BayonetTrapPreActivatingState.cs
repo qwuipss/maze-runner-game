@@ -7,13 +7,7 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 {
     private readonly double _updateTimeDelayMs;
 
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return _updateTimeDelayMs;
-        }
-    }
+    protected override double UpdateTimeDelayMs => _updateTimeDelayMs;
 
     public BayonetTrapPreActivatingState()
     {

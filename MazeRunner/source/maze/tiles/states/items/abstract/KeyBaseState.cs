@@ -5,27 +5,9 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public abstract class KeyBaseState : MazeItemBaseState
 {
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.MazeTiles.MazeItems.Key;
-        }
-    }
+    public override Texture2D Texture => Textures.MazeTiles.MazeItems.Key;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 8;
-        }
-    }
+    public override int FramesCount => 8;
 
-    protected override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 150;
-        }
-    }
+    protected override double UpdateTimeDelayMs => 150;
 }

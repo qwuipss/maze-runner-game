@@ -17,33 +17,15 @@ public class Maze
 
     private readonly List<MazeTileInfo> _components;
 
+    public IReadOnlyCollection<MazeTileInfo> Components => _components.AsReadOnly();
+
+    public ImmutableDictionary<Cell, MazeTile> TrapsInfo => _trapsInfo.ToImmutableDictionary();
+
+    public ImmutableDictionary<Cell, MazeTile> ItemsInfo => _itemsInfo.ToImmutableDictionary();
+
     public (Cell Cell, Exit Exit) ExitInfo { get; set; }
 
-    public IReadOnlyCollection<MazeTileInfo> Components
-    {
-        get
-        {
-            return _components.AsReadOnly();
-        }
-    }
-
     public MazeTile[,] Skeleton { get; init; }
-
-    public ImmutableDictionary<Cell, MazeTile> TrapsInfo
-    {
-        get
-        {
-            return _trapsInfo.ToImmutableDictionary();
-        }
-    }
-
-    public ImmutableDictionary<Cell, MazeTile> ItemsInfo
-    {
-        get
-        {
-            return _itemsInfo.ToImmutableDictionary();
-        }
-    }
 
     public Maze(MazeTile[,] skeleton)
     {

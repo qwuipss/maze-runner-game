@@ -15,6 +15,7 @@ public class RadioButtonContainer : MazeRunnerGameComponent
         foreach (var buttonInfo in ButtonsInfo)
         {
             var radionButton = (RadioButton)buttonInfo.Button;
+
             radionButton.ButtonSelected += ResetButtons;
         }
     }

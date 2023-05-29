@@ -20,29 +20,11 @@ public abstract class GuardMoveBaseState : GuardBaseState
     {
     }
 
-    public override Texture2D Texture
-    {
-        get
-        {
-            return Textures.Sprites.Guard.Run;
-        }
-    }
+    public override Texture2D Texture => Textures.Sprites.Guard.Run;
 
-    public override int FramesCount
-    {
-        get
-        {
-            return 4;
-        }
-    }
+    public override int FramesCount => 4;
 
-    public override double UpdateTimeDelayMs
-    {
-        get
-        {
-            return 150;
-        }
-    }
+    public override double UpdateTimeDelayMs => 150;
 
     public static bool PathToHeroExist(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> path)
     {

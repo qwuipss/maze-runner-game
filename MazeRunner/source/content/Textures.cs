@@ -143,6 +143,70 @@ public static class Textures
                 }
             }
 
+            public static class Menu
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/menu";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
+            public static class Restart
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/restart";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
+            public static class Resume
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/resume";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
+            public static class Quit
+            {
+                private const string ContentDirectory = $"{Buttons.ContentDirectory}/quit";
+
+                public static Texture2D Idle { get; private set; }
+                public static Texture2D Hover { get; private set; }
+                public static Texture2D Click { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Idle = game.Content.Load<Texture2D>($"{ContentDirectory}/idle");
+                    Hover = game.Content.Load<Texture2D>($"{ContentDirectory}/hover");
+                    Click = game.Content.Load<Texture2D>($"{ContentDirectory}/click");
+                }
+            }
+
             public static class EasyModeSelect
             {
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/easy";
@@ -194,6 +258,10 @@ public static class Textures
             public static void Load(Game game)
             {
                 Start.Load(game);
+                Restart.Load(game);
+                Menu.Load(game);
+                Resume.Load(game);
+                Quit.Load(game);
 
                 EasyModeSelect.Load(game);
                 NormalModeSelect.Load(game);
