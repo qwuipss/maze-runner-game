@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
@@ -20,6 +21,8 @@ public class GameRunningState : IGameState
     public event Action<IGameState> GameStateChanged;
 
     private const double StateSwitchAfterHeroDeadDelayMs = 2000;
+
+    private static Texture2D _cameraEffect;
 
     private double _heroAfterDeadElapsedTimeMs;
 
@@ -54,8 +57,13 @@ public class GameRunningState : IGameState
         IsControlling = true;
     }
 
-    public void Initialize(GraphicsDevice graphicsDevice)
+    public void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
+        if (game.IsMouseVisible)
+        {
+            game.IsMouseVisible = false;
+        }
+
         if (_graphicsDevice is not null)
         {
             return;
@@ -193,10 +201,23 @@ public class GameRunningState : IGameState
 
     private void InitializeHeroCamera()
     {
-        var heroFrameSize = HeroInfo.Sprite.FrameSize;
-        var shadowTreshold = heroFrameSize * GameParameters.HeroCameraShadowTresholdCoeff;
+        if (_cameraEffect is null)
+        {
+            var viewPort = _graphicsDevice.Viewport;
 
-        HeroCamera = new HeroCamera(_graphicsDevice, shadowTreshold, HeroInfo, GameParameters.HeroCameraScaleFactor);
+            var viewWidth = viewPort.Width;
+            var viewHeight = viewPort.Height;
+
+            var heroFrameSize = HeroInfo.Sprite.FrameSize;
+            var shadowTreshold = heroFrameSize * GameParameters.HeroCameraShadowTresholdCoeff;
+
+            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, _graphicsDevice);
+        }
+
+        HeroCamera = new HeroCamera(_graphicsDevice, HeroInfo, GameParameters.HeroCameraScaleFactor)
+        {
+            Effect = _cameraEffect,
+        };
     }
 
     private void InitializeTextWriters()
@@ -215,7 +236,7 @@ public class GameRunningState : IGameState
 
     private SpriteInfo CreateGuard()
     {
-        var guard = new Guard(GameParameters.GuardHalfHeartsDamage);
+        var guard = new Guard();
 
         var maze = _mazeInfo.Maze;
 

@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 namespace MazeRunner.GameBase.States;
 
@@ -29,7 +30,7 @@ public class GameMenuState : IGameState
                 MazeWidth = 25,
                 MazeHeight = 25,
 
-                MazeDeadEndsRemovePercentage = 60,
+                MazeDeadEndsRemovePercentage = 55,
 
                 MazeBayonetTrapInsertingPercentage = 2,
                 MazeDropTrapInsertingPercentage = 1,
@@ -37,18 +38,17 @@ public class GameMenuState : IGameState
                 HeroCameraScaleFactor = 7,
                 HeroCameraShadowTresholdCoeff = 2.4f,
 
-                GuardSpawnCount = 5,
-                GuardHalfHeartsDamage = 1,
+                GuardSpawnCount = 10,
 
-                HeroHalfHeartsHealth = 6,
+                HeroHalfHeartsHealth = 5,
             });
 
             Normal = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 45,
-                MazeHeight = 45,
+                MazeWidth = 35,
+                MazeHeight = 35,
 
-                MazeDeadEndsRemovePercentage = 70,
+                MazeDeadEndsRemovePercentage = 60,
 
                 MazeBayonetTrapInsertingPercentage = 3,
                 MazeDropTrapInsertingPercentage = 2,
@@ -56,18 +56,17 @@ public class GameMenuState : IGameState
                 HeroCameraScaleFactor = 7,
                 HeroCameraShadowTresholdCoeff = 2.4f,
 
-                GuardSpawnCount = 8,
-                GuardHalfHeartsDamage = 2,
+                GuardSpawnCount = 15,
 
-                HeroHalfHeartsHealth = 6,
+                HeroHalfHeartsHealth = 3,
             });
 
             Hard = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 65,
-                MazeHeight = 65,
+                MazeWidth = 45,
+                MazeHeight = 45,
 
-                MazeDeadEndsRemovePercentage = 75,
+                MazeDeadEndsRemovePercentage = 70,
 
                 MazeBayonetTrapInsertingPercentage = 4,
                 MazeDropTrapInsertingPercentage = 2,
@@ -76,14 +75,15 @@ public class GameMenuState : IGameState
                 HeroCameraShadowTresholdCoeff = 2.4f,
 
                 GuardSpawnCount = 25,
-                GuardHalfHeartsDamage = 3,
 
-                HeroHalfHeartsHealth = 6,
+                HeroHalfHeartsHealth = 2,
             });
         }
     }
 
     public event Action<IGameState> GameStateChanged;
+
+    private static Texture2D _cameraEffect;
 
     private int _viewWidth;
 
@@ -105,9 +105,14 @@ public class GameMenuState : IGameState
 
     private List<MazeRunnerGameComponent> _components;
 
-    public void Initialize(GraphicsDevice graphicsDevice)
+    public void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
         _graphicsDevice = graphicsDevice;
+
+        if (!game.IsMouseVisible)
+        {
+            game.IsMouseVisible = true;
+        }
 
         _difficulty = GameModes.Normal;
 
@@ -117,7 +122,7 @@ public class GameMenuState : IGameState
         _viewHeight = viewPort.Height;
 
         InitializeButtons();
-        InitializeMenuCamera();
+        InitializeStaticCamera();
         InitializeBackgroundMaze();
         InitializeComponentsList();
     }
@@ -268,14 +273,19 @@ public class GameMenuState : IGameState
         _mazeInfo = new MazeInfo(maze);
     }
 
-    private void InitializeMenuCamera()
+    private void InitializeStaticCamera()
     {
-        _staticCamera = new StaticCamera(_graphicsDevice);
+        if (_cameraEffect is null)
+        {
+            var shadowTreshold = _viewHeight / 2.1f;
 
-        var shadowTreshold = _viewHeight / 2.1f;
-        var effect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, _graphicsDevice);
+        }
 
-        _staticCamera.Effect = effect;
+        _staticCamera = new StaticCamera(_graphicsDevice)
+        {
+            Effect = _cameraEffect,
+        };
     }
 
     private void InitializeComponentsList()

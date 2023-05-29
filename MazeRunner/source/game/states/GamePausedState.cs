@@ -16,6 +16,8 @@ public class GamePausedState : IGameState
 {
     public event Action<IGameState> GameStateChanged;
 
+    private static Texture2D _cameraEffect;
+
     private readonly GameRunningState _runningState;
 
     private GraphicsDevice _graphicsDevice;
@@ -39,9 +41,14 @@ public class GamePausedState : IGameState
         _runningState = runningState;
     }
 
-    public void Initialize(GraphicsDevice graphicsDevice)
+    public void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
         _graphicsDevice = graphicsDevice;
+
+        if (!game.IsMouseVisible)
+        {
+            game.IsMouseVisible = true;
+        }
 
         var viewPort = graphicsDevice.Viewport;
 
@@ -49,7 +56,7 @@ public class GamePausedState : IGameState
         _viewHeight = viewPort.Height;
 
         InitializeButtons();
-        InitializeCamera();
+        InitializeStaticCamera();
         InitializeComponentsList();
     }
 
@@ -143,15 +150,18 @@ public class GamePausedState : IGameState
         InitializeMenuButton(buttonsScaleDivider, buttonsOffsetCoeff);
     }
 
-    private void InitializeCamera()
+    private void InitializeStaticCamera()
     {
-        var transparency = (byte)(byte.MaxValue / 4.25);
+        if (_cameraEffect is null)
+        {
+            var transparency = (byte)(byte.MaxValue / 4.25);
 
-        var effect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, transparency, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, transparency, _graphicsDevice);
+        }
 
         _staticCamera = new StaticCamera(_graphicsDevice)
         {
-            Effect = effect
+            Effect = _cameraEffect,
         };
     }
 

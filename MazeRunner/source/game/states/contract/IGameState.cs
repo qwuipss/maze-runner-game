@@ -8,7 +8,7 @@ public interface IGameState
 {
     public event Action<IGameState> GameStateChanged;
 
-    public void Initialize(GraphicsDevice graphicsDevice);
+    public void Initialize(GraphicsDevice graphicsDevice, Game game);
 
     public void Update(GameTime gameTime);
 

@@ -72,7 +72,7 @@ public class GuardAttackState : GuardBaseState
              && !hero.IsTakingDamage
              && Vector2.Distance(_heroInfo.Position, _guardInfo.Position) < Optimization.GetGuardAttackDistance(_guardInfo))
             {
-                hero.TakeDamage(((Enemy)_guardInfo.Sprite).HalfHeartsDamage);
+                hero.TakeDamage();
             }
 
             FaceToHero();

@@ -21,11 +21,9 @@ public class Guard : Enemy
 
     public override Vector2 Speed => new(15, 15);
 
-    public Guard(int halfHeartsDamage)
+    public Guard()
     {
         _drawingPriority = base.DrawingPriority;
-
-        HalfHeartsDamage = halfHeartsDamage;
     }
 
     public override RectangleF GetHitBox(Vector2 position)

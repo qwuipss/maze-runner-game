@@ -21,7 +21,7 @@ public class Hero : Sprite
 
     private int _halfHeartsHealth;
 
-    public override bool IsDead => State is HeroDeadState or HeroFalledState;
+    public override bool IsDead => State is HeroDeadState or HeroFalledState or HeroFallingState or HeroDyingState;
 
     public override Vector2 Speed => new(40, 40);
 
@@ -63,9 +63,9 @@ public class Hero : Sprite
         base.Update(gameTime);
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage()
     {
-        _halfHeartsHealth -= damage;
+        _halfHeartsHealth--;
 
         if (_halfHeartsHealth <= 0)
         {

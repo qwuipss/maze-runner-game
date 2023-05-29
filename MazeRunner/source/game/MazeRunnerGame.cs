@@ -30,7 +30,7 @@ public class MazeRunnerGame : Game
 
         _gameState = new GameMenuState();
 
-        _gameState.Initialize(GraphicsDevice);
+        _gameState.Initialize(GraphicsDevice, this);
 
         _gameState.GameStateChanged += GameStateChangedHandler;
     }
@@ -76,19 +76,7 @@ public class MazeRunnerGame : Game
     {
         _gameState = gameState;
 
-        if (_gameState is GameRunningState)
-        {
-            IsMouseVisible = false;
-        }
-        else
-        {
-            if (!IsMouseVisible)
-            {
-                IsMouseVisible = true;
-            }
-        }
-
-        _gameState.Initialize(GraphicsDevice);
+        _gameState.Initialize(GraphicsDevice, this);
 
         _gameState.GameStateChanged += GameStateChangedHandler;
     }

@@ -36,7 +36,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public Texture2D Effect { get; set; }
 
-    public HeroCamera(GraphicsDevice graphicsDevice, float shadowTreshold, SpriteInfo heroInfo, float scaleFactor = 1)
+    public HeroCamera(GraphicsDevice graphicsDevice, SpriteInfo heroInfo, float scaleFactor = 1)
     {
         var viewPort = graphicsDevice.Viewport;
 
@@ -46,8 +46,6 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         _bordersOffset = Matrix.CreateTranslation(_viewWidth / 2, _viewHeight / 2, 0);
 
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
-
-        Effect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, graphicsDevice);
 
         _heroInfo = heroInfo;
     }

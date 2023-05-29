@@ -14,7 +14,6 @@ public class GameParameters
     public float HeroCameraShadowTresholdCoeff;
 
     public int GuardSpawnCount;
-    public int GuardHalfHeartsDamage;
 
     public int HeroHalfHeartsHealth;
 }
