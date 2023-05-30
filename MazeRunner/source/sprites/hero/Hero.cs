@@ -48,9 +48,9 @@ public class Hero : Sprite
         base.Update(gameTime);
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damage)
     {
-        Health--;
+        Health -= damage;
 
         if (Health <= 0)
         {

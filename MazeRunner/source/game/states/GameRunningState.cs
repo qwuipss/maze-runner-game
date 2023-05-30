@@ -137,7 +137,7 @@ public class GameRunningState : IGameState
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            _maze, _findKeyTextWriter, HeroCamera,
+            _maze, _findKeyTextWriter, _heroHealthWriter, HeroCamera,
         };
 
         foreach (var enemy in _enemies)
@@ -228,7 +228,7 @@ public class GameRunningState : IGameState
     {
         _findKeyTextWriter = new FindKeyTextWriter(Hero, _maze);
 
-        _heroHealthWriter = new HeroHealthWriter(Hero);
+        _heroHealthWriter = new HeroHealthWriter(Hero, _graphicsDevice);
     }
 
     private Guard CreateGuard()
@@ -253,9 +253,10 @@ public class GameRunningState : IGameState
             return false;
         }
 
-        var mazeTile = _maze.Skeleton[cell.Y, cell.X];
         var cellPosition = _maze.GetCellPosition(cell);
         var distanceToHero = Vector2.Distance(Hero.Position, cellPosition);
+        
+        var mazeTile = _maze.Skeleton[cell.Y, cell.X];
 
         var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
 

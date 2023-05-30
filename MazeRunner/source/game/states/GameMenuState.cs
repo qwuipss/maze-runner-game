@@ -147,7 +147,7 @@ public class GameMenuState : IGameState
 
     private void InitializeButtons()
     {
-        void InitializeGameStartButton(int scaleDivider)
+        void InitializeGameStartButton(float scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
 
@@ -158,7 +158,7 @@ public class GameMenuState : IGameState
             _startButton.Position = new Vector2((_viewWidth - _startButton.Width) / 2, (_viewHeight - _startButton.Height) / 2);
         }
 
-        void InitializeQuitGameButton(int scaleDivider)
+        void InitializeQuitGameButton(float scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
 
@@ -169,7 +169,7 @@ public class GameMenuState : IGameState
             _quitButton.Position = new Vector2((_viewWidth - _quitButton.Width) / 2, 5 * _viewHeight / 7 - _quitButton.Height / 2);
         }
 
-        void InitializeGameDifficultySelectRadioButtons(int scaleDivider, float buttonsOffsetCoeff)
+        void InitializeGameDifficultySelectRadioButtons(float scaleDivider, float buttonsOffsetCoeff)
         {
             var boxScale = _viewWidth / scaleDivider;
 

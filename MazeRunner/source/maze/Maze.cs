@@ -71,6 +71,7 @@ public class Maze : MazeRunnerGameComponent
                 for (int x = 0; x < Skeleton.GetLength(1); x++)
                 {
                     var mazeTile = Skeleton[y, x];
+
                     mazeTile.Position = GetCellPosition(new Cell(x, y));
 
                     _components.Add(mazeTile);

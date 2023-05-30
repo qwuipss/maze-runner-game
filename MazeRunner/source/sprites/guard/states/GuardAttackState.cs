@@ -60,7 +60,7 @@ public class GuardAttackState : GuardBaseState
              && !Hero.IsTakingDamage
              && Vector2.Distance(Hero.Position, Guard.Position) < Guard.GetAttackDistance())
             {
-                Hero.TakeDamage();
+                Hero.TakeDamage(Guard.Damage);
             }
 
             FaceToHero();

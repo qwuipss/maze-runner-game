@@ -84,7 +84,7 @@ public class GameOverState : IGameState
 
     private void InitializeButtons()
     {
-        void InitializeRestartButton(int scaleDivider)
+        void InitializeRestartButton(float scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
 
@@ -95,7 +95,7 @@ public class GameOverState : IGameState
             _restartButton.Position = new Vector2(_viewWidth / 3 - _restartButton.Width / 2, _viewHeight / 2);
         }
 
-        void InitializeMenuButton(int scaleDivider)
+        void InitializeMenuButton(float scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
 

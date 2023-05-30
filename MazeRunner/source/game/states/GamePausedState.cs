@@ -85,7 +85,7 @@ public class GamePausedState : IGameState
 
     private void InitializeButtons()
     {
-        void InitializeRestartButton(int scaleDivider)
+        void InitializeRestartButton(float scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
 
@@ -96,7 +96,7 @@ public class GamePausedState : IGameState
             _restartButton.Position = new Vector2((_viewWidth - _restartButton.Width) / 2, (_viewHeight - _restartButton.Height) / 2);
         }
 
-        void InitializeResumeButton(int scaleDivider, float buttonOffsetCoeff)
+        void InitializeResumeButton(float scaleDivider, float buttonOffsetCoeff)
         {
             var boxScale = _viewWidth / scaleDivider;
 
@@ -109,7 +109,7 @@ public class GamePausedState : IGameState
             _resumeButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y - _restartButton.Height * buttonOffsetCoeff);
         }
 
-        void InitializeMenuButton(int scaleDivider, float buttonOffsetCoeff)
+        void InitializeMenuButton(float scaleDivider, float buttonOffsetCoeff)
         {
             var boxScale = _viewWidth / scaleDivider;
 

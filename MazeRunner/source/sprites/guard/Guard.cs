@@ -23,6 +23,8 @@ public class Guard : Enemy
 
     public override float DrawingPriority => _drawingPriority;
 
+    public override int Damage => 1;
+
     public override Vector2 Speed => new(15, 15);
 
     public Guard()
