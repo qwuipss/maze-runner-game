@@ -3,7 +3,6 @@ using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -99,7 +98,7 @@ public class GameOverState : IGameState
         void InitializeMenuButton(int scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
-            
+
             _menuButton = new MenuButton(() => GoToMenu(), boxScale);
 
             _menuButton.Initialize();

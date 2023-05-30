@@ -2,7 +2,6 @@
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -42,9 +41,9 @@ public abstract class SpriteBaseState : ISpriteState
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
 
-    protected static bool CollidesWithTraps(SpriteInfo spriteInfo, Maze maze, bool needActivating, out TrapType trapType)
+    protected static bool CollidesWithTraps(Sprite sprite, Maze maze, bool needActivating, out TrapType trapType)
     {
-        if (CollisionManager.CollidesWithTraps(spriteInfo.Sprite, spriteInfo.Position, maze, needActivating, out var trapInfo))
+        if (CollisionManager.CollidesWithTraps(sprite, sprite.Position, maze, needActivating, out var trapInfo))
         {
             trapType = trapInfo.Trap.TrapType;
 
@@ -53,6 +52,22 @@ public abstract class SpriteBaseState : ISpriteState
 
         trapType = TrapType.None;
         return false;
+    }
+
+    protected static Vector2 GetSpriteNormalizedPosition(Sprite sprite)
+    {
+        var hitBox = sprite.GetHitBox(sprite.Position);
+        var position = new Vector2(hitBox.X + hitBox.Width / 2, hitBox.Y + hitBox.Height / 2);
+
+        return position;
+    }
+
+    protected static Cell GetSpriteCell(Sprite sprite, Maze maze)
+    {
+        var position = GetSpriteNormalizedPosition(sprite);
+        var cell = maze.GetCellByPosition(position);
+
+        return cell;
     }
 
     public virtual ISpriteState ProcessState(GameTime gameTime)

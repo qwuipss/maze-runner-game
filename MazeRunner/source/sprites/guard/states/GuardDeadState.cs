@@ -1,10 +1,11 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.MazeBase;
+using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
 
 public class GuardDeadState : GuardDeathBaseState
 {
-    public GuardDeadState(ISpriteState previousState) : base(previousState)
+    public GuardDeadState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
         var framePosX = (FramesCount - 1) * FrameSize;
 

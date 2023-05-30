@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -14,7 +15,7 @@ public class HeroDamageTakingState : HeroBaseState
 
     private readonly ISpriteState _previousState;
 
-    public HeroDamageTakingState(ISpriteState previousState) : base(previousState)
+    public HeroDamageTakingState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
         _previousState = previousState;
     }

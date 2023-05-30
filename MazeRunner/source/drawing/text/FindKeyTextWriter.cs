@@ -1,6 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
-using MazeRunner.Wrappers;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -25,7 +25,7 @@ public class FindKeyTextWriter : TextWriter
 
     private readonly Maze _maze;
 
-    private readonly SpriteInfo _heroInfo;
+    private readonly Hero _hero;
 
     private WritingSide _writingSide;
 
@@ -37,14 +37,14 @@ public class FindKeyTextWriter : TextWriter
 
     public override float ScaleFactor => .2f;
 
-    public FindKeyTextWriter(SpriteInfo heroInfo, Maze maze)
+    public FindKeyTextWriter(Hero hero, Maze maze)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
 
         _textStringLength = Font.MeasureString(Text) * ScaleFactor;
 
-        _heroInfo = heroInfo;
+        _hero = hero;
         _maze = maze;
 
         _textShowDistance = maze.ExitInfo.Exit.FrameSize * 2;
@@ -89,10 +89,9 @@ public class FindKeyTextWriter : TextWriter
 
     private Vector2 GetDrawingPosition()
     {
-        var hero = _heroInfo.Sprite;
-        var position = _heroInfo.Position;
+        var position = _hero.Position;
 
-        var rightUpCorner = position.X + hero.FrameSize;
+        var rightUpCorner = position.X + _hero.FrameSize;
         var leftUpCorner = position.X;
 
         var rightSideTextEndPos = rightUpCorner + _textStringLength.X;
@@ -146,7 +145,7 @@ public class FindKeyTextWriter : TextWriter
                 return;
             }
 
-            Drawer.DrawString(this, Position);
+            Drawer.DrawString(this);
 
             _textShowTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
         }
@@ -173,7 +172,7 @@ public class FindKeyTextWriter : TextWriter
 
     private bool AreHeroExitLocatedNearby()
     {
-        var position = _heroInfo.Position;
+        var position = _hero.Position;
 
         var exitPosition = _maze.GetCellPosition(_maze.ExitInfo.Cell);
         var distance = Vector2.Distance(exitPosition, position);

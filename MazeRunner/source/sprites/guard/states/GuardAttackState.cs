@@ -1,7 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.GameBase;
 using MazeRunner.MazeBase;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,20 +10,10 @@ public class GuardAttackState : GuardBaseState
 {
     private const double AttackDelayMs = 550;
 
-    private readonly SpriteInfo _heroInfo;
-
-    private readonly SpriteInfo _guardInfo;
-
-    private readonly Maze _maze;
-
     private bool _isAttacking;
 
-    public GuardAttackState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : base(previousState)
+    public GuardAttackState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
-        _heroInfo = heroInfo;
-        _guardInfo = guardInfo;
-
-        _maze = maze;
     }
 
     public override Texture2D Texture => Textures.Sprites.Guard.Attack;
@@ -35,7 +24,7 @@ public class GuardAttackState : GuardBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (CollidesWithTraps(_guardInfo, _maze, true, out var trapType))
+        if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
@@ -58,7 +47,7 @@ public class GuardAttackState : GuardBaseState
 
                 if (animationPoint.X == (FramesCount - 1) * FrameSize)
                 {
-                    return new GuardIdleState(this, _heroInfo, _guardInfo, _maze);
+                    return new GuardIdleState(this, Hero, Guard, Maze);
                 }
 
                 var framePosX = animationPoint.X + FrameSize;
@@ -67,13 +56,11 @@ public class GuardAttackState : GuardBaseState
                 ElapsedGameTimeMs -= UpdateTimeDelayMs;
             }
 
-            var hero = (Hero)_heroInfo.Sprite;
-
-            if (!hero.IsDead
-             && !hero.IsTakingDamage
-             && Vector2.Distance(_heroInfo.Position, _guardInfo.Position) < Optimization.GetGuardAttackDistance(_guardInfo))
+            if (!Hero.IsDead
+             && !Hero.IsTakingDamage
+             && Vector2.Distance(Hero.Position, Guard.Position) < Optimization.GetGuardAttackDistance(Guard))
             {
-                hero.TakeDamage();
+                Hero.TakeDamage();
             }
 
             FaceToHero();
@@ -84,7 +71,7 @@ public class GuardAttackState : GuardBaseState
 
     private void FaceToHero()
     {
-        var turnDirectionX = (_heroInfo.Position - _guardInfo.Position).X;
+        var turnDirectionX = (Hero.Position - Guard.Position).X;
         var materialMovement = new Vector2(turnDirectionX * float.Epsilon, 0);
 
         ProcessFrameEffect(materialMovement);

@@ -1,12 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Sprites;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Drawing;
 
@@ -16,12 +10,12 @@ public class HeroHealthWriter : TextWriter
 
     private int _count;
 
-    public HeroHealthWriter(SpriteInfo heroInfo)
+    public HeroHealthWriter(Hero hero)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
 
-        _hero = (Hero)heroInfo.Sprite;
+        _hero = hero;
     }
 
     public override float ScaleFactor => 1;
@@ -30,7 +24,7 @@ public class HeroHealthWriter : TextWriter
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.DrawString(this, Position);
+        Drawer.DrawString(this);
     }
 
     public override void Update(GameTime gameTime)

@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Sprites;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
@@ -18,7 +19,7 @@ public class Maze : MazeRunnerGameComponent
 
     private readonly Dictionary<Cell, MazeTile> _itemsInfo;
 
-    private SpriteInfo _heroInfo;
+    private Hero _hero;
 
     private float _exitOpenDistance;
 
@@ -46,11 +47,11 @@ public class Maze : MazeRunnerGameComponent
         _components = new List<MazeTileInfo>();
     }
 
-    public void PostInitialize(SpriteInfo heroInfo)
+    public void PostInitialize(Hero hero)
     {
-        _heroInfo = heroInfo;
+        _hero = hero;
 
-        _exitOpenDistance = _heroInfo.Sprite.FrameSize * ExitOpenDistanceCoeff;
+        _exitOpenDistance = _hero.FrameSize * ExitOpenDistanceCoeff;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -210,7 +211,7 @@ public class Maze : MazeRunnerGameComponent
     {
         return IsKeyCollected
          && !ExitInfo.Exit.IsOpened
-         && _heroInfo is not null
-         && Vector2.Distance(_heroInfo.Position, GetCellPosition(ExitInfo.Cell)) < _exitOpenDistance;
+         && _hero is not null
+         && Vector2.Distance(_hero.Position, GetCellPosition(ExitInfo.Cell)) < _exitOpenDistance;
     }
 }

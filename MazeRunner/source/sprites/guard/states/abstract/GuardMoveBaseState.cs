@@ -4,7 +4,6 @@ using MazeRunner.GameBase;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -16,7 +15,7 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class GuardMoveBaseState : GuardBaseState
 {
-    protected GuardMoveBaseState(ISpriteState previousState) : base(previousState)
+    protected GuardMoveBaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
     }
 
@@ -26,9 +25,9 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
     public override double UpdateTimeDelayMs => 150;
 
-    public static bool PathToHeroExist(SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze, out IEnumerable<Vector2> path)
+    public static bool PathToHeroExist(Hero hero, Guard guard, Maze maze, out IEnumerable<Vector2> path)
     {
-        path = FindPathToHero(maze, heroInfo, guardInfo);
+        path = FindPathToHero(maze, hero, guard);
 
         if (!path.Any())
         {
@@ -38,14 +37,14 @@ public abstract class GuardMoveBaseState : GuardBaseState
         return true;
     }
 
-    protected static Vector2 GetMovementDirection(SpriteInfo guardInfo, IEnumerable<Vector2> path)
+    protected static Vector2 GetMovementDirection(Guard guard, IEnumerable<Vector2> path)
     {
         var direction = Vector2.Zero;
-        var guardPosition = GetSpriteNormalizedPosition(guardInfo);
+        var guardPosition = GetSpriteNormalizedPosition(guard);
 
         foreach (var movingPosition in path)
         {
-            if (!IsPositionReached(movingPosition, guardInfo))
+            if (!IsPositionReached(movingPosition, guard))
             {
                 direction = GetMovementDirection(guardPosition, movingPosition);
 
@@ -68,10 +67,10 @@ public abstract class GuardMoveBaseState : GuardBaseState
         return delta;
     }
 
-    protected static IEnumerable<Vector2> FindPathToHero(Maze maze, SpriteInfo heroInfo, SpriteInfo guardInfo)
+    protected static IEnumerable<Vector2> FindPathToHero(Maze maze, Hero hero, Guard guard)
     {
-        var heroCell = GetSpriteCell(heroInfo, maze);
-        var guardCell = GetSpriteCell(guardInfo, maze);
+        var heroCell = GetSpriteCell(hero, maze);
+        var guardCell = GetSpriteCell(guard, maze);
 
         var visitedCells = new HashSet<Cell>() { guardCell };
 
@@ -134,9 +133,9 @@ public abstract class GuardMoveBaseState : GuardBaseState
         }
     }
 
-    protected static bool IsPositionReached(Vector2 position, SpriteInfo spriteInfo)
+    protected static bool IsPositionReached(Vector2 position, Sprite sprite)
     {
-        var hitBox = spriteInfo.Sprite.GetHitBox(spriteInfo.Position);
+        var hitBox = sprite.GetHitBox(sprite.Position);
         var positionMaterialBox = new RectangleF(position.X, position.Y, float.Epsilon, float.Epsilon);
 
         return hitBox.IntersectsWith(positionMaterialBox);
@@ -156,25 +155,25 @@ public abstract class GuardMoveBaseState : GuardBaseState
             .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && cell != exitCell && !visitedCells.Contains(cell));
     }
 
-    private static bool CanMove(SpriteInfo guardInfo, Vector2 movement, Maze maze)
+    private static bool CanMove(Guard guard, Vector2 movement, Maze maze)
     {
-        var possiblePosition = guardInfo.Position + movement;
+        var possiblePosition = guard.Position + movement;
 
-        return !CollisionManager.CollidesWithTraps(guardInfo.Sprite, possiblePosition, maze, true, out var _);
+        return !CollisionManager.CollidesWithTraps(guard, possiblePosition, maze, true, out var _);
     }
 
-    protected bool ProcessMovement(SpriteInfo guardInfo, Vector2 direction, Maze maze, GameTime gameTime)
+    protected bool ProcessMovement(Guard guard, Vector2 direction, Maze maze, GameTime gameTime)
     {
-        var movement = guardInfo.Sprite.GetMovement(direction, gameTime);
+        var movement = guard.GetMovement(direction, gameTime);
 
-        if (!CanMove(guardInfo, movement, maze))
+        if (!CanMove(guard, movement, maze))
         {
             return false;
         }
 
         ProcessFrameEffect(movement);
 
-        guardInfo.Position += movement;
+        guard.Position += movement;
 
         return true;
     }

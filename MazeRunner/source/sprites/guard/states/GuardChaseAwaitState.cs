@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,18 +7,8 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardChaseAwaitState : GuardMoveBaseState
 {
-    private readonly SpriteInfo _heroInfo;
-
-    private readonly SpriteInfo _guardInfo;
-
-    private readonly Maze _maze;
-
-    public GuardChaseAwaitState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : base(previousState)
+    public GuardChaseAwaitState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
-        _heroInfo = heroInfo;
-        _guardInfo = guardInfo;
-
-        _maze = maze;
     }
 
     public override Texture2D Texture => Textures.Sprites.Guard.Idle;
@@ -30,26 +19,26 @@ public class GuardChaseAwaitState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (CollidesWithTraps(_guardInfo, _maze, true, out var trapType))
+        if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
 
-        if (CollidesWithTraps(_guardInfo, _maze, false, out var _))
+        if (CollidesWithTraps(Guard, Maze, false, out var _))
         {
-            return new GuardWalkState(this, _heroInfo, _guardInfo, _maze);
+            return new GuardWalkState(this, Hero, Guard, Maze);
         }
 
-        if (!PathToHeroExist(_heroInfo, _guardInfo, _maze, out var pathToHero))
+        if (!PathToHeroExist(Hero, Guard, Maze, out var pathToHero))
         {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _maze);
+            return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
-        var direction = GetMovementDirection(_guardInfo, pathToHero);
+        var direction = GetMovementDirection(Guard, pathToHero);
 
-        if (ProcessMovement(_guardInfo, direction, _maze, gameTime))
+        if (ProcessMovement(Guard, direction, Maze, gameTime))
         {
-            return new GuardChaseState(this, _heroInfo, _guardInfo, _maze);
+            return new GuardChaseState(this, Hero, Guard, Maze);
         }
 
         return this;

@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Cameras;
-using MazeRunner.GameBase;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
@@ -18,7 +17,7 @@ public static class Drawer
 
     private static RectangleF _viewBox;
 
-    public static void Initialize(MazeRunnerGame game)
+    public static void Initialize(Game game)
     {
         _spriteBatch = new SpriteBatch(game.GraphicsDevice);
     }
@@ -35,22 +34,22 @@ public static class Drawer
         _spriteBatch.End();
     }
 
-    public static void DrawButton(Button button, Vector2 position)
+    public static void DrawButton(Button button)
     {
         Draw(
             button.Texture,
-            position,
+            button.Position,
             button.CurrentAnimationFrame,
             Button.DrawingPriority,
             scale: button.BoxScale);
     }
 
-    public static void DrawString(TextWriter textWriter, Vector2 position)
+    public static void DrawString(TextWriter textWriter)
     {
         _spriteBatch.DrawString(
             textWriter.Font,
             textWriter.Text,
-            position,
+            textWriter.Position,
             textWriter.Color,
             0,
             Vector2.Zero,
@@ -59,11 +58,11 @@ public static class Drawer
             textWriter.DrawingPriority);
     }
 
-    public static void DrawSprite(Sprite sprite, Vector2 position)
+    public static void DrawSprite(Sprite sprite)
     {
         Draw(
              sprite.Texture,
-             position,
+             sprite.Position,
              sprite.CurrentAnimationFrame,
              sprite.DrawingPriority,
              spriteEffects: sprite.FrameEffect);

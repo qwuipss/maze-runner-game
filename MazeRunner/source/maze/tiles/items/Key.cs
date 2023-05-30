@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System.Drawing;
 

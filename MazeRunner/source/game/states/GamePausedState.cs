@@ -4,7 +4,6 @@ using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -103,7 +102,7 @@ public class GamePausedState : IGameState
 
             _resumeButton = new ResumeButton(() => ResumeGame(), boxScale);
 
-            _resumeButton.Initialize(); 
+            _resumeButton.Initialize();
 
             var restartButtonPosition = _restartButton.Position;
 

@@ -1,5 +1,4 @@
-﻿using MazeRunner.Wrappers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Drawing;
@@ -12,7 +11,7 @@ public abstract class ButtonBaseState : IButtonState
 {
     protected Button Button { get; init; }
 
-    protected ButtonBaseState(Button button) 
+    protected ButtonBaseState(Button button)
     {
         Button = button;
     }

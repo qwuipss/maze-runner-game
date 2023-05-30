@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Sprites.States;
@@ -9,7 +10,7 @@ public abstract class HeroFallBaseState : HeroBaseState
 
     public override int FramesCount => 4;
 
-    protected HeroFallBaseState(ISpriteState previousState) : base(previousState)
+    protected HeroFallBaseState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
     }
 }

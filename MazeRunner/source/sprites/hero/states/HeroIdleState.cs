@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -8,31 +7,25 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroIdleState : HeroBaseState
 {
-    private readonly SpriteInfo _heroInfo;
-
-    private readonly Maze _maze;
-
     public override Texture2D Texture => Textures.Sprites.Hero.Idle;
 
     public override int FramesCount => 2;
 
     public override double UpdateTimeDelayMs => 300;
 
-    public HeroIdleState(ISpriteState previousState, SpriteInfo heroInfo, Maze maze) : base(previousState)
+    public HeroIdleState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
-        _heroInfo = heroInfo;
-        _maze = maze;
     }
 
-    public HeroIdleState(SpriteInfo heroInfo, Maze maze) : this(null, heroInfo, maze)
+    public HeroIdleState(Hero hero, Maze maze) : this(null, hero, maze)
     {
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        var movement = ProcessMovement(_heroInfo, _maze, gameTime);
+        var movement = ProcessMovement(gameTime);
 
-        if (CollidesWithTraps(_heroInfo, _maze, true, out var trapType))
+        if (CollidesWithTraps(Hero, Maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
@@ -41,9 +34,9 @@ public class HeroIdleState : HeroBaseState
         {
             ProcessFrameEffect(movement);
 
-            _heroInfo.Position += movement;
+            Hero.Position += movement;
 
-            return new HeroRunState(this, _heroInfo, _maze);
+            return new HeroRunState(this, Hero, Maze);
         }
 
         base.ProcessState(gameTime);

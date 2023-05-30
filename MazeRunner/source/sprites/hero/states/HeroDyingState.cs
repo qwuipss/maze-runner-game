@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.MazeBase;
+using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
 
@@ -6,7 +7,7 @@ public class HeroDyingState : HeroDeathBaseState
 {
     public override double UpdateTimeDelayMs => 100;
 
-    public HeroDyingState(ISpriteState previousState) : base(previousState)
+    public HeroDyingState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
     }
 
@@ -20,7 +21,7 @@ public class HeroDyingState : HeroDeathBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new HeroDeadState(this);
+                return new HeroDeadState(this, Hero, Maze);
             }
 
             var framePosX = animationPoint.X + FrameSize;

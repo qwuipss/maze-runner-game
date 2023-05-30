@@ -6,12 +6,10 @@ using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 
 namespace MazeRunner.GameBase.States;
 
@@ -152,7 +150,7 @@ public class GameMenuState : IGameState
         void InitializeGameStartButton(int scaleDivider)
         {
             var boxScale = _viewWidth / scaleDivider;
-            
+
             _startButton = new StartButton(() => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value)), boxScale);
 
             _startButton.Initialize();

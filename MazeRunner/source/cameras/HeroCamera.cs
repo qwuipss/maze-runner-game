@@ -2,7 +2,6 @@
 using MazeRunner.Drawing;
 using MazeRunner.Helpers;
 using MazeRunner.Sprites;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -12,7 +11,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 {
     private const float DrawingPriority = .1f;
 
-    private readonly SpriteInfo _heroInfo;
+    private readonly Hero _hero;
 
     private readonly Matrix _scale;
 
@@ -36,7 +35,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public Texture2D Effect { get; set; }
 
-    public HeroCamera(GraphicsDevice graphicsDevice, SpriteInfo heroInfo, float scaleFactor = 1)
+    public HeroCamera(GraphicsDevice graphicsDevice, Hero hero, float scaleFactor = 1)
     {
         var viewPort = graphicsDevice.Viewport;
 
@@ -47,7 +46,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
-        _heroInfo = heroInfo;
+        _hero = hero;
     }
 
     public override void Draw(GameTime gameTime)
@@ -60,19 +59,21 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public override void Update(GameTime gameTime)
     {
-        Follow(_heroInfo.Sprite, _heroInfo.Position);
+        FollowHero();
     }
 
-    private void Follow(Sprite sprite, Vector2 spritePosition)
+    private void FollowHero()
     {
-        var halfFrameSize = sprite.FrameSize / 2;
+        var heroPosition = _hero.Position;
+
+        var halfFrameSize = _hero.FrameSize / 2;
 
         var cameraPosition = Matrix.CreateTranslation(
-            -spritePosition.X - halfFrameSize,
-            -spritePosition.Y - halfFrameSize,
+            -heroPosition.X - halfFrameSize,
+            -heroPosition.Y - halfFrameSize,
             0);
 
-        _viewPosition = new Vector2(spritePosition.X + halfFrameSize, spritePosition.Y + halfFrameSize);
+        _viewPosition = new Vector2(heroPosition.X + halfFrameSize, heroPosition.Y + halfFrameSize);
         _transformMatrix = cameraPosition * _scale * _bordersOffset;
     }
 }

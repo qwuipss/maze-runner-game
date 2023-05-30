@@ -1,6 +1,4 @@
-﻿using MazeRunner.Wrappers;
-
-namespace MazeRunner.MazeBase.Tiles;
+﻿namespace MazeRunner.MazeBase.Tiles;
 
 public abstract class MazeItem : MazeTile
 {

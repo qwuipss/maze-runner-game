@@ -1,7 +1,6 @@
 ﻿using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
 
@@ -9,11 +8,17 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class HeroBaseState : SpriteBaseState
 {
-    protected HeroBaseState(ISpriteState previousState) : base(previousState)
+    protected Hero Hero { get; set; }
+
+    protected Maze Maze { get; set; }
+
+    protected HeroBaseState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState)
     {
+        Hero = hero;
+        Maze = maze;
     }
 
-    protected static Vector2 ProcessMovement(SpriteInfo heroInfo, Maze maze, GameTime gameTime)
+    protected Vector2 ProcessMovement(GameTime gameTime)
     {
         static bool IsMovementAccepted(Sprite hero, Vector2 position, Vector2 movement, Maze maze)
         {
@@ -21,35 +26,32 @@ public abstract class HeroBaseState : SpriteBaseState
                 && !CollisionManager.CollidesWithExit(hero, position, movement, maze);
         }
 
-        var hero = heroInfo.Sprite;
-        var position = heroInfo.Position;
-
         var movementDirection = KeyboardManager.ProcessHeroMovement();
-        var movement = hero.GetMovement(movementDirection, gameTime);
+        var movement = Hero.GetMovement(movementDirection, gameTime);
 
         if (movementDirection == Vector2.Zero)
         {
             return Vector2.Zero;
         }
 
-        if (IsMovementAccepted(hero, position, movement, maze))
+        if (IsMovementAccepted(Hero, Hero.Position, movement, Maze))
         {
             movementDirection.Normalize();
-            movement = hero.GetMovement(movementDirection, gameTime);
+            movement = Hero.GetMovement(movementDirection, gameTime);
 
             return movement;
         }
 
         var movementX = new Vector2(movement.X, 0);
 
-        if (IsMovementAccepted(hero, position, movementX, maze))
+        if (IsMovementAccepted(Hero, Hero.Position, movementX, Maze))
         {
             return movementX;
         }
 
         var movementY = new Vector2(0, movement.Y);
 
-        if (IsMovementAccepted(hero, position, movementY, maze))
+        if (IsMovementAccepted(Hero, Hero.Position, movementY, Maze))
         {
             return movementY;
         }
@@ -61,8 +63,8 @@ public abstract class HeroBaseState : SpriteBaseState
     {
         return trapType switch
         {
-            TrapType.Bayonet => new HeroDyingState(this),
-            TrapType.Drop => new HeroFallingState(this),
+            TrapType.Bayonet => new HeroDyingState(this, Hero, Maze),
+            TrapType.Drop => new HeroFallingState(this, Hero, Maze),
             _ => throw new NotImplementedException()
         };
     }

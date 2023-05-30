@@ -36,11 +36,11 @@ public class GameRunningState : IGameState
 
     private HeroHealthWriter _heroHealthWriter;
 
-    private List<SpriteInfo> _enemiesInfo;
+    private List<Enemy> _enemies;
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
 
-    private List<SpriteInfo> _respawnEnemies;
+    private List<Enemy> _respawnEnemies;
 
     private List<MazeRunnerGameComponent> _deadGameComponents;
 
@@ -48,7 +48,7 @@ public class GameRunningState : IGameState
 
     public bool IsControlling { get; set; }
 
-    public SpriteInfo HeroInfo { get; private set; }
+    public Hero Hero { get; private set; }
 
     public HeroCamera HeroCamera { get; private set; }
 
@@ -104,9 +104,9 @@ public class GameRunningState : IGameState
                 continue;
             }
 
-            if (component is SpriteInfo spriteInfo)
+            if (component is Sprite sprite)
             {
-                UpdateSpriteInfo(spriteInfo, gameTime);
+                UpdateSprite(sprite, gameTime);
                 continue;
             }
 
@@ -132,7 +132,7 @@ public class GameRunningState : IGameState
 
     private void InitializeComponentsList()
     {
-        _respawnEnemies = new List<SpriteInfo>();
+        _respawnEnemies = new List<Enemy>();
 
         _deadGameComponents = new List<MazeRunnerGameComponent>();
 
@@ -141,12 +141,12 @@ public class GameRunningState : IGameState
             _maze, _findKeyTextWriter, HeroCamera,
         };
 
-        foreach (var enemyInfo in _enemiesInfo)
+        foreach (var enemyInfo in _enemies)
         {
             _gameComponents.Add(enemyInfo);
         }
 
-        _gameComponents.Add(HeroInfo);
+        _gameComponents.Add(Hero);
     }
 
     private void PreInitializeMaze()
@@ -167,19 +167,21 @@ public class GameRunningState : IGameState
 
     private void PostInitializeMaze()
     {
-        _maze.PostInitialize(HeroInfo);
+        _maze.PostInitialize(Hero);
     }
 
     private void InitializeHero()
     {
-        var heroCell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
-        var heroPosition = _maze.GetCellPosition(heroCell);
+        var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
+        var position = _maze.GetCellPosition(cell);
 
-        var hero = Hero.GetInstance();
+        Hero = new Hero(GameParameters.HeroHealth)
+        {
+            Position = position,
+        };
 
-        HeroInfo = new SpriteInfo(hero, heroPosition);
 
-        hero.Initialize(HeroInfo, this._maze, GameParameters.HeroHealth);
+        Hero.Initialize(_maze);
     }
 
     private void InitializeEnemies()
@@ -188,11 +190,11 @@ public class GameRunningState : IGameState
         {
             for (int i = 0; i < GameParameters.GuardSpawnCount; i++)
             {
-                _enemiesInfo.Add(CreateGuard());
+                _enemies.Add(CreateGuard());
             }
         }
 
-        _enemiesInfo = new List<SpriteInfo>();
+        _enemies = new List<Enemy>();
 
         InitializeGuards();
     }
@@ -206,7 +208,7 @@ public class GameRunningState : IGameState
             var viewWidth = viewPort.Width;
             var viewHeight = viewPort.Height;
 
-            var heroFrameSize = HeroInfo.Sprite.FrameSize;
+            var heroFrameSize = Hero.FrameSize;
             var shadowTreshold = heroFrameSize * GameParameters.HeroCameraShadowTresholdCoeff;
 
             _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, _graphicsDevice);
@@ -217,7 +219,7 @@ public class GameRunningState : IGameState
             InitializeCameraEffect();
         }
 
-        HeroCamera = new HeroCamera(_graphicsDevice, HeroInfo, GameParameters.HeroCameraScaleFactor)
+        HeroCamera = new HeroCamera(_graphicsDevice, Hero, GameParameters.HeroCameraScaleFactor)
         {
             Effect = _cameraEffect,
         };
@@ -225,23 +227,24 @@ public class GameRunningState : IGameState
 
     private void InitializeTextWriters()
     {
-        _findKeyTextWriter = new FindKeyTextWriter(HeroInfo, _maze);
+        _findKeyTextWriter = new FindKeyTextWriter(Hero, _maze);
 
-        _heroHealthWriter = new HeroHealthWriter(HeroInfo);
+        _heroHealthWriter = new HeroHealthWriter(Hero);
     }
 
-    private SpriteInfo CreateGuard()
+    private Guard CreateGuard()
     {
-        var guard = new Guard();
+        var cell = MazeGenerator.GetRandomCell(_maze, IsEnemyFreeFloorCell).First();
+        var position = _maze.GetCellPosition(cell);
 
-        var guardCell = MazeGenerator.GetRandomCell(_maze, IsEnemyFreeFloorCell).First();
-        var guardPosition = _maze.GetCellPosition(guardCell);
+        var guard = new Guard()
+        {
+            Position = position,
+        };
 
-        var guardInfo = new SpriteInfo(guard, guardPosition);
+        guard.Initialize(Hero, _maze);
 
-        guard.Initialize(guardInfo, HeroInfo, this._maze);
-
-        return guardInfo;
+        return guard;
     }
 
     private bool IsEnemyFreeFloorCell(Cell cell)
@@ -253,7 +256,7 @@ public class GameRunningState : IGameState
 
         var mazeTile = _maze.Skeleton[cell.Y, cell.X];
         var cellPosition = _maze.GetCellPosition(cell);
-        var distanceToHero = Vector2.Distance(HeroInfo.Position, cellPosition);
+        var distanceToHero = Vector2.Distance(Hero.Position, cellPosition);
 
         var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
 
@@ -262,7 +265,7 @@ public class GameRunningState : IGameState
             return false;
         }
 
-        var isEnemyFree = _enemiesInfo
+        var isEnemyFree = _enemies
             .Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) < spawnDistance)
             .Count() is 0;
 
@@ -282,9 +285,9 @@ public class GameRunningState : IGameState
         _deadGameComponents.Clear();
     }
 
-    private void AddEnemyToRespawnList(SpriteInfo enemyInfo)
+    private void AddEnemyToRespawnList(Enemy enemy)
     {
-        if (enemyInfo.Sprite is Guard)
+        if (enemy is Guard)
         {
             _respawnEnemies.Add(CreateGuard());
         }
@@ -296,9 +299,9 @@ public class GameRunningState : IGameState
 
     private void RespawnEnemies()
     {
-        foreach (var enemyInfo in _respawnEnemies)
+        foreach (var enemy in _respawnEnemies)
         {
-            _gameComponents.Add(enemyInfo);
+            _gameComponents.Add(enemy);
         }
 
         _respawnEnemies.Clear();
@@ -316,7 +319,7 @@ public class GameRunningState : IGameState
         }
     }
 
-    private void UpdateSpriteInfo(SpriteInfo spriteInfo, GameTime gameTime)
+    private void UpdateSprite(Sprite sprite, GameTime gameTime)
     {
         void ProcessStateControl(Sprite hero, GameTime gameTime)
         {
@@ -336,23 +339,21 @@ public class GameRunningState : IGameState
             }
         }
 
-        var sprite = spriteInfo.Sprite;
-
-        if (sprite is not Hero)
+        if (sprite is Enemy enemy)
         {
-            var distance = Vector2.Distance(spriteInfo.Position, HeroInfo.Position);
+            var distance = Vector2.Distance(enemy.Position, Hero.Position);
 
-            if (distance > Optimization.GetEnemyUpdateDistance(spriteInfo))
+            if (distance > Optimization.GetEnemyUpdateDistance(enemy))
             {
                 return;
             }
 
-            if (sprite.IsDead
-             && distance > Optimization.GetEnemyDisposingDistance(spriteInfo))
+            if (enemy.IsDead
+             && distance > Optimization.GetEnemyDisposingDistance(enemy))
             {
-                _deadGameComponents.Add(spriteInfo);
+                _deadGameComponents.Add(enemy);
 
-                AddEnemyToRespawnList(spriteInfo);
+                AddEnemyToRespawnList(enemy);
             }
         }
         else
@@ -360,12 +361,12 @@ public class GameRunningState : IGameState
             ProcessStateControl(sprite, gameTime);
         }
 
-        spriteInfo.Update(gameTime);
+        sprite.Update(gameTime);
     }
 
     private void UpdateMazeTileInfo(MazeTileInfo tileInfo, GameTime gameTime)
     {
-        var distance = Vector2.Distance(tileInfo.Position, HeroInfo.Position);
+        var distance = Vector2.Distance(tileInfo.Position, Hero.Position);
 
         if (distance < Optimization.GetMazeTileUpdateDistance(tileInfo.MazeTile))
         {

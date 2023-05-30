@@ -1,6 +1,4 @@
-﻿using MazeRunner.Wrappers;
-
-namespace MazeRunner.Gui.Buttons.States;
+﻿namespace MazeRunner.Gui.Buttons.States;
 
 public abstract class ButtonPushBaseState : ButtonBaseState
 {

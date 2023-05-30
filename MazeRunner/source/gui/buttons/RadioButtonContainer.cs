@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Components;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Gui.Buttons;

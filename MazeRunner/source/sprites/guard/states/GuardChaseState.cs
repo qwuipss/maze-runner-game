@@ -1,48 +1,37 @@
 ﻿using MazeRunner.GameBase;
 using MazeRunner.MazeBase;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
 
 public class GuardChaseState : GuardMoveBaseState
 {
-    private readonly SpriteInfo _heroInfo;
-
-    private readonly SpriteInfo _guardInfo;
-
-    private readonly Maze _maze;
-
-    public GuardChaseState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : base(previousState)
+    public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
-        _heroInfo = heroInfo;
-        _guardInfo = guardInfo;
-
-        _maze = maze;
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (CollidesWithTraps(_guardInfo, _maze, true, out var trapType))
+        if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
 
-        if (!IsHeroNearby(_heroInfo, _guardInfo, _maze, out var pathToHero))
+        if (!IsHeroNearby(out var pathToHero))
         {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _maze);
+            return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
-        if (CanAttack(_heroInfo, _guardInfo))
+        if (CanAttack(Hero, Guard))
         {
-            return new GuardAttackState(this, _heroInfo, _guardInfo, _maze);
+            return new GuardAttackState(this, Hero, Guard, Maze);
         }
 
-        var direction = GetMovementDirection(_guardInfo, pathToHero);
+        var direction = GetMovementDirection(Guard, pathToHero);
 
-        if (!ProcessMovement(_guardInfo, direction, _maze, gameTime))
+        if (!ProcessMovement(Guard, direction, Maze, gameTime))
         {
-            return new GuardChaseAwaitState(this, _heroInfo, _guardInfo, _maze);
+            return new GuardChaseAwaitState(this, Hero, Guard, Maze);
         }
 
         base.ProcessState(gameTime);
@@ -50,10 +39,10 @@ public class GuardChaseState : GuardMoveBaseState
         return this;
     }
 
-    private static bool CanAttack(SpriteInfo heroInfo, SpriteInfo guardInfo)
+    private static bool CanAttack(Hero hero, Guard guard)
     {
-        var distance = Vector2.Distance(heroInfo.Position, guardInfo.Position);
+        var distance = Vector2.Distance(hero.Position, guard.Position);
 
-        return distance < Optimization.GetGuardAttackDistance(guardInfo);
+        return distance < Optimization.GetGuardAttackDistance(guard);
     }
 }

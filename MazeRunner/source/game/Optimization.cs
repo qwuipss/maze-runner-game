@@ -1,5 +1,5 @@
 ﻿using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Wrappers;
+using MazeRunner.Sprites;
 
 namespace MazeRunner.GameBase;
 
@@ -17,14 +17,14 @@ internal static class Optimization
     private const float MazeTileCollidingDistanceCoeff = 1.5f;
     private const float MazeTileUpdateDistanceCoeff = 7;
 
-    public static float GetGuardHeroDetectionDistance(SpriteInfo guardInfo)
+    public static float GetGuardHeroDetectionDistance(Guard guard)
     {
-        return guardInfo.Sprite.FrameSize * GuardHeroDetectionDistanceCoeff;
+        return guard.FrameSize * GuardHeroDetectionDistanceCoeff;
     }
 
-    public static float GetGuardAttackDistance(SpriteInfo guardInfo)
+    public static float GetGuardAttackDistance(Guard guard)
     {
-        return guardInfo.Sprite.FrameSize * GuardAttackDistanceCoeff;
+        return guard.FrameSize * GuardAttackDistanceCoeff;
     }
 
     public static float GetMazeTileUpdateDistance(MazeTile mazeTile)
@@ -37,14 +37,14 @@ internal static class Optimization
         return mazeTile.FrameSize * MazeTileCollidingDistanceCoeff;
     }
 
-    public static float GetEnemyUpdateDistance(SpriteInfo spriteInfo)
+    public static float GetEnemyUpdateDistance(Enemy enemy)
     {
-        return spriteInfo.Sprite.FrameSize * EnemiesUpdateDistanceCoeff;
+        return enemy.FrameSize * EnemiesUpdateDistanceCoeff;
     }
 
-    public static float GetEnemyDisposingDistance(SpriteInfo spriteInfo)
+    public static float GetEnemyDisposingDistance(Enemy enemy)
     {
-        return spriteInfo.Sprite.FrameSize * EnemyDisposingDistanceCoeff;
+        return enemy.FrameSize * EnemyDisposingDistanceCoeff;
     }
 
     public static float GetEnemySpawnDistance(MazeTile mazeTile)

@@ -42,6 +42,6 @@ public abstract class Button : MazeRunnerGameComponent
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.DrawButton(this, Position);
+        Drawer.DrawButton(this);
     }
 }

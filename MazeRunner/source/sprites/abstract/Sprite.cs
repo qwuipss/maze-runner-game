@@ -1,4 +1,6 @@
-﻿using MazeRunner.Sprites.States;
+﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Drawing;
@@ -6,7 +8,7 @@ using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.Sprites;
 
-public abstract class Sprite
+public abstract class Sprite : MazeRunnerGameComponent
 {
     public abstract Vector2 Speed { get; }
 
@@ -14,15 +16,17 @@ public abstract class Sprite
 
     public virtual float DrawingPriority => .45f;
 
-    public virtual Texture2D Texture => State.Texture;
+    public Texture2D Texture => State.Texture;
 
-    public virtual int FrameSize => State.FrameSize;
+    public int FrameSize => State.FrameSize;
 
-    public virtual SpriteEffects FrameEffect => State.FrameEffect;
+    public RectangleXna CurrentAnimationFrame => State.CurrentAnimationFrame;
 
-    public virtual RectangleXna CurrentAnimationFrame => State.CurrentAnimationFrame;
+    public SpriteEffects FrameEffect => State.FrameEffect;
 
     public ISpriteState State { get; set; }
+
+    public Vector2 Position { get; set; }
 
     public abstract RectangleF GetHitBox(Vector2 position);
 
@@ -31,8 +35,13 @@ public abstract class Sprite
         return direction * Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
     }
 
-    public virtual void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         State = State.ProcessState(gameTime);
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Drawer.DrawSprite(this);
     }
 }
