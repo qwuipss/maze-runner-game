@@ -58,6 +58,20 @@ public class GameRunningState : IGameState
         IsControlling = true;
     }
 
+    public static void SwitchCamera(ICamera camera)
+    {
+        Drawer.EndDraw();
+
+        Drawer.BeginDraw(camera);
+    }
+
+    public void ContinueDraw()
+    {
+        Drawer.EndDraw();
+
+        Drawer.BeginDraw(HeroCamera);
+    }
+
     public void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
         if (game.IsMouseVisible)
@@ -137,7 +151,7 @@ public class GameRunningState : IGameState
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            _maze, _findKeyTextWriter, _heroHealthWriter, HeroCamera,
+            _maze, _findKeyTextWriter, HeroCamera,
         };
 
         foreach (var enemy in _enemies)
@@ -146,6 +160,7 @@ public class GameRunningState : IGameState
         }
 
         _gameComponents.Add(Hero);
+        _gameComponents.Add(_heroHealthWriter);
     }
 
     private void PreInitializeMaze()
@@ -208,7 +223,7 @@ public class GameRunningState : IGameState
             var viewHeight = viewPort.Height;
 
             var heroFrameSize = Hero.FrameSize;
-            var shadowTreshold = heroFrameSize * GameParameters.HeroCameraShadowTresholdCoeff;
+            var shadowTreshold = heroFrameSize * 2.4f;
 
             _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, _graphicsDevice);
         }
@@ -218,7 +233,7 @@ public class GameRunningState : IGameState
             InitializeCameraEffect();
         }
 
-        HeroCamera = new HeroCamera(_graphicsDevice, Hero, GameParameters.HeroCameraScaleFactor)
+        HeroCamera = new HeroCamera(_graphicsDevice, Hero)
         {
             Effect = _cameraEffect,
         };
@@ -228,7 +243,9 @@ public class GameRunningState : IGameState
     {
         _findKeyTextWriter = new FindKeyTextWriter(Hero, _maze);
 
-        _heroHealthWriter = new HeroHealthWriter(Hero, _graphicsDevice);
+        var heroHealthWriterScaleDivider = 450;
+
+        _heroHealthWriter = new HeroHealthWriter(Hero, this, heroHealthWriterScaleDivider, _graphicsDevice);
     }
 
     private Guard CreateGuard()
@@ -255,7 +272,7 @@ public class GameRunningState : IGameState
 
         var cellPosition = _maze.GetCellPosition(cell);
         var distanceToHero = Vector2.Distance(Hero.Position, cellPosition);
-        
+
         var mazeTile = _maze.Skeleton[cell.Y, cell.X];
 
         var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
@@ -334,6 +351,8 @@ public class GameRunningState : IGameState
 
                 if (_heroAfterDeadElapsedTimeMs > StateSwitchAfterHeroDeadDelayMs)
                 {
+                    _gameComponents.Remove(_heroHealthWriter);
+
                     GameStateChanged.Invoke(new GameOverState(this));
                 }
             }

@@ -10,9 +10,6 @@ public class GameParameters
     public int MazeBayonetTrapInsertingPercentage;
     public int MazeDropTrapInsertingPercentage;
 
-    public float HeroCameraScaleFactor;
-    public float HeroCameraShadowTresholdCoeff;
-
     public int GuardSpawnCount;
 
     public int HeroHealth;

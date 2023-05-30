@@ -33,9 +33,6 @@ public class GameMenuState : IGameState
                 MazeBayonetTrapInsertingPercentage = 2,
                 MazeDropTrapInsertingPercentage = 1,
 
-                HeroCameraScaleFactor = 7,
-                HeroCameraShadowTresholdCoeff = 2.4f,
-
                 GuardSpawnCount = 0,//10
 
                 HeroHealth = 5,
@@ -51,9 +48,6 @@ public class GameMenuState : IGameState
                 MazeBayonetTrapInsertingPercentage = 3,
                 MazeDropTrapInsertingPercentage = 2,
 
-                HeroCameraScaleFactor = 7,
-                HeroCameraShadowTresholdCoeff = 2.4f,
-
                 GuardSpawnCount = 15,
 
                 HeroHealth = 3,
@@ -68,9 +62,6 @@ public class GameMenuState : IGameState
 
                 MazeBayonetTrapInsertingPercentage = 4,
                 MazeDropTrapInsertingPercentage = 2,
-
-                HeroCameraScaleFactor = 7,
-                HeroCameraShadowTresholdCoeff = 2.4f,
 
                 GuardSpawnCount = 25,
 

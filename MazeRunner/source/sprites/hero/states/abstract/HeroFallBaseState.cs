@@ -12,5 +12,6 @@ public abstract class HeroFallBaseState : HeroBaseState
 
     protected HeroFallBaseState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
+        Hero.Health = 0;
     }
 }

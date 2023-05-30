@@ -1,5 +1,4 @@
 ﻿using MazeRunner.Content;
-using MazeRunner.GameBase;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;

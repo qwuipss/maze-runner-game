@@ -24,7 +24,7 @@ public class Hero : Sprite
 
     public bool IsTakingDamage => State is HeroDamageTakingState;
 
-    public int Health { get; private set; }
+    public int Health { get; set; }
 
     public Hero(int health)
     {

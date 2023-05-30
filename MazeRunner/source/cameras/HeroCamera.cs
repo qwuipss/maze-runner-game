@@ -35,7 +35,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public Texture2D Effect { get; set; }
 
-    public HeroCamera(GraphicsDevice graphicsDevice, Hero hero, float scaleFactor = 1)
+    public HeroCamera(GraphicsDevice graphicsDevice, Hero hero)
     {
         var viewPort = graphicsDevice.Viewport;
 
@@ -43,6 +43,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         _viewHeight = viewPort.Height;
 
         _bordersOffset = Matrix.CreateTranslation(_viewWidth / 2, _viewHeight / 2, 0);
+
+        var scaleFactor = 7;
 
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
