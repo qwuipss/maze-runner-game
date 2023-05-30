@@ -12,7 +12,7 @@ public class ResumeButtonHoverState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public ResumeButtonHoverState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public ResumeButtonHoverState(Button button) : base(button)
     {
     }
 
@@ -20,14 +20,14 @@ public class ResumeButtonHoverState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (!IsCursorHoverButton(mouseState, ButtonInfo))
+        if (!IsCursorHoverButton(mouseState))
         {
-            return new ResumeButtonIdleState(ButtonInfo);
+            return new ResumeButtonIdleState(Button);
         }
 
         if (mouseState.LeftButton == ButtonState.Pressed)
         {
-            return new ResumeButtonClickedState(ButtonInfo);
+            return new ResumeButtonClickedState(Button);
         }
 
         return this;

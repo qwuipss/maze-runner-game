@@ -26,9 +26,9 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
     public override double UpdateTimeDelayMs => 150;
 
-    public static bool PathToHeroExist(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> path)
+    public static bool PathToHeroExist(SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze, out IEnumerable<Vector2> path)
     {
-        path = FindPathToHero(mazeInfo.Maze, heroInfo, guardInfo);
+        path = FindPathToHero(maze, heroInfo, guardInfo);
 
         if (!path.Any())
         {

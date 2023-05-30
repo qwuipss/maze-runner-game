@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Helpers;
+using MazeRunner.MazeBase;
 using MazeRunner.Sprites.States;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -19,8 +20,6 @@ public class Hero : Sprite
 
     private SpriteInfo _selfInfo;
 
-    private int _halfHeartsHealth;
-
     public override bool IsDead => State is HeroDeadState or HeroFalledState or HeroFallingState or HeroDyingState;
 
     public override Vector2 Speed => new(40, 40);
@@ -29,6 +28,8 @@ public class Hero : Sprite
 
     public bool IsTakingDamage => State is HeroDamageTakingState;
 
+    public int Health { get; private set; }
+
     static Hero()
     {
         _instance = new Lazy<Hero>(() => new Hero());
@@ -36,7 +37,7 @@ public class Hero : Sprite
 
     private Hero()
     {
-        _halfHeartsHealth = 6;
+        Health = 6;
     }
 
     public static Hero GetInstance()
@@ -44,13 +45,13 @@ public class Hero : Sprite
         return _instance.Value;
     }
 
-    public void Initialize(SpriteInfo selfInfo, MazeInfo mazeInfo, int halfHeartsHealth)
+    public void Initialize(SpriteInfo selfInfo, Maze maze, int halfHeartsHealth)
     {
-        _halfHeartsHealth = halfHeartsHealth;
+        Health = halfHeartsHealth;
 
         _selfInfo = selfInfo;
 
-        State = new HeroIdleState(_selfInfo, mazeInfo);
+        State = new HeroIdleState(_selfInfo, maze);
     }
 
     public override RectangleF GetHitBox(Vector2 position)
@@ -65,9 +66,9 @@ public class Hero : Sprite
 
     public void TakeDamage()
     {
-        _halfHeartsHealth--;
+        Health--;
 
-        if (_halfHeartsHealth <= 0)
+        if (Health <= 0)
         {
             State = new HeroDyingState(State);
         }

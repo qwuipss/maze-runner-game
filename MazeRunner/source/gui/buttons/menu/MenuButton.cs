@@ -6,14 +6,12 @@ namespace MazeRunner.Gui.Buttons;
 
 public class MenuButton : Button
 {
-    public MenuButton(Action onClick) : base(onClick)
+    public MenuButton(Action onClick, float boxScale) : base(onClick, boxScale)
     {
     }
 
-    public override void Initialize(ButtonInfo buttonInfo)
+    public override void Initialize()
     {
-        base.Initialize(buttonInfo);
-
-        State = new MenuButtonIdleState(buttonInfo);
+        State = new MenuButtonIdleState(this);
     }
 }

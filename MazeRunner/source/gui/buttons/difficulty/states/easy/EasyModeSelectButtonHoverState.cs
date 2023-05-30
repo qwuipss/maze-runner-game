@@ -12,7 +12,7 @@ public class EasyModeSelectButtonHoverState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public EasyModeSelectButtonHoverState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public EasyModeSelectButtonHoverState(Button button) : base(button)
     {
     }
 
@@ -20,14 +20,14 @@ public class EasyModeSelectButtonHoverState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (!IsCursorHoverButton(mouseState, ButtonInfo))
+        if (!IsCursorHoverButton(mouseState))
         {
-            return new EasyModeSelectButtonIdleState(ButtonInfo);
+            return new EasyModeSelectButtonIdleState(Button);
         }
 
         if (mouseState.LeftButton == ButtonState.Pressed)
         {
-            return new EasyModeSelectButtonClickedState(ButtonInfo);
+            return new EasyModeSelectButtonClickedState(Button);
         }
 
         return this;

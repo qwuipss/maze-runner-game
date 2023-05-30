@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase.Tiles;
+﻿using MazeRunner.Components;
+using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
@@ -9,11 +10,17 @@ using System.Runtime.CompilerServices;
 
 namespace MazeRunner.MazeBase;
 
-public class Maze
+public class Maze : MazeRunnerGameComponent
 {
+    private const float ExitOpenDistanceCoeff = 2;
+
     private readonly Dictionary<Cell, MazeTile> _trapsInfo;
 
     private readonly Dictionary<Cell, MazeTile> _itemsInfo;
+
+    private SpriteInfo _heroInfo;
+
+    private float _exitOpenDistance;
 
     private readonly List<MazeTileInfo> _components;
 
@@ -27,6 +34,8 @@ public class Maze
 
     public MazeTile[,] Skeleton { get; init; }
 
+    public bool IsKeyCollected { get; set; }
+
     public Maze(MazeTile[,] skeleton)
     {
         Skeleton = skeleton;
@@ -35,6 +44,13 @@ public class Maze
         _itemsInfo = new Dictionary<Cell, MazeTile>();
 
         _components = new List<MazeTileInfo>();
+    }
+
+    public void PostInitialize(SpriteInfo heroInfo)
+    {
+        _heroInfo = heroInfo;
+
+        _exitOpenDistance = _heroInfo.Sprite.FrameSize * ExitOpenDistanceCoeff;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -95,7 +111,7 @@ public class Maze
         InitializeExitComponentsList();
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         foreach (var component in _components)
         {
@@ -103,14 +119,18 @@ public class Maze
         }
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
+        if (NeedOpenExit())
+        {
+            ExitInfo.Exit.Open();
+        }
+
         foreach (var component in _components)
         {
             component.Update(gameTime);
         }
     }
-
 
     public bool IsFloor(Cell cell)
     {
@@ -184,5 +204,13 @@ public class Maze
 
         _itemsInfo.Remove(cell);
         _components.Remove(itemInfo);
+    }
+
+    private bool NeedOpenExit()
+    {
+        return IsKeyCollected
+         && !ExitInfo.Exit.IsOpened
+         && _heroInfo is not null
+         && Vector2.Distance(_heroInfo.Position, GetCellPosition(ExitInfo.Cell)) < _exitOpenDistance;
     }
 }

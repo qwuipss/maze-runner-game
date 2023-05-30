@@ -11,7 +11,7 @@ public class QuitButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public QuitButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public QuitButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class QuitButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new QuitButtonIdleState(ButtonInfo);
+                return new QuitButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

@@ -12,7 +12,7 @@ public class RestartButtonIdleState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public RestartButtonIdleState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public RestartButtonIdleState(Button button) : base(button)
     {
     }
 
@@ -20,9 +20,9 @@ public class RestartButtonIdleState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (IsCursorHoverButton(mouseState, ButtonInfo))
+        if (IsCursorHoverButton(mouseState))
         {
-            return new RestartButtonHoverState(ButtonInfo);
+            return new RestartButtonHoverState(Button);
         }
 
         return this;

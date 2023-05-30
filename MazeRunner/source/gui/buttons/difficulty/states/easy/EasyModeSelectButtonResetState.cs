@@ -11,7 +11,7 @@ public class EasyModeSelectButtonResetState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public EasyModeSelectButtonResetState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public EasyModeSelectButtonResetState(Button button) : base(button)
     {
         var framePosX = (FramesCount - 1) * FrameWidth;
 
@@ -28,7 +28,7 @@ public class EasyModeSelectButtonResetState : ButtonPushBaseState
 
             if (animationPoint.X is 0)
             {
-                return new EasyModeSelectButtonIdleState(ButtonInfo);
+                return new EasyModeSelectButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X - FrameWidth;

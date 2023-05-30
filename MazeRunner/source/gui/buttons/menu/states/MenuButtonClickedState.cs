@@ -11,7 +11,7 @@ public class MenuButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public MenuButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public MenuButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class MenuButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new MenuButtonIdleState(ButtonInfo);
+                return new MenuButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

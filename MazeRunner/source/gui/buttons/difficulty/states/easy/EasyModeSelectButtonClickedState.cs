@@ -11,7 +11,7 @@ public class EasyModeSelectButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public EasyModeSelectButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public EasyModeSelectButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class EasyModeSelectButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new EasyModeSelectButtonSelectedState(ButtonInfo);
+                return new EasyModeSelectButtonSelectedState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

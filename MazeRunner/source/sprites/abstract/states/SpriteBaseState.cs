@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Helpers;
 using MazeRunner.Managers;
+using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
@@ -41,9 +42,9 @@ public abstract class SpriteBaseState : ISpriteState
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
 
-    protected static bool CollidesWithTraps(SpriteInfo spriteInfo, MazeInfo mazeInfo, bool needActivating, out TrapType trapType)
+    protected static bool CollidesWithTraps(SpriteInfo spriteInfo, Maze maze, bool needActivating, out TrapType trapType)
     {
-        if (CollisionManager.CollidesWithTraps(spriteInfo.Sprite, spriteInfo.Position, mazeInfo.Maze, needActivating, out var trapInfo))
+        if (CollisionManager.CollidesWithTraps(spriteInfo.Sprite, spriteInfo.Position, maze, needActivating, out var trapInfo))
         {
             trapType = trapInfo.Trap.TrapType;
 

@@ -17,16 +17,16 @@ public class GuardWalkState : GuardMoveBaseState
 
     private readonly SpriteInfo _guardInfo;
 
-    private readonly MazeInfo _mazeInfo;
+    private readonly Maze _maze;
 
     private readonly LinkedList<Vector2> _walkPath;
 
-    public GuardWalkState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
+    public GuardWalkState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : base(previousState)
     {
         _heroInfo = heroInfo;
         _guardInfo = guardInfo;
 
-        _mazeInfo = mazeInfo;
+        _maze = maze;
 
         var walkPathLength = RandomHelper.Next(WalkPathMinLength, WalkPathMaxLength);
 
@@ -35,14 +35,14 @@ public class GuardWalkState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
+        if (CollidesWithTraps(_guardInfo, _maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
 
-        if (IsHeroNearby(_heroInfo, _guardInfo, _mazeInfo, out var _))
+        if (IsHeroNearby(_heroInfo, _guardInfo, _maze, out var _))
         {
-            return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardChaseState(this, _heroInfo, _guardInfo, _maze);
         }
 
         var walkPosition = _walkPath.First();
@@ -50,9 +50,9 @@ public class GuardWalkState : GuardMoveBaseState
         var position = GetSpriteNormalizedPosition(_guardInfo);
         var direction = GetMovementDirection(position, walkPosition);
 
-        if (!ProcessMovement(_guardInfo, direction, _mazeInfo.Maze, gameTime))
+        if (!ProcessMovement(_guardInfo, direction, _maze, gameTime))
         {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardIdleState(this, _heroInfo, _guardInfo, _maze);
         }
 
         if (IsPositionReached(walkPosition, _guardInfo))
@@ -62,7 +62,7 @@ public class GuardWalkState : GuardMoveBaseState
 
         if (_walkPath.Count is 0)
         {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardIdleState(this, _heroInfo, _guardInfo, _maze);
         }
 
         base.ProcessState(gameTime);
@@ -72,24 +72,22 @@ public class GuardWalkState : GuardMoveBaseState
 
     private LinkedList<Vector2> GetRandomWalkPath(int pathLength)
     {
-        var maze = _mazeInfo.Maze;
-
-        var startCell = GetSpriteCell(_guardInfo, maze);
+        var startCell = GetSpriteCell(_guardInfo, _maze);
 
         var currentCell = startCell;
 
         var visitedCells = new HashSet<Cell>() { currentCell };
         var walkPath = new LinkedList<Vector2>();
 
-        var exitCell = maze.ExitInfo.Cell;
+        var exitCell = _maze.ExitInfo.Cell;
 
-        var movingPosition = GetCellNormalizedPosition(currentCell, maze);
+        var movingPosition = GetCellNormalizedPosition(currentCell, _maze);
 
         walkPath.AddLast(movingPosition);
 
         for (int i = 0; i < pathLength; i++)
         {
-            var adjacentCells = GetAdjacentMovingCells(currentCell, exitCell, maze, visitedCells).ToArray();
+            var adjacentCells = GetAdjacentMovingCells(currentCell, exitCell, _maze, visitedCells).ToArray();
 
             if (adjacentCells.Length is 0)
             {
@@ -97,7 +95,7 @@ public class GuardWalkState : GuardMoveBaseState
             }
 
             currentCell = RandomHelper.Choice(adjacentCells);
-            movingPosition = GetCellNormalizedPosition(currentCell, maze);
+            movingPosition = GetCellNormalizedPosition(currentCell, _maze);
 
             walkPath.AddLast(movingPosition);
             visitedCells.Add(currentCell);

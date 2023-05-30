@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Helpers;
+using MazeRunner.MazeBase;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +13,7 @@ public class GuardIdleState : GuardBaseState
 
     private readonly SpriteInfo _guardInfo;
 
-    private readonly MazeInfo _mazeInfo;
+    private readonly Maze _maze;
 
     public override Texture2D Texture => Textures.Sprites.Guard.Idle;
 
@@ -20,33 +21,33 @@ public class GuardIdleState : GuardBaseState
 
     public override double UpdateTimeDelayMs => 650;
 
-    public GuardIdleState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
+    public GuardIdleState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : base(previousState)
     {
         _heroInfo = heroInfo;
         _guardInfo = guardInfo;
 
-        _mazeInfo = mazeInfo;
+        _maze = maze;
     }
 
-    public GuardIdleState(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : this(null, heroInfo, guardInfo, mazeInfo)
+    public GuardIdleState(SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : this(null, heroInfo, guardInfo, maze)
     {
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
+        if (CollidesWithTraps(_guardInfo, _maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
 
-        if (CollidesWithTraps(_guardInfo, _mazeInfo, false, out var _))
+        if (CollidesWithTraps(_guardInfo, _maze, false, out var _))
         {
-            return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardWalkState(this, _heroInfo, _guardInfo, _maze);
         }
 
-        if (IsHeroNearby(_heroInfo, _guardInfo, _mazeInfo, out var _))
+        if (IsHeroNearby(_heroInfo, _guardInfo, _maze, out var _))
         {
-            return new GuardChaseState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardChaseState(this, _heroInfo, _guardInfo, _maze);
         }
 
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
@@ -58,7 +59,7 @@ public class GuardIdleState : GuardBaseState
 
             if (framePosX is 0 && animationPoint.X == (FramesCount - 1) * FrameSize && RandomHelper.RandomBoolean())
             {
-                return new GuardWalkState(this, _heroInfo, _guardInfo, _mazeInfo);
+                return new GuardWalkState(this, _heroInfo, _guardInfo, _maze);
             }
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);

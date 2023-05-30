@@ -17,15 +17,15 @@ public class FindKeyTextWriter : TextWriter
 
     private const double TextMaxShowTimeMs = 3000;
 
-    private static readonly Lazy<FindKeyTextWriter> _instance;
+    private readonly float _textShowDistance;
+
+    private readonly int _mazeWidth;
 
     private readonly Vector2 _textStringLength;
 
-    private TextWriterInfo _selfInfo;
+    private readonly Maze _maze;
 
-    private MazeInfo _mazeInfo;
-
-    private SpriteInfo _heroInfo;
+    private readonly SpriteInfo _heroInfo;
 
     private WritingSide _writingSide;
 
@@ -35,23 +35,26 @@ public class FindKeyTextWriter : TextWriter
 
     private double _textShowTimeMs;
 
-    private float _textShowDistance;
-
-    private int _mazeWidth;
-
     public override float ScaleFactor => .2f;
 
-    static FindKeyTextWriter()
-    {
-        _instance = new Lazy<FindKeyTextWriter>(() => new FindKeyTextWriter());
-    }
-
-    private FindKeyTextWriter()
+    public FindKeyTextWriter(SpriteInfo heroInfo, Maze maze)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
 
         _textStringLength = Font.MeasureString(Text) * ScaleFactor;
+
+        _heroInfo = heroInfo;
+        _maze = maze;
+
+        _textShowDistance = maze.ExitInfo.Exit.FrameSize * 2;
+
+        var skeleton = maze.Skeleton;
+
+        var sideCell = new Cell(skeleton.GetLength(1) - 1, 0);
+        var sideCellPosX = (int)maze.GetCellPosition(sideCell).X;
+
+        _mazeWidth = sideCellPosX + skeleton[sideCell.Y, sideCell.X].FrameSize;
     }
 
     public override string Text
@@ -62,14 +65,9 @@ public class FindKeyTextWriter : TextWriter
         }
     }
 
-    public static FindKeyTextWriter GetInstance()
+    public override void Draw(GameTime gameTime)
     {
-        return _instance.Value;
-    }
-
-    public override void Draw(GameTime gameTime, Vector2 position)
-    {
-        DrawIfNeeded(gameTime, position);
+        DrawIfNeeded(gameTime);
     }
 
     public override void Update(GameTime gameTime)
@@ -85,25 +83,8 @@ public class FindKeyTextWriter : TextWriter
 
         if (_needWriting)
         {
-            _selfInfo.Position = GetDrawingPosition();
+            Position = GetDrawingPosition();
         }
-    }
-
-    public void Initialize(SpriteInfo heroInfo, MazeInfo mazeInfo, TextWriterInfo selfInfo)
-    {
-        _heroInfo = heroInfo;
-        _mazeInfo = mazeInfo;
-        _selfInfo = selfInfo;
-
-        var maze = _mazeInfo.Maze;
-
-        _textShowDistance = maze.ExitInfo.Exit.FrameSize * 2;
-
-        var skeleton = maze.Skeleton;
-        var sideCell = new Cell(skeleton.GetLength(1) - 1, 0);
-        var sideCellPosX = (int)maze.GetCellPosition(sideCell).X;
-
-        _mazeWidth = sideCellPosX + skeleton[sideCell.Y, sideCell.X].FrameSize;
     }
 
     private Vector2 GetDrawingPosition()
@@ -153,7 +134,7 @@ public class FindKeyTextWriter : TextWriter
         }
     }
 
-    private void DrawIfNeeded(GameTime gameTime, Vector2 position)
+    private void DrawIfNeeded(GameTime gameTime)
     {
         if (_needWriting)
         {
@@ -165,7 +146,7 @@ public class FindKeyTextWriter : TextWriter
                 return;
             }
 
-            Drawer.DrawString(this, position);
+            Drawer.DrawString(this, Position);
 
             _textShowTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
         }
@@ -173,7 +154,7 @@ public class FindKeyTextWriter : TextWriter
 
     private void ProcessNeedWriting()
     {
-        var keyCollected = _mazeInfo.IsKeyCollected;
+        var keyCollected = _maze.IsKeyCollected;
 
         if (!_needWriting && !keyCollected)
         {
@@ -192,10 +173,9 @@ public class FindKeyTextWriter : TextWriter
 
     private bool AreHeroExitLocatedNearby()
     {
-        var maze = _mazeInfo.Maze;
         var position = _heroInfo.Position;
 
-        var exitPosition = maze.GetCellPosition(maze.ExitInfo.Cell);
+        var exitPosition = _maze.GetCellPosition(_maze.ExitInfo.Cell);
         var distance = Vector2.Distance(exitPosition, position);
 
         return distance <= _textShowDistance;

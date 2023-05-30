@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.Components;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Drawing;
 
-public abstract class TextWriter
+public abstract class TextWriter : MazeRunnerGameComponent
 {
     public abstract float ScaleFactor { get; }
 
@@ -13,11 +14,9 @@ public abstract class TextWriter
 
     public Color Color { get; init; }
 
-    public virtual float DrawingPriority => 0.05f;
-
     public bool IsDead { get; protected set; }
 
-    public abstract void Update(GameTime gameTime);
+    public Vector2 Position { get; set; }
 
-    public abstract void Draw(GameTime gameTime, Vector2 position);
+    public virtual float DrawingPriority => 0.05f;
 }

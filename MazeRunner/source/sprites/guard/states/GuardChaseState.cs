@@ -1,4 +1,5 @@
 ﻿using MazeRunner.GameBase;
+using MazeRunner.MazeBase;
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 
@@ -10,38 +11,38 @@ public class GuardChaseState : GuardMoveBaseState
 
     private readonly SpriteInfo _guardInfo;
 
-    private readonly MazeInfo _mazeInfo;
+    private readonly Maze _maze;
 
-    public GuardChaseState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo) : base(previousState)
+    public GuardChaseState(ISpriteState previousState, SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze) : base(previousState)
     {
         _heroInfo = heroInfo;
         _guardInfo = guardInfo;
 
-        _mazeInfo = mazeInfo;
+        _maze = maze;
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
-        if (CollidesWithTraps(_guardInfo, _mazeInfo, true, out var trapType))
+        if (CollidesWithTraps(_guardInfo, _maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
         }
 
-        if (!IsHeroNearby(_heroInfo, _guardInfo, _mazeInfo, out var pathToHero))
+        if (!IsHeroNearby(_heroInfo, _guardInfo, _maze, out var pathToHero))
         {
-            return new GuardIdleState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardIdleState(this, _heroInfo, _guardInfo, _maze);
         }
 
         if (CanAttack(_heroInfo, _guardInfo))
         {
-            return new GuardAttackState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardAttackState(this, _heroInfo, _guardInfo, _maze);
         }
 
         var direction = GetMovementDirection(_guardInfo, pathToHero);
 
-        if (!ProcessMovement(_guardInfo, direction, _mazeInfo.Maze, gameTime))
+        if (!ProcessMovement(_guardInfo, direction, _maze, gameTime))
         {
-            return new GuardChaseAwaitState(this, _heroInfo, _guardInfo, _mazeInfo);
+            return new GuardChaseAwaitState(this, _heroInfo, _guardInfo, _maze);
         }
 
         base.ProcessState(gameTime);

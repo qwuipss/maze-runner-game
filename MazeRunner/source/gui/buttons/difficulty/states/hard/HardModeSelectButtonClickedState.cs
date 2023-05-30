@@ -11,7 +11,7 @@ public class HardModeSelectButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public HardModeSelectButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public HardModeSelectButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class HardModeSelectButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new HardModeSelectButtonSelectedState(ButtonInfo);
+                return new HardModeSelectButtonSelectedState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

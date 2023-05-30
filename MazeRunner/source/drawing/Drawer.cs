@@ -35,14 +35,14 @@ public static class Drawer
         _spriteBatch.End();
     }
 
-    public static void DrawButton(Button button, Vector2 position, float boxScale)
+    public static void DrawButton(Button button, Vector2 position)
     {
         Draw(
             button.Texture,
             position,
             button.CurrentAnimationFrame,
             Button.DrawingPriority,
-            scale: boxScale);
+            scale: button.BoxScale);
     }
 
     public static void DrawString(TextWriter textWriter, Vector2 position)

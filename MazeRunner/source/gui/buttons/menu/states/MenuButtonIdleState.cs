@@ -12,7 +12,7 @@ public class MenuButtonIdleState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public MenuButtonIdleState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public MenuButtonIdleState(Button button) : base(button)
     {
     }
 
@@ -20,9 +20,9 @@ public class MenuButtonIdleState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (IsCursorHoverButton(mouseState, ButtonInfo))
+        if (IsCursorHoverButton(mouseState))
         {
-            return new MenuButtonHoverState(ButtonInfo);
+            return new MenuButtonHoverState(Button);
         }
 
         return this;

@@ -12,7 +12,7 @@ public class StartButtonHoverState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public StartButtonHoverState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public StartButtonHoverState(Button button) : base(button)
     {
     }
 
@@ -20,14 +20,14 @@ public class StartButtonHoverState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (!IsCursorHoverButton(mouseState, ButtonInfo))
+        if (!IsCursorHoverButton(mouseState))
         {
-            return new StartButtonIdleState(ButtonInfo);
+            return new StartButtonIdleState(Button);
         }
 
         if (mouseState.LeftButton == ButtonState.Pressed)
         {
-            return new StartButtonClickedState(ButtonInfo);
+            return new StartButtonClickedState(Button);
         }
 
         return this;

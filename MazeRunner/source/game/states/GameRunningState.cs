@@ -30,9 +30,11 @@ public class GameRunningState : IGameState
 
     private GraphicsDevice _graphicsDevice;
 
-    private MazeInfo _mazeInfo;
+    private Maze _maze;
 
-    private TextWriterInfo _findKeyTextWriterInfo;
+    private FindKeyTextWriter _findKeyTextWriter;
+
+    private HeroHealthWriter _heroHealthWriter;
 
     private List<SpriteInfo> _enemiesInfo;
 
@@ -108,9 +110,9 @@ public class GameRunningState : IGameState
                 continue;
             }
 
-            if (component is TextWriterInfo textWriterInfo)
+            if (component is TextWriter textWriter)
             {
-                UpdateTextWriterInfo(textWriterInfo, gameTime);
+                UpdateTextWriterInfo(textWriter, gameTime);
                 continue;
             }
 
@@ -136,7 +138,7 @@ public class GameRunningState : IGameState
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>()
         {
-            _mazeInfo, _findKeyTextWriterInfo, HeroCamera,
+            _maze, _findKeyTextWriter, HeroCamera,
         };
 
         foreach (var enemyInfo in _enemiesInfo)
@@ -149,39 +151,35 @@ public class GameRunningState : IGameState
 
     private void PreInitializeMaze()
     {
-        var maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
+        _maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
 
-        MazeGenerator.MakeCyclic(maze, GameParameters.MazeDeadEndsRemovePercentage);
+        MazeGenerator.MakeCyclic(_maze, GameParameters.MazeDeadEndsRemovePercentage);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), GameParameters.MazeDropTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), GameParameters.MazeDropTrapInsertingPercentage);
 
-        MazeGenerator.InsertExit(maze);
+        MazeGenerator.InsertExit(_maze);
 
-        MazeGenerator.InsertItem(maze, new Key());
+        MazeGenerator.InsertItem(_maze, new Key());
 
-        maze.InitializeComponentsList();
-
-        _mazeInfo = new MazeInfo(maze);
+        _maze.InitializeComponentsList();
     }
 
     private void PostInitializeMaze()
     {
-        _mazeInfo.HeroInfo = HeroInfo;
+        _maze.PostInitialize(HeroInfo);
     }
 
     private void InitializeHero()
     {
-        var maze = _mazeInfo.Maze;
-
-        var heroCell = MazeGenerator.GetRandomCell(maze, maze.IsFloor).First();
-        var heroPosition = maze.GetCellPosition(heroCell);
+        var heroCell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
+        var heroPosition = _maze.GetCellPosition(heroCell);
 
         var hero = Hero.GetInstance();
 
         HeroInfo = new SpriteInfo(hero, heroPosition);
 
-        hero.Initialize(HeroInfo, _mazeInfo, GameParameters.HeroHalfHeartsHealth);
+        hero.Initialize(HeroInfo, this._maze, GameParameters.HeroHealth);
     }
 
     private void InitializeEnemies()
@@ -227,45 +225,34 @@ public class GameRunningState : IGameState
 
     private void InitializeTextWriters()
     {
-        void InitializeFindKeyTextWriter()
-        {
-            var findKeyTextWriter = FindKeyTextWriter.GetInstance();
+        _findKeyTextWriter = new FindKeyTextWriter(HeroInfo, _maze);
 
-            _findKeyTextWriterInfo = new TextWriterInfo(findKeyTextWriter);
-
-            findKeyTextWriter.Initialize(HeroInfo, _mazeInfo, _findKeyTextWriterInfo);
-        }
-
-        InitializeFindKeyTextWriter();
+        _heroHealthWriter = new HeroHealthWriter(HeroInfo);
     }
 
     private SpriteInfo CreateGuard()
     {
         var guard = new Guard();
 
-        var maze = _mazeInfo.Maze;
-
-        var guardCell = MazeGenerator.GetRandomCell(maze, IsEnemyFreeFloorCell).First();
-        var guardPosition = maze.GetCellPosition(guardCell);
+        var guardCell = MazeGenerator.GetRandomCell(_maze, IsEnemyFreeFloorCell).First();
+        var guardPosition = _maze.GetCellPosition(guardCell);
 
         var guardInfo = new SpriteInfo(guard, guardPosition);
 
-        guard.Initialize(guardInfo, HeroInfo, _mazeInfo);
+        guard.Initialize(guardInfo, HeroInfo, this._maze);
 
         return guardInfo;
     }
 
     private bool IsEnemyFreeFloorCell(Cell cell)
     {
-        var maze = _mazeInfo.Maze;
-
-        if (!maze.IsFloor(cell))
+        if (!_maze.IsFloor(cell))
         {
             return false;
         }
 
-        var mazeTile = maze.Skeleton[cell.Y, cell.X];
-        var cellPosition = maze.GetCellPosition(cell);
+        var mazeTile = _maze.Skeleton[cell.Y, cell.X];
+        var cellPosition = _maze.GetCellPosition(cell);
         var distanceToHero = Vector2.Distance(HeroInfo.Position, cellPosition);
 
         var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
@@ -386,13 +373,13 @@ public class GameRunningState : IGameState
         }
     }
 
-    private void UpdateTextWriterInfo(TextWriterInfo writerInfo, GameTime gameTime)
+    private void UpdateTextWriterInfo(TextWriter textWriter, GameTime gameTime)
     {
-        if (writerInfo.TextWriter.IsDead)
+        if (textWriter.IsDead)
         {
-            _deadGameComponents.Add(writerInfo);
+            _deadGameComponents.Add(textWriter);
         }
 
-        writerInfo.Update(gameTime);
+        textWriter.Update(gameTime);
     }
 }

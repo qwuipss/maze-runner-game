@@ -6,45 +6,41 @@ namespace MazeRunner.Gui.Buttons;
 
 public class RadioButtonContainer : MazeRunnerGameComponent
 {
-    protected ButtonInfo[] ButtonsInfo { get; init; }
+    protected RadioButton[] Buttons { get; init; }
 
-    public RadioButtonContainer(params ButtonInfo[] buttonsInfo)
+    public RadioButtonContainer(params RadioButton[] buttons)
     {
-        ButtonsInfo = buttonsInfo;
+        Buttons = buttons;
 
-        foreach (var buttonInfo in ButtonsInfo)
+        foreach (var button in Buttons)
         {
-            var radionButton = (RadioButton)buttonInfo.Button;
-
-            radionButton.ButtonSelected += ResetButtons;
+            button.ButtonSelected += ResetButtons;
         }
     }
 
     public override void Draw(GameTime gameTime)
     {
-        foreach (var buttonInfo in ButtonsInfo)
+        foreach (var button in Buttons)
         {
-            buttonInfo.Draw(gameTime);
+            button.Draw(gameTime);
         }
     }
 
     public override void Update(GameTime gameTime)
     {
-        foreach (var buttonInfo in ButtonsInfo)
+        foreach (var button in Buttons)
         {
-            buttonInfo.Update(gameTime);
+            button.Update(gameTime);
         }
     }
 
     protected void ResetButtons()
     {
-        foreach (var buttonInfo in ButtonsInfo)
+        foreach (var button in Buttons)
         {
-            var radioButton = (RadioButton)buttonInfo.Button;
-
-            if (radioButton.IsSelected)
+            if (button.IsSelected)
             {
-                radioButton.Reset();
+                button.Reset();
             }
         }
     }

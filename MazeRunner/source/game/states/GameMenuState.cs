@@ -27,8 +27,8 @@ public class GameMenuState : IGameState
         {
             Easy = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 25,
-                MazeHeight = 25,
+                MazeWidth = 5,//25
+                MazeHeight = 5,
 
                 MazeDeadEndsRemovePercentage = 55,
 
@@ -38,9 +38,9 @@ public class GameMenuState : IGameState
                 HeroCameraScaleFactor = 7,
                 HeroCameraShadowTresholdCoeff = 2.4f,
 
-                GuardSpawnCount = 10,
+                GuardSpawnCount = 0,//10
 
-                HeroHalfHeartsHealth = 5,
+                HeroHealth = 5,
             });
 
             Normal = new Lazy<GameParameters>(() => new GameParameters()
@@ -58,7 +58,7 @@ public class GameMenuState : IGameState
 
                 GuardSpawnCount = 15,
 
-                HeroHalfHeartsHealth = 3,
+                HeroHealth = 3,
             });
 
             Hard = new Lazy<GameParameters>(() => new GameParameters()
@@ -76,7 +76,7 @@ public class GameMenuState : IGameState
 
                 GuardSpawnCount = 25,
 
-                HeroHalfHeartsHealth = 2,
+                HeroHealth = 2,
             });
         }
     }
@@ -93,11 +93,11 @@ public class GameMenuState : IGameState
 
     private GraphicsDevice _graphicsDevice;
 
-    private ButtonInfo _startButtonInfo;
+    private Button _startButton;
 
-    private ButtonInfo _quitButtonInfo;
+    private Button _quitButton;
 
-    private MazeInfo _mazeInfo;
+    private Maze _maze;
 
     private StaticCamera _staticCamera;
 
@@ -151,87 +151,57 @@ public class GameMenuState : IGameState
     {
         void InitializeGameStartButton(int scaleDivider)
         {
-            var startButton = new StartButton(() => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value)));
+            var boxScale = _viewWidth / scaleDivider;
+            
+            _startButton = new StartButton(() => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value)), boxScale);
 
-            var startButtonBoxScale = _viewWidth / scaleDivider;
+            _startButton.Initialize();
 
-            _startButtonInfo = new ButtonInfo(startButton, startButtonBoxScale);
-
-            startButton.Initialize(_startButtonInfo);
-
-            var startButtonPosition = new Vector2((_viewWidth - startButton.Width) / 2, (_viewHeight - startButton.Height) / 2);
-
-            _startButtonInfo.Position = startButtonPosition;
+            _startButton.Position = new Vector2((_viewWidth - _startButton.Width) / 2, (_viewHeight - _startButton.Height) / 2);
         }
 
         void InitializeQuitGameButton(int scaleDivider)
         {
-            var quitButton = new QuitButton(() => Environment.Exit(0));
+            var boxScale = _viewWidth / scaleDivider;
 
-            var quitButtonBoxScale = _viewWidth / scaleDivider;
+            _quitButton = new QuitButton(() => Environment.Exit(0), boxScale);
 
-            _quitButtonInfo = new ButtonInfo(quitButton, quitButtonBoxScale);
+            _quitButton.Initialize();
 
-            quitButton.Initialize(_quitButtonInfo);
-
-            var quitButtonPosition = new Vector2((_viewWidth - quitButton.Width) / 2, 5 * _viewHeight / 7 - quitButton.Height / 2);
-
-            _quitButtonInfo.Position = quitButtonPosition;
+            _quitButton.Position = new Vector2((_viewWidth - _quitButton.Width) / 2, 5 * _viewHeight / 7 - _quitButton.Height / 2);
         }
 
         void InitializeGameDifficultySelectRadioButtons(int scaleDivider, float buttonsOffsetCoeff)
         {
-            var easySelectButtonBoxScale = _viewWidth / scaleDivider;
+            var boxScale = _viewWidth / scaleDivider;
 
-            var normalSelectButtonBoxScale = easySelectButtonBoxScale;
-            var hardSelectButtonBoxScale = normalSelectButtonBoxScale;
+            var normalSelectButton = new NormalModeSelectRadioButton(() => _difficulty = GameModes.Normal, boxScale);
 
-            #region NormalModeSelectButton
-            var normalSelectButton = new NormalModeSelectRadioButton(() => _difficulty = GameModes.Normal);
-
-            var normalSelectButtonInfo = new ButtonInfo(normalSelectButton, normalSelectButtonBoxScale);
-
-            normalSelectButton.Initialize(normalSelectButtonInfo);
-
-            var startMenuButton = _startButtonInfo.Button;
-            var startMenuButtonPosition = _startButtonInfo.Position;
+            normalSelectButton.Initialize();
 
             var normalSelectButtonPosition = new Vector2(
                 (_viewWidth - normalSelectButton.Width) / 2,
-                startMenuButtonPosition.Y + startMenuButton.Height * buttonsOffsetCoeff);
+                _startButton.Position.Y + _startButton.Height * buttonsOffsetCoeff);
 
-            normalSelectButtonInfo.Position = normalSelectButtonPosition;
-            #endregion
+            normalSelectButton.Position = normalSelectButtonPosition;
 
-            #region EasyModeSelectButton
-            var easySelectButton = new EasyModeSelectRadioButton(() => _difficulty = GameModes.Easy);
+            var easySelectButton = new EasyModeSelectRadioButton(() => _difficulty = GameModes.Easy, boxScale);
 
-            var easySelectButtonInfo = new ButtonInfo(easySelectButton, easySelectButtonBoxScale);
+            easySelectButton.Initialize();
 
-            easySelectButton.Initialize(easySelectButtonInfo);
-
-            var easySelectButtonPosition = new Vector2(
+            easySelectButton.Position = new Vector2(
                 normalSelectButtonPosition.X - easySelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            easySelectButtonInfo.Position = easySelectButtonPosition;
-            #endregion
+            var hardSelectButton = new HardModeSelectRadioButton(() => _difficulty = GameModes.Hard, boxScale);
 
-            #region HardModeSelectButton
-            var hardSelectButton = new HardModeSelectRadioButton(() => _difficulty = GameModes.Hard);
+            hardSelectButton.Initialize();
 
-            var hardSelectButtonInfo = new ButtonInfo(hardSelectButton, normalSelectButtonBoxScale);
-
-            hardSelectButton.Initialize(hardSelectButtonInfo);
-
-            var hardSelectButtonPosition = new Vector2(
+            hardSelectButton.Position = new Vector2(
                 normalSelectButtonPosition.X + normalSelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            hardSelectButtonInfo.Position = hardSelectButtonPosition;
-            #endregion
-
-            _difficultySelectButtonsContainer = new RadioButtonContainer(easySelectButtonInfo, normalSelectButtonInfo, hardSelectButtonInfo);
+            _difficultySelectButtonsContainer = new RadioButtonContainer(easySelectButton, normalSelectButton, hardSelectButton);
 
             normalSelectButton.Push();
         }
@@ -257,20 +227,18 @@ public class GameMenuState : IGameState
 
         var frameSize = (double)Textures.MazeTiles.Floor_1.Width;
 
-        var maze = MazeGenerator.GenerateMaze((int)Math.Ceiling(_viewWidth / frameSize) + 1, (int)Math.Ceiling(_viewHeight / frameSize) + 1);
+        _maze = MazeGenerator.GenerateMaze((int)Math.Ceiling(_viewWidth / frameSize) + 1, (int)Math.Ceiling(_viewHeight / frameSize) + 1);
 
-        MazeGenerator.MakeCyclic(maze, deadEndsRemovePercentage);
+        MazeGenerator.MakeCyclic(_maze, deadEndsRemovePercentage);
 
-        MazeGenerator.InsertTraps(maze, () => new BayonetTrap(), bayonetTrapInsertingPercentage);
-        MazeGenerator.InsertTraps(maze, () => new DropTrap(), dropTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), bayonetTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), dropTrapInsertingPercentage);
 
-        MazeGenerator.InsertExit(maze);
+        MazeGenerator.InsertExit(_maze);
 
-        MazeGenerator.InsertItem(maze, new Key());
+        MazeGenerator.InsertItem(_maze, new Key());
 
-        maze.InitializeComponentsList();
-
-        _mazeInfo = new MazeInfo(maze);
+        _maze.InitializeComponentsList();
     }
 
     private void InitializeStaticCamera()
@@ -297,7 +265,7 @@ public class GameMenuState : IGameState
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            _startButtonInfo, _quitButtonInfo, _mazeInfo, _staticCamera, _difficultySelectButtonsContainer,
+            _startButton, _quitButton, _maze, _staticCamera, _difficultySelectButtonsContainer,
         };
     }
 }

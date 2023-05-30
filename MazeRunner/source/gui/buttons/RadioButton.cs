@@ -8,7 +8,7 @@ public abstract class RadioButton : Button
 
     public bool IsSelected { get; set; }
 
-    protected RadioButton(Action onClick) : base(onClick)
+    protected RadioButton(Action onClick, float boxScale) : base(onClick, boxScale)
     {
     }
 

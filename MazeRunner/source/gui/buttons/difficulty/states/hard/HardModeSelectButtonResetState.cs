@@ -11,7 +11,7 @@ public class HardModeSelectButtonResetState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public HardModeSelectButtonResetState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public HardModeSelectButtonResetState(Button button) : base(button)
     {
         var framePosX = (FramesCount - 1) * FrameWidth;
 
@@ -28,7 +28,7 @@ public class HardModeSelectButtonResetState : ButtonPushBaseState
 
             if (animationPoint.X is 0)
             {
-                return new HardModeSelectButtonIdleState(ButtonInfo);
+                return new HardModeSelectButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X - FrameWidth;

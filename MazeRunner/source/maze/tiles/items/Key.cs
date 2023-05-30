@@ -37,10 +37,10 @@ public sealed class Key : MazeItem
         return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 
-    public override void ProcessCollecting(MazeInfo mazeInfo, Cell cell)
+    public override void ProcessCollecting(Maze maze, Cell cell)
     {
-        base.ProcessCollecting(mazeInfo, cell);
+        base.ProcessCollecting(maze, cell);
 
-        mazeInfo.IsKeyCollected = true;
+        maze.IsKeyCollected = true;
     }
 }

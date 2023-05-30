@@ -1,12 +1,13 @@
-﻿using MazeRunner.Gui.Buttons.States;
-using MazeRunner.Wrappers;
+﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
+using MazeRunner.Gui.Buttons.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 
 namespace MazeRunner.Gui.Buttons;
 
-public abstract class Button
+public abstract class Button : MazeRunnerGameComponent
 {
     public static float DrawingPriority => .15f;
 
@@ -14,28 +15,33 @@ public abstract class Button
 
     public Rectangle CurrentAnimationFrame => State.CurrentAnimationFrame;
 
-    public float Width => State.FrameWidth * SelfInfo.BoxScale;
+    public float Width => State.FrameWidth * BoxScale;
 
-    public float Height => State.FrameHeight * SelfInfo.BoxScale;
+    public float Height => State.FrameHeight * BoxScale;
 
     public Action OnClick { get; init; }
 
+    public float BoxScale { get; init; }
+
+    public Vector2 Position { get; set; }
+
     protected IButtonState State { get; set; }
 
-    protected ButtonInfo SelfInfo { get; set; }
-
-    public Button(Action onClick)
+    public Button(Action onClick, float boxScale)
     {
         OnClick = onClick;
+        BoxScale = boxScale;
     }
 
-    public virtual void Initialize(ButtonInfo buttonInfo)
-    {
-        SelfInfo = buttonInfo;
-    }
+    public abstract void Initialize();
 
-    public virtual void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         State = State.ProcessState(gameTime);
+    }
+
+    public override void Draw(GameTime gameTime)
+    {
+        Drawer.DrawButton(this, Position);
     }
 }

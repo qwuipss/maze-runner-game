@@ -10,32 +10,32 @@ namespace MazeRunner.Gui.Buttons.States;
 
 public abstract class ButtonBaseState : IButtonState
 {
+    protected Button Button { get; init; }
+
+    protected ButtonBaseState(Button button) 
+    {
+        Button = button;
+    }
+
     public abstract Texture2D Texture { get; }
 
     public abstract int FramesCount { get; }
-
-    protected ButtonInfo ButtonInfo { get; init; }
-
-    public ButtonBaseState(ButtonInfo buttonInfo)
-    {
-        ButtonInfo = buttonInfo;
-    }
 
     public int FrameWidth => Texture.Width / FramesCount;
 
     public int FrameHeight => Texture.Height;
 
-    public RectangleXna CurrentAnimationFrame => new RectangleXna(CurrentAnimationFramePoint, new PointXna(FrameWidth, FrameHeight));
+    public RectangleXna CurrentAnimationFrame => new(CurrentAnimationFramePoint, new PointXna(FrameWidth, FrameHeight));
 
     protected PointXna CurrentAnimationFramePoint { get; set; }
 
-    protected bool IsCursorHoverButton(MouseState mouseState, ButtonInfo buttonInfo)
+    protected bool IsCursorHoverButton(MouseState mouseState)
     {
         var cursorPosition = mouseState.Position;
         var materialCursorBox = new RectangleF(cursorPosition.X, cursorPosition.Y, float.Epsilon, float.Epsilon);
 
-        var buttonPosition = buttonInfo.Position;
-        var boxScale = buttonInfo.BoxScale;
+        var buttonPosition = Button.Position;
+        var boxScale = Button.BoxScale;
 
         var buttonBox = new RectangleF(buttonPosition.X, buttonPosition.Y, FrameWidth * boxScale, FrameHeight * boxScale);
 

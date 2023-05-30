@@ -8,15 +8,13 @@ public class HardModeSelectRadioButton : RadioButton
 {
     public override event Action ButtonSelected;
 
-    public HardModeSelectRadioButton(Action onClick) : base(onClick)
+    public HardModeSelectRadioButton(Action onClick, float boxScale) : base(onClick, boxScale)
     {
     }
 
-    public override void Initialize(ButtonInfo buttonInfo)
+    public override void Initialize()
     {
-        base.Initialize(buttonInfo);
-
-        State = new HardModeSelectButtonIdleState(SelfInfo);
+        State = new HardModeSelectButtonIdleState(this);
     }
 
     public override void Select()
@@ -27,13 +25,13 @@ public class HardModeSelectRadioButton : RadioButton
 
     public override void Reset()
     {
-        State = new HardModeSelectButtonResetState(SelfInfo);
+        State = new HardModeSelectButtonResetState(this);
     }
 
     public override void Push()
     {
         Select();
 
-        State = new HardModeSelectButtonSelectedState(SelfInfo);
+        State = new HardModeSelectButtonSelectedState(this);
     }
 }

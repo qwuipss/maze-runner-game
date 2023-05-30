@@ -11,7 +11,7 @@ public class NormalModeSelectButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public NormalModeSelectButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public NormalModeSelectButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class NormalModeSelectButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new NormalModeSelectButtonSelectedState(ButtonInfo);
+                return new NormalModeSelectButtonSelectedState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

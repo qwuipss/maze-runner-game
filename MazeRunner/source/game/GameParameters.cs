@@ -15,5 +15,5 @@ public class GameParameters
 
     public int GuardSpawnCount;
 
-    public int HeroHalfHeartsHealth;
+    public int HeroHealth;
 }

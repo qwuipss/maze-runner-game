@@ -3,6 +3,7 @@ using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MazeRunner.Gui.Buttons.States;
 
@@ -12,13 +13,18 @@ public class EasyModeSelectButtonIdleState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public EasyModeSelectButtonIdleState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public EasyModeSelectButtonIdleState(Button button) : base(button)
     {
-        var radionButton = (RadioButton)buttonInfo.Button;
-
-        if (radionButton.IsSelected)
+        if (button is RadioButton radioButton)
         {
-            radionButton.IsSelected = false;
+            if (radioButton.IsSelected)
+            {
+                radioButton.IsSelected = false;
+            }
+        }
+        else
+        {
+            throw new InvalidCastException();
         }
     }
 
@@ -26,9 +32,9 @@ public class EasyModeSelectButtonIdleState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (IsCursorHoverButton(mouseState, ButtonInfo))
+        if (IsCursorHoverButton(mouseState))
         {
-            return new EasyModeSelectButtonHoverState(ButtonInfo);
+            return new EasyModeSelectButtonHoverState(Button);
         }
 
         return this;

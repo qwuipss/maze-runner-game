@@ -22,8 +22,8 @@ public abstract class MazeItem : MazeTile
         }
     }
 
-    public virtual void ProcessCollecting(MazeInfo mazeInfo, Cell cell)
+    public virtual void ProcessCollecting(Maze maze, Cell cell)
     {
-        mazeInfo.Maze.RemoveItem(cell);
+        maze.RemoveItem(cell);
     }
 }

@@ -2,6 +2,7 @@
 using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MazeRunner.Gui.Buttons.States;
 
@@ -11,10 +12,16 @@ public class HardModeSelectButtonSelectedState : ButtonBaseState
 
     public override int FramesCount => 5;
 
-    public HardModeSelectButtonSelectedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public HardModeSelectButtonSelectedState(Button button) : base(button)
     {
-        var radioButton = (RadioButton)buttonInfo.Button;
-        radioButton.Select();
+        if (button is RadioButton radioButton)
+        {
+            radioButton.Select();
+        }
+        else
+        {
+            throw new InvalidCastException();
+        }
 
         var framePosX = (FramesCount - 1) * FrameWidth;
 

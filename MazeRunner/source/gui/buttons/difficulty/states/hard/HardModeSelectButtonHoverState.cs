@@ -12,7 +12,7 @@ public class HardModeSelectButtonHoverState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public HardModeSelectButtonHoverState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public HardModeSelectButtonHoverState(Button button) : base(button)
     {
     }
 
@@ -20,14 +20,14 @@ public class HardModeSelectButtonHoverState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (!IsCursorHoverButton(mouseState, ButtonInfo))
+        if (!IsCursorHoverButton(mouseState))
         {
-            return new HardModeSelectButtonIdleState(ButtonInfo);
+            return new HardModeSelectButtonIdleState(Button);
         }
 
         if (mouseState.LeftButton == ButtonState.Pressed)
         {
-            return new HardModeSelectButtonClickedState(ButtonInfo);
+            return new HardModeSelectButtonClickedState(Button);
         }
 
         return this;

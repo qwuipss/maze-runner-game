@@ -6,14 +6,12 @@ namespace MazeRunner.Gui.Buttons;
 
 public class ResumeButton : Button
 {
-    public ResumeButton(Action onClick) : base(onClick)
+    public ResumeButton(Action onClick, float boxScale) : base(onClick, boxScale)
     {
     }
 
-    public override void Initialize(ButtonInfo buttonInfo)
+    public override void Initialize()
     {
-        base.Initialize(buttonInfo);
-
-        State = new ResumeButtonIdleState(buttonInfo);
+        State = new ResumeButtonIdleState(this);
     }
 }

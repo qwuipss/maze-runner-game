@@ -11,7 +11,7 @@ public class StartButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public StartButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public StartButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class StartButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new StartButtonIdleState(ButtonInfo);
+                return new StartButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

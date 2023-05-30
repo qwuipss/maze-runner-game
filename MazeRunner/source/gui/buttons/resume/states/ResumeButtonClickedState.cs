@@ -11,7 +11,7 @@ public class ResumeButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public ResumeButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public ResumeButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class ResumeButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new ResumeButtonIdleState(ButtonInfo);
+                return new ResumeButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

@@ -8,15 +8,13 @@ public class NormalModeSelectRadioButton : RadioButton
 {
     public override event Action ButtonSelected;
 
-    public NormalModeSelectRadioButton(Action onClick) : base(onClick)
+    public NormalModeSelectRadioButton(Action onClick, float boxScale) : base(onClick, boxScale)
     {
     }
 
-    public override void Initialize(ButtonInfo buttonInfo)
+    public override void Initialize()
     {
-        base.Initialize(buttonInfo);
-
-        State = new NormalModeSelectButtonIdleState(SelfInfo);
+        State = new NormalModeSelectButtonIdleState(this);
     }
 
     public override void Select()
@@ -27,13 +25,13 @@ public class NormalModeSelectRadioButton : RadioButton
 
     public override void Reset()
     {
-        State = new NormalModeSelectButtonResetState(SelfInfo);
+        State = new NormalModeSelectButtonResetState(this);
     }
 
     public override void Push()
     {
         Select();
 
-        State = new NormalModeSelectButtonSelectedState(SelfInfo);
+        State = new NormalModeSelectButtonSelectedState(this);
     }
 }

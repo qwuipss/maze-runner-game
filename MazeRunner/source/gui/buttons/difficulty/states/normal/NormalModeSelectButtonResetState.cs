@@ -11,7 +11,7 @@ public class NormalModeSelectButtonResetState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public NormalModeSelectButtonResetState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public NormalModeSelectButtonResetState(Button button) : base(button)
     {
         var framePosX = (FramesCount - 1) * FrameWidth;
 
@@ -28,7 +28,7 @@ public class NormalModeSelectButtonResetState : ButtonPushBaseState
 
             if (animationPoint.X is 0)
             {
-                return new NormalModeSelectButtonIdleState(ButtonInfo);
+                return new NormalModeSelectButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X - FrameWidth;

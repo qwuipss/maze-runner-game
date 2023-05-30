@@ -8,15 +8,13 @@ public class EasyModeSelectRadioButton : RadioButton
 {
     public override event Action ButtonSelected;
 
-    public EasyModeSelectRadioButton(Action onClick) : base(onClick)
+    public EasyModeSelectRadioButton(Action onClick, float boxScale) : base(onClick, boxScale)
     {
     }
 
-    public override void Initialize(ButtonInfo buttonInfo)
+    public override void Initialize()
     {
-        base.Initialize(buttonInfo);
-
-        State = new EasyModeSelectButtonIdleState(SelfInfo);
+        State = new EasyModeSelectButtonIdleState(this);
     }
 
     public override void Select()
@@ -27,13 +25,13 @@ public class EasyModeSelectRadioButton : RadioButton
 
     public override void Reset()
     {
-        State = new EasyModeSelectButtonResetState(SelfInfo);
+        State = new EasyModeSelectButtonResetState(this);
     }
 
     public override void Push()
     {
         Select();
 
-        State = new EasyModeSelectButtonSelectedState(SelfInfo);
+        State = new EasyModeSelectButtonSelectedState(this);
     }
 }

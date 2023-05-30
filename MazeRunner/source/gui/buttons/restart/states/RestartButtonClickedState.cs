@@ -11,7 +11,7 @@ public class RestartButtonClickedState : ButtonPushBaseState
 
     public override int FramesCount => 5;
 
-    public RestartButtonClickedState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public RestartButtonClickedState(Button button) : base(button)
     {
     }
 
@@ -25,9 +25,9 @@ public class RestartButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                ButtonInfo.Button.OnClick.Invoke();
+                Button.OnClick.Invoke();
 
-                return new RestartButtonIdleState(ButtonInfo);
+                return new RestartButtonIdleState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

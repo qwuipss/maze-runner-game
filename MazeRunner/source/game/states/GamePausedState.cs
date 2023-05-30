@@ -28,11 +28,11 @@ public class GamePausedState : IGameState
 
     private int _viewHeight;
 
-    private ButtonInfo _menuButtonInfo;
+    private Button _menuButton;
 
-    private ButtonInfo _restartButtonInfo;
+    private Button _restartButton;
 
-    private ButtonInfo _resumeButtonInfo;
+    private Button _resumeButton;
 
     private List<MazeRunnerGameComponent> _components;
 
@@ -88,58 +88,39 @@ public class GamePausedState : IGameState
     {
         void InitializeRestartButton(int scaleDivider)
         {
-            var restartButton = new RestartButton(() => RestartGame());
+            var boxScale = _viewWidth / scaleDivider;
 
-            var restartButtonBoxScale = _viewWidth / scaleDivider;
+            _restartButton = new RestartButton(() => RestartGame(), boxScale);
 
-            _restartButtonInfo = new ButtonInfo(restartButton, restartButtonBoxScale);
+            _restartButton.Initialize();
 
-            restartButton.Initialize(_restartButtonInfo);
-
-            var heroInfo = _runningState.HeroInfo;
-
-            var hero = heroInfo.Sprite;
-            var heroPosition = heroInfo.Position;
-
-            var restartButtonPosition = new Vector2((_viewWidth - restartButton.Width) / 2, (_viewHeight - restartButton.Height) / 2);
-
-            _restartButtonInfo.Position = restartButtonPosition;
+            _restartButton.Position = new Vector2((_viewWidth - _restartButton.Width) / 2, (_viewHeight - _restartButton.Height) / 2);
         }
 
         void InitializeResumeButton(int scaleDivider, float buttonOffsetCoeff)
         {
-            var resumeButton = new ResumeButton(() => ResumeGame());
+            var boxScale = _viewWidth / scaleDivider;
 
-            var resumeButtonBoxScale = _viewWidth / scaleDivider;
+            _resumeButton = new ResumeButton(() => ResumeGame(), boxScale);
 
-            _resumeButtonInfo = new ButtonInfo(resumeButton, resumeButtonBoxScale);
+            _resumeButton.Initialize(); 
 
-            resumeButton.Initialize(_resumeButtonInfo);
+            var restartButtonPosition = _restartButton.Position;
 
-            var restartButton = _restartButtonInfo.Button;
-            var restartButtonPosition = _restartButtonInfo.Position;
-
-            var resumeButtonPosition = new Vector2(restartButtonPosition.X, restartButtonPosition.Y - restartButton.Height * buttonOffsetCoeff);
-
-            _resumeButtonInfo.Position = resumeButtonPosition;
+            _resumeButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y - _restartButton.Height * buttonOffsetCoeff);
         }
 
         void InitializeMenuButton(int scaleDivider, float buttonOffsetCoeff)
         {
-            var menuButton = new MenuButton(() => GoToMenu());
+            var boxScale = _viewWidth / scaleDivider;
 
-            var menuButtonBoxScale = _viewWidth / scaleDivider;
+            _menuButton = new MenuButton(() => GoToMenu(), boxScale);
 
-            _menuButtonInfo = new ButtonInfo(menuButton, menuButtonBoxScale);
+            _menuButton.Initialize();
 
-            menuButton.Initialize(_menuButtonInfo);
+            var restartButtonPosition = _restartButton.Position;
 
-            var restartButton = _restartButtonInfo.Button;
-            var restartButtonPosition = _restartButtonInfo.Position;
-
-            var menuButtonPosition = new Vector2(restartButtonPosition.X, restartButtonPosition.Y + restartButton.Height * buttonOffsetCoeff);
-
-            _menuButtonInfo.Position = menuButtonPosition;
+            _menuButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y + _restartButton.Height * buttonOffsetCoeff);
         }
 
         var buttonsScaleDivider = 400;
@@ -174,7 +155,7 @@ public class GamePausedState : IGameState
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            _resumeButtonInfo, _restartButtonInfo, _menuButtonInfo, _staticCamera,
+            _resumeButton, _restartButton, _menuButton, _staticCamera,
         };
     }
 

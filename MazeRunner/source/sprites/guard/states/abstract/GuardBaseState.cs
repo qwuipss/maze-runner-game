@@ -24,7 +24,7 @@ public abstract class GuardBaseState : SpriteBaseState
         };
     }
 
-    protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo, MazeInfo mazeInfo, out IEnumerable<Vector2> pathToHero)
+    protected static bool IsHeroNearby(SpriteInfo heroInfo, SpriteInfo guardInfo, Maze maze, out IEnumerable<Vector2> pathToHero)
     {
         if (heroInfo.Sprite.IsDead)
         {
@@ -42,7 +42,7 @@ public abstract class GuardBaseState : SpriteBaseState
             return false;
         }
 
-        var pathExist = GuardMoveBaseState.PathToHeroExist(heroInfo, guardInfo, mazeInfo, out pathToHero);
+        var pathExist = GuardMoveBaseState.PathToHeroExist(heroInfo, guardInfo, maze, out pathToHero);
 
         return pathExist;
     }

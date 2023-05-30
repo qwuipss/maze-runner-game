@@ -12,7 +12,7 @@ public class QuitButtonIdleState : ButtonBaseState
 
     public override int FramesCount => 1;
 
-    public QuitButtonIdleState(ButtonInfo buttonInfo) : base(buttonInfo)
+    public QuitButtonIdleState(Button button) : base(button)
     {
     }
 
@@ -20,9 +20,9 @@ public class QuitButtonIdleState : ButtonBaseState
     {
         var mouseState = Mouse.GetState();
 
-        if (IsCursorHoverButton(mouseState, ButtonInfo))
+        if (IsCursorHoverButton(mouseState))
         {
-            return new QuitButtonHoverState(ButtonInfo);
+            return new QuitButtonHoverState(Button);
         }
 
         return this;

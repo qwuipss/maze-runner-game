@@ -25,9 +25,9 @@ public class GameOverState : IGameState
 
     private int _viewHeight;
 
-    private ButtonInfo _restartButtonInfo;
+    private Button _restartButton;
 
-    private ButtonInfo _menuButtonInfo;
+    private Button _menuButton;
 
     private StaticCamera _staticCamera;
 
@@ -87,32 +87,24 @@ public class GameOverState : IGameState
     {
         void InitializeRestartButton(int scaleDivider)
         {
-            var restartButton = new RestartButton(() => RestartGame());
+            var boxScale = _viewWidth / scaleDivider;
 
-            var restartButtonBoxScale = _viewWidth / scaleDivider;
+            _restartButton = new RestartButton(() => RestartGame(), boxScale);
 
-            _restartButtonInfo = new ButtonInfo(restartButton, restartButtonBoxScale);
+            _restartButton.Initialize();
 
-            restartButton.Initialize(_restartButtonInfo);
-
-            var restartButtonPosition = new Vector2(_viewWidth / 3 - restartButton.Width / 2, _viewHeight / 2);
-
-            _restartButtonInfo.Position = restartButtonPosition;
+            _restartButton.Position = new Vector2(_viewWidth / 3 - _restartButton.Width / 2, _viewHeight / 2);
         }
 
         void InitializeMenuButton(int scaleDivider)
         {
-            var menuButton = new MenuButton(() => GoToMenu());
+            var boxScale = _viewWidth / scaleDivider;
+            
+            _menuButton = new MenuButton(() => GoToMenu(), boxScale);
 
-            var menuButtonBoxScale = _viewWidth / scaleDivider;
+            _menuButton.Initialize();
 
-            _menuButtonInfo = new ButtonInfo(menuButton, menuButtonBoxScale);
-
-            menuButton.Initialize(_menuButtonInfo);
-
-            var menuButtonPosition = new Vector2(2 * _viewWidth / 3 - menuButton.Width / 2, _viewHeight / 2);
-
-            _menuButtonInfo.Position = menuButtonPosition;
+            _menuButton.Position = new Vector2(2 * _viewWidth / 3 - _menuButton.Width / 2, _viewHeight / 2); ;
         }
 
         var buttonsScaleDivider = 360;
@@ -144,7 +136,7 @@ public class GameOverState : IGameState
     {
         _components = new List<MazeRunnerGameComponent>()
         {
-            _restartButtonInfo, _menuButtonInfo,
+            _restartButton, _menuButton,
         };
     }
 
