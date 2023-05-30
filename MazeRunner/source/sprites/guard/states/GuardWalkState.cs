@@ -38,7 +38,7 @@ public class GuardWalkState : GuardMoveBaseState
         var position = GetSpriteNormalizedPosition(Guard);
         var direction = GetMovementDirection(position, walkPosition);
 
-        if (!ProcessMovement(Guard, direction, Maze, gameTime))
+        if (!ProcessMovement(direction, gameTime))
         {
             return new GuardIdleState(this, Hero, Guard, Maze);
         }
@@ -75,7 +75,7 @@ public class GuardWalkState : GuardMoveBaseState
 
         for (int i = 0; i < pathLength; i++)
         {
-            var adjacentCells = GetAdjacentMovingCells(currentCell, exitCell, Maze, visitedCells).ToArray();
+            var adjacentCells = GetAdjacentMovingCells(currentCell, Maze, visitedCells).ToArray();
 
             if (adjacentCells.Length is 0)
             {

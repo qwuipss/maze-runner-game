@@ -7,15 +7,15 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardChaseAwaitState : GuardMoveBaseState
 {
-    public GuardChaseAwaitState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
-    {
-    }
-
     public override Texture2D Texture => Textures.Sprites.Guard.Idle;
 
     public override int FramesCount => 4;
 
     public override double UpdateTimeDelayMs => double.MaxValue;
+
+    public GuardChaseAwaitState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
+    {
+    }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
@@ -34,9 +34,9 @@ public class GuardChaseAwaitState : GuardMoveBaseState
             return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
-        var direction = GetMovementDirection(Guard, pathToHero);
+        var direction = GetMovementDirection(pathToHero);
 
-        if (ProcessMovement(Guard, direction, Maze, gameTime))
+        if (ProcessMovement(direction, gameTime))
         {
             return new GuardChaseState(this, Hero, Guard, Maze);
         }

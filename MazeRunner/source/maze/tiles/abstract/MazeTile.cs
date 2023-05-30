@@ -1,4 +1,6 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.Components;
+using MazeRunner.Drawing;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,13 +9,13 @@ using RectagleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.MazeBase.Tiles;
 
-public abstract class MazeTile
+public abstract class MazeTile : MazeRunnerGameComponent
 {
     public abstract TileType TileType { get; }
 
-    public virtual float FrameRotationAngle { get; set; }
+    public float FrameRotationAngle { get; set; }
 
-    public virtual Vector2 OriginFrameRotationVector { get; set; }
+    public Vector2 OriginFrameRotationVector { get; set; }
 
     public virtual float DrawingPriority
     {
@@ -23,7 +25,7 @@ public abstract class MazeTile
         }
     }
 
-    public virtual Texture2D Texture
+    public Texture2D Texture
     {
         get
         {
@@ -31,7 +33,7 @@ public abstract class MazeTile
         }
     }
 
-    public virtual int FrameSize
+    public int FrameSize
     {
         get
         {
@@ -39,7 +41,7 @@ public abstract class MazeTile
         }
     }
 
-    public virtual RectagleXna CurrentAnimationFrame
+    public RectagleXna CurrentAnimationFrame
     {
         get
         {
@@ -48,6 +50,8 @@ public abstract class MazeTile
     }
 
     protected virtual IMazeTileState State { get; set; }
+
+    public Vector2 Position { get; set; }
 
     public static Vector2 GetOriginFrameRotationVector(MazeTile tile)
     {
@@ -66,13 +70,18 @@ public abstract class MazeTile
         return Vector2.Zero;
     }
 
-    public virtual void Update(GameTime gameTime)
+    public virtual RectangleF GetHitBox(Vector2 position)
+    {
+        return HitBoxHelper.GetHitBox(position, FrameSize, FrameSize);
+    }
+
+    public override void Update(GameTime gameTime)
     {
         State = State.ProcessState(gameTime);
     }
 
-    public virtual RectangleF GetHitBox(Vector2 position)
+    public override void Draw(GameTime gameTime)
     {
-        return HitBoxHelper.GetHitBox(position, FrameSize, FrameSize);
+        Drawer.DrawMazeTile(this);
     }
 }

@@ -6,17 +6,11 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class GuardDeathBaseState : GuardBaseState
 {
-    protected GuardDeathBaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
-    {
-    }
-
     public override Texture2D Texture => Textures.Sprites.Guard.Dead;
 
-    public override int FramesCount
+    public override int FramesCount => 4; 
+    
+    protected GuardDeathBaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
-        get
-        {
-            return 4;
-        }
     }
 }

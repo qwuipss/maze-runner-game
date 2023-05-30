@@ -68,11 +68,11 @@ public static class Drawer
              spriteEffects: sprite.FrameEffect);
     }
 
-    public static void DrawMazeTile(MazeTile mazeTile, Vector2 position)
+    public static void DrawMazeTile(MazeTile mazeTile)
     {
         Draw(
              mazeTile.Texture,
-             position,
+             mazeTile.Position,
              mazeTile.CurrentAnimationFrame,
              mazeTile.DrawingPriority,
              mazeTile.FrameRotationAngle,

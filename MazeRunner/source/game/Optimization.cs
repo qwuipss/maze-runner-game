@@ -11,7 +11,6 @@ internal static class Optimization
     private const float EnemyDisposingDistanceCoeff = 7;
     private const float EnemiesUpdateDistanceCoeff = 10;
 
-    private const float GuardAttackDistanceCoeff = .85f;
     private const float GuardHeroDetectionDistanceCoeff = 3;
 
     private const float MazeTileCollidingDistanceCoeff = 1.5f;
@@ -20,11 +19,6 @@ internal static class Optimization
     public static float GetGuardHeroDetectionDistance(Guard guard)
     {
         return guard.FrameSize * GuardHeroDetectionDistanceCoeff;
-    }
-
-    public static float GetGuardAttackDistance(Guard guard)
-    {
-        return guard.FrameSize * GuardAttackDistanceCoeff;
     }
 
     public static float GetMazeTileUpdateDistance(MazeTile mazeTile)

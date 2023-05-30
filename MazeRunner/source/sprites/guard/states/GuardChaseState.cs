@@ -6,6 +6,8 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardChaseState : GuardMoveBaseState
 {
+    private const float GuardAttackDistanceCoeff = .85f;
+
     public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
     }
@@ -22,14 +24,14 @@ public class GuardChaseState : GuardMoveBaseState
             return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
-        if (CanAttack(Hero, Guard))
+        if (CanAttack())
         {
             return new GuardAttackState(this, Hero, Guard, Maze);
         }
 
-        var direction = GetMovementDirection(Guard, pathToHero);
+        var direction = GetMovementDirection(pathToHero);
 
-        if (!ProcessMovement(Guard, direction, Maze, gameTime))
+        if (!ProcessMovement(direction, gameTime))
         {
             return new GuardChaseAwaitState(this, Hero, Guard, Maze);
         }
@@ -39,10 +41,15 @@ public class GuardChaseState : GuardMoveBaseState
         return this;
     }
 
-    private static bool CanAttack(Hero hero, Guard guard)
+    private bool CanAttack()
     {
-        var distance = Vector2.Distance(hero.Position, guard.Position);
+        var distance = Vector2.Distance(Hero.Position, Guard.Position);
 
-        return distance < Optimization.GetGuardAttackDistance(guard);
+        return distance < GetGuardAttackDistance();
+    }
+
+    private float GetGuardAttackDistance()
+    {
+        return Guard.FrameSize * GuardAttackDistanceCoeff;
     }
 }

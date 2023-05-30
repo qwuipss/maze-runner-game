@@ -6,7 +6,6 @@ using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -98,9 +97,9 @@ public class GameRunningState : IGameState
     {
         foreach (var component in _gameComponents)
         {
-            if (component is MazeTileInfo tileInfo)
+            if (component is MazeTile mazeTile)
             {
-                UpdateMazeTileInfo(tileInfo, gameTime);
+                UpdateMazeTile(mazeTile, gameTime);
                 continue;
             }
 
@@ -112,7 +111,7 @@ public class GameRunningState : IGameState
 
             if (component is TextWriter textWriter)
             {
-                UpdateTextWriterInfo(textWriter, gameTime);
+                UpdateTextWriter(textWriter, gameTime);
                 continue;
             }
 
@@ -141,9 +140,9 @@ public class GameRunningState : IGameState
             _maze, _findKeyTextWriter, HeroCamera,
         };
 
-        foreach (var enemyInfo in _enemies)
+        foreach (var enemy in _enemies)
         {
-            _gameComponents.Add(enemyInfo);
+            _gameComponents.Add(enemy);
         }
 
         _gameComponents.Add(Hero);
@@ -266,7 +265,7 @@ public class GameRunningState : IGameState
         }
 
         var isEnemyFree = _enemies
-            .Where(enemyInfo => Vector2.Distance(enemyInfo.Position, cellPosition) < spawnDistance)
+            .Where(enemy => Vector2.Distance(enemy.Position, cellPosition) < spawnDistance)
             .Count() is 0;
 
         return isEnemyFree;
@@ -364,17 +363,17 @@ public class GameRunningState : IGameState
         sprite.Update(gameTime);
     }
 
-    private void UpdateMazeTileInfo(MazeTileInfo tileInfo, GameTime gameTime)
+    private void UpdateMazeTile(MazeTile mazeTile, GameTime gameTime)
     {
-        var distance = Vector2.Distance(tileInfo.Position, Hero.Position);
+        var distance = Vector2.Distance(mazeTile.Position, Hero.Position);
 
-        if (distance < Optimization.GetMazeTileUpdateDistance(tileInfo.MazeTile))
+        if (distance < Optimization.GetMazeTileUpdateDistance(mazeTile))
         {
-            tileInfo.Update(gameTime);
+            mazeTile.Update(gameTime);
         }
     }
 
-    private void UpdateTextWriterInfo(TextWriter textWriter, GameTime gameTime)
+    private void UpdateTextWriter(TextWriter textWriter, GameTime gameTime)
     {
         if (textWriter.IsDead)
         {

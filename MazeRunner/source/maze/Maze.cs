@@ -1,7 +1,6 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
-using MazeRunner.Wrappers;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
@@ -23,9 +22,9 @@ public class Maze : MazeRunnerGameComponent
 
     private float _exitOpenDistance;
 
-    private readonly List<MazeTileInfo> _components;
+    private readonly List<MazeTile> _components;
 
-    public IReadOnlyCollection<MazeTileInfo> Components => _components.AsReadOnly();
+    public IReadOnlyCollection<MazeTile> Components => _components.AsReadOnly();
 
     public ImmutableDictionary<Cell, MazeTile> TrapsInfo => _trapsInfo.ToImmutableDictionary();
 
@@ -44,7 +43,7 @@ public class Maze : MazeRunnerGameComponent
         _trapsInfo = new Dictionary<Cell, MazeTile>();
         _itemsInfo = new Dictionary<Cell, MazeTile>();
 
-        _components = new List<MazeTileInfo>();
+        _components = new List<MazeTile>();
     }
 
     public void PostInitialize(Hero hero)
@@ -71,10 +70,10 @@ public class Maze : MazeRunnerGameComponent
             {
                 for (int x = 0; x < Skeleton.GetLength(1); x++)
                 {
-                    var tile = Skeleton[y, x];
-                    var tilePosition = GetCellPosition(new Cell(x, y));
+                    var mazeTile = Skeleton[y, x];
+                    mazeTile.Position = GetCellPosition(new Cell(x, y));
 
-                    _components.Add(new MazeTileInfo(tile, tilePosition));
+                    _components.Add(mazeTile);
                 }
             }
         }
@@ -83,9 +82,9 @@ public class Maze : MazeRunnerGameComponent
         {
             foreach (var (cell, trap) in _trapsInfo)
             {
-                var trapPosition = GetCellPosition(cell);
+                trap.Position = GetCellPosition(cell);
 
-                _components.Add(new MazeTileInfo(trap, trapPosition));
+                _components.Add(trap);
             }
         }
 
@@ -93,17 +92,17 @@ public class Maze : MazeRunnerGameComponent
         {
             foreach (var (cell, item) in _itemsInfo)
             {
-                var itemPosition = GetCellPosition(cell);
+                item.Position = GetCellPosition(cell);
 
-                _components.Add(new MazeTileInfo(item, itemPosition));
+                _components.Add(item);
             }
         }
 
         void InitializeExitComponentsList()
         {
-            var exitPosition = GetCellPosition(ExitInfo.Cell);
+            ExitInfo.Exit.Position = GetCellPosition(ExitInfo.Cell);
 
-            _components.Add(new MazeTileInfo(ExitInfo.Exit, exitPosition));
+            _components.Add(ExitInfo.Exit);
         }
 
         InitializeSkeletonComponentsList();
@@ -201,10 +200,10 @@ public class Maze : MazeRunnerGameComponent
     {
         var cellPosition = GetCellPosition(cell);
 
-        var itemInfo = _components.Where(mti => mti.Position == cellPosition && mti.MazeTile is MazeItem).Single();
+        var itemTile = _components.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
 
         _itemsInfo.Remove(cell);
-        _components.Remove(itemInfo);
+        _components.Remove(itemTile);
     }
 
     private bool NeedOpenExit()

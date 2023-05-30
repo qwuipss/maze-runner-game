@@ -2,4 +2,5 @@
 
 public abstract class Enemy : Sprite
 {
+    public abstract float GetAttackDistance();
 }

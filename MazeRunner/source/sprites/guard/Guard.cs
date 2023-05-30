@@ -3,6 +3,7 @@ using MazeRunner.MazeBase;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using System.Drawing;
+using static MazeRunner.Content.Textures.Sprites;
 
 namespace MazeRunner.Sprites;
 
@@ -11,7 +12,10 @@ public class Guard : Enemy
     private const float HitBoxOffset = 5;
 
     private const float HitBoxSizeX = 5;
-    private const float HitBoxSizeY = 11;
+
+    private const float HitBoxSizeY = 11; 
+    
+    private const float GuardAttackDistanceCoeff = .85f;
 
     private float _drawingPriority;
 
@@ -44,5 +48,10 @@ public class Guard : Enemy
         {
             _drawingPriority += .1f;
         }
+    }
+
+    public override float GetAttackDistance()
+    {
+        return FrameSize * GuardAttackDistanceCoeff;
     }
 }

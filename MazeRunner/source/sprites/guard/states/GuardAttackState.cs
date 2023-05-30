@@ -58,7 +58,7 @@ public class GuardAttackState : GuardBaseState
 
             if (!Hero.IsDead
              && !Hero.IsTakingDamage
-             && Vector2.Distance(Hero.Position, Guard.Position) < Optimization.GetGuardAttackDistance(Guard))
+             && Vector2.Distance(Hero.Position, Guard.Position) < Guard.GetAttackDistance())
             {
                 Hero.TakeDamage();
             }
