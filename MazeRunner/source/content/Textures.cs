@@ -279,11 +279,31 @@ public static class Textures
     {
         private const string ContentDirectory = $"marks";
 
+        public static class Chalk
+        {
+            private const string ContentDirectory = $"{Marks.ContentDirectory}/chalk";
+
+            public static Texture2D Cross_1 { get; private set; }
+            public static Texture2D Cross_2 { get; private set; }
+            public static Texture2D Cross_3 { get; private set; }
+            public static Texture2D Cross_4 { get; private set; }
+
+            public static void Load(Game game)
+            {
+                Cross_1 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_1");
+                Cross_2 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_2");
+                Cross_3 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_3");
+                Cross_4 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_4");
+            }
+        }
+
         public static Texture2D Heart { get; private set; }
 
         public static void Load(Game game)
         {
             Heart = game.Content.Load<Texture2D>($"{ContentDirectory}/heart");
+
+            Chalk.Load(game);
         }
     }
 
