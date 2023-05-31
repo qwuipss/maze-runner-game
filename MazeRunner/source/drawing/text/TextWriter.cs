@@ -16,7 +16,7 @@ public abstract class TextWriter : MazeRunnerGameComponent
 
     public bool IsDead { get; protected set; }
 
-    public Vector2 Position { get; set; }
+    public Vector2 Position { get; protected set; }
 
     public virtual float DrawingPriority => 0.05f;
 }

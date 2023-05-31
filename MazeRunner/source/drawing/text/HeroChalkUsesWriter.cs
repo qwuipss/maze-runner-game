@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Content;
-using MazeRunner.GameBase.States;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -30,7 +29,7 @@ public class HeroChalkUsesWriter : TextWriter
         _chalkTexture = Textures.Gui.StateShowers.Chalk;
     }
 
-    public HeroChalkUsesWriter(Hero hero, HeroHealthWriter healthWriter, float scaleDivider, GraphicsDevice graphicsDevice)
+    public HeroChalkUsesWriter(Hero hero, HeroHealthWriter healthWriter, float scaleDivider, int viewWidth, int viewHeight)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
@@ -39,9 +38,9 @@ public class HeroChalkUsesWriter : TextWriter
 
         _count = _hero.ChalkUses;
 
-        _scaleFactor = graphicsDevice.Viewport.Width / scaleDivider;
+        _scaleFactor = viewWidth / scaleDivider;
 
-        _staticCamera = new StaticCamera(graphicsDevice);
+        _staticCamera = new StaticCamera(viewWidth, viewHeight);
 
         var textOffset = 1.25f;
 
@@ -50,12 +49,14 @@ public class HeroChalkUsesWriter : TextWriter
         var stringSize = Font.MeasureString($"x{_count}") * _scaleFactor;
 
         _chalkTextureDrawingPosition = new Vector2(
-            0, 
+            0,
             healthWriter.HeartTextureDrawingPosition.Y + HeroHealthWriter.HeartTexture.Height * healthWriter.ScaleFactor * topOffset);
+
+        var textDowningCoeff = .86f;
 
         Position = new Vector2(
             _chalkTexture.Width * _scaleFactor * textOffset,
-            _chalkTextureDrawingPosition.Y + _chalkTexture.Height * _scaleFactor - stringSize.Y * .86f);
+            _chalkTextureDrawingPosition.Y + _chalkTexture.Height * _scaleFactor - stringSize.Y * textDowningCoeff);
     }
 
     public override void Draw(GameTime gameTime)

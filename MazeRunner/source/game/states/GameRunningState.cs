@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace MazeRunner.GameBase.States;
 
-public class GameRunningState : IGameState
+public class GameRunningState : GameBaseState
 {
-    public event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> GameStateChanged;
 
     private const double StateSwitchAfterHeroDeadDelayMs = 2000;
 
@@ -28,8 +28,6 @@ public class GameRunningState : IGameState
     private double _heroAfterDeadElapsedTimeMs;
 
     private bool _isGameOver;
-
-    private GraphicsDevice _graphicsDevice;
 
     private Maze _maze;
 
@@ -64,19 +62,16 @@ public class GameRunningState : IGameState
         IsControlling = true;
     }
 
-    public void Initialize(GraphicsDevice graphicsDevice, Game game)
+    public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
-        if (game.IsMouseVisible)
-        {
-            game.IsMouseVisible = false;
-        }
+        TurnOffMouseVisible(game);
 
-        if (_graphicsDevice is not null)
+        if (GraphicsDevice is not null)
         {
             return;
         }
 
-        _graphicsDevice = graphicsDevice;
+        base.Initialize(graphicsDevice, game);
 
         PreInitializeMaze();
         InitializeHero();
@@ -87,7 +82,7 @@ public class GameRunningState : IGameState
         InitializeComponentsList();
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         Drawer.BeginDraw(HeroCamera);
 
@@ -104,7 +99,7 @@ public class GameRunningState : IGameState
         }
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         foreach (var component in _gameComponents)
         {
@@ -222,7 +217,7 @@ public class GameRunningState : IGameState
     {
         void InitializeCameraEffect()
         {
-            var viewPort = _graphicsDevice.Viewport;
+            var viewPort = GraphicsDevice.Viewport;
 
             var viewWidth = viewPort.Width;
             var viewHeight = viewPort.Height;
@@ -230,7 +225,7 @@ public class GameRunningState : IGameState
             var heroFrameSize = Hero.FrameSize;
             var shadowTreshold = heroFrameSize * 2.4f;
 
-            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, GraphicsDevice);
         }
 
         if (_cameraEffect is null)
@@ -238,7 +233,7 @@ public class GameRunningState : IGameState
             InitializeCameraEffect();
         }
 
-        HeroCamera = new HeroCamera(_graphicsDevice, Hero)
+        HeroCamera = new HeroCamera(Hero, ViewWidth, ViewHeight)
         {
             Effect = _cameraEffect,
         };
@@ -250,9 +245,9 @@ public class GameRunningState : IGameState
 
         var scaleDivider = 450;
 
-        _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, _graphicsDevice);
+        _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, ViewWidth, ViewHeight);
 
-        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, _graphicsDevice);
+        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, ViewWidth, ViewHeight);
     }
 
     private Guard CreateGuard()
@@ -366,8 +361,7 @@ public class GameRunningState : IGameState
 
                 if (_heroAfterDeadElapsedTimeMs > StateSwitchAfterHeroDeadDelayMs)
                 {
-                    _gameComponents.Remove(_heroHealthWriter);
-                    _gameComponents.Remove(_heroChalkUsesWriter);
+                    _stateShowers.Clear();
 
                     GameStateChanged.Invoke(new GameOverState(this));
                 }

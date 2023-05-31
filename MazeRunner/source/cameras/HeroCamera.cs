@@ -35,12 +35,10 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public Texture2D Effect { get; set; }
 
-    public HeroCamera(GraphicsDevice graphicsDevice, Hero hero)
+    public HeroCamera(Hero hero, int viewWidth, int viewHeight)
     {
-        var viewPort = graphicsDevice.Viewport;
-
-        _viewWidth = viewPort.Width;
-        _viewHeight = viewPort.Height;
+        _viewWidth = viewWidth;
+        _viewHeight = viewHeight;
 
         _bordersOffset = Matrix.CreateTranslation(_viewWidth / 2, _viewHeight / 2, 0);
 

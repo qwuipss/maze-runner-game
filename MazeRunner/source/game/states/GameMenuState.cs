@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 namespace MazeRunner.GameBase.States;
 
-public class GameMenuState : IGameState
+public class GameMenuState : GameBaseState
 {
     private static class GameModes
     {
@@ -73,17 +73,11 @@ public class GameMenuState : IGameState
         }
     }
 
-    public event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> GameStateChanged;
 
     private static Texture2D _cameraEffect;
 
-    private int _viewWidth;
-
-    private int _viewHeight;
-
     private Lazy<GameParameters> _difficulty;
-
-    private GraphicsDevice _graphicsDevice;
 
     private Button _startButton;
 
@@ -97,21 +91,13 @@ public class GameMenuState : IGameState
 
     private List<MazeRunnerGameComponent> _components;
 
-    public void Initialize(GraphicsDevice graphicsDevice, Game game)
+    public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
-        _graphicsDevice = graphicsDevice;
+        base.Initialize(graphicsDevice, game);
 
-        if (!game.IsMouseVisible)
-        {
-            game.IsMouseVisible = true;
-        }
+        TurnOnMouseVisible(game);
 
         _difficulty = GameModes.Normal;
-
-        var viewPort = _graphicsDevice.Viewport;
-
-        _viewWidth = viewPort.Width;
-        _viewHeight = viewPort.Height;
 
         InitializeButtons();
         InitializeCamera();
@@ -119,7 +105,7 @@ public class GameMenuState : IGameState
         InitializeComponentsList();
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         Drawer.BeginDraw(_staticCamera);
 
@@ -131,7 +117,7 @@ public class GameMenuState : IGameState
         Drawer.EndDraw();
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         foreach (var component in _components)
         {
@@ -143,36 +129,36 @@ public class GameMenuState : IGameState
     {
         void InitializeGameStartButton(float scaleDivider)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _startButton = new StartButton(() => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value)), boxScale);
 
             _startButton.Initialize();
 
-            _startButton.Position = new Vector2((_viewWidth - _startButton.Width) / 2, (_viewHeight - _startButton.Height) / 2);
+            _startButton.Position = new Vector2((ViewWidth - _startButton.Width) / 2, (ViewHeight - _startButton.Height) / 2);
         }
 
         void InitializeQuitGameButton(float scaleDivider)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _quitButton = new QuitButton(() => Environment.Exit(0), boxScale);
 
             _quitButton.Initialize();
 
-            _quitButton.Position = new Vector2((_viewWidth - _quitButton.Width) / 2, 5 * _viewHeight / 7 - _quitButton.Height / 2);
+            _quitButton.Position = new Vector2((ViewWidth - _quitButton.Width) / 2, 5 * ViewHeight / 7 - _quitButton.Height / 2);
         }
 
         void InitializeGameDifficultySelectRadioButtons(float scaleDivider, float buttonsOffsetCoeff)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             var normalSelectButton = new NormalModeSelectRadioButton(() => _difficulty = GameModes.Normal, boxScale);
 
             normalSelectButton.Initialize();
 
             var normalSelectButtonPosition = new Vector2(
-                (_viewWidth - normalSelectButton.Width) / 2,
+                (ViewWidth - normalSelectButton.Width) / 2,
                 _startButton.Position.Y + _startButton.Height * buttonsOffsetCoeff);
 
             normalSelectButton.Position = normalSelectButtonPosition;
@@ -219,7 +205,7 @@ public class GameMenuState : IGameState
 
         var frameSize = (double)Textures.MazeTiles.Floor_1.Width;
 
-        _maze = MazeGenerator.GenerateMaze((int)Math.Ceiling(_viewWidth / frameSize) + 1, (int)Math.Ceiling(_viewHeight / frameSize) + 1);
+        _maze = MazeGenerator.GenerateMaze((int)Math.Ceiling(ViewWidth / frameSize) + 1, (int)Math.Ceiling(ViewHeight / frameSize) + 1);
 
         MazeGenerator.MakeCyclic(_maze, deadEndsRemovePercentage);
 
@@ -237,9 +223,9 @@ public class GameMenuState : IGameState
     {
         void InitializeCameraEffect()
         {
-            var shadowTreshold = _viewHeight / 2.1f;
+            var shadowTreshold = ViewHeight / 2.1f;
 
-            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(_viewWidth, _viewHeight, shadowTreshold, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(ViewWidth, ViewHeight, shadowTreshold, GraphicsDevice);
         }
 
         if (_cameraEffect is null)
@@ -247,7 +233,7 @@ public class GameMenuState : IGameState
             InitializeCameraEffect();
         }
 
-        _staticCamera = new StaticCamera(_graphicsDevice)
+        _staticCamera = new StaticCamera(ViewWidth, ViewHeight)
         {
             Effect = _cameraEffect,
         };

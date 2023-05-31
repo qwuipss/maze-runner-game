@@ -8,17 +8,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase.States;
 
-public class GameWonState : IGameState
+public class GameWonState : GameBaseState
 {
-    public event Action<IGameState> GameStateChanged;
-
-    private GraphicsDevice _graphicsDevice;
+    public override event Action<IGameState> GameStateChanged;
 
     private StaticCamera _staticCamera;
 
@@ -26,27 +21,15 @@ public class GameWonState : IGameState
 
     private GameWonWriter _gameWonWriter;
 
-    private int _viewWidth;
-
-    private int _viewHeight;
-
     private Button _menuButton;
 
     private List<MazeRunnerGameComponent> _components;
 
-    public void Initialize(GraphicsDevice graphicsDevice, Game game)
+    public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
-        if (!game.IsMouseVisible)
-        {
-            game.IsMouseVisible = true;
-        }
+        base.Initialize(graphicsDevice, game);
 
-        _graphicsDevice = graphicsDevice;
-
-        var viewPort = _graphicsDevice.Viewport;
-
-        _viewWidth = viewPort.Width;
-        _viewHeight = viewPort.Height;
+        TurnOnMouseVisible(game);
 
         InitializeCamera();
         InitializeButtons();
@@ -54,7 +37,7 @@ public class GameWonState : IGameState
         InitializeComponentsList();
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         Drawer.BeginDraw(_staticCamera);
 
@@ -66,7 +49,7 @@ public class GameWonState : IGameState
         Drawer.EndDraw();
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         foreach (var component in _components)
         {
@@ -76,14 +59,14 @@ public class GameWonState : IGameState
 
     private void InitializeTextWriters()
     {
-        _gameWonWriter = new GameWonWriter(_viewWidth, _viewHeight);
+        _gameWonWriter = new GameWonWriter(ViewWidth, ViewHeight);
     }
 
     private void InitializeCamera()
     {
         void InitializeCameraEffect()
         {
-            _cameraEffect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, byte.MaxValue, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateTransparentBackground(ViewWidth, ViewHeight, 255, GraphicsDevice);
         }
 
         if (_cameraEffect is null)
@@ -91,7 +74,7 @@ public class GameWonState : IGameState
             InitializeCameraEffect();
         }
 
-        _staticCamera = new StaticCamera(_graphicsDevice)
+        _staticCamera = new StaticCamera(ViewWidth, ViewHeight)
         {
             Effect = _cameraEffect,
             DrawingPriority = .5f,
@@ -102,13 +85,13 @@ public class GameWonState : IGameState
     {
         var scaleDivider = 300;
 
-        var boxScale = _viewWidth / scaleDivider;
+        var boxScale = ViewWidth / scaleDivider;
 
         _menuButton = new MenuButton(() => GoToMenu(), boxScale);
 
         _menuButton.Initialize();
 
-        _menuButton.Position = new Vector2((_viewWidth - _menuButton.Width) / 2, (_viewHeight - _menuButton.Height) / 2);
+        _menuButton.Position = new Vector2((ViewWidth - _menuButton.Width) / 2, (ViewHeight - _menuButton.Height) / 2);
     }
 
     private void InitializeComponentsList()

@@ -1,7 +1,5 @@
-﻿using MazeRunner.GameBase;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using System;
 using static MazeRunner.GameBase.Settings;
 
 namespace MazeRunner.Managers;

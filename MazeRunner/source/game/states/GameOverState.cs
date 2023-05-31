@@ -10,19 +10,13 @@ using System.Collections.Generic;
 
 namespace MazeRunner.GameBase.States;
 
-public class GameOverState : IGameState
+public class GameOverState : GameBaseState
 {
-    public event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> GameStateChanged;
 
     private static Texture2D _cameraEffect;
 
     private readonly GameRunningState _runningState;
-
-    private GraphicsDevice _graphicsDevice;
-
-    private int _viewWidth;
-
-    private int _viewHeight;
 
     private Button _restartButton;
 
@@ -39,26 +33,18 @@ public class GameOverState : IGameState
         runningState.IsControlling = false;
     }
 
-    public void Initialize(GraphicsDevice graphicsDevice, Game game)
+    public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
-        _graphicsDevice = graphicsDevice;
+        base.Initialize(graphicsDevice, game);
 
-        if (!game.IsMouseVisible)
-        {
-            game.IsMouseVisible = true;
-        }
-
-        var viewPort = _graphicsDevice.Viewport;
-
-        _viewWidth = viewPort.Width;
-        _viewHeight = viewPort.Height;
+        TurnOnMouseVisible(game);
 
         InitializeCameras();
         InitializeButtons();
         InitializeComponentsList();
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         _runningState.Draw(gameTime);
 
@@ -72,7 +58,7 @@ public class GameOverState : IGameState
         Drawer.EndDraw();
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         _runningState.Update(gameTime);
 
@@ -86,24 +72,24 @@ public class GameOverState : IGameState
     {
         void InitializeRestartButton(float scaleDivider)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _restartButton = new RestartButton(() => RestartGame(), boxScale);
 
             _restartButton.Initialize();
 
-            _restartButton.Position = new Vector2(_viewWidth / 3 - _restartButton.Width / 2, _viewHeight / 2);
+            _restartButton.Position = new Vector2(ViewWidth / 3 - _restartButton.Width / 2, ViewHeight / 2);
         }
 
         void InitializeMenuButton(float scaleDivider)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _menuButton = new MenuButton(() => GoToMenu(), boxScale);
 
             _menuButton.Initialize();
 
-            _menuButton.Position = new Vector2(2 * _viewWidth / 3 - _menuButton.Width / 2, _viewHeight / 2); ;
+            _menuButton.Position = new Vector2(2 * ViewWidth / 3 - _menuButton.Width / 2, ViewHeight / 2); ;
         }
 
         var buttonsScaleDivider = 360;
@@ -118,7 +104,7 @@ public class GameOverState : IGameState
         {
             var transparency = (byte)(byte.MaxValue / 1.35);
 
-            _cameraEffect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, transparency, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateTransparentBackground(ViewWidth, ViewHeight, transparency, GraphicsDevice);
         }
 
         if (_cameraEffect is null)
@@ -128,7 +114,7 @@ public class GameOverState : IGameState
 
         _runningState.HeroCamera.Effect = _cameraEffect;
 
-        _staticCamera = new StaticCamera(_graphicsDevice);
+        _staticCamera = new StaticCamera(ViewWidth, ViewHeight);
     }
 
     private void InitializeComponentsList()

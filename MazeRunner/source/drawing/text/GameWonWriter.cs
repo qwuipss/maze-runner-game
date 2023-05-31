@@ -1,10 +1,5 @@
 ﻿using MazeRunner.Content;
 using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Drawing.Writers;
 
@@ -27,7 +22,9 @@ public class GameWonWriter : TextWriter
 
         var stringSize = Font.MeasureString(Text) * _scaleFactor;
 
-        Position = new Vector2((viewWidth - stringSize.X) / 2, (viewHeight - stringSize.Y) / 2 * .45f);
+        var topOffset = .45f;
+
+        Position = new Vector2((viewWidth - stringSize.X) / 2, (viewHeight - stringSize.Y) / 2 * topOffset);
     }
 
     public override void Draw(GameTime gameTime)

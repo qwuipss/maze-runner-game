@@ -1,9 +1,4 @@
 ﻿using MazeRunner.MazeBase.Tiles.States;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.MazeBase.Tiles;
 
@@ -13,7 +8,7 @@ public class ChalkMark : MazeMark
 
     public override float DrawingPriority => .75f;
 
-    public ChalkMark() 
+    public ChalkMark()
     {
         State = new ChalkMarkIdleState();
     }

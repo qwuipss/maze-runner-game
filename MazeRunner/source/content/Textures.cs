@@ -1,7 +1,5 @@
-﻿using MazeRunner.MazeBase.Tiles;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Net.Mime;
 
 namespace MazeRunner.Content;
 
@@ -95,7 +93,7 @@ public static class Textures
 
             MazeTraps.Load(game);
             MazeItems.Load(game);
-            MazeMarks.Load(game);   
+            MazeMarks.Load(game);
         }
     }
 

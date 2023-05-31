@@ -11,21 +11,15 @@ using System.Collections.Generic;
 
 namespace MazeRunner.GameBase.States;
 
-public class GamePausedState : IGameState
+public class GamePausedState : GameBaseState
 {
-    public event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> GameStateChanged;
 
     private static Texture2D _cameraEffect;
 
     private readonly GameRunningState _runningState;
 
-    private GraphicsDevice _graphicsDevice;
-
     private StaticCamera _staticCamera;
-
-    private int _viewWidth;
-
-    private int _viewHeight;
 
     private Button _menuButton;
 
@@ -40,26 +34,18 @@ public class GamePausedState : IGameState
         _runningState = runningState;
     }
 
-    public void Initialize(GraphicsDevice graphicsDevice, Game game)
+    public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
-        _graphicsDevice = graphicsDevice;
+        base.Initialize(graphicsDevice, game);
 
-        if (!game.IsMouseVisible)
-        {
-            game.IsMouseVisible = true;
-        }
-
-        var viewPort = graphicsDevice.Viewport;
-
-        _viewWidth = viewPort.Width;
-        _viewHeight = viewPort.Height;
+        TurnOnMouseVisible(game);
 
         InitializeButtons();
         InitializeStaticCamera();
         InitializeComponentsList();
     }
 
-    public void Draw(GameTime gameTime)
+    public override void Draw(GameTime gameTime)
     {
         _runningState.Draw(gameTime);
 
@@ -73,7 +59,7 @@ public class GamePausedState : IGameState
         Drawer.EndDraw();
     }
 
-    public void Update(GameTime gameTime)
+    public override void Update(GameTime gameTime)
     {
         foreach (var component in _components)
         {
@@ -87,18 +73,18 @@ public class GamePausedState : IGameState
     {
         void InitializeRestartButton(float scaleDivider)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _restartButton = new RestartButton(() => RestartGame(), boxScale);
 
             _restartButton.Initialize();
 
-            _restartButton.Position = new Vector2((_viewWidth - _restartButton.Width) / 2, (_viewHeight - _restartButton.Height) / 2);
+            _restartButton.Position = new Vector2((ViewWidth - _restartButton.Width) / 2, (ViewHeight - _restartButton.Height) / 2);
         }
 
         void InitializeResumeButton(float scaleDivider, float buttonOffsetCoeff)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _resumeButton = new ResumeButton(() => ResumeGame(), boxScale);
 
@@ -111,7 +97,7 @@ public class GamePausedState : IGameState
 
         void InitializeMenuButton(float scaleDivider, float buttonOffsetCoeff)
         {
-            var boxScale = _viewWidth / scaleDivider;
+            var boxScale = ViewWidth / scaleDivider;
 
             _menuButton = new MenuButton(() => GoToMenu(), boxScale);
 
@@ -136,7 +122,7 @@ public class GamePausedState : IGameState
         {
             var transparency = (byte)(byte.MaxValue / 4.25);
 
-            _cameraEffect = EffectsHelper.CreateTransparentBackground(_viewWidth, _viewHeight, transparency, _graphicsDevice);
+            _cameraEffect = EffectsHelper.CreateTransparentBackground(ViewWidth, ViewHeight, transparency, GraphicsDevice);
         }
 
         if (_cameraEffect is null)
@@ -144,7 +130,7 @@ public class GamePausedState : IGameState
             InitializeCameraEffect();
         }
 
-        _staticCamera = new StaticCamera(_graphicsDevice)
+        _staticCamera = new StaticCamera(ViewWidth, ViewHeight)
         {
             Effect = _cameraEffect,
         };

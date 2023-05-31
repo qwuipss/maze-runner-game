@@ -27,12 +27,10 @@ public class StaticCamera : MazeRunnerGameComponent, ICamera
 
     public float DrawingPriority { get; set; }
 
-    public StaticCamera(GraphicsDevice graphicsDevice)
+    public StaticCamera(int viewWidth, int viewHeight)
     {
-        var viewPort = graphicsDevice.Viewport;
-
-        _viewWidth = viewPort.Width;
-        _viewHeight = viewPort.Height;
+        _viewWidth = viewWidth;
+        _viewHeight = viewHeight;
 
         var bordersOffset = Matrix.CreateTranslation(0, 0, 0);
 
