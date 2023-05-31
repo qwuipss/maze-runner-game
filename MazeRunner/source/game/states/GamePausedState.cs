@@ -15,8 +15,6 @@ public class GamePausedState : GameBaseState
 {
     public override event Action<IGameState> GameStateChanged;
 
-    private static Texture2D _cameraEffect;
-
     private readonly GameRunningState _runningState;
 
     private StaticCamera _staticCamera;
@@ -27,7 +25,7 @@ public class GamePausedState : GameBaseState
 
     private Button _resumeButton;
 
-    private List<MazeRunnerGameComponent> _components;
+    private HashSet<MazeRunnerGameComponent> _components;
 
     public GamePausedState(GameRunningState runningState)
     {
@@ -41,6 +39,7 @@ public class GamePausedState : GameBaseState
         TurnOnMouseVisible(game);
 
         InitializeButtons();
+        InitializeShadower();
         InitializeStaticCamera();
         InitializeComponentsList();
     }
@@ -66,6 +65,7 @@ public class GamePausedState : GameBaseState
             component.Update(gameTime);
         }
 
+        ProcessShadowerState(_components);
         HandleSecondaryButtons(gameTime);
     }
 
@@ -116,29 +116,23 @@ public class GamePausedState : GameBaseState
         InitializeMenuButton(buttonsScaleDivider, buttonsOffsetCoeff);
     }
 
+    private void InitializeShadower()
+    {
+        Shadower = new EffectsHelper.Shadower(false);
+    }
+
     private void InitializeStaticCamera()
     {
-        void InitializeCameraEffect()
-        {
-            var transparency = (byte)(byte.MaxValue / 4.25);
-
-            _cameraEffect = EffectsHelper.CreateTransparentBackground(ViewWidth, ViewHeight, transparency, GraphicsDevice);
-        }
-
-        if (_cameraEffect is null)
-        {
-            InitializeCameraEffect();
-        }
-
         _staticCamera = new StaticCamera(ViewWidth, ViewHeight)
         {
-            Effect = _cameraEffect,
+            Effect = EffectsHelper.Shadower.BlackBackground,
+            EffectTransparency = 1 / 4.25f,
         };
     }
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>
+        _components = new HashSet<MazeRunnerGameComponent>
         {
             _resumeButton, _restartButton, _menuButton, _staticCamera,
         };
@@ -159,11 +153,15 @@ public class GamePausedState : GameBaseState
 
     private void RestartGame()
     {
-        GameStateChanged.Invoke(new GameRunningState(_runningState.GameParameters));
+        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameRunningState(_runningState.GameParameters));
+
+        NeedShadowerActivate = true;
     }
 
     private void GoToMenu()
     {
-        GameStateChanged.Invoke(new GameMenuState());
+        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameMenuState());
+
+        NeedShadowerActivate = true;
     }
 }

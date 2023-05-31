@@ -19,17 +19,52 @@ namespace MazeRunner.GameBase.States;
 
 public class GameRunningState : GameBaseState
 {
+    private class HeroCameraEffectDecreaser
+    {
+        public const float TransparencyDecreasingTreshold = 1 / 2.25f;
+
+        private const double DecreasingDelayMs = EffectsHelper.Shadower.StepAddDelay * 2.25;
+
+        private const float DecreasingStep = EffectsHelper.Shadower.Step;
+
+        private readonly HeroCamera _camera;
+
+        private double _elapsedTimeMs;
+
+        public HeroCameraEffectDecreaser(HeroCamera camera)
+        {
+            _camera = camera;
+        }
+
+        public bool Update(GameTime gameTime)
+        {
+            _elapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (_elapsedTimeMs > DecreasingDelayMs)
+            {
+                _camera.EffectTransparency -= DecreasingStep;
+
+                _elapsedTimeMs -= DecreasingDelayMs;
+            }
+
+            if (_camera.EffectTransparency < TransparencyDecreasingTreshold)
+            {
+                return true;
+            }
+
+            return false;
+        }
+    }
+
     public override event Action<IGameState> GameStateChanged;
 
-    private const double StateSwitchAfterHeroDeadDelayMs = 2000;
-
     private static Texture2D _cameraEffect;
-
-    private double _heroAfterDeadElapsedTimeMs;
 
     private bool _isGameOver;
 
     private Maze _maze;
+
+    private StaticCamera _staticCamera;
 
     private FindKeyWriter _findKeyTextWriter;
 
@@ -41,11 +76,13 @@ public class GameRunningState : GameBaseState
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
 
-    private List<MazeRunnerGameComponent> _stateShowers;
+    private HashSet<MazeRunnerGameComponent> _staticComponents;
 
     private List<Enemy> _respawnEnemies;
 
     private List<MazeRunnerGameComponent> _deadGameComponents;
+
+    private Lazy<HeroCameraEffectDecreaser> _cameraEffectDecreaser;
 
     public GameParameters GameParameters { get; init; }
 
@@ -73,12 +110,11 @@ public class GameRunningState : GameBaseState
 
         base.Initialize(graphicsDevice, game);
 
-        PreInitializeMaze();
-        InitializeHero();
-        PostInitializeMaze();
-        InitializeCamera();
+        InitializeHeroAndMaze();
+        InitializeCameras();
         InitializeEnemies();
         InitializeTextWriters();
+        InitializeShadower();
         InitializeComponentsList();
     }
 
@@ -93,41 +129,56 @@ public class GameRunningState : GameBaseState
 
         Drawer.EndDraw();
 
-        foreach (var stateShower in _stateShowers)
+        Drawer.BeginDraw(_staticCamera);
+
+        foreach (var staticComponent in _staticComponents)
         {
-            stateShower.Draw(gameTime);
+            staticComponent.Draw(gameTime);
         }
+
+        Drawer.EndDraw();
     }
 
     public override void Update(GameTime gameTime)
     {
-        foreach (var component in _gameComponents)
+        void UpdateGameComponents()
         {
-            if (component is MazeTile mazeTile)
+            foreach (var component in _gameComponents)
             {
-                UpdateMazeTile(mazeTile, gameTime);
-                continue;
-            }
+                if (component is MazeTile mazeTile)
+                {
+                    UpdateMazeTile(mazeTile, gameTime);
+                    continue;
+                }
 
-            if (component is Sprite sprite)
-            {
-                UpdateSprite(sprite, gameTime);
-                continue;
-            }
+                if (component is Sprite sprite)
+                {
+                    UpdateSprite(sprite, gameTime);
+                    continue;
+                }
 
-            if (component is TextWriter textWriter)
-            {
-                UpdateTextWriter(textWriter, gameTime);
-                continue;
-            }
+                if (component is TextWriter textWriter)
+                {
+                    UpdateTextWriter(textWriter, gameTime);
+                    continue;
+                }
 
-            component.Update(gameTime);
+                component.Update(gameTime);
+            }
         }
 
-        foreach (var stateShower in _stateShowers)
+        void UpdateStaticComponents()
         {
-            stateShower.Update(gameTime);
+            foreach (var staticComponent in _staticComponents)
+            {
+                staticComponent.Update(gameTime);
+            }
+
+            ProcessShadowerState(_staticComponents);
         }
+
+        UpdateGameComponents();
+        UpdateStaticComponents();
 
         if (!IsControlling)
         {
@@ -156,14 +207,13 @@ public class GameRunningState : GameBaseState
             _gameComponents.Add(enemy);
         }
 
-        _stateShowers = new List<MazeRunnerGameComponent>
+        _staticComponents = new HashSet<MazeRunnerGameComponent>
         {
-            _heroHealthWriter,
-            _heroChalkUsesWriter
+            _heroHealthWriter, _heroChalkUsesWriter, Shadower,
         };
     }
 
-    private void PreInitializeMaze()
+    private void InitializeHeroAndMaze()
     {
         _maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
 
@@ -176,26 +226,21 @@ public class GameRunningState : GameBaseState
 
         MazeGenerator.InsertItem(_maze, new Key());
 
-        _maze.InitializeComponentsList();
-    }
-
-    private void PostInitializeMaze()
-    {
-        _maze.PostInitialize(Hero);
-    }
-
-    private void InitializeHero()
-    {
         var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
         var position = _maze.GetCellPosition(cell);
 
         Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses)
         {
-            Position = position,
+            Position = position
         };
 
+        MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksSpawnPercentage);
 
         Hero.Initialize(_maze);
+
+        _maze.PostInitialize(Hero);
+
+        _maze.InitializeComponentsList();
     }
 
     private void InitializeEnemies()
@@ -213,7 +258,7 @@ public class GameRunningState : GameBaseState
         InitializeGuards();
     }
 
-    private void InitializeCamera()
+    private void InitializeCameras()
     {
         void InitializeCameraEffect()
         {
@@ -227,10 +272,14 @@ public class GameRunningState : GameBaseState
             InitializeCameraEffect();
         }
 
+        _staticCamera = new StaticCamera(ViewWidth, ViewHeight);
+
         HeroCamera = new HeroCamera(Hero, ViewWidth, ViewHeight)
         {
             Effect = _cameraEffect,
         };
+
+        _cameraEffectDecreaser = new Lazy<HeroCameraEffectDecreaser>(() => new HeroCameraEffectDecreaser(HeroCamera));
     }
 
     private void InitializeTextWriters()
@@ -239,9 +288,16 @@ public class GameRunningState : GameBaseState
 
         var scaleDivider = 450;
 
-        _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, ViewWidth, ViewHeight);
+        _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, ViewWidth);
 
-        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, ViewWidth, ViewHeight);
+        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, ViewWidth);
+    }
+
+    private void InitializeShadower()
+    {
+        Shadower = new EffectsHelper.Shadower(true);
+
+        Shadower.TresholdReached += () => NeedShadowerDeactivate = true;
     }
 
     private Guard CreateGuard()
@@ -338,27 +394,7 @@ public class GameRunningState : GameBaseState
         {
             if (IsMazeEscaped())
             {
-                GameStateChanged.Invoke(new GameWonState());
-            }
-        }
-
-        void ProcessStateControl()
-        {
-            if (Hero.IsDead && !_isGameOver)
-            {
-                _isGameOver = true;
-            }
-
-            if (_isGameOver && IsControlling)
-            {
-                _heroAfterDeadElapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-                if (_heroAfterDeadElapsedTimeMs > StateSwitchAfterHeroDeadDelayMs)
-                {
-                    _stateShowers.Clear();
-
-                    GameStateChanged.Invoke(new GameOverState(this));
-                }
+                WonGame();
             }
         }
 
@@ -379,9 +415,9 @@ public class GameRunningState : GameBaseState
                 AddEnemyToRespawnList(enemy);
             }
         }
-        else if (sprite is Hero hero)
+        else if (sprite is Hero)
         {
-            ProcessStateControl();
+            ProcessStateControl(gameTime);
             ProcessGameWin();
         }
         else
@@ -415,5 +451,32 @@ public class GameRunningState : GameBaseState
     private bool IsMazeEscaped()
     {
         return SpriteBaseState.GetSpriteCell(Hero, _maze) == _maze.ExitInfo.Cell;
+    }
+
+    private void ProcessStateControl(GameTime gameTime)
+    {
+        if (Hero.IsDead && !_isGameOver)
+        {
+            _isGameOver = true;
+        }
+
+        if (_isGameOver && IsControlling)
+        {
+            if (_cameraEffectDecreaser.Value.Update(gameTime))
+            {
+                _staticComponents.Clear();
+
+                GameStateChanged.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
+            }
+        }
+    }
+
+    private void WonGame()
+    {
+        Shadower = new EffectsHelper.Shadower(false);
+
+        NeedShadowerActivate = true;
+
+        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameWonState());
     }
 }

@@ -29,18 +29,18 @@ public abstract class MazeTile : MazeRunnerGameComponent
 
     protected IMazeTileState State { get; set; }
 
-    public static Vector2 GetOriginFrameRotationVector(MazeTile tile)
+    public static Vector2 GetOriginFrameRotationVector(MazeTile mazeTile)
     {
-        var rotation = tile.FrameRotationAngle;
+        var rotation = mazeTile.FrameRotationAngle;
 
         if (rotation is MathHelper.PiOver2)
         {
-            return new Vector2(0, tile.FrameSize);
+            return new Vector2(0, mazeTile.FrameSize);
         }
 
         if (rotation is -MathHelper.PiOver2)
         {
-            return new Vector2(tile.FrameSize, 0);
+            return new Vector2(mazeTile.FrameSize, 0);
         }
 
         return Vector2.Zero;

@@ -5,12 +5,14 @@ public class GameParameters
     public int MazeWidth;
     public int MazeHeight;
 
-    public int MazeDeadEndsRemovePercentage;
+    public float MazeDeadEndsRemovePercentage;
 
-    public int MazeBayonetTrapInsertingPercentage;
-    public int MazeDropTrapInsertingPercentage;
+    public float MazeBayonetTrapInsertingPercentage;
+    public float MazeDropTrapInsertingPercentage;
 
     public int GuardSpawnCount;
+
+    public float ChalksSpawnPercentage;
 
     public int HeroHealth;
     public int ChalkUses;

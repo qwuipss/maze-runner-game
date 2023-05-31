@@ -4,14 +4,17 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Gui.Buttons.States;
 
-public class RestartButtonClickedState : ButtonPushBaseState
+public class StartButtonResetState : ButtonPushBaseState
 {
-    public override Texture2D Texture => Textures.Gui.Buttons.Restart.Click;
+    public override Texture2D Texture => Textures.Gui.Buttons.Start.Click;
 
     public override int FramesCount => 5;
 
-    public RestartButtonClickedState(Button button) : base(button)
+    public StartButtonResetState(Button button) : base(button)
     {
+        var framePosX = (FramesCount - 1) * FrameWidth;
+
+        CurrentAnimationFramePoint = new Point(framePosX, 0);
     }
 
     public override IButtonState ProcessState(GameTime gameTime)
@@ -22,14 +25,12 @@ public class RestartButtonClickedState : ButtonPushBaseState
         {
             var animationPoint = CurrentAnimationFramePoint;
 
-            if (animationPoint.X == (FramesCount - 1) * FrameWidth)
+            if (animationPoint.X is 0)
             {
-                Button.OnClick.Invoke();
-
-                return new RestartButtonResetState(Button);
+                return new StartButtonIdleState(Button);
             }
 
-            var framePosX = animationPoint.X + FrameWidth;
+            var framePosX = animationPoint.X - FrameWidth;
 
             CurrentAnimationFramePoint = new Point(framePosX, 0);
             ElapsedGameTimeMs -= UpdateTimeDelayMs;

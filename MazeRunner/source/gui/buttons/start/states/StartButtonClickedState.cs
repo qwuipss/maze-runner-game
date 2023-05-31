@@ -26,7 +26,7 @@ public class StartButtonClickedState : ButtonPushBaseState
             {
                 Button.OnClick.Invoke();
 
-                return new StartButtonIdleState(Button);
+                return new StartButtonResetState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

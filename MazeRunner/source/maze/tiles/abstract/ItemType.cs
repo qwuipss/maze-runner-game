@@ -3,4 +3,5 @@
 public enum ItemType
 {
     Key,
+    Chalk,
 }

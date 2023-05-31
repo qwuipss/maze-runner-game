@@ -67,8 +67,6 @@ public class GuardWalkState : GuardMoveBaseState
         var visitedCells = new HashSet<Cell>() { currentCell };
         var walkPath = new LinkedList<Vector2>();
 
-        var exitCell = Maze.ExitInfo.Cell;
-
         var movingPosition = GetCellNormalizedPosition(currentCell, Maze);
 
         walkPath.AddLast(movingPosition);

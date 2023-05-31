@@ -10,7 +10,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using static MazeRunner.Helpers.EffectsHelper;
 
 namespace MazeRunner.GameBase.States;
 
@@ -19,7 +18,9 @@ public class GameMenuState : GameBaseState
     private static class GameModes
     {
         public static readonly Lazy<GameParameters> Easy;
+
         public static readonly Lazy<GameParameters> Normal;
+
         public static readonly Lazy<GameParameters> Hard;
 
         static GameModes()
@@ -35,6 +36,7 @@ public class GameMenuState : GameBaseState
                 MazeDropTrapInsertingPercentage = 1,
 
                 GuardSpawnCount = 1,//10
+                ChalksSpawnPercentage = 2,
 
                 HeroHealth = 1115,
                 ChalkUses = 10,
@@ -51,6 +53,7 @@ public class GameMenuState : GameBaseState
                 MazeDropTrapInsertingPercentage = 2,
 
                 GuardSpawnCount = 15,
+                ChalksSpawnPercentage = 10,
 
                 HeroHealth = 3,
                 ChalkUses = 15,
@@ -67,6 +70,7 @@ public class GameMenuState : GameBaseState
                 MazeDropTrapInsertingPercentage = 2,
 
                 GuardSpawnCount = 25,
+                ChalksSpawnPercentage = 10,
 
                 HeroHealth = 2,
                 ChalkUses = 25,
@@ -77,10 +81,6 @@ public class GameMenuState : GameBaseState
     public override event Action<IGameState> GameStateChanged;
 
     private static Texture2D _cameraEffect;
-
-    private Shadower _shadower;
-
-    private bool _gameStarted;
 
     private Lazy<GameParameters> _difficulty;
 
@@ -107,6 +107,7 @@ public class GameMenuState : GameBaseState
         InitializeButtons();
         InitializeCamera();
         InitializeMaze();
+        InitializeShadower();
         InitializeComponentsList();
     }
 
@@ -129,10 +130,7 @@ public class GameMenuState : GameBaseState
             component.Update(gameTime);
         }
 
-        if (_gameStarted && _shadower is not null && !_components.Contains(_shadower))
-        {
-            _components.Add(_shadower);
-        }
+        ProcessShadowerState(_components);
     }
 
     private void InitializeButtons()
@@ -141,7 +139,7 @@ public class GameMenuState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _startButton = new StartButton(() => StartGame(), boxScale);
+            _startButton = new StartButton(StartGame, boxScale);
 
             _startButton.Initialize();
 
@@ -152,7 +150,7 @@ public class GameMenuState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _quitButton = new QuitButton(() => Environment.Exit(0), boxScale);
+            _quitButton = new QuitButton(QuitGame, boxScale);
 
             _quitButton.Initialize();
 
@@ -253,16 +251,28 @@ public class GameMenuState : GameBaseState
     {
         _components = new HashSet<MazeRunnerGameComponent>
         {
-            _startButton, _quitButton, _maze, _staticCamera, _difficultySelectButtonsContainer,
+            _startButton, _quitButton, _maze, _staticCamera, _difficultySelectButtonsContainer, Shadower,
         };
     }
 
     private void StartGame()
     {
-        _gameStarted = true;
+        NeedShadowerActivate = true;
 
-        _shadower = new Shadower(GraphicsDevice, ViewWidth, ViewHeight, 0);
+        Shadower = new EffectsHelper.Shadower(false);
 
-        _shadower.TresholdReached += () => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value));
+        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value));
+    }
+
+    private void InitializeShadower()
+    {
+        Shadower = new EffectsHelper.Shadower(true);
+
+        Shadower.TresholdReached += () => NeedShadowerDeactivate = true;
+    }
+
+    private void QuitGame()
+    {
+        Environment.Exit(0);
     }
 }

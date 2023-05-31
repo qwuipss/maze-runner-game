@@ -33,6 +33,7 @@ public class GuardAttackState : GuardBaseState
         if (!_isAttacking && ElapsedGameTimeMs > AttackDelayMs)
         {
             _isAttacking = true;
+
             ElapsedGameTimeMs -= AttackDelayMs;
         }
 

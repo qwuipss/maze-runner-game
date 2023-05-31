@@ -1,5 +1,4 @@
-﻿using MazeRunner.Cameras;
-using MazeRunner.Content;
+﻿using MazeRunner.Content;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,8 +10,6 @@ public class HeroChalkUsesWriter : TextWriter
     private static readonly Texture2D _chalkTexture;
 
     private readonly float _scaleFactor;
-
-    private readonly StaticCamera _staticCamera;
 
     private readonly Hero _hero;
 
@@ -29,7 +26,7 @@ public class HeroChalkUsesWriter : TextWriter
         _chalkTexture = Textures.Gui.StateShowers.Chalk;
     }
 
-    public HeroChalkUsesWriter(Hero hero, HeroHealthWriter healthWriter, float scaleDivider, int viewWidth, int viewHeight)
+    public HeroChalkUsesWriter(Hero hero, HeroHealthWriter healthWriter, float scaleDivider, int viewWidth)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
@@ -39,8 +36,6 @@ public class HeroChalkUsesWriter : TextWriter
         _count = _hero.ChalkUses;
 
         _scaleFactor = viewWidth / scaleDivider;
-
-        _staticCamera = new StaticCamera(viewWidth, viewHeight);
 
         var textOffset = 1.25f;
 
@@ -61,13 +56,9 @@ public class HeroChalkUsesWriter : TextWriter
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.BeginDraw(_staticCamera);
-
         Drawer.Draw(_chalkTexture, _chalkTextureDrawingPosition, new Rectangle(0, 0, _chalkTexture.Width, _chalkTexture.Height), DrawingPriority, scale: _scaleFactor);
 
         Drawer.DrawString(this);
-
-        Drawer.EndDraw();
     }
 
     public override void Update(GameTime gameTime)

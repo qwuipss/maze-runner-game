@@ -1,6 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.Components;
+using MazeRunner.Helpers;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 
 namespace MazeRunner.GameBase.States;
 
@@ -13,6 +16,12 @@ public abstract class GameBaseState : IGameState
     protected int ViewWidth { get; set; }
 
     protected int ViewHeight { get; set; }
+
+    protected EffectsHelper.Shadower Shadower { get; set; }
+
+    protected bool NeedShadowerActivate { get; set; }
+
+    protected bool NeedShadowerDeactivate { get; set; }
 
     public virtual void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
@@ -47,5 +56,21 @@ public abstract class GameBaseState : IGameState
 
         ViewWidth = viewPort.Width;
         ViewHeight = viewPort.Height;
+    }
+
+    protected void ProcessShadowerState(HashSet<MazeRunnerGameComponent> components)
+    {
+        if (NeedShadowerActivate)
+        {
+            NeedShadowerActivate = false;
+
+            components.Add(Shadower);
+        }
+        else if (NeedShadowerDeactivate)
+        {
+            NeedShadowerDeactivate = false;
+
+            components.Remove(Shadower);
+        }
     }
 }

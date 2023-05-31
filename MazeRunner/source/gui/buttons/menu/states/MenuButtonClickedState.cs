@@ -26,7 +26,7 @@ public class MenuButtonClickedState : ButtonPushBaseState
             {
                 Button.OnClick.Invoke();
 
-                return new MenuButtonIdleState(Button);
+                return new MenuButtonResetState(Button);
             }
 
             var framePosX = animationPoint.X + FrameWidth;

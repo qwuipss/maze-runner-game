@@ -8,7 +8,7 @@ internal static class Optimization
     internal const int GuardHeroMaxPathLength = 7;
 
     private const float EnemySpawnDistanceCoeff = 3;
-    private const float EnemyDisposingDistanceCoeff = 3; // 7
+    private const float EnemyDisposingDistanceCoeff = 7;
     private const float EnemiesUpdateDistanceCoeff = 10;
 
     private const float GuardHeroDetectionDistanceCoeff = 3;

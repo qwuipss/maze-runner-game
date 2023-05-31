@@ -41,10 +41,12 @@ public static class Textures
             private const string ContentDirectory = $"{BaseContentDirectory}/items";
 
             public static Texture2D Key { get; private set; }
+            public static Texture2D Chalk { get; private set; }
 
             public static void Load(Game game)
             {
                 Key = game.Content.Load<Texture2D>($"{ContentDirectory}/key");
+                Chalk = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk");
             }
         }
 

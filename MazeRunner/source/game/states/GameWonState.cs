@@ -17,13 +17,11 @@ public class GameWonState : GameBaseState
 
     private StaticCamera _staticCamera;
 
-    private Texture2D _cameraEffect;
-
     private GameWonWriter _gameWonWriter;
 
     private Button _menuButton;
 
-    private List<MazeRunnerGameComponent> _components;
+    private HashSet<MazeRunnerGameComponent> _components;
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
@@ -32,6 +30,7 @@ public class GameWonState : GameBaseState
         TurnOnMouseVisible(game);
 
         InitializeCamera();
+        InitializeShadower();
         InitializeButtons();
         InitializeTextWriters();
         InitializeComponentsList();
@@ -55,6 +54,8 @@ public class GameWonState : GameBaseState
         {
             component.Update(gameTime);
         }
+
+        ProcessShadowerState(_components);
     }
 
     private void InitializeTextWriters()
@@ -64,21 +65,7 @@ public class GameWonState : GameBaseState
 
     private void InitializeCamera()
     {
-        void InitializeCameraEffect()
-        {
-            _cameraEffect = EffectsHelper.CreateTransparentBackground(ViewWidth, ViewHeight, 255, GraphicsDevice);
-        }
-
-        if (_cameraEffect is null)
-        {
-            InitializeCameraEffect();
-        }
-
-        _staticCamera = new StaticCamera(ViewWidth, ViewHeight)
-        {
-            Effect = _cameraEffect,
-            DrawingPriority = .5f,
-        };
+        _staticCamera = new StaticCamera(ViewWidth, ViewHeight);
     }
 
     private void InitializeButtons()
@@ -96,14 +83,28 @@ public class GameWonState : GameBaseState
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>
+        _components = new HashSet<MazeRunnerGameComponent>
         {
-            _staticCamera, _menuButton, _gameWonWriter,
+            _menuButton, _gameWonWriter, Shadower,
         };
     }
 
     private void GoToMenu()
     {
-        GameStateChanged.Invoke(new GameMenuState());
+        Shadower = new EffectsHelper.Shadower(false);
+
+        NeedShadowerActivate = true;
+
+        Shadower.TresholdReached += () =>
+        {
+            GameStateChanged.Invoke(new GameMenuState());
+        };
+    }
+
+    private void InitializeShadower()
+    {
+        Shadower = new EffectsHelper.Shadower(true);
+
+        Shadower.TresholdReached += () => NeedShadowerDeactivate = true;
     }
 }

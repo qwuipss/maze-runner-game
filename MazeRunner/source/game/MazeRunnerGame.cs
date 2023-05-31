@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.GameBase.States;
+using MazeRunner.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -28,6 +29,7 @@ public class MazeRunnerGame : Game
 
         SetFullScreen();
         InitializeDrawer();
+        InitializeShadower();
 
         _gameState = new GameMenuState();
 
@@ -80,5 +82,15 @@ public class MazeRunnerGame : Game
         _gameState.Initialize(GraphicsDevice, this);
 
         _gameState.GameStateChanged += GameStateChangedHandler;
+    }
+
+    private void InitializeShadower()
+    {
+        var viewport = GraphicsDevice.Viewport;
+
+        var width = viewport.Width;
+        var height = viewport.Height;
+
+        EffectsHelper.Shadower.InitializeBlackBackground(width, height, GraphicsDevice);
     }
 }

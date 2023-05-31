@@ -1,5 +1,4 @@
-﻿using MazeRunner.Cameras;
-using MazeRunner.Components;
+﻿using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.Extensions;
 using Microsoft.Xna.Framework;
@@ -12,27 +11,31 @@ public static class EffectsHelper
 {
     public class Shadower : MazeRunnerGameComponent
     {
-        public event Action TresholdReached; 
+        public event Action TresholdReached;
 
-        private const double StepAddDelay = 50;
+        public const double StepAddDelay = 25;
 
-        private const float Step = .05f;
+        public const float Step = .05f;
+
+        public static Texture2D BlackBackground => _blackBackground;
 
         private static Texture2D _blackBackground;
+
+        private readonly float _step;
 
         private float _transparency;
 
         private double _elapsedTimeMs;
 
-        private bool _notified;
-
-        public Shadower(GraphicsDevice graphicsDevice, int viewWidth, int viewHeight, float startTransparency)
+        public Shadower(bool isDecreasing)
         {
-            _transparency = startTransparency;
+            _step = Step;
 
-            if (_blackBackground is null)
+            _transparency = isDecreasing ? 1 : 0;
+
+            if (isDecreasing)
             {
-                InitializeBlackBackground(viewWidth, viewHeight, graphicsDevice);
+                _step *= -1;
             }
         }
 
@@ -44,47 +47,27 @@ public static class EffectsHelper
 
         public override void Update(GameTime gameTime)
         {
-            if (!_notified && !_transparency.InRange(0, 1))
-            {
-                _notified = true;
-
-                TresholdReached.Invoke();
-
-                return;
-            }
-
             _elapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
             if (_elapsedTimeMs > StepAddDelay)
             {
-                _transparency += Step;
+                _transparency += _step;
 
-                _elapsedTimeMs = 0;
+                _elapsedTimeMs -= StepAddDelay;
+            }
+
+            if (!_transparency.InRange(0, 1))
+            {
+                TresholdReached.Invoke();
+
+                return;
             }
         }
-        
-        private static void InitializeBlackBackground(int width, int height, GraphicsDevice graphicsDevice)
+
+        public static void InitializeBlackBackground(int width, int height, GraphicsDevice graphicsDevice)
         {
             _blackBackground = CreateTransparentBackground(width, height, byte.MaxValue, graphicsDevice);
         }
-    }
-
-
-    public static Texture2D CreateTransparentBackground(int width, int height, byte transparency, GraphicsDevice graphicsDevice)
-    {
-        var effectData = new Color[height, width];
-
-        for (int y = 0; y < effectData.GetLength(0); y++)
-        {
-            for (int x = 0; x < effectData.GetLength(1); x++)
-            {
-                effectData[y, x] = Color.Black;
-
-                effectData[y, x].A = transparency;
-            }
-        }
-
-        return GetTexture(effectData, width, height, graphicsDevice);
     }
 
     public static Texture2D CreateGradientCircleEffect(int width, int height, float shadowTreshold, GraphicsDevice graphicsDevice)
@@ -111,6 +94,23 @@ public static class EffectsHelper
                     effectData[y, x] = Color.Black;
                     effectData[y, x].A = transparency;
                 }
+            }
+        }
+
+        return GetTexture(effectData, width, height, graphicsDevice);
+    }
+
+    private static Texture2D CreateTransparentBackground(int width, int height, byte transparency, GraphicsDevice graphicsDevice)
+    {
+        var effectData = new Color[height, width];
+
+        for (int y = 0; y < effectData.GetLength(0); y++)
+        {
+            for (int x = 0; x < effectData.GetLength(1); x++)
+            {
+                effectData[y, x] = Color.Black;
+
+                effectData[y, x].A = transparency;
             }
         }
 

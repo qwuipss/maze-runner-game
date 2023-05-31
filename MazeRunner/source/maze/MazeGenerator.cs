@@ -3,6 +3,7 @@ using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace MazeRunner.MazeBase;
@@ -63,7 +64,7 @@ public static class MazeGenerator
         return maze;
     }
 
-    public static void MakeCyclic(Maze maze, int deadEndsRemovePercentage)
+    public static void MakeCyclic(Maze maze, float deadEndsRemovePercentage)
     {
         bool IsDeadEnd(Cell cell)
         {
@@ -78,10 +79,10 @@ public static class MazeGenerator
             return isDeadEnd;
         }
 
-        static void RemoveDeadEnds(Maze maze, int deadEndsRemovePercentage, Func<Cell, bool> deadEndSelector)
+        static void RemoveDeadEnds(Maze maze, float deadEndsRemovePercentage, Func<Cell, bool> deadEndSelector)
         {
             var deadEndsCount = maze.GetTileCount(deadEndSelector);
-            var deadEndsRemoveCount = deadEndsCount * deadEndsRemovePercentage / 100;
+            var deadEndsRemoveCount = (int)(deadEndsCount * deadEndsRemovePercentage / 100);
 
             var counter = 0;
             var skeleton = maze.Skeleton;
@@ -135,10 +136,10 @@ public static class MazeGenerator
         return (tiles, floorsInserted);
     }
 
-    public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, int percentage)
+    public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, float percentage)
     {
         var floorsCount = maze.GetTileCount(maze.IsFloor);
-        var insertionsCount = floorsCount * percentage / 100;
+        var insertionsCount = (int)(floorsCount * percentage / 100);
 
         for (int i = 0; i < insertionsCount; i++)
         {
@@ -167,6 +168,19 @@ public static class MazeGenerator
         var floorCell = GetRandomCell(maze, maze.IsFloor).First();
 
         maze.InsertItem(item, floorCell);
+    }
+
+    public static void InsertItems(Maze maze, Func<MazeItem> itemSource, float percentage)
+    {
+        var floorsCount = maze.GetTileCount(maze.IsFloor);
+        var insertionsCount = (int)(floorsCount * percentage / 100);
+
+        for (int i = 0; i < insertionsCount; i++)
+        {
+            var floorCell = GetRandomCell(maze, maze.IsFloor).First();
+
+            maze.InsertItem(itemSource.Invoke(), floorCell);
+        }
     }
 
     public static void AddCellsInSearchingQueue(IEnumerable<Cell> cells, HashSet<Cell> visitedCells, Queue<Cell> searchingQueue)
