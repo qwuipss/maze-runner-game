@@ -217,15 +217,9 @@ public class GameRunningState : GameBaseState
     {
         void InitializeCameraEffect()
         {
-            var viewPort = GraphicsDevice.Viewport;
+            var shadowTreshold = Hero.FrameSize * 2.4f;
 
-            var viewWidth = viewPort.Width;
-            var viewHeight = viewPort.Height;
-
-            var heroFrameSize = Hero.FrameSize;
-            var shadowTreshold = heroFrameSize * 2.4f;
-
-            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(viewWidth, viewHeight, shadowTreshold, GraphicsDevice);
+            _cameraEffect = EffectsHelper.CreateGradientCircleEffect(ViewWidth, ViewHeight, shadowTreshold, GraphicsDevice);
         }
 
         if (_cameraEffect is null)

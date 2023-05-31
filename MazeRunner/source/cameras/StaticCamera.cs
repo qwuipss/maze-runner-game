@@ -27,8 +27,12 @@ public class StaticCamera : MazeRunnerGameComponent, ICamera
 
     public float DrawingPriority { get; set; }
 
+    public float EffectTransparency { get; set; }
+
     public StaticCamera(int viewWidth, int viewHeight)
     {
+        EffectTransparency = 1;
+
         _viewWidth = viewWidth;
         _viewHeight = viewHeight;
 
@@ -49,7 +53,7 @@ public class StaticCamera : MazeRunnerGameComponent, ICamera
     {
         if (Effect is not null)
         {
-            Drawer.Draw(Effect, Vector2.Zero, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
+            Drawer.Draw(Effect, Vector2.Zero, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority, transparency: EffectTransparency);
         }
     }
 }

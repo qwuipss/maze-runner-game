@@ -35,8 +35,12 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
     public Texture2D Effect { get; set; }
 
+    public float EffectTransparency { get; set; }
+
     public HeroCamera(Hero hero, int viewWidth, int viewHeight)
     {
+        EffectTransparency = 1;
+
         _viewWidth = viewWidth;
         _viewHeight = viewHeight;
 
@@ -54,7 +58,7 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         var viewBox = DrawHelper.GetViewBox(this);
         var position = new Vector2(viewBox.X, viewBox.Y);
 
-        Drawer.Draw(Effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
+        Drawer.Draw(Effect, position, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority, transparency: EffectTransparency);
     }
 
     public override void Update(GameTime gameTime)

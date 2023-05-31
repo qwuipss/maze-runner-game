@@ -88,11 +88,12 @@ public static class Drawer
         float rotation = 0,
         Vector2 origin = default,
         float scale = 1,
-        SpriteEffects spriteEffects = default)
+        SpriteEffects spriteEffects = default,
+        float transparency = 1)
     {
         if (DrawHelper.IsInViewBox(position, sourceRectangle, _viewBox))
         {
-            _spriteBatch.Draw(texture, position, sourceRectangle, ColorXna.White, rotation, origin, scale, spriteEffects, layerDepth);
+            _spriteBatch.Draw(texture, position, sourceRectangle, new ColorXna(ColorXna.White, transparency), rotation, origin, scale, spriteEffects, layerDepth);
         }
     }
 }

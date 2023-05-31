@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using static MazeRunner.Helpers.EffectsHelper;
 
 namespace MazeRunner.GameBase.States;
 
@@ -77,6 +78,10 @@ public class GameMenuState : GameBaseState
 
     private static Texture2D _cameraEffect;
 
+    private Shadower _shadower;
+
+    private bool _gameStarted;
+
     private Lazy<GameParameters> _difficulty;
 
     private Button _startButton;
@@ -89,7 +94,7 @@ public class GameMenuState : GameBaseState
 
     private RadioButtonContainer _difficultySelectButtonsContainer;
 
-    private List<MazeRunnerGameComponent> _components;
+    private HashSet<MazeRunnerGameComponent> _components;
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
@@ -101,7 +106,7 @@ public class GameMenuState : GameBaseState
 
         InitializeButtons();
         InitializeCamera();
-        InitializeBackgroundMaze();
+        InitializeMaze();
         InitializeComponentsList();
     }
 
@@ -123,6 +128,11 @@ public class GameMenuState : GameBaseState
         {
             component.Update(gameTime);
         }
+
+        if (_gameStarted && _shadower is not null && !_components.Contains(_shadower))
+        {
+            _components.Add(_shadower);
+        }
     }
 
     private void InitializeButtons()
@@ -131,7 +141,7 @@ public class GameMenuState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _startButton = new StartButton(() => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value)), boxScale);
+            _startButton = new StartButton(() => StartGame(), boxScale);
 
             _startButton.Initialize();
 
@@ -196,7 +206,7 @@ public class GameMenuState : GameBaseState
         InitializeGameDifficultySelectRadioButtons(dificultyButtonsScaleDivider, difficultyButtonsOffsetCoeff);
     }
 
-    private void InitializeBackgroundMaze()
+    private void InitializeMaze()
     {
         var bayonetTrapInsertingPercentage = 2;
         var dropTrapInsertingPercentage = 2;
@@ -241,9 +251,18 @@ public class GameMenuState : GameBaseState
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>
+        _components = new HashSet<MazeRunnerGameComponent>
         {
             _startButton, _quitButton, _maze, _staticCamera, _difficultySelectButtonsContainer,
         };
+    }
+
+    private void StartGame()
+    {
+        _gameStarted = true;
+
+        _shadower = new Shadower(GraphicsDevice, ViewWidth, ViewHeight, 0);
+
+        _shadower.TresholdReached += () => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value));
     }
 }
