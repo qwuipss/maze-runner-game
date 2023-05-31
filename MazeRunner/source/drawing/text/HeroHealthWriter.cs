@@ -5,7 +5,7 @@ using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MazeRunner.Drawing;
+namespace MazeRunner.Drawing.Writers;
 
 public class HeroHealthWriter : TextWriter
 {
@@ -14,8 +14,6 @@ public class HeroHealthWriter : TextWriter
     private readonly float _scaleFactor;
 
     private readonly StaticCamera _staticCamera;
-
-    private readonly GameRunningState _runningState;
 
     private readonly Hero _hero;
 
@@ -32,7 +30,7 @@ public class HeroHealthWriter : TextWriter
         HeartTexture = Textures.Gui.StateShowers.Heart;
     }
 
-    public HeroHealthWriter(Hero hero, GameRunningState runningState, float scaleDivider, GraphicsDevice graphicsDevice)
+    public HeroHealthWriter(Hero hero, float scaleDivider, GraphicsDevice graphicsDevice)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
@@ -42,8 +40,6 @@ public class HeroHealthWriter : TextWriter
         _count = _hero.Health;
 
         _scaleFactor = graphicsDevice.Viewport.Width / scaleDivider;
-
-        _runningState = runningState;
 
         _staticCamera = new StaticCamera(graphicsDevice);
 
@@ -56,13 +52,13 @@ public class HeroHealthWriter : TextWriter
 
     public override void Draw(GameTime gameTime)
     {
-        GameRunningState.SwitchCamera(_staticCamera);
+        Drawer.BeginDraw(_staticCamera);
 
         Drawer.Draw(HeartTexture, HeartTextureDrawingPosition, new Rectangle(0, 0, HeartTexture.Width, HeartTexture.Height), DrawingPriority, scale: _scaleFactor);
 
         Drawer.DrawString(this);
 
-        _runningState.ContinueDraw();
+        Drawer.EndDraw();
     }
 
     public override void Update(GameTime gameTime)

@@ -4,9 +4,9 @@ using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 
-namespace MazeRunner.Drawing;
+namespace MazeRunner.Drawing.Writers;
 
-public class FindKeyTextWriter : TextWriter
+public class FindKeyWriter : TextWriter
 {
     private enum WritingSide
     {
@@ -37,7 +37,7 @@ public class FindKeyTextWriter : TextWriter
 
     public override float ScaleFactor => .2f;
 
-    public FindKeyTextWriter(Hero hero, Maze maze)
+    public FindKeyWriter(Hero hero, Maze maze)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;

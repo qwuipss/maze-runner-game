@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MazeRunner.Drawing;
+namespace MazeRunner.Drawing.Writers;
 
 public abstract class TextWriter : MazeRunnerGameComponent
 {

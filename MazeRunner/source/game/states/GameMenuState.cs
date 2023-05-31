@@ -25,17 +25,17 @@ public class GameMenuState : IGameState
         {
             Easy = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 5,//25
-                MazeHeight = 5,
+                MazeWidth = 7,//25
+                MazeHeight = 7,
 
                 MazeDeadEndsRemovePercentage = 55,
 
-                MazeBayonetTrapInsertingPercentage = 2,
+                MazeBayonetTrapInsertingPercentage = 30,
                 MazeDropTrapInsertingPercentage = 1,
 
-                GuardSpawnCount = 0,//10
+                GuardSpawnCount = 1,//10
 
-                HeroHealth = 5,
+                HeroHealth = 1115,
                 ChalkUses = 10,
             });
 
@@ -114,7 +114,7 @@ public class GameMenuState : IGameState
         _viewHeight = viewPort.Height;
 
         InitializeButtons();
-        InitializeStaticCamera();
+        InitializeCamera();
         InitializeBackgroundMaze();
         InitializeComponentsList();
     }
@@ -233,7 +233,7 @@ public class GameMenuState : IGameState
         _maze.InitializeComponentsList();
     }
 
-    private void InitializeStaticCamera()
+    private void InitializeCamera()
     {
         void InitializeCameraEffect()
         {
@@ -255,7 +255,7 @@ public class GameMenuState : IGameState
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>()
+        _components = new List<MazeRunnerGameComponent>
         {
             _startButton, _quitButton, _maze, _staticCamera, _difficultySelectButtonsContainer,
         };

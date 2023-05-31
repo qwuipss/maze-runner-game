@@ -25,6 +25,8 @@ public class StaticCamera : MazeRunnerGameComponent, ICamera
 
     public Texture2D Effect { get; set; }
 
+    public float DrawingPriority { get; set; }
+
     public StaticCamera(GraphicsDevice graphicsDevice)
     {
         var viewPort = graphicsDevice.Viewport;
@@ -49,7 +51,7 @@ public class StaticCamera : MazeRunnerGameComponent, ICamera
     {
         if (Effect is not null)
         {
-            Drawer.Draw(Effect, Vector2.Zero, new Rectangle(0, 0, _viewWidth, _viewHeight), 0);
+            Drawer.Draw(Effect, Vector2.Zero, new Rectangle(0, 0, _viewWidth, _viewHeight), DrawingPriority);
         }
     }
 }

@@ -1,11 +1,13 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
 using MazeRunner.Drawing;
+using MazeRunner.Drawing.Writers;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -31,7 +33,7 @@ public class GameRunningState : IGameState
 
     private Maze _maze;
 
-    private FindKeyTextWriter _findKeyTextWriter;
+    private FindKeyWriter _findKeyTextWriter;
 
     private HeroHealthWriter _heroHealthWriter;
 
@@ -40,6 +42,8 @@ public class GameRunningState : IGameState
     private List<Enemy> _enemies;
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
+
+    private List<MazeRunnerGameComponent> _stateShowers;
 
     private List<Enemy> _respawnEnemies;
 
@@ -60,20 +64,6 @@ public class GameRunningState : IGameState
         IsControlling = true;
     }
 
-    public static void SwitchCamera(ICamera camera)
-    {
-        Drawer.EndDraw();
-
-        Drawer.BeginDraw(camera);
-    }
-
-    public void ContinueDraw()
-    {
-        Drawer.EndDraw();
-
-        Drawer.BeginDraw(HeroCamera);
-    }
-
     public void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
         if (game.IsMouseVisible)
@@ -91,7 +81,7 @@ public class GameRunningState : IGameState
         PreInitializeMaze();
         InitializeHero();
         PostInitializeMaze();
-        InitializeHeroCamera();
+        InitializeCamera();
         InitializeEnemies();
         InitializeTextWriters();
         InitializeComponentsList();
@@ -107,6 +97,11 @@ public class GameRunningState : IGameState
         }
 
         Drawer.EndDraw();
+
+        foreach (var stateShower in _stateShowers)
+        {
+            stateShower.Draw(gameTime);
+        }
     }
 
     public void Update(GameTime gameTime)
@@ -134,6 +129,11 @@ public class GameRunningState : IGameState
             component.Update(gameTime);
         }
 
+        foreach (var stateShower in _stateShowers)
+        {
+            stateShower.Update(gameTime);
+        }
+
         if (!IsControlling)
         {
             return;
@@ -151,9 +151,9 @@ public class GameRunningState : IGameState
 
         _deadGameComponents = new List<MazeRunnerGameComponent>();
 
-        _gameComponents = new HashSet<MazeRunnerGameComponent>()
+        _gameComponents = new HashSet<MazeRunnerGameComponent>
         {
-            _maze, _findKeyTextWriter, HeroCamera,
+            _maze, _findKeyTextWriter, HeroCamera, Hero,
         };
 
         foreach (var enemy in _enemies)
@@ -161,9 +161,11 @@ public class GameRunningState : IGameState
             _gameComponents.Add(enemy);
         }
 
-        _gameComponents.Add(Hero);
-        _gameComponents.Add(_heroHealthWriter);
-        _gameComponents.Add(_heroChalkUsesWriter);
+        _stateShowers = new List<MazeRunnerGameComponent>
+        {
+            _heroHealthWriter,
+            _heroChalkUsesWriter
+        };
     }
 
     private void PreInitializeMaze()
@@ -216,7 +218,7 @@ public class GameRunningState : IGameState
         InitializeGuards();
     }
 
-    private void InitializeHeroCamera()
+    private void InitializeCamera()
     {
         void InitializeCameraEffect()
         {
@@ -244,13 +246,13 @@ public class GameRunningState : IGameState
 
     private void InitializeTextWriters()
     {
-        _findKeyTextWriter = new FindKeyTextWriter(Hero, _maze);
+        _findKeyTextWriter = new FindKeyWriter(Hero, _maze);
 
         var scaleDivider = 450;
 
-        _heroHealthWriter = new HeroHealthWriter(Hero, this, scaleDivider, _graphicsDevice);
+        _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, _graphicsDevice);
 
-        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, this, _heroHealthWriter, scaleDivider, _graphicsDevice);
+        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, _graphicsDevice);
     }
 
     private Guard CreateGuard()
@@ -343,9 +345,17 @@ public class GameRunningState : IGameState
 
     private void UpdateSprite(Sprite sprite, GameTime gameTime)
     {
-        void ProcessStateControl(Sprite hero, GameTime gameTime)
+        void ProcessGameWin()
         {
-            if (hero.IsDead && !_isGameOver)
+            if (IsMazeEscaped())
+            {
+                GameStateChanged.Invoke(new GameWonState());
+            }
+        }
+
+        void ProcessStateControl()
+        {
+            if (Hero.IsDead && !_isGameOver)
             {
                 _isGameOver = true;
             }
@@ -381,9 +391,14 @@ public class GameRunningState : IGameState
                 AddEnemyToRespawnList(enemy);
             }
         }
+        else if (sprite is Hero hero)
+        {
+            ProcessStateControl();
+            ProcessGameWin();
+        }
         else
         {
-            ProcessStateControl(sprite, gameTime);
+            throw new NotImplementedException();
         }
 
         sprite.Update(gameTime);
@@ -407,5 +422,10 @@ public class GameRunningState : IGameState
         }
 
         textWriter.Update(gameTime);
+    }
+
+    private bool IsMazeEscaped()
+    {
+        return SpriteBaseState.GetSpriteCell(Hero, _maze) == _maze.ExitInfo.Cell;
     }
 }

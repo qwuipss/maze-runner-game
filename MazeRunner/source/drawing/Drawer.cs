@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Cameras;
+using MazeRunner.Drawing.Writers;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;

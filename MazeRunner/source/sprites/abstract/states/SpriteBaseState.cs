@@ -33,13 +33,21 @@ public abstract class SpriteBaseState : ISpriteState
 
     public int FrameSize => Texture.Width / FramesCount;
 
-    public Rectangle CurrentAnimationFrame => new Rectangle(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
+    public Rectangle CurrentAnimationFrame => new(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
 
     protected Point CurrentAnimationFramePoint { get; set; }
 
     protected double ElapsedGameTimeMs { get; set; }
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
+
+    public static Cell GetSpriteCell(Sprite sprite, Maze maze)
+    {
+        var position = GetSpriteNormalizedPosition(sprite);
+        var cell = maze.GetCellByPosition(position);
+
+        return cell;
+    }
 
     protected static bool CollidesWithTraps(Sprite sprite, Maze maze, bool needActivating, out TrapType trapType)
     {
@@ -60,14 +68,6 @@ public abstract class SpriteBaseState : ISpriteState
         var position = new Vector2(hitBox.X + hitBox.Width / 2, hitBox.Y + hitBox.Height / 2);
 
         return position;
-    }
-
-    protected static Cell GetSpriteCell(Sprite sprite, Maze maze)
-    {
-        var position = GetSpriteNormalizedPosition(sprite);
-        var cell = maze.GetCellByPosition(position);
-
-        return cell;
     }
 
     public virtual ISpriteState ProcessState(GameTime gameTime)

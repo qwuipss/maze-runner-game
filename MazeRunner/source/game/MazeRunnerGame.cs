@@ -65,7 +65,7 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        _graphics.ApplyChanges();
+     //   _graphics.ApplyChanges();
     }
 
     private void InitializeDrawer()

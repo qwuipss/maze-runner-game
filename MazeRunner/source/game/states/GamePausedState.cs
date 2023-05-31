@@ -152,7 +152,7 @@ public class GamePausedState : IGameState
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>()
+        _components = new List<MazeRunnerGameComponent>
         {
             _resumeButton, _restartButton, _menuButton, _staticCamera,
         };

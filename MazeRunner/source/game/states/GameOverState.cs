@@ -133,7 +133,7 @@ public class GameOverState : IGameState
 
     private void InitializeComponentsList()
     {
-        _components = new List<MazeRunnerGameComponent>()
+        _components = new List<MazeRunnerGameComponent>
         {
             _restartButton, _menuButton,
         };
