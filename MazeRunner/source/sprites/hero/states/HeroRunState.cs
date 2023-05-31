@@ -38,6 +38,8 @@ public class HeroRunState : HeroBaseState
 
         ProcessItemsColliding();
 
+        HandleChalkCrossDrawing(gameTime);
+
         base.ProcessState(gameTime);
 
         return this;

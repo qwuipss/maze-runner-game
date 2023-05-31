@@ -26,9 +26,12 @@ public class Hero : Sprite
 
     public int Health { get; set; }
 
-    public Hero(int health)
+    public int ChalkUses { get; set; }
+
+    public Hero(int health, int chalkUses)
     {
         Health = health;
+        ChalkUses = chalkUses;
     }
 
     public void Initialize(Maze maze)

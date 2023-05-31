@@ -1,16 +1,65 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.GameBase;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using static MazeRunner.GameBase.Settings;
 
 namespace MazeRunner.Managers;
 
 public static class KeyboardManager
 {
-    private const double PauseSwitchPressDelayMs = 250;
+    private class CooldownButton
+    {
+        private readonly Keys _button;
 
-    private static double _pauseSwitchLastPressElapsedTimeMs;
+        private readonly double _cooldownMs;
 
-    private static bool _isPauseSwitchOnCooldown;
+        private double _lastPressElapsedTimeMs;
+
+        private bool _isOnCooldown;
+
+        public CooldownButton(double cooldownMs, Keys button)
+        {
+            _cooldownMs = cooldownMs;
+            _button = button;
+        }
+
+        public bool IsPressed(GameTime gameTime)
+        {
+            var keyboardState = Keyboard.GetState();
+
+            if (_isOnCooldown)
+            {
+                _lastPressElapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+                if (_lastPressElapsedTimeMs > _cooldownMs)
+                {
+                    _isOnCooldown = false;
+
+                    _lastPressElapsedTimeMs -= _cooldownMs;
+                }
+            }
+
+            if (!_isOnCooldown && keyboardState.IsKeyDown(_button))
+            {
+                _isOnCooldown = true;
+
+                return true;
+            }
+
+            return false;
+        }
+    }
+
+    private static readonly CooldownButton _pauseSwitchButton;
+
+    private static readonly CooldownButton _chalkDrawingButton;
+
+    static KeyboardManager()
+    {
+        _pauseSwitchButton = new CooldownButton(250, PauseSwitch);
+        _chalkDrawingButton = new CooldownButton(250, ChalkDrawing);
+    }
 
     public static Vector2 ProcessHeroMovement()
     {
@@ -42,27 +91,11 @@ public static class KeyboardManager
 
     public static bool IsGamePauseSwitched(GameTime gameTime)
     {
-        var keyboardState = Keyboard.GetState();
+        return _pauseSwitchButton.IsPressed(gameTime);
+    }
 
-        if (_isPauseSwitchOnCooldown)
-        {
-            _pauseSwitchLastPressElapsedTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
-
-            if (_pauseSwitchLastPressElapsedTimeMs > PauseSwitchPressDelayMs)
-            {
-                _isPauseSwitchOnCooldown = false;
-
-                _pauseSwitchLastPressElapsedTimeMs -= PauseSwitchPressDelayMs;
-            }
-        }
-
-        if (!_isPauseSwitchOnCooldown && keyboardState.IsKeyDown(PauseSwitchButton))
-        {
-            _isPauseSwitchOnCooldown = true;
-
-            return true;
-        }
-
-        return false;
+    public static bool IsChalkDrawingButtonPressed(GameTime gameTime)
+    {
+        return _chalkDrawingButton.IsPressed(gameTime);
     }
 }

@@ -4,7 +4,9 @@ namespace MazeRunner.GameBase;
 
 internal static class Settings
 {
-    public static Keys PauseSwitchButton => Keys.Escape;
+    public static Keys PauseSwitch => Keys.Escape;
+
+    public static Keys ChalkDrawing => Keys.X;
 
     public static Keys MoveUp => Keys.W;
     public static Keys MoveDown => Keys.S;

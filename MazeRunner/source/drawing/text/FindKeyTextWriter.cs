@@ -21,7 +21,7 @@ public class FindKeyTextWriter : TextWriter
 
     private readonly int _mazeWidth;
 
-    private readonly Vector2 _textStringLength;
+    private readonly Vector2 _stringSize;
 
     private readonly Maze _maze;
 
@@ -42,7 +42,7 @@ public class FindKeyTextWriter : TextWriter
         Font = Fonts.BaseFont;
         Color = Color.White;
 
-        _textStringLength = Font.MeasureString(Text) * ScaleFactor;
+        _stringSize = Font.MeasureString(Text) * ScaleFactor;
 
         _hero = hero;
         _maze = maze;
@@ -94,8 +94,8 @@ public class FindKeyTextWriter : TextWriter
         var rightUpCorner = position.X + _hero.FrameSize;
         var leftUpCorner = position.X;
 
-        var rightSideTextEndPos = rightUpCorner + _textStringLength.X;
-        var leftSideTextStartPos = leftUpCorner - _textStringLength.X;
+        var rightSideTextEndPos = rightUpCorner + _stringSize.X;
+        var leftSideTextStartPos = leftUpCorner - _stringSize.X;
 
         switch (_writingSide)
         {

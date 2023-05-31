@@ -7,4 +7,5 @@ public enum TileType
     Exit,
     Trap,
     Item,
+    Mark,
 }

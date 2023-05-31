@@ -13,45 +13,21 @@ public abstract class MazeTile : MazeRunnerGameComponent
 {
     public abstract TileType TileType { get; }
 
+    public virtual float DrawingPriority => 1;
+
+    public Texture2D Texture => State.Texture;
+
+    public int FrameSize => State.FrameSize;
+
+    public RectagleXna CurrentAnimationFrame => State.CurrentAnimationFrame;
+
+    public Vector2 Position { get; set; }
+
     public float FrameRotationAngle { get; set; }
 
     public Vector2 OriginFrameRotationVector { get; set; }
 
-    public virtual float DrawingPriority
-    {
-        get
-        {
-            return 1;
-        }
-    }
-
-    public Texture2D Texture
-    {
-        get
-        {
-            return State.Texture;
-        }
-    }
-
-    public int FrameSize
-    {
-        get
-        {
-            return State.FrameSize;
-        }
-    }
-
-    public RectagleXna CurrentAnimationFrame
-    {
-        get
-        {
-            return State.CurrentAnimationFrame;
-        }
-    }
-
-    protected virtual IMazeTileState State { get; set; }
-
-    public Vector2 Position { get; set; }
+    protected IMazeTileState State { get; set; }
 
     public static Vector2 GetOriginFrameRotationVector(MazeTile tile)
     {

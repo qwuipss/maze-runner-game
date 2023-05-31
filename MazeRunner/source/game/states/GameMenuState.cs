@@ -36,6 +36,7 @@ public class GameMenuState : IGameState
                 GuardSpawnCount = 0,//10
 
                 HeroHealth = 5,
+                ChalkUses = 10,
             });
 
             Normal = new Lazy<GameParameters>(() => new GameParameters()
@@ -51,6 +52,7 @@ public class GameMenuState : IGameState
                 GuardSpawnCount = 15,
 
                 HeroHealth = 3,
+                ChalkUses = 15,
             });
 
             Hard = new Lazy<GameParameters>(() => new GameParameters()
@@ -66,6 +68,7 @@ public class GameMenuState : IGameState
                 GuardSpawnCount = 25,
 
                 HeroHealth = 2,
+                ChalkUses = 25,
             });
         }
     }

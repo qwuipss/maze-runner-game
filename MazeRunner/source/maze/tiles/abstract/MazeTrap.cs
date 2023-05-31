@@ -6,11 +6,5 @@ public abstract class MazeTrap : MazeTile
 
     public abstract bool IsActivated { get; }
 
-    public override float DrawingPriority
-    {
-        get
-        {
-            return .8f;
-        }
-    }
+    public override float DrawingPriority => .8f;
 }

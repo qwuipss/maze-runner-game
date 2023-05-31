@@ -35,6 +35,8 @@ public class GameRunningState : IGameState
 
     private HeroHealthWriter _heroHealthWriter;
 
+    private HeroChalkUsesWriter _heroChalkUsesWriter;
+
     private List<Enemy> _enemies;
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
@@ -161,6 +163,7 @@ public class GameRunningState : IGameState
 
         _gameComponents.Add(Hero);
         _gameComponents.Add(_heroHealthWriter);
+        _gameComponents.Add(_heroChalkUsesWriter);
     }
 
     private void PreInitializeMaze()
@@ -189,7 +192,7 @@ public class GameRunningState : IGameState
         var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
         var position = _maze.GetCellPosition(cell);
 
-        Hero = new Hero(GameParameters.HeroHealth)
+        Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses)
         {
             Position = position,
         };
@@ -243,9 +246,11 @@ public class GameRunningState : IGameState
     {
         _findKeyTextWriter = new FindKeyTextWriter(Hero, _maze);
 
-        var heroHealthWriterScaleDivider = 450;
+        var scaleDivider = 450;
 
-        _heroHealthWriter = new HeroHealthWriter(Hero, this, heroHealthWriterScaleDivider, _graphicsDevice);
+        _heroHealthWriter = new HeroHealthWriter(Hero, this, scaleDivider, _graphicsDevice);
+
+        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, this, _heroHealthWriter, scaleDivider, _graphicsDevice);
     }
 
     private Guard CreateGuard()
@@ -352,6 +357,7 @@ public class GameRunningState : IGameState
                 if (_heroAfterDeadElapsedTimeMs > StateSwitchAfterHeroDeadDelayMs)
                 {
                     _gameComponents.Remove(_heroHealthWriter);
+                    _gameComponents.Remove(_heroChalkUsesWriter);
 
                     GameStateChanged.Invoke(new GameOverState(this));
                 }

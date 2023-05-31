@@ -13,4 +13,5 @@ public class GameParameters
     public int GuardSpawnCount;
 
     public int HeroHealth;
+    public int ChalkUses;
 }

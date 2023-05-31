@@ -18,6 +18,16 @@ public abstract class HeroBaseState : SpriteBaseState
         Maze = maze;
     }
 
+    protected override HeroBaseState GetTrapCollidingState(TrapType trapType)
+    {
+        return trapType switch
+        {
+            TrapType.Bayonet => new HeroDyingState(this, Hero, Maze),
+            TrapType.Drop => new HeroFallingState(this, Hero, Maze),
+            _ => throw new NotImplementedException()
+        };
+    }
+
     protected Vector2 ProcessMovement(GameTime gameTime)
     {
         static bool IsMovementAccepted(Sprite hero, Vector2 position, Vector2 movement, Maze maze)
@@ -59,13 +69,23 @@ public abstract class HeroBaseState : SpriteBaseState
         return Vector2.Zero;
     }
 
-    protected override HeroBaseState GetTrapCollidingState(TrapType trapType)
+    protected void HandleChalkCrossDrawing(GameTime gameTime)
     {
-        return trapType switch
+        if (Hero.ChalkUses > 0 && KeyboardManager.IsChalkDrawingButtonPressed(gameTime))
         {
-            TrapType.Bayonet => new HeroDyingState(this, Hero, Maze),
-            TrapType.Drop => new HeroFallingState(this, Hero, Maze),
-            _ => throw new NotImplementedException()
-        };
+            var cell = GetSpriteCell(Hero, Maze);
+
+            if (Maze.CanInsertMark(cell))
+            {
+                var mark = new ChalkMark
+                {
+                    Position = Maze.GetCellPosition(cell)
+                };
+
+                Maze.InsertMark(mark, cell);
+
+                Hero.ChalkUses--;
+            }
+        }
     }
 }

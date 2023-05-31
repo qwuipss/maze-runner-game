@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.MazeBase.Tiles;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Net.Mime;
 
 namespace MazeRunner.Content;
 
@@ -48,6 +50,34 @@ public static class Textures
             }
         }
 
+        public static class MazeMarks
+        {
+            private const string ContentDirectory = $"{BaseContentDirectory}/marks";
+
+            public static class Chalk
+            {
+                private const string ContentDirectory = $"{MazeMarks.ContentDirectory}/chalk";
+
+                public static Texture2D Cross_1 { get; private set; }
+                public static Texture2D Cross_2 { get; private set; }
+                public static Texture2D Cross_3 { get; private set; }
+                public static Texture2D Cross_4 { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Cross_1 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_1");
+                    Cross_2 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_2");
+                    Cross_3 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_3");
+                    Cross_4 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_4");
+                }
+            }
+
+            public static void Load(Game game)
+            {
+                Chalk.Load(game);
+            }
+        }
+
         public static void Load(Game game)
         {
             var dir = $"{BaseContentDirectory}/{ContentDirectory}";
@@ -65,6 +95,7 @@ public static class Textures
 
             MazeTraps.Load(game);
             MazeItems.Load(game);
+            MazeMarks.Load(game);   
         }
     }
 
@@ -269,41 +300,24 @@ public static class Textures
             }
         }
 
-        public static void Load(Game game)
+        public static class StateShowers
         {
-            Buttons.Load(game);
-        }
-    }
+            private const string ContentDirectory = $"{Gui.ContentDirectory}/stateShowers";
 
-    public static class Marks
-    {
-        private const string ContentDirectory = $"marks";
-
-        public static class Chalk
-        {
-            private const string ContentDirectory = $"{Marks.ContentDirectory}/chalk";
-
-            public static Texture2D Cross_1 { get; private set; }
-            public static Texture2D Cross_2 { get; private set; }
-            public static Texture2D Cross_3 { get; private set; }
-            public static Texture2D Cross_4 { get; private set; }
+            public static Texture2D Heart { get; private set; }
+            public static Texture2D Chalk { get; private set; }
 
             public static void Load(Game game)
             {
-                Cross_1 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_1");
-                Cross_2 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_2");
-                Cross_3 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_3");
-                Cross_4 = game.Content.Load<Texture2D>($"{ContentDirectory}/cross_4");
+                Heart = game.Content.Load<Texture2D>($"{ContentDirectory}/heart");
+                Chalk = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk");
             }
         }
 
-        public static Texture2D Heart { get; private set; }
-
         public static void Load(Game game)
         {
-            Heart = game.Content.Load<Texture2D>($"{ContentDirectory}/heart");
-
-            Chalk.Load(game);
+            Buttons.Load(game);
+            StateShowers.Load(game);
         }
     }
 
@@ -312,6 +326,5 @@ public static class Textures
         MazeTiles.Load(game);
         Sprites.Load(game);
         Gui.Load(game);
-        Marks.Load(game);
     }
 }

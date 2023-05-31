@@ -7,9 +7,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.Drawing;
 
-public class HeroHealthWriter : TextWriter
+public class HeroChalkUsesWriter : TextWriter
 {
-    public static readonly Texture2D HeartTexture;
+    private static readonly Texture2D _chalkTexture;
 
     private readonly float _scaleFactor;
 
@@ -19,27 +19,27 @@ public class HeroHealthWriter : TextWriter
 
     private readonly Hero _hero;
 
+    private readonly Vector2 _chalkTextureDrawingPosition;
+
     private int _count;
 
     public override float ScaleFactor => _scaleFactor;
 
     public override string Text => $"x{_count}";
 
-    public Vector2 HeartTextureDrawingPosition { get; init; }
-
-    static HeroHealthWriter()
+    static HeroChalkUsesWriter()
     {
-        HeartTexture = Textures.Gui.StateShowers.Heart;
+        _chalkTexture = Textures.Gui.StateShowers.Chalk;
     }
 
-    public HeroHealthWriter(Hero hero, GameRunningState runningState, float scaleDivider, GraphicsDevice graphicsDevice)
+    public HeroChalkUsesWriter(Hero hero, GameRunningState runningState, HeroHealthWriter healthWriter, float scaleDivider, GraphicsDevice graphicsDevice)
     {
         Font = Fonts.BaseFont;
         Color = Color.White;
 
         _hero = hero;
 
-        _count = _hero.Health;
+        _count = _hero.ChalkUses;
 
         _scaleFactor = graphicsDevice.Viewport.Width / scaleDivider;
 
@@ -49,16 +49,24 @@ public class HeroHealthWriter : TextWriter
 
         var textOffset = 1.25f;
 
+        var topOffset = 1.5f;
+
         var stringSize = Font.MeasureString($"x{_count}") * _scaleFactor;
 
-        Position = new Vector2(HeartTexture.Width * _scaleFactor * textOffset, HeartTexture.Height * _scaleFactor - stringSize.Y * .86f);
+        _chalkTextureDrawingPosition = new Vector2(
+            0, 
+            healthWriter.HeartTextureDrawingPosition.Y + HeroHealthWriter.HeartTexture.Height * healthWriter.ScaleFactor * topOffset);
+
+        Position = new Vector2(
+            _chalkTexture.Width * _scaleFactor * textOffset,
+            _chalkTextureDrawingPosition.Y + _chalkTexture.Height * _scaleFactor - stringSize.Y * .86f);
     }
 
     public override void Draw(GameTime gameTime)
     {
         GameRunningState.SwitchCamera(_staticCamera);
 
-        Drawer.Draw(HeartTexture, HeartTextureDrawingPosition, new Rectangle(0, 0, HeartTexture.Width, HeartTexture.Height), DrawingPriority, scale: _scaleFactor);
+        Drawer.Draw(_chalkTexture, _chalkTextureDrawingPosition, new Rectangle(0, 0, _chalkTexture.Width, _chalkTexture.Height), DrawingPriority, scale: _scaleFactor);
 
         Drawer.DrawString(this);
 
@@ -67,9 +75,9 @@ public class HeroHealthWriter : TextWriter
 
     public override void Update(GameTime gameTime)
     {
-        if (_count != _hero.Health)
+        if (_count != _hero.ChalkUses)
         {
-            _count = _hero.Health;
+            _count = _hero.ChalkUses;
         }
     }
 }

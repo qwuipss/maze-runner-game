@@ -18,6 +18,8 @@ public class Maze : MazeRunnerGameComponent
 
     private readonly Dictionary<Cell, MazeTile> _itemsInfo;
 
+    private readonly Dictionary<Cell, MazeTile> _marksInfo;
+
     private Hero _hero;
 
     private float _exitOpenDistance;
@@ -42,6 +44,7 @@ public class Maze : MazeRunnerGameComponent
 
         _trapsInfo = new Dictionary<Cell, MazeTile>();
         _itemsInfo = new Dictionary<Cell, MazeTile>();
+        _marksInfo = new Dictionary<Cell, MazeTile>();
 
         _components = new List<MazeTile>();
     }
@@ -195,6 +198,18 @@ public class Maze : MazeRunnerGameComponent
     public void InsertItem(MazeItem item, Cell cell)
     {
         _itemsInfo.Add(cell, item);
+    }
+
+    public void InsertMark(MazeMark mark, Cell cell)
+    {
+        _marksInfo.Add(cell, mark);
+
+        _components.Add(mark);
+    }
+
+    public bool CanInsertMark(Cell cell)
+    {
+        return !_marksInfo.ContainsKey(cell) && !_trapsInfo.ContainsKey(cell);
     }
 
     public void RemoveItem(Cell cell)
