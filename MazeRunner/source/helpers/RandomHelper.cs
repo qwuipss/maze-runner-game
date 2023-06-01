@@ -11,7 +11,7 @@ public static class RandomHelper
 
     static RandomHelper()
     {
-        _random = new Random(1); //
+        _random = new Random();
     }
 
     public static int Next(int minValue, int maxValue)

@@ -27,15 +27,15 @@ public class GameMenuState : GameBaseState
         {
             Easy = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 9, //25
-                MazeHeight = 9,
+                MazeWidth = 25,
+                MazeHeight = 25,
 
                 MazeDeadEndsRemovePercentage = 55,
 
                 MazeBayonetTrapInsertingPercentage = 2,
                 MazeDropTrapInsertingPercentage = 1.25f,
 
-                GuardSpawnCount = 0,
+                GuardSpawnCount = 7,
 
                 ChalksInsertingPercentage = 1,
                 FoodInsertingPercentage = .75f,
