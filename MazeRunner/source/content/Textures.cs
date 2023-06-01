@@ -38,15 +38,52 @@ public static class Textures
 
         public static class MazeItems
         {
+            public static class Food
+            {
+                private const string ContentDirectory = $"{MazeItems.ContentDirectory}/food";
+
+                public static Texture2D Apple { get; private set; }
+                public static Texture2D Bread { get; private set; }
+                public static Texture2D Potato { get; private set; }
+                public static Texture2D Tomato { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Apple = game.Content.Load<Texture2D>($"{ContentDirectory}/apple");
+                    Bread = game.Content.Load<Texture2D>($"{ContentDirectory}/bread");
+                    Potato = game.Content.Load<Texture2D>($"{ContentDirectory}/potato");
+                    Tomato = game.Content.Load<Texture2D>($"{ContentDirectory}/tomato");
+                }
+            }
+
+            public static class Chalk
+            {
+                private const string ContentDirectory = $"{MazeItems.ContentDirectory}/chalk";
+
+                public static Texture2D Chalk_1 { get; private set; }
+                public static Texture2D Chalk_2 { get; private set; }
+                public static Texture2D Chalk_3 { get; private set; }
+                public static Texture2D Chalk_4 { get; private set; }
+
+                public static void Load(Game game)
+                {
+                    Chalk_1 = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk_1");
+                    Chalk_2 = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk_2");
+                    Chalk_3 = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk_3");
+                    Chalk_4 = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk_4");
+                }
+            }
+
             private const string ContentDirectory = $"{BaseContentDirectory}/items";
 
             public static Texture2D Key { get; private set; }
-            public static Texture2D Chalk { get; private set; }
 
             public static void Load(Game game)
             {
                 Key = game.Content.Load<Texture2D>($"{ContentDirectory}/key");
-                Chalk = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk");
+
+                Food.Load(game);
+                Chalk.Load(game);
             }
         }
 

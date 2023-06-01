@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace MazeRunner.MazeBase.Tiles;
 
-public sealed class Key : MazeItem
+public class Key : MazeItem
 {
     private const float HitBoxOffset = 4;
 

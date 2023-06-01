@@ -4,4 +4,5 @@ public enum ItemType
 {
     Key,
     Chalk,
+    Food,
 }

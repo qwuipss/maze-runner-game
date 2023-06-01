@@ -3,7 +3,6 @@ using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace MazeRunner.MazeBase;
@@ -138,8 +137,7 @@ public static class MazeGenerator
 
     public static void InsertTraps(Maze maze, Func<MazeTrap> trapSource, float percentage)
     {
-        var floorsCount = maze.GetTileCount(maze.IsFloor);
-        var insertionsCount = (int)(floorsCount * percentage / 100);
+        var insertionsCount = GetInsertionsCount(maze, percentage);
 
         for (int i = 0; i < insertionsCount; i++)
         {
@@ -172,8 +170,7 @@ public static class MazeGenerator
 
     public static void InsertItems(Maze maze, Func<MazeItem> itemSource, float percentage)
     {
-        var floorsCount = maze.GetTileCount(maze.IsFloor);
-        var insertionsCount = (int)(floorsCount * percentage / 100);
+        var insertionsCount = GetInsertionsCount(maze, percentage);
 
         for (int i = 0; i < insertionsCount; i++)
         {
@@ -315,5 +312,13 @@ public static class MazeGenerator
         var floor = new Floor();
 
         maze.Skeleton[wallCoords.Y, wallCoords.X] = floor;
+    }
+
+    private static int GetInsertionsCount(Maze maze, float percentage)
+    {
+        var floorsCount = maze.GetTileCount(maze.IsFloor);
+        var insertionsCount = (int)(floorsCount * percentage / 100);
+
+        return insertionsCount;
     }
 }

@@ -56,17 +56,22 @@ public class GuardAttackState : GuardBaseState
                 ElapsedGameTimeMs -= UpdateTimeDelayMs;
             }
 
-            if (!Hero.IsDead
-             && !Hero.IsTakingDamage
-             && Vector2.Distance(Hero.Position, Guard.Position) < Guard.GetAttackDistance())
-            {
-                Hero.TakeDamage(Guard.Damage);
-            }
+            DamageHeroIfNeeded();
 
             FaceToHero();
         }
 
         return this;
+    }
+
+    private void DamageHeroIfNeeded()
+    {
+        if (!Hero.IsDead
+         && !Hero.IsTakingDamage
+         && Vector2.Distance(Hero.Position, Guard.Position) < Guard.GetAttackDistance() * 1.25)
+        {
+            Hero.TakeDamage(Guard.Damage);
+        }
     }
 
     private void FaceToHero()

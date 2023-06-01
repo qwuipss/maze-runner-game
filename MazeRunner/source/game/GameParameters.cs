@@ -12,7 +12,8 @@ public class GameParameters
 
     public int GuardSpawnCount;
 
-    public float ChalksSpawnPercentage;
+    public float ChalksInsertingPercentage;
+    public float FoodInsertingPercentage;
 
     public int HeroHealth;
     public int ChalkUses;

@@ -226,15 +226,15 @@ public class GameRunningState : GameBaseState
 
         MazeGenerator.InsertItem(_maze, new Key());
 
+        Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
+
+        MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage);
+        MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
+
         var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
         var position = _maze.GetCellPosition(cell);
 
-        Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses)
-        {
-            Position = position
-        };
-
-        MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksSpawnPercentage);
+        Hero.Position = position;
 
         Hero.Initialize(_maze);
 

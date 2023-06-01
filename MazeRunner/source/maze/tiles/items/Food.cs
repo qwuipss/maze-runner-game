@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace MazeRunner.MazeBase.Tiles;
 
-public class Chalk : MazeItem
+public class Food : MazeItem
 {
     private const float HitBoxOffset = 4;
 
@@ -14,11 +14,11 @@ public class Chalk : MazeItem
 
     private readonly Hero _hero;
 
-    public Chalk(Hero hero)
+    public Food(Hero hero)
     {
         _hero = hero;
 
-        State = new ChalkIdleState();
+        State = new FoodIdleState();
     }
 
     public override TileType TileType
@@ -33,7 +33,7 @@ public class Chalk : MazeItem
     {
         get
         {
-            return ItemType.Chalk;
+            return ItemType.Food;
         }
     }
 
@@ -46,6 +46,6 @@ public class Chalk : MazeItem
     {
         base.ProcessCollecting(maze, cell);
 
-        _hero.ChalkUses++;
+        _hero.Health++;
     }
 }

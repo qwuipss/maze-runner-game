@@ -27,18 +27,20 @@ public class GameMenuState : GameBaseState
         {
             Easy = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 7,//25
-                MazeHeight = 7,
+                MazeWidth = 9, //25
+                MazeHeight = 9,
 
                 MazeDeadEndsRemovePercentage = 55,
 
-                MazeBayonetTrapInsertingPercentage = 30,
-                MazeDropTrapInsertingPercentage = 1,
+                MazeBayonetTrapInsertingPercentage = 2,
+                MazeDropTrapInsertingPercentage = 1.25f,
 
-                GuardSpawnCount = 1,//10
-                ChalksSpawnPercentage = 2,
+                GuardSpawnCount = 0,
 
-                HeroHealth = 1115,
+                ChalksInsertingPercentage = 1,
+                FoodInsertingPercentage = .75f,
+
+                HeroHealth = 5,
                 ChalkUses = 10,
             });
 
@@ -49,11 +51,13 @@ public class GameMenuState : GameBaseState
 
                 MazeDeadEndsRemovePercentage = 60,
 
-                MazeBayonetTrapInsertingPercentage = 3,
-                MazeDropTrapInsertingPercentage = 2,
+                MazeBayonetTrapInsertingPercentage = 2.25f,
+                MazeDropTrapInsertingPercentage = 1.75f,
 
                 GuardSpawnCount = 15,
-                ChalksSpawnPercentage = 10,
+
+                ChalksInsertingPercentage = 1.25f,
+                FoodInsertingPercentage = .75f,
 
                 HeroHealth = 3,
                 ChalkUses = 15,
@@ -64,13 +68,15 @@ public class GameMenuState : GameBaseState
                 MazeWidth = 45,
                 MazeHeight = 45,
 
-                MazeDeadEndsRemovePercentage = 70,
+                MazeDeadEndsRemovePercentage = 65,
 
-                MazeBayonetTrapInsertingPercentage = 4,
+                MazeBayonetTrapInsertingPercentage = 3.75f,
                 MazeDropTrapInsertingPercentage = 2,
 
                 GuardSpawnCount = 25,
-                ChalksSpawnPercentage = 10,
+
+                ChalksInsertingPercentage = 1.75f,
+                FoodInsertingPercentage = 0.5f,
 
                 HeroHealth = 2,
                 ChalkUses = 25,

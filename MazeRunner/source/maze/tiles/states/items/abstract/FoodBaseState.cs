@@ -1,22 +1,22 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using static MazeRunner.Content.Textures.MazeTiles.MazeItems.Chalk;
+using static MazeRunner.Content.Textures.MazeTiles.MazeItems.Food;
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
-public abstract class ChalkBaseState : MazeItemBaseState
+public abstract class FoodBaseState : MazeTileBaseState
 {
     protected static readonly IDictionary<Texture2D, float> TextureChancePairs;
 
-    static ChalkBaseState()
+    static FoodBaseState()
     {
         TextureChancePairs = new Dictionary<Texture2D, float>
         {
-            { Chalk_1, .25f },
-            { Chalk_2, .25f },
-            { Chalk_3, .25f },
-            { Chalk_4, .25f },
+            { Apple, .25f },
+            { Bread, .25f },
+            { Potato, .25f },
+            { Tomato, .25f },
         }
         .ToImmutableDictionary();
     }

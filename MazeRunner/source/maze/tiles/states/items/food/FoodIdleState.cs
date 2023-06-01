@@ -4,13 +4,13 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
-public class ChalkIdleState : ChalkBaseState
+public class FoodIdleState : FoodBaseState
 {
     private readonly Texture2D _texture;
 
     public override Texture2D Texture => _texture;
 
-    public ChalkIdleState()
+    public FoodIdleState()
     {
         _texture = RandomHelper.Choice(TextureChancePairs);
     }

@@ -14,7 +14,7 @@ public class Guard : Enemy
 
     private const float HitBoxSizeY = 11;
 
-    private const float GuardAttackDistanceCoeff = .85f;
+    private const float AttackDistanceCoeff = .85f;
 
     private float _drawingPriority;
 
@@ -53,6 +53,6 @@ public class Guard : Enemy
 
     public override float GetAttackDistance()
     {
-        return FrameSize * GuardAttackDistanceCoeff;
+        return FrameSize * AttackDistanceCoeff;
     }
 }

@@ -23,7 +23,7 @@ public class GuardChaseState : GuardMoveBaseState
             return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
-        if (CanAttack())
+        if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.GetAttackDistance())
         {
             return new GuardAttackState(this, Hero, Guard, Maze);
         }
@@ -38,17 +38,5 @@ public class GuardChaseState : GuardMoveBaseState
         base.ProcessState(gameTime);
 
         return this;
-    }
-
-    private bool CanAttack()
-    {
-        var distance = Vector2.Distance(Hero.Position, Guard.Position);
-
-        return distance < GetGuardAttackDistance();
-    }
-
-    private float GetGuardAttackDistance()
-    {
-        return Guard.FrameSize * GuardAttackDistanceCoeff;
     }
 }
