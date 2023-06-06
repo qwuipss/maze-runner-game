@@ -145,12 +145,6 @@ public class GameRunningState : GameBaseState
         {
             foreach (var component in _gameComponents)
             {
-                if (component is MazeTile mazeTile)
-                {
-                    UpdateMazeTile(mazeTile, gameTime);
-                    continue;
-                }
-
                 if (component is Sprite sprite)
                 {
                     UpdateSprite(sprite, gameTime);
@@ -217,6 +211,7 @@ public class GameRunningState : GameBaseState
     {
         _maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
 
+
         MazeGenerator.MakeCyclic(_maze, GameParameters.MazeDeadEndsRemovePercentage);
 
         MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
@@ -227,7 +222,7 @@ public class GameRunningState : GameBaseState
         MazeGenerator.InsertItem(_maze, new Key());
 
         Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
-
+        
         MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage);
         MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
 
@@ -238,7 +233,7 @@ public class GameRunningState : GameBaseState
 
         Hero.Initialize(_maze);
 
-        _maze.PostInitialize(Hero);
+        _maze.Initialize(Hero);
 
         _maze.InitializeComponentsList();
     }
@@ -426,16 +421,6 @@ public class GameRunningState : GameBaseState
         }
 
         sprite.Update(gameTime);
-    }
-
-    private void UpdateMazeTile(MazeTile mazeTile, GameTime gameTime)
-    {
-        var distance = Vector2.Distance(mazeTile.Position, Hero.Position);
-
-        if (distance < Optimization.GetMazeTileUpdateDistance(mazeTile))
-        {
-            mazeTile.Update(gameTime);
-        }
     }
 
     private void UpdateTextWriter(TextWriter textWriter, GameTime gameTime)

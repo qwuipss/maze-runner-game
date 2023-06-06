@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Components;
+using MazeRunner.GameBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -49,7 +50,7 @@ public class Maze : MazeRunnerGameComponent
         _components = new List<MazeTile>();
     }
 
-    public void PostInitialize(Hero hero)
+    public void Initialize(Hero hero)
     {
         _hero = hero;
 
@@ -132,7 +133,11 @@ public class Maze : MazeRunnerGameComponent
 
         foreach (var component in _components)
         {
-            component.Update(gameTime);
+            if (component is MazeTile mazeTile)
+            {
+                UpdateMazeTile(mazeTile, gameTime);
+                continue;
+            }
         }
     }
 
@@ -228,5 +233,20 @@ public class Maze : MazeRunnerGameComponent
          && !ExitInfo.Exit.IsOpened
          && _hero is not null
          && Vector2.Distance(_hero.Position, GetCellPosition(ExitInfo.Cell)) < _exitOpenDistance;
+    }
+
+    private void UpdateMazeTile(MazeTile mazeTile, GameTime gameTime)
+    {
+        if (_hero is null)
+        {
+            return;
+        }
+
+        var distance = Vector2.Distance(mazeTile.Position, _hero.Position);
+
+        if (distance < Optimization.GetMazeTileUpdateDistance(mazeTile))
+        {
+            mazeTile.Update(gameTime);
+        }
     }
 }

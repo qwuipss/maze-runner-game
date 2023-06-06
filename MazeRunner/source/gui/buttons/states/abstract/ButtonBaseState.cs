@@ -9,13 +9,6 @@ namespace MazeRunner.Gui.Buttons.States;
 
 public abstract class ButtonBaseState : IButtonState
 {
-    protected Button Button { get; init; }
-
-    protected ButtonBaseState(Button button)
-    {
-        Button = button;
-    }
-
     public abstract Texture2D Texture { get; }
 
     public abstract int FramesCount { get; }
@@ -27,6 +20,13 @@ public abstract class ButtonBaseState : IButtonState
     public RectangleXna CurrentAnimationFrame => new(CurrentAnimationFramePoint, new PointXna(FrameWidth, FrameHeight));
 
     protected PointXna CurrentAnimationFramePoint { get; set; }
+
+    protected Button Button { get; init; }
+
+    protected ButtonBaseState(Button button)
+    {
+        Button = button;
+    }
 
     protected bool IsCursorHoverButton(MouseState mouseState)
     {
