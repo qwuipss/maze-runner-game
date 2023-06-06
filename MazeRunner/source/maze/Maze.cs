@@ -1,13 +1,16 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.GameBase;
+using MazeRunner.GameBase.States;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using static MazeRunner.Content.Textures;
 
 namespace MazeRunner.MazeBase;
 
@@ -25,9 +28,9 @@ public class Maze : MazeRunnerGameComponent
 
     private float _exitOpenDistance;
 
-    private readonly List<MazeTile> _components;
+    private readonly List<MazeTile> _mazeTiles;
 
-    public IReadOnlyCollection<MazeTile> Components => _components.AsReadOnly();
+    public IReadOnlyCollection<MazeTile> Components => _mazeTiles.AsReadOnly();
 
     public ImmutableDictionary<Cell, MazeTile> TrapsInfo => _trapsInfo.ToImmutableDictionary();
 
@@ -47,7 +50,7 @@ public class Maze : MazeRunnerGameComponent
         _itemsInfo = new Dictionary<Cell, MazeTile>();
         _marksInfo = new Dictionary<Cell, MazeTile>();
 
-        _components = new List<MazeTile>();
+        _mazeTiles = new List<MazeTile>();
     }
 
     public void Initialize(Hero hero)
@@ -55,6 +58,8 @@ public class Maze : MazeRunnerGameComponent
         _hero = hero;
 
         _exitOpenDistance = _hero.FrameSize * ExitOpenDistanceCoeff;
+
+        Position = _hero.Position;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -66,6 +71,15 @@ public class Maze : MazeRunnerGameComponent
         var framePosY = frameSize * cell.Y;
 
         return new Vector2(framePosX, framePosY);
+    }
+
+    public static Cell GetCellByPosition(Vector2 position)
+    {
+        var cellSize = GameConstants.AssetsFrameSize;
+
+        var cell = new Cell((int)position.X / cellSize, (int)position.Y / cellSize);
+
+        return cell;
     }
 
     public void InitializeComponentsList()
@@ -80,7 +94,7 @@ public class Maze : MazeRunnerGameComponent
 
                     mazeTile.Position = GetCellPosition(new Cell(x, y));
 
-                    _components.Add(mazeTile);
+                    _mazeTiles.Add(mazeTile);
                 }
             }
         }
@@ -91,7 +105,7 @@ public class Maze : MazeRunnerGameComponent
             {
                 trap.Position = GetCellPosition(cell);
 
-                _components.Add(trap);
+                _mazeTiles.Add(trap);
             }
         }
 
@@ -101,7 +115,7 @@ public class Maze : MazeRunnerGameComponent
             {
                 item.Position = GetCellPosition(cell);
 
-                _components.Add(item);
+                _mazeTiles.Add(item);
             }
         }
 
@@ -109,7 +123,7 @@ public class Maze : MazeRunnerGameComponent
         {
             ExitInfo.Exit.Position = GetCellPosition(ExitInfo.Cell);
 
-            _components.Add(ExitInfo.Exit);
+            _mazeTiles.Add(ExitInfo.Exit);
         }
 
         InitializeSkeletonComponentsList();
@@ -120,27 +134,51 @@ public class Maze : MazeRunnerGameComponent
 
     public override void Draw(GameTime gameTime)
     {
-        foreach (var component in _components)
+        foreach (var mazeTile in _mazeTiles)
         {
-            component.Draw(gameTime);
+            mazeTile.Draw(gameTime);
         }
     }
 
     public override void Update(GameTime gameTime)
     {
+        if (_hero is null)
+        {
+            return;
+        }
+
         if (NeedOpenExit())
         {
             ExitInfo.Exit.Open();
         }
 
-        foreach (var component in _components)
+        var heroCell = SpriteBaseState.GetSpriteCell(_hero);
+        var updatableArea = GameBaseState.GetUpdatableArea(heroCell, Skeleton);
+
+        for (int y = updatableArea.Top; y < updatableArea.Bottom; y++)
         {
-            if (component is MazeTile mazeTile)
+            for (int x = updatableArea.Left; x < updatableArea.Right; x++)
             {
-                UpdateMazeTile(mazeTile, gameTime);
-                continue;
+                Skeleton[y, x].Update(gameTime);
             }
         }
+
+        //foreach (var mazeTile in _mazeTiles)
+        //{
+        //    if (_hero is null)
+        //    {
+        //        mazeTile.Update(gameTime);
+
+        //        return;
+        //    }
+
+        //    if (IsInArea(updatableArea, mazeTile))
+        //    {
+        //        mazeTile.Update(gameTime);
+        //    }
+        //}
+
+        Position = _hero.Position;
     }
 
     public bool IsFloor(Cell cell)
@@ -174,15 +212,6 @@ public class Maze : MazeRunnerGameComponent
         return tileCount;
     }
 
-    public Cell GetCellByPosition(Vector2 position)
-    {
-        var cellSize = Skeleton[0, 0].FrameSize;
-
-        var cell = new Cell((int)position.X / cellSize, (int)position.Y / cellSize);
-
-        return cell;
-    }
-
     public void InsertTrap(MazeTrap trap, Cell cell)
     {
         _trapsInfo.Add(cell, trap);
@@ -204,7 +233,7 @@ public class Maze : MazeRunnerGameComponent
     {
         _marksInfo.Add(cell, mark);
 
-        _components.Add(mark);
+        _mazeTiles.Add(mark);
     }
 
     public bool CanInsertMark(Cell cell)
@@ -216,10 +245,10 @@ public class Maze : MazeRunnerGameComponent
     {
         var cellPosition = GetCellPosition(cell);
 
-        var itemTile = _components.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
+        var itemTile = _mazeTiles.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
 
         _itemsInfo.Remove(cell);
-        _components.Remove(itemTile);
+        _mazeTiles.Remove(itemTile);
     }
 
     private bool NeedOpenExit()
@@ -228,22 +257,5 @@ public class Maze : MazeRunnerGameComponent
          && !ExitInfo.Exit.IsOpened
          && _hero is not null
          && Vector2.Distance(_hero.Position, GetCellPosition(ExitInfo.Cell)) < _exitOpenDistance;
-    }
-
-    private void UpdateMazeTile(MazeTile mazeTile, GameTime gameTime)
-    {
-        if (_hero is null)
-        {
-            mazeTile.Update(gameTime);
-
-            return;
-        }
-
-        var distance = Vector2.Distance(mazeTile.Position, _hero.Position);
-
-        if (distance < Optimization.GetMazeTileUpdateDistance(mazeTile))
-        {
-            mazeTile.Update(gameTime);
-        }
     }
 }

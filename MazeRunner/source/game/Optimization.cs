@@ -16,33 +16,12 @@ internal static class Optimization
     private const float MazeTileCollidingDistanceCoeff = 1.5f;
     private const float MazeTileUpdateDistanceCoeff = 7;
 
-    public static float GetGuardHeroDetectionDistance(Guard guard)
-    {
-        return guard.FrameSize * GuardHeroDetectionDistanceCoeff;
-    }
+    public const float GuardHeroDetectionDistance = GameConstants.AssetsFrameSize * GuardHeroDetectionDistanceCoeff;
 
-    public static float GetMazeTileUpdateDistance(MazeTile mazeTile)
-    {
-        return mazeTile.FrameSize * MazeTileUpdateDistanceCoeff;
-    }
+    public const float MazeTileUpdateDistance = GameConstants.AssetsFrameSize * MazeTileUpdateDistanceCoeff;
+    public const float MazeTileCollidingCheckDistance = GameConstants.AssetsFrameSize * MazeTileCollidingDistanceCoeff;
 
-    public static float GetMazeTileCollidingCheckDistance(MazeTile mazeTile)
-    {
-        return mazeTile.FrameSize * MazeTileCollidingDistanceCoeff;
-    }
-
-    public static float GetEnemyUpdateDistance(Enemy enemy)
-    {
-        return enemy.FrameSize * EnemiesUpdateDistanceCoeff;
-    }
-
-    public static float GetEnemyDisposingDistance(Enemy enemy)
-    {
-        return enemy.FrameSize * EnemyDisposingDistanceCoeff;
-    }
-
-    public static float GetEnemySpawnDistance(MazeTile mazeTile)
-    {
-        return mazeTile.FrameSize * EnemySpawnDistanceCoeff;
-    }
+    public const float EnemyUpdateDistance = GameConstants.AssetsFrameSize * EnemiesUpdateDistanceCoeff;
+    public const float EnemyDisposingDistance = GameConstants.AssetsFrameSize * EnemyDisposingDistanceCoeff;
+    public const float EnemySpawnDistance = GameConstants.AssetsFrameSize * EnemySpawnDistanceCoeff;
 }

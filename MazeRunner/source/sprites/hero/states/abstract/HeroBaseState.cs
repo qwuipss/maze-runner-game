@@ -73,7 +73,7 @@ public abstract class HeroBaseState : SpriteBaseState
     {
         if (Hero.ChalkUses > 0 && KeyboardManager.IsChalkDrawingButtonPressed(gameTime))
         {
-            var cell = GetSpriteCell(Hero, Maze);
+            var cell = GetSpriteCell(Hero);
 
             if (Maze.CanInsertMark(cell))
             {

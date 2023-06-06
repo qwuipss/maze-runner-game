@@ -42,10 +42,10 @@ public abstract class SpriteBaseState : ISpriteState
 
     protected abstract ISpriteState GetTrapCollidingState(TrapType trapType);
 
-    public static Cell GetSpriteCell(Sprite sprite, Maze maze)
+    public static Cell GetSpriteCell(Sprite sprite)
     {
         var position = GetSpriteNormalizedPosition(sprite);
-        var cell = maze.GetCellByPosition(position);
+        var cell = Maze.GetCellByPosition(position);
 
         return cell;
     }

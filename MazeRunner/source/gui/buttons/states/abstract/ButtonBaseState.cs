@@ -31,7 +31,7 @@ public abstract class ButtonBaseState : IButtonState
     protected bool IsCursorHoverButton(MouseState mouseState)
     {
         var cursorPosition = mouseState.Position;
-        var materialCursorBox = new RectangleF(cursorPosition.X, cursorPosition.Y, float.Epsilon, float.Epsilon);
+        var materialCursorBox = new RectangleF(cursorPosition.X, cursorPosition.Y, 0, 0);
 
         var buttonPosition = Button.Position;
         var boxScale = Button.BoxScale;

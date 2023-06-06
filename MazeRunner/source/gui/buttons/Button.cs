@@ -23,8 +23,6 @@ public abstract class Button : MazeRunnerGameComponent
 
     public float BoxScale { get; init; }
 
-    public Vector2 Position { get; set; }
-
     protected IButtonState State { get; set; }
 
     public Button(Action onClick, float boxScale)

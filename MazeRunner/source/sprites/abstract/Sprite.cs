@@ -26,8 +26,6 @@ public abstract class Sprite : MazeRunnerGameComponent
 
     public ISpriteState State { get; set; }
 
-    public Vector2 Position { get; set; }
-
     public abstract RectangleF GetHitBox(Vector2 position);
 
     public Vector2 GetMovement(Vector2 direction, GameTime gameTime)

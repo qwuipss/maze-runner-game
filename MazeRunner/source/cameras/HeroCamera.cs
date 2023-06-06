@@ -51,6 +51,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
         _hero = hero;
+
+        Position = _hero.Position;
     }
 
     public override void Draw(GameTime gameTime)
@@ -64,6 +66,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
     public override void Update(GameTime gameTime)
     {
         FollowHero();
+
+        Position = _hero.Position;
     }
 
     private void FollowHero()

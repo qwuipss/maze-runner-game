@@ -1,5 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.MazeBase;
+using Microsoft.Xna.Framework;
 using System.Drawing;
+using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.Helpers;
 

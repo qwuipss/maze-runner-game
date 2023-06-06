@@ -60,7 +60,7 @@ public class GuardWalkState : GuardMoveBaseState
 
     private LinkedList<Vector2> GetRandomWalkPath(int pathLength)
     {
-        var startCell = GetSpriteCell(Guard, Maze);
+        var startCell = GetSpriteCell(Guard);
 
         var currentCell = startCell;
 

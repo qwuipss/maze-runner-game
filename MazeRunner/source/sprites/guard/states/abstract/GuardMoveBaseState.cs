@@ -39,8 +39,8 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
     protected static IEnumerable<Vector2> FindPathToHero(Hero hero, Guard guard, Maze maze)
     {
-        var heroCell = GetSpriteCell(hero, maze);
-        var guardCell = GetSpriteCell(guard, maze);
+        var heroCell = GetSpriteCell(hero);
+        var guardCell = GetSpriteCell(guard);
 
         var visitedCells = new HashSet<Cell>() { guardCell };
 
@@ -104,7 +104,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
     protected static bool IsPositionReached(Vector2 position, Sprite sprite)
     {
         var hitBox = sprite.GetHitBox(sprite.Position);
-        var positionMaterialBox = new RectangleF(position.X, position.Y, float.Epsilon, float.Epsilon);
+        var positionMaterialBox = new RectangleF(position.X, position.Y, 0, 0);
 
         return hitBox.IntersectsWith(positionMaterialBox);
     }

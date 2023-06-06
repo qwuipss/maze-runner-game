@@ -9,6 +9,7 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
+using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -141,23 +142,31 @@ public class GameRunningState : GameBaseState
 
     public override void Update(GameTime gameTime)
     {
-        void UpdateGameComponents()
+        void UpdateGameComponents(RectangleXna updatableArea)
         {
             foreach (var component in _gameComponents)
             {
-                if (component is Sprite sprite)
+                if (component is Hero)
                 {
-                    UpdateSprite(sprite, gameTime);
-                    continue;
+                    var x = 9;
+                }
+                if (MazeRunnerGameComponent.IsInArea(updatableArea, component))
+                {
+                    component.Update(gameTime);
                 }
 
-                if (component is TextWriter textWriter)
-                {
-                    UpdateTextWriter(textWriter, gameTime);
-                    continue;
-                }
+                //if (component is Sprite sprite)
+                //{
+                //    UpdateSprite(sprite, gameTime);
+                //    continue;
+                //}
 
-                component.Update(gameTime);
+                //if (component is TextWriter textWriter)
+                //{
+                //    UpdateTextWriter(textWriter, gameTime);
+                //    continue;
+                //}
+
             }
         }
 
@@ -171,7 +180,10 @@ public class GameRunningState : GameBaseState
             ProcessShadowerState(_staticComponents);
         }
 
-        UpdateGameComponents();
+        var heroCell = SpriteBaseState.GetSpriteCell(Hero);
+        var updatableArea = GetUpdatableArea(heroCell, _maze.Skeleton);
+
+        UpdateGameComponents(updatableArea);
         UpdateStaticComponents();
 
         if (!IsControlling)
@@ -210,7 +222,6 @@ public class GameRunningState : GameBaseState
     private void InitializeHeroAndMaze()
     {
         _maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
-
 
         MazeGenerator.MakeCyclic(_maze, GameParameters.MazeDeadEndsRemovePercentage);
 
@@ -322,7 +333,7 @@ public class GameRunningState : GameBaseState
 
         var mazeTile = _maze.Skeleton[cell.Y, cell.X];
 
-        var spawnDistance = Optimization.GetEnemySpawnDistance(mazeTile);
+        var spawnDistance = Optimization.EnemySpawnDistance;
 
         if (distanceToHero < spawnDistance)
         {
@@ -397,13 +408,13 @@ public class GameRunningState : GameBaseState
         {
             var distance = Vector2.Distance(enemy.Position, Hero.Position);
 
-            if (distance > Optimization.GetEnemyUpdateDistance(enemy))
+            if (distance > Optimization.EnemyUpdateDistance)
             {
                 return;
             }
 
             if (enemy.IsDead
-             && distance > Optimization.GetEnemyDisposingDistance(enemy))
+             && distance > Optimization.EnemyDisposingDistance)
             {
                 _deadGameComponents.Add(enemy);
 
@@ -435,7 +446,7 @@ public class GameRunningState : GameBaseState
 
     private bool IsMazeEscaped()
     {
-        return SpriteBaseState.GetSpriteCell(Hero, _maze) == _maze.ExitInfo.Cell;
+        return SpriteBaseState.GetSpriteCell(Hero) == _maze.ExitInfo.Cell;
     }
 
     private void ProcessStateControl(GameTime gameTime)

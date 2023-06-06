@@ -21,8 +21,6 @@ public abstract class MazeTile : MazeRunnerGameComponent
 
     public RectagleXna CurrentAnimationFrame => State.CurrentAnimationFrame;
 
-    public Vector2 Position { get; set; }
-
     public float FrameRotationAngle { get; set; }
 
     public Vector2 OriginFrameRotationVector { get; set; }
