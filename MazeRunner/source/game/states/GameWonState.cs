@@ -13,7 +13,7 @@ namespace MazeRunner.GameBase.States;
 
 public class GameWonState : GameBaseState
 {
-    public override event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> ControlGiveUpNotify;
 
     private StaticCamera _staticCamera;
 
@@ -97,7 +97,7 @@ public class GameWonState : GameBaseState
 
         Shadower.TresholdReached += () =>
         {
-            GameStateChanged.Invoke(new GameMenuState());
+            ControlGiveUpNotify.Invoke(new GameMenuState());
         };
     }
 

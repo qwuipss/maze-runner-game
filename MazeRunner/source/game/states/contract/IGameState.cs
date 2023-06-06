@@ -6,7 +6,7 @@ namespace MazeRunner.GameBase.States;
 
 public interface IGameState
 {
-    public event Action<IGameState> GameStateChanged;
+    public event Action<IGameState> ControlGiveUpNotify;
 
     public void Initialize(GraphicsDevice graphicsDevice, Game game);
 

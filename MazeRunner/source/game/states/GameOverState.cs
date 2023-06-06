@@ -12,7 +12,7 @@ namespace MazeRunner.GameBase.States;
 
 public class GameOverState : GameBaseState
 {
-    public override event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> ControlGiveUpNotify;
 
     private readonly GameRunningState _runningState;
 
@@ -126,13 +126,13 @@ public class GameOverState : GameBaseState
     {
         NeedShadowerActivate = true;
 
-        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameRunningState(_runningState.GameParameters));
+        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameRunningState(_runningState.GameParameters));
     }
 
     private void GoToMenu()
     {
         NeedShadowerActivate = true;
 
-        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameMenuState());
+        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameMenuState());
     }
 }

@@ -15,7 +15,7 @@ public class MazeRunnerGame : Game
 
     public MazeRunnerGame()
     {
-        IsFixedTimeStep = false;
+        IsFixedTimeStep = true;
         IsMouseVisible = true;
 
         Content.RootDirectory = "Content";
@@ -27,7 +27,7 @@ public class MazeRunnerGame : Game
     {
         base.Initialize();
 
-        SetFullScreen();
+        //SetFullScreen();
         InitializeDrawer();
         InitializeShadower();
 
@@ -35,7 +35,7 @@ public class MazeRunnerGame : Game
 
         _gameState.Initialize(GraphicsDevice, this);
 
-        _gameState.GameStateChanged += GameStateChangedHandler;
+        _gameState.ControlGiveUpNotify += ControlGiveUpHandler;
     }
 
     protected override void LoadContent()
@@ -67,7 +67,7 @@ public class MazeRunnerGame : Game
         _graphics.PreferredBackBufferWidth = GraphicsDevice.Adapter.CurrentDisplayMode.Width;
         _graphics.PreferredBackBufferHeight = GraphicsDevice.Adapter.CurrentDisplayMode.Height;
 
-        //_graphics.ApplyChanges();
+        _graphics.ApplyChanges();
     }
 
     private void InitializeDrawer()
@@ -75,13 +75,13 @@ public class MazeRunnerGame : Game
         Drawer.Initialize(this);
     }
 
-    private void GameStateChangedHandler(IGameState gameState)
+    private void ControlGiveUpHandler(IGameState gameState)
     {
         _gameState = gameState;
 
         _gameState.Initialize(GraphicsDevice, this);
 
-        _gameState.GameStateChanged += GameStateChangedHandler;
+        _gameState.ControlGiveUpNotify += ControlGiveUpHandler;
     }
 
     private void InitializeShadower()

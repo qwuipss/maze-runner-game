@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.GameBase;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.MazeBase.Tiles.States;
@@ -11,9 +12,9 @@ public abstract class MazeTileBaseState : IMazeTileState
 
     protected abstract double UpdateTimeDelayMs { get; }
 
-    public int FrameSize => Texture.Width / FramesCount;
+    public int FrameSize => GameConstants.AssetsFrameSize;
 
-    public Rectangle CurrentAnimationFrame => new Rectangle(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
+    public Rectangle CurrentAnimationFrame => new(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
 
     protected Point CurrentAnimationFramePoint { get; set; }
 

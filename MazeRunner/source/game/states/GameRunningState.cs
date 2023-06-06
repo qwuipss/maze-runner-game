@@ -56,7 +56,7 @@ public class GameRunningState : GameBaseState
         }
     }
 
-    public override event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> ControlGiveUpNotify;
 
     private static Texture2D _cameraEffect;
 
@@ -227,7 +227,7 @@ public class GameRunningState : GameBaseState
         MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
 
         var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
-        var position = _maze.GetCellPosition(cell);
+        var position = Maze.GetCellPosition(cell);
 
         Hero.Position = position;
 
@@ -298,7 +298,7 @@ public class GameRunningState : GameBaseState
     private Guard CreateGuard()
     {
         var cell = MazeGenerator.GetRandomCell(_maze, IsEnemyFreeFloorCell).First();
-        var position = _maze.GetCellPosition(cell);
+        var position = Maze.GetCellPosition(cell);
 
         var guard = new Guard()
         {
@@ -317,7 +317,7 @@ public class GameRunningState : GameBaseState
             return false;
         }
 
-        var cellPosition = _maze.GetCellPosition(cell);
+        var cellPosition = Maze.GetCellPosition(cell);
         var distanceToHero = Vector2.Distance(Hero.Position, cellPosition);
 
         var mazeTile = _maze.Skeleton[cell.Y, cell.X];
@@ -377,9 +377,9 @@ public class GameRunningState : GameBaseState
 
         if (KeyboardManager.IsGamePauseSwitched(gameTime))
         {
-            GameStateChanged.Invoke(new GamePausedState(this));
+            ControlGiveUpNotify.Invoke(new GamePausedState(this));
 
-            GameStateChanged = null;
+            ControlGiveUpNotify = null;
         }
     }
 
@@ -451,7 +451,7 @@ public class GameRunningState : GameBaseState
             {
                 _staticComponents.Clear();
 
-                GameStateChanged.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
+                ControlGiveUpNotify.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
             }
         }
     }
@@ -462,6 +462,6 @@ public class GameRunningState : GameBaseState
 
         NeedShadowerActivate = true;
 
-        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameWonState());
+        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameWonState());
     }
 }

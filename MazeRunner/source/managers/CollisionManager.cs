@@ -94,7 +94,7 @@ public static class CollisionManager
 
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile mazeTile, Cell tileCell)
     {
-        var tilePosition = Maze.GetIndependentCellPosition(mazeTile, tileCell);
+        var tilePosition = Maze.GetCellPosition(tileCell);
 
         if (Vector2.Distance(tilePosition, position) > Optimization.GetMazeTileCollidingCheckDistance(mazeTile))
         {

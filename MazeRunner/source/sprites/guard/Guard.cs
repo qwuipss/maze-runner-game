@@ -18,7 +18,7 @@ public class Guard : Enemy
 
     private float _drawingPriority;
 
-    public override bool IsDead => State is GuardDeadState or GuardFalledState;
+    public override bool IsDead => State is GuardDeadState or GuardFalledState or GuardFallingState or GuardDyingState;
 
     public override float DrawingPriority => _drawingPriority;
 
@@ -51,7 +51,7 @@ public class Guard : Enemy
         }
     }
 
-    public override float GetAttackDistance()
+    public float GetAttackDistance()
     {
         return FrameSize * AttackDistanceCoeff;
     }

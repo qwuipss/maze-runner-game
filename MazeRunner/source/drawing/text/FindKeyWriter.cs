@@ -51,10 +51,8 @@ public class FindKeyWriter : TextWriter
 
         var skeleton = maze.Skeleton;
 
-        var sideCell = new Cell(skeleton.GetLength(1) - 1, 0);
-        var sideCellPosX = (int)maze.GetCellPosition(sideCell).X;
-
-        _mazeWidth = sideCellPosX + skeleton[sideCell.Y, sideCell.X].FrameSize;
+        var sideCell = new Cell(skeleton.GetLength(1), 0);
+        _mazeWidth = (int)Maze.GetCellPosition(sideCell).X;
     }
 
     public override string Text
@@ -174,7 +172,7 @@ public class FindKeyWriter : TextWriter
     {
         var position = _hero.Position;
 
-        var exitPosition = _maze.GetCellPosition(_maze.ExitInfo.Cell);
+        var exitPosition = Maze.GetCellPosition(_maze.ExitInfo.Cell);
         var distance = Vector2.Distance(exitPosition, position);
 
         return distance <= _textShowDistance;

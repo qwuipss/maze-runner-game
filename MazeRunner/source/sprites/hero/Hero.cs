@@ -9,9 +9,11 @@ namespace MazeRunner.Sprites;
 public class Hero : Sprite
 {
     private const float HitBoxOffsetX = 5;
+
     private const float HitBoxOffsetY = 5;
 
     private const float HitBoxWidth = 7;
+
     private const float HitBoxHeight = 10;
 
     private Maze _maze;

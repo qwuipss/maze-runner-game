@@ -58,10 +58,12 @@ public class Maze : MazeRunnerGameComponent
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Vector2 GetIndependentCellPosition(MazeTile tile, Cell cell)
+    public static Vector2 GetCellPosition(Cell cell)
     {
-        var framePosX = tile.FrameSize * cell.X;
-        var framePosY = tile.FrameSize * cell.Y;
+        var frameSize = GameConstants.AssetsFrameSize;
+
+        var framePosX = frameSize * cell.X;
+        var framePosY = frameSize * cell.Y;
 
         return new Vector2(framePosX, framePosY);
     }
@@ -172,13 +174,6 @@ public class Maze : MazeRunnerGameComponent
         return tileCount;
     }
 
-    public Vector2 GetCellPosition(Cell cell)
-    {
-        var tile = Skeleton[cell.Y, cell.X];
-
-        return GetIndependentCellPosition(tile, cell);
-    }
-
     public Cell GetCellByPosition(Vector2 position)
     {
         var cellSize = Skeleton[0, 0].FrameSize;
@@ -239,6 +234,8 @@ public class Maze : MazeRunnerGameComponent
     {
         if (_hero is null)
         {
+            mazeTile.Update(gameTime);
+
             return;
         }
 

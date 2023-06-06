@@ -84,7 +84,7 @@ public class GameMenuState : GameBaseState
         }
     }
 
-    public override event Action<IGameState> GameStateChanged;
+    public override event Action<IGameState> ControlGiveUpNotify;
 
     private static Texture2D _cameraEffect;
 
@@ -217,7 +217,7 @@ public class GameMenuState : GameBaseState
 
         var deadEndsRemovePercentage = 75;
 
-        var frameSize = (double)Textures.MazeTiles.Floor_1.Width;
+        var frameSize = (double)GameConstants.AssetsFrameSize;
 
         _maze = MazeGenerator.GenerateMaze((int)Math.Ceiling(ViewWidth / frameSize) + 1, (int)Math.Ceiling(ViewHeight / frameSize) + 1);
 
@@ -267,7 +267,7 @@ public class GameMenuState : GameBaseState
 
         Shadower = new EffectsHelper.Shadower(false);
 
-        Shadower.TresholdReached += () => GameStateChanged.Invoke(new GameRunningState(_difficulty.Value));
+        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameRunningState(_difficulty.Value));
     }
 
     private void InitializeShadower()

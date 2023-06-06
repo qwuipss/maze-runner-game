@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.GameBase;
+using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
@@ -31,7 +32,7 @@ public abstract class SpriteBaseState : ISpriteState
 
     public SpriteEffects FrameEffect { get; set; }
 
-    public int FrameSize => Texture.Width / FramesCount;
+    public int FrameSize => GameConstants.AssetsFrameSize;
 
     public Rectangle CurrentAnimationFrame => new(CurrentAnimationFramePoint, new Point(FrameSize, FrameSize));
 

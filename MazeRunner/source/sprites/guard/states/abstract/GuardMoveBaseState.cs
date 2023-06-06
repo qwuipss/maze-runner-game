@@ -112,7 +112,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
     protected static Vector2 GetCellNormalizedPosition(Cell cell, Maze maze)
     {
         var halfFrameSize = maze.Skeleton[cell.Y, cell.X].FrameSize / 2;
-        var position = maze.GetCellPosition(cell);
+        var position = Maze.GetCellPosition(cell);
 
         return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
     }

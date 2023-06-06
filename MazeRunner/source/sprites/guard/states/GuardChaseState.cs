@@ -5,8 +5,6 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardChaseState : GuardMoveBaseState
 {
-    private const float GuardAttackDistanceCoeff = .85f;
-
     public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
     }

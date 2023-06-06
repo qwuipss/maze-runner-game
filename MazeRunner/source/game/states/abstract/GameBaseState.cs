@@ -9,7 +9,7 @@ namespace MazeRunner.GameBase.States;
 
 public abstract class GameBaseState : IGameState
 {
-    public abstract event Action<IGameState> GameStateChanged;
+    public abstract event Action<IGameState> ControlGiveUpNotify;
 
     protected GraphicsDevice GraphicsDevice { get; set; }
 
@@ -22,13 +22,6 @@ public abstract class GameBaseState : IGameState
     protected bool NeedShadowerActivate { get; set; }
 
     protected bool NeedShadowerDeactivate { get; set; }
-
-    public virtual void Initialize(GraphicsDevice graphicsDevice, Game game)
-    {
-        GraphicsDevice = graphicsDevice;
-
-        InitializeViewDimensions();
-    }
 
     public abstract void Draw(GameTime gameTime);
 
@@ -48,6 +41,13 @@ public abstract class GameBaseState : IGameState
         {
             game.IsMouseVisible = true;
         }
+    }
+
+    public virtual void Initialize(GraphicsDevice graphicsDevice, Game game)
+    {
+        GraphicsDevice = graphicsDevice;
+
+        InitializeViewDimensions();
     }
 
     private void InitializeViewDimensions()
