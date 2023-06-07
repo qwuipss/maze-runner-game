@@ -56,7 +56,7 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
             if (currentCell == heroCell)
             {
-                if (currentNode.LinkNumber > Optimization.GuardHeroMaxPathLength)
+                if (currentNode.LinkNumber > GameRules.GuardHeroMaxPathLength)
                 {
                     return Array.Empty<Vector2>();
                 }
@@ -86,13 +86,13 @@ public abstract class GuardMoveBaseState : GuardBaseState
 
             if (!enumerator.MoveNext())
             {
-                yield return GetCellNormalizedPosition(firstCell, maze);
+                yield return GetCellNormalizedPosition(firstCell);
             }
 
-            var firstCellPosition = GetCellNormalizedPosition(firstCell, maze);
+            var firstCellPosition = GetCellNormalizedPosition(firstCell);
 
             var secondCell = enumerator.Current;
-            var secondCellPosition = GetCellNormalizedPosition(secondCell, maze);
+            var secondCellPosition = GetCellNormalizedPosition(secondCell);
 
             var delta = (secondCellPosition - firstCellPosition) / 2f;
 
@@ -109,20 +109,17 @@ public abstract class GuardMoveBaseState : GuardBaseState
         return hitBox.IntersectsWith(positionMaterialBox);
     }
 
-    protected static Vector2 GetCellNormalizedPosition(Cell cell, Maze maze)
+    protected static Vector2 GetCellNormalizedPosition(Cell cell)
     {
-        var halfFrameSize = maze.Skeleton[cell.Y, cell.X].FrameSize / 2;
         var position = Maze.GetCellPosition(cell);
 
-        return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
+        return new Vector2(position.X + GameConstants.AssetsFrameSize, position.Y + GameConstants.AssetsFrameSize);
     }
 
     protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Maze maze, HashSet<Cell> visitedCells)
     {
-        var exitCell = maze.ExitInfo.Cell;
-
         return MazeGenerator.GetAdjacentCells(cell, maze, 1)
-            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && cell != exitCell && !visitedCells.Contains(cell));
+            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall and not TileType.Exit && !visitedCells.Contains(cell));
     }
 
     public static bool PathToHeroExist(Hero hero, Guard guard, Maze maze, out IEnumerable<Vector2> path)

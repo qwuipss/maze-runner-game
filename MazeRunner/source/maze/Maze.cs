@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.GameBase;
 using MazeRunner.GameBase.States;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using MazeRunner.Sprites.States;
@@ -16,25 +17,25 @@ namespace MazeRunner.MazeBase;
 
 public class Maze : MazeRunnerGameComponent
 {
+    private const int MazeTileUpdateAreaWidthRadius = GameRunningState.UpdateAreaWidthRadius;
+
+    private const int MazeTileUpdateAreaHeightRadius = GameRunningState.UpdateAreaHeightRadius;
+
+    private const int MazeTileCollideAreaRadius = 2;
+
     private const float ExitOpenDistanceCoeff = 2;
 
-    private readonly Dictionary<Cell, MazeTile> _trapsInfo;
-
-    private readonly Dictionary<Cell, MazeTile> _itemsInfo;
-
-    private readonly Dictionary<Cell, MazeTile> _marksInfo;
+    private readonly Dictionary<Cell, MazeTile> _hoverTilesInfo;
 
     private Hero _hero;
 
     private float _exitOpenDistance;
 
-    private readonly List<MazeTile> _mazeTiles;
+    private readonly HashSet<MazeTile> _mazeTiles;
 
-    public IReadOnlyCollection<MazeTile> Components => _mazeTiles.AsReadOnly();
+    public ImmutableHashSet<MazeTile> Components => _mazeTiles.ToImmutableHashSet();
 
-    public ImmutableDictionary<Cell, MazeTile> TrapsInfo => _trapsInfo.ToImmutableDictionary();
-
-    public ImmutableDictionary<Cell, MazeTile> ItemsInfo => _itemsInfo.ToImmutableDictionary();
+    public ImmutableDictionary<Cell, MazeTile> HoverTilesInfo => _hoverTilesInfo.ToImmutableDictionary();
 
     public (Cell Cell, Exit Exit) ExitInfo { get; set; }
 
@@ -46,20 +47,8 @@ public class Maze : MazeRunnerGameComponent
     {
         Skeleton = skeleton;
 
-        _trapsInfo = new Dictionary<Cell, MazeTile>();
-        _itemsInfo = new Dictionary<Cell, MazeTile>();
-        _marksInfo = new Dictionary<Cell, MazeTile>();
-
-        _mazeTiles = new List<MazeTile>();
-    }
-
-    public void Initialize(Hero hero)
-    {
-        _hero = hero;
-
-        _exitOpenDistance = _hero.FrameSize * ExitOpenDistanceCoeff;
-
-        Position = _hero.Position;
+        _mazeTiles = new HashSet<MazeTile>();
+        _hoverTilesInfo = new Dictionary<Cell, MazeTile>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,9 +71,69 @@ public class Maze : MazeRunnerGameComponent
         return cell;
     }
 
+    public override void Draw(GameTime gameTime)
+    {
+        foreach (var mazeTile in _mazeTiles)
+        {
+            mazeTile.Draw(gameTime);
+        }
+    }
+
+    public override void Update(GameTime gameTime)
+    {
+        void UpdateAll()
+        {
+            foreach (var mazeTile in _mazeTiles)
+            {
+                mazeTile.Update(gameTime);
+            }
+        }
+
+        if (_hero is null)
+        {
+            UpdateAll();
+
+            return;
+        }
+
+        if (NeedOpenExit())
+        {
+            ExitInfo.Exit.Open();
+        }
+
+        var heroCell = SpriteBaseState.GetSpriteCell(_hero);
+        var updatableArea = HitBoxHelper.GetArea(heroCell, MazeTileUpdateAreaWidthRadius, MazeTileUpdateAreaHeightRadius, Skeleton);
+
+        for (int y = updatableArea.Top; y <= updatableArea.Bottom; y++)
+        {
+            for (int x = updatableArea.Left; x <= updatableArea.Right; x++)
+            {
+                var cell = new Cell(x, y);
+
+                Skeleton[y, x].Update(gameTime);
+
+                if (_hoverTilesInfo.TryGetValue(cell, out var tile))
+                {
+                    tile.Update(gameTime);
+                }
+            }
+        }
+
+        Position = _hero.Position;
+    }
+
+    public void Initialize(Hero hero)
+    {
+        _hero = hero;
+
+        _exitOpenDistance = _hero.FrameSize * ExitOpenDistanceCoeff;
+
+        Position = _hero.Position;
+    }
+
     public void InitializeComponentsList()
     {
-        void InitializeSkeletonComponentsList()
+        void InitializeSkeleton()
         {
             for (int y = 0; y < Skeleton.GetLength(0); y++)
             {
@@ -99,94 +148,39 @@ public class Maze : MazeRunnerGameComponent
             }
         }
 
-        void InitializeTrapsComponentsList()
+        void InitializeHoverTiles()
         {
-            foreach (var (cell, trap) in _trapsInfo)
+            foreach (var (cell, tile) in _hoverTilesInfo)
             {
-                trap.Position = GetCellPosition(cell);
+                tile.Position = GetCellPosition(cell);
 
-                _mazeTiles.Add(trap);
+                _mazeTiles.Add(tile);
             }
         }
 
-        void InitializeItemsComponentsList()
-        {
-            foreach (var (cell, item) in _itemsInfo)
-            {
-                item.Position = GetCellPosition(cell);
-
-                _mazeTiles.Add(item);
-            }
-        }
-
-        void InitializeExitComponentsList()
+        void InitializeExit()
         {
             ExitInfo.Exit.Position = GetCellPosition(ExitInfo.Cell);
 
             _mazeTiles.Add(ExitInfo.Exit);
         }
 
-        InitializeSkeletonComponentsList();
-        InitializeTrapsComponentsList();
-        InitializeItemsComponentsList();
-        InitializeExitComponentsList();
+        InitializeSkeleton();
+        InitializeHoverTiles();
+        InitializeExit();
     }
 
-    public override void Draw(GameTime gameTime)
+    public Rectangle GetCollideArea()
     {
-        foreach (var mazeTile in _mazeTiles)
-        {
-            mazeTile.Draw(gameTime);
-        }
-    }
-
-    public override void Update(GameTime gameTime)
-    {
-        if (_hero is null)
-        {
-            return;
-        }
-
-        if (NeedOpenExit())
-        {
-            ExitInfo.Exit.Open();
-        }
-
         var heroCell = SpriteBaseState.GetSpriteCell(_hero);
-        var updatableArea = GameBaseState.GetUpdatableArea(heroCell, Skeleton);
 
-        for (int y = updatableArea.Top; y < updatableArea.Bottom; y++)
-        {
-            for (int x = updatableArea.Left; x < updatableArea.Right; x++)
-            {
-                Skeleton[y, x].Update(gameTime);
-            }
-        }
-
-        //foreach (var mazeTile in _mazeTiles)
-        //{
-        //    if (_hero is null)
-        //    {
-        //        mazeTile.Update(gameTime);
-
-        //        return;
-        //    }
-
-        //    if (IsInArea(updatableArea, mazeTile))
-        //    {
-        //        mazeTile.Update(gameTime);
-        //    }
-        //}
-
-        Position = _hero.Position;
+        return HitBoxHelper.GetArea(heroCell, MazeTileCollideAreaRadius, MazeTileCollideAreaRadius, Skeleton);
     }
 
     public bool IsFloor(Cell cell)
     {
-        return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
-           && cell != ExitInfo.Cell
-           && !_trapsInfo.ContainsKey(cell)
-           && !_itemsInfo.ContainsKey(cell);
+        return Skeleton[cell.Y, cell.X].TileType is TileType.Floor and not TileType.Exit
+           && !_hoverTilesInfo.ContainsKey(cell);
     }
 
     public bool IsWall(Cell cell)
@@ -214,7 +208,7 @@ public class Maze : MazeRunnerGameComponent
 
     public void InsertTrap(MazeTrap trap, Cell cell)
     {
-        _trapsInfo.Add(cell, trap);
+        _hoverTilesInfo.Add(cell, trap);
     }
 
     public void InsertExit(Exit exit, Cell cell)
@@ -226,19 +220,19 @@ public class Maze : MazeRunnerGameComponent
 
     public void InsertItem(MazeItem item, Cell cell)
     {
-        _itemsInfo.Add(cell, item);
+        _hoverTilesInfo.Add(cell, item);
     }
 
     public void InsertMark(MazeMark mark, Cell cell)
     {
-        _marksInfo.Add(cell, mark);
+        _hoverTilesInfo.Add(cell, mark);
 
         _mazeTiles.Add(mark);
     }
 
     public bool CanInsertMark(Cell cell)
     {
-        return !_marksInfo.ContainsKey(cell) && !_trapsInfo.ContainsKey(cell);
+        return !_hoverTilesInfo.ContainsKey(cell);
     }
 
     public void RemoveItem(Cell cell)
@@ -247,7 +241,7 @@ public class Maze : MazeRunnerGameComponent
 
         var itemTile = _mazeTiles.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
 
-        _itemsInfo.Remove(cell);
+        _hoverTilesInfo.Remove(cell);
         _mazeTiles.Remove(itemTile);
     }
 
@@ -255,7 +249,6 @@ public class Maze : MazeRunnerGameComponent
     {
         return IsKeyCollected
          && !ExitInfo.Exit.IsOpened
-         && _hero is not null
          && Vector2.Distance(_hero.Position, GetCellPosition(ExitInfo.Cell)) < _exitOpenDistance;
     }
 }

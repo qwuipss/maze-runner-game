@@ -43,7 +43,7 @@ public abstract class GuardBaseState : SpriteBaseState
 
         var distance = Vector2.Distance(Hero.Position, Guard.Position);
 
-        if (distance > Optimization.GuardHeroDetectionDistance)
+        if (distance > GameRules.GuardHeroDetectionDistance)
         {
             pathToHero = null;
 

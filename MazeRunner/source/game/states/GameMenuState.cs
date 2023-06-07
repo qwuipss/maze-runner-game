@@ -46,8 +46,8 @@ public class GameMenuState : GameBaseState
 
             Normal = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 500, //35
-                MazeHeight = 500,
+                MazeWidth = 350, //35
+                MazeHeight = 350,
 
                 MazeDeadEndsRemovePercentage = 60,
 

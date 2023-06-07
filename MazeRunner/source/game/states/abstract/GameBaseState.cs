@@ -33,26 +33,6 @@ public abstract class GameBaseState : IGameState
 
     public abstract void Update(GameTime gameTime);
 
-    public static Rectangle GetUpdatableArea<T>(Cell centerCell, T[,] area)
-    {
-        var areaWidth = area.GetLength(1) - 1;
-        var areaHeight = area.GetLength(0) - 1;
-
-        var sX = centerCell.X - UpdateAreaWidthRadius;
-        sX = sX < 0 ? 0 : sX;
-
-        var eX = centerCell.X + UpdateAreaWidthRadius;
-        eX = eX > areaWidth ? areaWidth : eX;
-
-        var sY = centerCell.Y - UpdateAreaHeightRadius;
-        sY = sY < 0 ? 0 : sY;
-
-        var eY = centerCell.Y + UpdateAreaHeightRadius;
-        eY = eY > areaHeight ? areaHeight : eY;
-
-        return new Rectangle(sX, sY, eX - sX, eY - sY);
-    }
-
     protected static void TurnOffMouseVisible(Game game)
     {
         if (game.IsMouseVisible)

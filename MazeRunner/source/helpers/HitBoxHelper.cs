@@ -18,4 +18,24 @@ public static class HitBoxHelper
     {
         return new RectangleF(position.X, position.Y, width, height);
     }
+
+    public static RectangleXna GetArea<T>(Cell center, int widthRadius, int heightRadius, T[,] bounds)
+    {
+        var areaWidth = bounds.GetLength(1) - 1;
+        var areaHeight = bounds.GetLength(0) - 1;
+
+        var x = center.X - widthRadius;
+        x = x < 0 ? 0 : x;
+
+        var width = widthRadius * 2;
+        width = x + width > areaWidth ? areaWidth - x : width;
+
+        var y = center.Y - heightRadius;
+        y = y < 0 ? 0 : y;
+
+        var height = heightRadius * 2;
+        height = y + height > areaHeight ? areaHeight - y : height;
+
+        return new RectangleXna(x, y, width, height);
+    }
 }

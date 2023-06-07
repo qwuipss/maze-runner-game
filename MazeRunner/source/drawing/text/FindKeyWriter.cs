@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.GameBase;
 using MazeRunner.MazeBase;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
@@ -17,7 +18,7 @@ public class FindKeyWriter : TextWriter
 
     private const double TextMaxShowTimeMs = 3000;
 
-    private readonly float _textShowDistance;
+    private const float TextShowDistance = GameConstants.AssetsFrameSize * 2;
 
     private readonly int _mazeWidth;
 
@@ -46,8 +47,6 @@ public class FindKeyWriter : TextWriter
 
         _hero = hero;
         _maze = maze;
-
-        _textShowDistance = maze.ExitInfo.Exit.FrameSize * 2;
 
         var skeleton = maze.Skeleton;
 
@@ -175,6 +174,6 @@ public class FindKeyWriter : TextWriter
         var exitPosition = Maze.GetCellPosition(_maze.ExitInfo.Cell);
         var distance = Vector2.Distance(exitPosition, position);
 
-        return distance <= _textShowDistance;
+        return distance <= TextShowDistance;
     }
 }

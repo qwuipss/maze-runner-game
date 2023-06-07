@@ -2,6 +2,7 @@
 using MazeRunner.MazeBase;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
+using System;
 using System.Drawing;
 
 namespace MazeRunner.Sprites;
@@ -17,6 +18,8 @@ public class Guard : Enemy
     private const float AttackDistanceCoeff = .85f;
 
     private float _drawingPriority;
+
+    public override event Action EnemyDiedNotify;
 
     public override bool IsDead => State is GuardDeadState or GuardFalledState or GuardFallingState or GuardDyingState;
 
@@ -48,6 +51,8 @@ public class Guard : Enemy
         if (_drawingPriority == base.DrawingPriority && IsDead)
         {
             _drawingPriority += .1f;
+
+            EnemyDiedNotify.Invoke();
         }
     }
 

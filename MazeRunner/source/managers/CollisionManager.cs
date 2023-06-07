@@ -3,8 +3,11 @@ using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Drawing;
+using System.Net;
 
 namespace MazeRunner.Managers;
 
@@ -12,13 +15,14 @@ public static class CollisionManager
 {
     public static bool CollidesWithWalls(Sprite sprite, Vector2 position, Vector2 movement, Maze maze)
     {
-        var mazeSkeleton = maze.Skeleton;
+        var skeleton = maze.Skeleton;
+        var collideArea = maze.GetCollideArea();
 
-        for (int y = 0; y < mazeSkeleton.GetLength(0); y++)
+        for (int y = collideArea.Top; y <= collideArea.Bottom; y++)
         {
-            for (int x = 0; x < mazeSkeleton.GetLength(1); x++)
+            for (int x = collideArea.Left; x <= collideArea.Right; x++)
             {
-                var tile = mazeSkeleton[y, x];
+                var tile = skeleton[y, x];
 
                 if (tile.TileType is not TileType.Wall)
                 {
@@ -45,19 +49,21 @@ public static class CollisionManager
 
     public static bool CollidesWithItems(Sprite sprite, Vector2 position, Maze maze, out (Cell Cell, MazeItem Item) itemInfo)
     {
-        if (CollidesWith(maze.ItemsInfo, sprite, position, out var tileInfo))
+        if (CollidesWith(maze.HoverTilesInfo, sprite, position, maze, mazeTile => mazeTile.TileType is TileType.Item, out var tileInfo))
         {
             itemInfo = (tileInfo.Cell, (MazeItem)tileInfo.Tile);
+
             return true;
         }
 
         itemInfo = (new Cell(), null);
+
         return false;
     }
 
     public static bool CollidesWithTraps(Sprite sprite, Vector2 position, Maze maze, bool needActivating, out (Cell Cell, MazeTrap Trap) trapInfo)
     {
-        if (CollidesWith(maze.TrapsInfo, sprite, position, out var tileInfo))
+        if (CollidesWith(maze.HoverTilesInfo, sprite, position, maze, mazeTile => mazeTile.TileType is TileType.Trap, out var tileInfo))
         {
             if (((MazeTrap)tileInfo.Tile).IsActivated == needActivating)
             {
@@ -68,22 +74,35 @@ public static class CollisionManager
         }
 
         trapInfo = (new Cell(), null);
+
         return false;
     }
 
-    private static bool CollidesWith(ImmutableDictionary<Cell, MazeTile> sourceInfo, Sprite sprite, Vector2 position, out (Cell Cell, MazeTile Tile) tileInfo)
+    private static bool CollidesWith(
+        IDictionary<Cell, MazeTile> sourceInfo, Sprite sprite, Vector2 position, Maze maze, Func<MazeTile, bool> selector, out (Cell Cell, MazeTile Tile) tileInfo)
     {
-        foreach (var (cell, tile) in sourceInfo)
-        {
-            if (CollidesWithMazeTile(sprite, position, tile, cell))
-            {
-                tileInfo = (cell, tile);
+        var collideArea = maze.GetCollideArea();
 
-                return true;
+        for (int y = collideArea.Top; y <= collideArea.Bottom; y++)
+        {
+            for (int x = collideArea.Left; x <= collideArea.Right; x++)
+            {
+                var cell = new Cell(x, y);
+
+                if (sourceInfo.TryGetValue(cell, out var tile))
+                {
+                    if (selector.Invoke(tile) && CollidesWithMazeTile(sprite, position, tile, cell))
+                    {
+                        tileInfo = (cell, tile);
+
+                        return true;
+                    }
+                }
             }
         }
 
         tileInfo = (new Cell(), null);
+
         return false;
     }
 
@@ -95,13 +114,8 @@ public static class CollisionManager
     private static bool CollidesWithMazeTile(Sprite sprite, Vector2 position, Vector2 movement, MazeTile mazeTile, Cell tileCell)
     {
         var tilePosition = Maze.GetCellPosition(tileCell);
-
-        if (Vector2.Distance(tilePosition, position) > Optimization.MazeTileCollidingCheckDistance)
-        {
-            return false;
-        }
-
         var tileHitBox = mazeTile.GetHitBox(tilePosition);
+
         var spriteExtendedHitBox = GetExtendedHitBox(sprite, position, movement);
 
         return spriteExtendedHitBox.IntersectsWith(tileHitBox);

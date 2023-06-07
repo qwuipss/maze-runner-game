@@ -57,6 +57,10 @@ public class GameRunningState : GameBaseState
         }
     }
 
+    public const int UpdateAreaWidthRadius = 7;
+
+    public const int UpdateAreaHeightRadius = 5;
+
     public override event Action<IGameState> ControlGiveUpNotify;
 
     private static Texture2D _cameraEffect;
@@ -146,27 +150,10 @@ public class GameRunningState : GameBaseState
         {
             foreach (var component in _gameComponents)
             {
-                if (component is Hero)
-                {
-                    var x = 9;
-                }
                 if (MazeRunnerGameComponent.IsInArea(updatableArea, component))
                 {
                     component.Update(gameTime);
                 }
-
-                //if (component is Sprite sprite)
-                //{
-                //    UpdateSprite(sprite, gameTime);
-                //    continue;
-                //}
-
-                //if (component is TextWriter textWriter)
-                //{
-                //    UpdateTextWriter(textWriter, gameTime);
-                //    continue;
-                //}
-
             }
         }
 
@@ -181,15 +168,19 @@ public class GameRunningState : GameBaseState
         }
 
         var heroCell = SpriteBaseState.GetSpriteCell(Hero);
-        var updatableArea = GetUpdatableArea(heroCell, _maze.Skeleton);
+        var updatableArea = HitBoxHelper.GetArea(heroCell, UpdateAreaWidthRadius, UpdateAreaHeightRadius, _maze.Skeleton);
 
         UpdateGameComponents(updatableArea);
         UpdateStaticComponents();
+
+        ProcessStateControl(gameTime);
 
         if (!IsControlling)
         {
             return;
         }
+
+        ProcessGameWin();
 
         HandleSecondaryButtons(gameTime);
 
@@ -255,7 +246,11 @@ public class GameRunningState : GameBaseState
         {
             for (int i = 0; i < GameParameters.GuardSpawnCount; i++)
             {
-                _enemies.Add(CreateGuard());
+                var guard = CreateGuard();
+
+                _enemies.Add(guard);
+
+                guard.EnemyDiedNotify += () => AddEnemyToRespawnList(CreateGuard());
             }
         }
 
@@ -333,15 +328,13 @@ public class GameRunningState : GameBaseState
 
         var mazeTile = _maze.Skeleton[cell.Y, cell.X];
 
-        var spawnDistance = Optimization.EnemySpawnDistance;
-
-        if (distanceToHero < spawnDistance)
+        if (distanceToHero < GameRules.EnemySpawnDistance)
         {
             return false;
         }
 
         var isEnemyFree = _enemies
-            .Where(enemy => Vector2.Distance(enemy.Position, cellPosition) < spawnDistance)
+            .Where(enemy => Vector2.Distance(enemy.Position, cellPosition) < GameRules.EnemySpawnDistance)
             .Count() is 0;
 
         return isEnemyFree;
@@ -349,12 +342,14 @@ public class GameRunningState : GameBaseState
 
     private void DisposeDeadGameComponents()
     {
-        if (_deadGameComponents.Count is not 0)
+        if (_deadGameComponents.Count is 0)
         {
-            foreach (var component in _deadGameComponents)
-            {
-                _gameComponents.Remove(component);
-            }
+            return;
+        }
+
+        foreach (var component in _deadGameComponents)
+        {
+            _gameComponents.Remove(component);
         }
 
         _deadGameComponents.Clear();
@@ -374,6 +369,11 @@ public class GameRunningState : GameBaseState
 
     private void RespawnEnemies()
     {
+        if (_respawnEnemies.Count is 0)
+        {
+            return;
+        }
+
         foreach (var enemy in _respawnEnemies)
         {
             _gameComponents.Add(enemy);
@@ -392,56 +392,6 @@ public class GameRunningState : GameBaseState
 
             ControlGiveUpNotify = null;
         }
-    }
-
-    private void UpdateSprite(Sprite sprite, GameTime gameTime)
-    {
-        void ProcessGameWin()
-        {
-            if (IsMazeEscaped())
-            {
-                WonGame();
-            }
-        }
-
-        if (sprite is Enemy enemy)
-        {
-            var distance = Vector2.Distance(enemy.Position, Hero.Position);
-
-            if (distance > Optimization.EnemyUpdateDistance)
-            {
-                return;
-            }
-
-            if (enemy.IsDead
-             && distance > Optimization.EnemyDisposingDistance)
-            {
-                _deadGameComponents.Add(enemy);
-
-                AddEnemyToRespawnList(enemy);
-            }
-        }
-        else if (sprite is Hero)
-        {
-            ProcessStateControl(gameTime);
-            ProcessGameWin();
-        }
-        else
-        {
-            throw new NotImplementedException();
-        }
-
-        sprite.Update(gameTime);
-    }
-
-    private void UpdateTextWriter(TextWriter textWriter, GameTime gameTime)
-    {
-        if (textWriter.IsDead)
-        {
-            _deadGameComponents.Add(textWriter);
-        }
-
-        textWriter.Update(gameTime);
     }
 
     private bool IsMazeEscaped()
@@ -474,5 +424,13 @@ public class GameRunningState : GameBaseState
         NeedShadowerActivate = true;
 
         Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameWonState());
+    }
+
+    private void ProcessGameWin()
+    {
+        if (IsMazeEscaped())
+        {
+            WonGame();
+        }
     }
 }

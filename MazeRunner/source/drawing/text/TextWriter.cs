@@ -10,11 +10,11 @@ public abstract class TextWriter : MazeRunnerGameComponent
 
     public abstract string Text { get; }
 
+    public virtual float DrawingPriority => 0.05f;
+
     public SpriteFont Font { get; init; }
 
     public Color Color { get; init; }
 
     public bool IsDead { get; protected set; }
-
-    public virtual float DrawingPriority => 0.05f;
 }

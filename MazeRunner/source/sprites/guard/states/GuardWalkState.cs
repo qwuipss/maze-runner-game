@@ -67,7 +67,7 @@ public class GuardWalkState : GuardMoveBaseState
         var visitedCells = new HashSet<Cell>() { currentCell };
         var walkPath = new LinkedList<Vector2>();
 
-        var movingPosition = GetCellNormalizedPosition(currentCell, Maze);
+        var movingPosition = GetCellNormalizedPosition(currentCell);
 
         walkPath.AddLast(movingPosition);
 
@@ -81,7 +81,7 @@ public class GuardWalkState : GuardMoveBaseState
             }
 
             currentCell = RandomHelper.Choice(adjacentCells);
-            movingPosition = GetCellNormalizedPosition(currentCell, Maze);
+            movingPosition = GetCellNormalizedPosition(currentCell);
 
             walkPath.AddLast(movingPosition);
             visitedCells.Add(currentCell);

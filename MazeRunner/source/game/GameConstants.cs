@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase;
 
-internal class GameConstants
+public static class GameConstants
 {
     public const int AssetsFrameSize = 16;
 }
