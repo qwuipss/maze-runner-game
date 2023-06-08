@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
-using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
@@ -46,8 +45,8 @@ public class GameMenuState : GameBaseState
 
             Normal = new Lazy<GameParameters>(() => new GameParameters()
             {
-                MazeWidth = 350, //35
-                MazeHeight = 350,
+                MazeWidth = 35,
+                MazeHeight = 35,
 
                 MazeDeadEndsRemovePercentage = 60,
 

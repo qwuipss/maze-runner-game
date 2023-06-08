@@ -1,13 +1,10 @@
-﻿using MazeRunner.GameBase;
-using MazeRunner.MazeBase;
+﻿using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Drawing;
-using System.Net;
 
 namespace MazeRunner.Managers;
 

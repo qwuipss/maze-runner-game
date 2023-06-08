@@ -2,6 +2,7 @@
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MazeRunner.Drawing.Writers;
 
@@ -14,6 +15,8 @@ public class HeroHealthWriter : TextWriter
     private readonly Hero _hero;
 
     private int _count;
+
+    public override event Action WriterDiedNotify;
 
     public override float ScaleFactor => _scaleFactor;
 

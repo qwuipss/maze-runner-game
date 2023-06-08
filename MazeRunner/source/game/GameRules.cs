@@ -1,7 +1,4 @@
-﻿using MazeRunner.MazeBase.Tiles;
-using MazeRunner.Sprites;
-
-namespace MazeRunner.GameBase;
+﻿namespace MazeRunner.GameBase;
 
 public static class GameRules
 {

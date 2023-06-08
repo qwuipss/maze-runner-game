@@ -21,7 +21,7 @@ public class GuardChaseState : GuardMoveBaseState
             return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
-        if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.GetAttackDistance())
+        if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.AttackDistance)
         {
             return new GuardAttackState(this, Hero, Guard, Maze);
         }

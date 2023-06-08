@@ -1,11 +1,14 @@
 ﻿using MazeRunner.Content;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace MazeRunner.Drawing.Writers;
 
 public class GameWonWriter : TextWriter
 {
     private readonly float _scaleFactor;
+
+    public override event Action WriterDiedNotify;
 
     public override float ScaleFactor => _scaleFactor;
 

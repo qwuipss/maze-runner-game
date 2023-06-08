@@ -36,6 +36,8 @@ public class FindKeyWriter : TextWriter
 
     private double _textShowTimeMs;
 
+    public override event Action WriterDiedNotify;
+
     public override float ScaleFactor => .2f;
 
     public FindKeyWriter(Hero hero, Maze maze)
@@ -71,7 +73,7 @@ public class FindKeyWriter : TextWriter
     {
         if (_textShowed)
         {
-            IsDead = true;
+            WriterDiedNotify.Invoke();
 
             return;
         }

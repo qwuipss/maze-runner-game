@@ -2,6 +2,7 @@
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MazeRunner.Drawing.Writers;
 
@@ -16,6 +17,8 @@ public class HeroChalkUsesWriter : TextWriter
     private readonly Vector2 _chalkTextureDrawingPosition;
 
     private int _count;
+
+    public override event Action WriterDiedNotify;
 
     public override float ScaleFactor => _scaleFactor;
 

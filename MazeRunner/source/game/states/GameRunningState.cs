@@ -9,12 +9,12 @@ using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
-using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.GameBase.States;
 
@@ -224,7 +224,7 @@ public class GameRunningState : GameBaseState
         MazeGenerator.InsertItem(_maze, new Key());
 
         Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
-        
+
         MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage);
         MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
 
@@ -292,6 +292,8 @@ public class GameRunningState : GameBaseState
         _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, ViewWidth);
 
         _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, ViewWidth);
+
+        _findKeyTextWriter.WriterDiedNotify += () => AddComponentToDeadList(_findKeyTextWriter);
     }
 
     private void InitializeShadower()
@@ -432,5 +434,10 @@ public class GameRunningState : GameBaseState
         {
             WonGame();
         }
+    }
+
+    private void AddComponentToDeadList(MazeRunnerGameComponent component)
+    {
+        _deadGameComponents.Add(component);
     }
 }

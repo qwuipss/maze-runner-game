@@ -113,7 +113,9 @@ public abstract class GuardMoveBaseState : GuardBaseState
     {
         var position = Maze.GetCellPosition(cell);
 
-        return new Vector2(position.X + GameConstants.AssetsFrameSize, position.Y + GameConstants.AssetsFrameSize);
+        var halfFrameSize = GameConstants.AssetsFrameSize / 2;
+
+        return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
     }
 
     protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Maze maze, HashSet<Cell> visitedCells)

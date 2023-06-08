@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.GameBase;
+using MazeRunner.Helpers;
 using MazeRunner.MazeBase;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
@@ -25,7 +26,9 @@ public class Guard : Enemy
 
     public override float DrawingPriority => _drawingPriority;
 
-    public override int Damage => 1;
+    public int Damage => 1;
+
+    public float AttackDistance => AttackDistanceCoeff * GameConstants.AssetsFrameSize;
 
     public override Vector2 Speed => new(15, 15);
 
@@ -54,10 +57,5 @@ public class Guard : Enemy
 
             EnemyDiedNotify.Invoke();
         }
-    }
-
-    public float GetAttackDistance()
-    {
-        return FrameSize * AttackDistanceCoeff;
     }
 }

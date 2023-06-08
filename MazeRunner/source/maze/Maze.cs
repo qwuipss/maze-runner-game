@@ -11,7 +11,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using static MazeRunner.Content.Textures;
 
 namespace MazeRunner.MazeBase;
 
@@ -31,9 +30,7 @@ public class Maze : MazeRunnerGameComponent
 
     private float _exitOpenDistance;
 
-    private readonly HashSet<MazeTile> _mazeTiles;
-
-    public ImmutableHashSet<MazeTile> Components => _mazeTiles.ToImmutableHashSet();
+    private readonly HashSet<MazeRunnerGameComponent> _components;
 
     public ImmutableDictionary<Cell, MazeTile> HoverTilesInfo => _hoverTilesInfo.ToImmutableDictionary();
 
@@ -47,35 +44,31 @@ public class Maze : MazeRunnerGameComponent
     {
         Skeleton = skeleton;
 
-        _mazeTiles = new HashSet<MazeTile>();
+        _components = new HashSet<MazeRunnerGameComponent>();
         _hoverTilesInfo = new Dictionary<Cell, MazeTile>();
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Vector2 GetCellPosition(Cell cell)
     {
-        var frameSize = GameConstants.AssetsFrameSize;
-
-        var framePosX = frameSize * cell.X;
-        var framePosY = frameSize * cell.Y;
+        var framePosX = GameConstants.AssetsFrameSize * cell.X;
+        var framePosY = GameConstants.AssetsFrameSize * cell.Y;
 
         return new Vector2(framePosX, framePosY);
     }
 
     public static Cell GetCellByPosition(Vector2 position)
     {
-        var cellSize = GameConstants.AssetsFrameSize;
-
-        var cell = new Cell((int)position.X / cellSize, (int)position.Y / cellSize);
+        var cell = new Cell((int)position.X / GameConstants.AssetsFrameSize, (int)position.Y / GameConstants.AssetsFrameSize);
 
         return cell;
     }
 
     public override void Draw(GameTime gameTime)
     {
-        foreach (var mazeTile in _mazeTiles)
+        foreach (var component in _components)
         {
-            mazeTile.Draw(gameTime);
+            component.Draw(gameTime);
         }
     }
 
@@ -83,9 +76,9 @@ public class Maze : MazeRunnerGameComponent
     {
         void UpdateAll()
         {
-            foreach (var mazeTile in _mazeTiles)
+            foreach (var component in _components)
             {
-                mazeTile.Update(gameTime);
+                component.Update(gameTime);
             }
         }
 
@@ -143,7 +136,7 @@ public class Maze : MazeRunnerGameComponent
 
                     mazeTile.Position = GetCellPosition(new Cell(x, y));
 
-                    _mazeTiles.Add(mazeTile);
+                    _components.Add(mazeTile);
                 }
             }
         }
@@ -154,15 +147,19 @@ public class Maze : MazeRunnerGameComponent
             {
                 tile.Position = GetCellPosition(cell);
 
-                _mazeTiles.Add(tile);
+                _components.Add(tile);
             }
         }
 
         void InitializeExit()
         {
-            ExitInfo.Exit.Position = GetCellPosition(ExitInfo.Cell);
+            var exitCell = ExitInfo.Cell;
+            var exit = ExitInfo.Exit;
 
-            _mazeTiles.Add(ExitInfo.Exit);
+            ExitInfo.Exit.Position = GetCellPosition(exitCell);
+
+            _components.Add(exit);
+            _hoverTilesInfo.Add(exitCell, exit);
         }
 
         InitializeSkeleton();
@@ -227,7 +224,7 @@ public class Maze : MazeRunnerGameComponent
     {
         _hoverTilesInfo.Add(cell, mark);
 
-        _mazeTiles.Add(mark);
+        _components.Add(mark);
     }
 
     public bool CanInsertMark(Cell cell)
@@ -239,10 +236,10 @@ public class Maze : MazeRunnerGameComponent
     {
         var cellPosition = GetCellPosition(cell);
 
-        var itemTile = _mazeTiles.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
+        var itemTile = _components.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
 
         _hoverTilesInfo.Remove(cell);
-        _mazeTiles.Remove(itemTile);
+        _components.Remove(itemTile);
     }
 
     private bool NeedOpenExit()

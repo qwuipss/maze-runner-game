@@ -1,11 +1,9 @@
 ﻿using MazeRunner.Components;
 using MazeRunner.Helpers;
-using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MazeRunner.GameBase.States;
 
