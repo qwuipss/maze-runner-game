@@ -5,9 +5,9 @@ namespace MazeRunner.Gui.Buttons;
 
 public class HardModeSelectRadioButton : RadioButton
 {
-    public override event Action ButtonSelected;
+    public override event Action ButtonPressed;
 
-    public HardModeSelectRadioButton(Action onClick, float boxScale) : base(onClick, boxScale)
+    public HardModeSelectRadioButton(float boxScale) : base(boxScale)
     {
     }
 
@@ -16,9 +16,9 @@ public class HardModeSelectRadioButton : RadioButton
         State = new HardModeSelectButtonIdleState(this);
     }
 
-    public override void Select()
+    public override void Click()
     {
-        ButtonSelected.Invoke();
+        ButtonPressed.Invoke();
         IsSelected = true;
     }
 
@@ -29,7 +29,7 @@ public class HardModeSelectRadioButton : RadioButton
 
     public override void Push()
     {
-        Select();
+        Click();
 
         State = new HardModeSelectButtonSelectedState(this);
     }

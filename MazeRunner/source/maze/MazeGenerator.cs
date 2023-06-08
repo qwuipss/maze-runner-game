@@ -161,14 +161,14 @@ public static class MazeGenerator
         maze.InsertExit(exit, sideCell);
     }
 
-    public static void InsertItem(Maze maze, MazeItem item)
+    public static void InsertItem(Maze maze, MazeItem item, Action collectingActions)
     {
         var floorCell = GetRandomCell(maze, maze.IsFloor).First();
 
-        maze.InsertItem(item, floorCell);
+        maze.InsertItem(item, floorCell, collectingActions);
     }
 
-    public static void InsertItems(Maze maze, Func<MazeItem> itemSource, float percentage)
+    public static void InsertItems(Maze maze, Func<MazeItem> itemSource, float percentage, Action collectingActions)
     {
         var insertionsCount = GetInsertionsCount(maze, percentage);
 
@@ -176,7 +176,7 @@ public static class MazeGenerator
         {
             var floorCell = GetRandomCell(maze, maze.IsFloor).First();
 
-            maze.InsertItem(itemSource.Invoke(), floorCell);
+            maze.InsertItem(itemSource.Invoke(), floorCell, collectingActions);
         }
     }
 

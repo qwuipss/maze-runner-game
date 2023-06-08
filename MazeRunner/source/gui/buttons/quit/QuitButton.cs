@@ -5,12 +5,19 @@ namespace MazeRunner.Gui.Buttons;
 
 public class QuitButton : Button
 {
-    public QuitButton(Action onClick, float boxScale) : base(onClick, boxScale)
+    public override event Action ButtonPressed;
+
+    public QuitButton(float boxScale) : base(boxScale)
     {
     }
 
     public override void Initialize()
     {
         State = new QuitButtonIdleState(this);
+    }
+
+    public override void Click()
+    {
+        ButtonPressed.Invoke();
     }
 }

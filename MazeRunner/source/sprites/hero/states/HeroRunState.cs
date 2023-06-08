@@ -49,9 +49,7 @@ public class HeroRunState : HeroBaseState
     {
         if (CollisionManager.CollidesWithItems(Hero, Hero.Position, Maze, out var itemInfo))
         {
-            var (cell, item) = itemInfo;
-
-            item.ProcessCollecting(Maze, cell);
+            itemInfo.Item.Collect();
         }
     }
 }

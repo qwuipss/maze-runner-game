@@ -24,7 +24,7 @@ public class RestartButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
-                Button.OnClick.Invoke();
+                Button.Click();
 
                 return new RestartButtonResetState(Button);
             }

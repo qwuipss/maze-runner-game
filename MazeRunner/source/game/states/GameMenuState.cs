@@ -3,9 +3,11 @@ using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -113,7 +115,7 @@ public class GameMenuState : GameBaseState
         InitializeCamera();
         InitializeMaze();
         InitializeShadower();
-        InitializeComponentsList();
+        InitializeComponents();
     }
 
     public override void Draw(GameTime gameTime)
@@ -144,29 +146,35 @@ public class GameMenuState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _startButton = new StartButton(StartGame, boxScale);
+            _startButton = new StartButton(boxScale);
 
             _startButton.Initialize();
 
             _startButton.Position = new Vector2((ViewWidth - _startButton.Width) / 2, (ViewHeight - _startButton.Height) / 2);
+
+            _startButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _startButton.ButtonPressed += StartGame;
         }
 
         void InitializeQuitGameButton(float scaleDivider)
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _quitButton = new QuitButton(QuitGame, boxScale);
+            _quitButton = new QuitButton(boxScale);
 
             _quitButton.Initialize();
 
             _quitButton.Position = new Vector2((ViewWidth - _quitButton.Width) / 2, 5 * ViewHeight / 7 - _quitButton.Height / 2);
+
+            _quitButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _quitButton.ButtonPressed += QuitGame;
         }
 
         void InitializeGameDifficultySelectRadioButtons(float scaleDivider, float buttonsOffsetCoeff)
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            var normalSelectButton = new NormalModeSelectRadioButton(() => _difficulty = GameModes.Normal, boxScale);
+            var normalSelectButton = new NormalModeSelectRadioButton(boxScale);
 
             normalSelectButton.Initialize();
 
@@ -175,8 +183,9 @@ public class GameMenuState : GameBaseState
                 _startButton.Position.Y + _startButton.Height * buttonsOffsetCoeff);
 
             normalSelectButton.Position = normalSelectButtonPosition;
+            normalSelectButton.ButtonPressed += () => _difficulty = GameModes.Normal;
 
-            var easySelectButton = new EasyModeSelectRadioButton(() => _difficulty = GameModes.Easy, boxScale);
+            var easySelectButton = new EasyModeSelectRadioButton(boxScale);
 
             easySelectButton.Initialize();
 
@@ -184,7 +193,10 @@ public class GameMenuState : GameBaseState
                 normalSelectButtonPosition.X - easySelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            var hardSelectButton = new HardModeSelectRadioButton(() => _difficulty = GameModes.Hard, boxScale);
+            easySelectButton.ButtonPressed += SoundManager.PlayRadioButtonPressedSound;
+            easySelectButton.ButtonPressed += () => _difficulty = GameModes.Easy;
+
+            var hardSelectButton = new HardModeSelectRadioButton(boxScale);
 
             hardSelectButton.Initialize();
 
@@ -192,9 +204,14 @@ public class GameMenuState : GameBaseState
                 normalSelectButtonPosition.X + normalSelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
+            hardSelectButton.ButtonPressed += SoundManager.PlayRadioButtonPressedSound;
+            hardSelectButton.ButtonPressed += () => _difficulty = GameModes.Hard;
+
             _difficultySelectButtonsContainer = new RadioButtonContainer(easySelectButton, normalSelectButton, hardSelectButton);
 
             normalSelectButton.Push();
+
+            normalSelectButton.ButtonPressed += SoundManager.PlayRadioButtonPressedSound;
         }
 
         var startButtonScaleDivider = 360;
@@ -227,9 +244,9 @@ public class GameMenuState : GameBaseState
 
         MazeGenerator.InsertExit(_maze);
 
-        MazeGenerator.InsertItem(_maze, new Key());
+        MazeGenerator.InsertItem(_maze, new Key(), null);
 
-        _maze.InitializeComponentsList();
+        _maze.InitializeComponents();
     }
 
     private void InitializeCamera()
@@ -252,7 +269,7 @@ public class GameMenuState : GameBaseState
         };
     }
 
-    private void InitializeComponentsList()
+    private void InitializeComponents()
     {
         _components = new HashSet<MazeRunnerGameComponent>
         {

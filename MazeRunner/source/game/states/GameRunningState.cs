@@ -120,7 +120,7 @@ public class GameRunningState : GameBaseState
         InitializeEnemies();
         InitializeTextWriters();
         InitializeShadower();
-        InitializeComponentsList();
+        InitializeComponents();
     }
 
     public override void Draw(GameTime gameTime)
@@ -188,7 +188,7 @@ public class GameRunningState : GameBaseState
         DisposeDeadGameComponents();
     }
 
-    private void InitializeComponentsList()
+    private void InitializeComponents()
     {
         _respawnEnemies = new List<Enemy>();
 
@@ -212,32 +212,77 @@ public class GameRunningState : GameBaseState
 
     private void InitializeHeroAndMaze()
     {
-        _maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
+        void GenerateMaze()
+        {
+            _maze = MazeGenerator.GenerateMaze(GameParameters.MazeWidth, GameParameters.MazeHeight);
 
-        MazeGenerator.MakeCyclic(_maze, GameParameters.MazeDeadEndsRemovePercentage);
+            MazeGenerator.MakeCyclic(_maze, GameParameters.MazeDeadEndsRemovePercentage);
+        }
 
-        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
-        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), GameParameters.MazeDropTrapInsertingPercentage);
+        void InsertKey()
+        {
+            var key = new Key();
 
-        MazeGenerator.InsertExit(_maze);
+            var keyCollectedActions = () =>
+            {
+                _maze.IsKeyCollected = true;
 
-        MazeGenerator.InsertItem(_maze, new Key());
+                SoundManager.PlayKeyCollectedSound();
+            };
 
-        Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
+            MazeGenerator.InsertItem(_maze, key, keyCollectedActions);
+        }
 
-        MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage);
-        MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
+        void InsertTraps()
+        {
+            MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
+            MazeGenerator.InsertTraps(_maze, () => new DropTrap(), GameParameters.MazeDropTrapInsertingPercentage);
+        }
 
-        var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
-        var position = Maze.GetCellPosition(cell);
+        void InsertItems()
+        {
+            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.PlayFoodEatenSound);
+            MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage, SoundManager.PlayButtonPressedSound);
+        }
 
-        Hero.Position = position;
+        void InsertExit()
+        {
+            MazeGenerator.InsertExit(_maze);
+        }
 
-        Hero.Initialize(_maze);
+        void InitializeHero()
+        {
+            var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
+            var position = Maze.GetCellPosition(cell);
 
-        _maze.Initialize(Hero);
+            Hero.Initialize(_maze);
 
-        _maze.InitializeComponentsList();
+            Hero.Position = position;
+        }
+
+        void CreateHero()
+        {
+            Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
+        }
+
+        void InitializeMaze()
+        {
+            _maze.Initialize(Hero);
+            _maze.InitializeComponents();
+        }
+
+        GenerateMaze();
+
+        InsertTraps();
+        InsertExit();
+        InsertKey();
+
+        CreateHero();
+
+        InsertItems();
+
+        InitializeHero();
+        InitializeMaze();
     }
 
     private void InitializeEnemies()

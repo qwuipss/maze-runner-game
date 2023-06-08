@@ -15,7 +15,7 @@ public class NormalModeSelectButtonSelectedState : ButtonBaseState
     {
         if (button is RadioButton radioButton)
         {
-            radioButton.Select();
+            radioButton.Click();
         }
         else
         {

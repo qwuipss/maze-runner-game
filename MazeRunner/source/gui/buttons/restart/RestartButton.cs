@@ -5,12 +5,19 @@ namespace MazeRunner.Gui.Buttons;
 
 public class RestartButton : Button
 {
-    public RestartButton(Action onClick, float boxScale) : base(onClick, boxScale)
+    public override event Action ButtonPressed;
+
+    public RestartButton(float boxScale) : base(boxScale)
     {
     }
 
     public override void Initialize()
     {
         State = new RestartButtonIdleState(this);
+    }
+
+    public override void Click()
+    {
+        ButtonPressed.Invoke();
     }
 }

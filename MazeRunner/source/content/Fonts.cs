@@ -11,6 +11,6 @@ public static class Fonts
 
     public static void Load(Game game)
     {
-        BaseFont = game.Content.Load<SpriteFont>($"{ContentDirectory}/notification");
+        BaseFont = game.Content.Load<SpriteFont>($"{ContentDirectory}/base");
     }
 }

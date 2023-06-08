@@ -18,7 +18,9 @@ public class HeroChalkUsesWriter : TextWriter
 
     private int _count;
 
+#pragma warning disable CS0067 // The event 'HeroChalkUsesWriter.WriterDiedNotify' is never used
     public override event Action WriterDiedNotify;
+#pragma warning restore CS0067 // The event 'HeroChalkUsesWriter.WriterDiedNotify' is never used
 
     public override float ScaleFactor => _scaleFactor;
 

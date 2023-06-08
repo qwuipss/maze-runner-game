@@ -9,6 +9,8 @@ namespace MazeRunner.Gui.Buttons;
 
 public abstract class Button : MazeRunnerGameComponent
 {
+    public abstract event Action ButtonPressed;
+
     public static float DrawingPriority => .15f;
 
     public Texture2D Texture => State.Texture;
@@ -19,19 +21,18 @@ public abstract class Button : MazeRunnerGameComponent
 
     public float Height => State.FrameHeight * BoxScale;
 
-    public Action OnClick { get; init; }
-
     public float BoxScale { get; init; }
 
     protected IButtonState State { get; set; }
 
-    public Button(Action onClick, float boxScale)
+    public Button(float boxScale)
     {
-        OnClick = onClick;
         BoxScale = boxScale;
     }
 
     public abstract void Initialize();
+
+    public abstract void Click();
 
     public override void Update(GameTime gameTime)
     {

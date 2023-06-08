@@ -2,6 +2,7 @@
 using MazeRunner.MazeBase.Tiles.States;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
+using System;
 using System.Drawing;
 
 namespace MazeRunner.MazeBase.Tiles;
@@ -13,6 +14,8 @@ public class Chalk : MazeItem
     private const float HitBoxSize = 8;
 
     private readonly Hero _hero;
+
+    public override event Action ItemCollectedNotify;
 
     public Chalk(Hero hero)
     {
@@ -42,10 +45,10 @@ public class Chalk : MazeItem
         return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 
-    public override void ProcessCollecting(Maze maze, Cell cell)
+    public override void Collect()
     {
-        base.ProcessCollecting(maze, cell);
+        _hero.ChalkUses += RandomHelper.Next(0, 3);
 
-        _hero.ChalkUses++;
+        ItemCollectedNotify.Invoke();
     }
 }

@@ -26,11 +26,11 @@ public class Maze : MazeRunnerGameComponent
 
     private readonly Dictionary<Cell, MazeTile> _hoverTilesInfo;
 
+    private readonly HashSet<MazeRunnerGameComponent> _components;
+
     private Hero _hero;
 
     private float _exitOpenDistance;
-
-    private readonly HashSet<MazeRunnerGameComponent> _components;
 
     public ImmutableDictionary<Cell, MazeTile> HoverTilesInfo => _hoverTilesInfo.ToImmutableDictionary();
 
@@ -124,7 +124,7 @@ public class Maze : MazeRunnerGameComponent
         Position = _hero.Position;
     }
 
-    public void InitializeComponentsList()
+    public void InitializeComponents()
     {
         void InitializeSkeleton()
         {
@@ -215,15 +215,17 @@ public class Maze : MazeRunnerGameComponent
         Skeleton[cell.Y, cell.X] = new Floor();
     }
 
-    public void InsertItem(MazeItem item, Cell cell)
+    public void InsertItem(MazeItem item, Cell cell, Action collectingActions)
     {
+        item.ItemCollectedNotify += collectingActions;
+        item.ItemCollectedNotify += () => RemoveItem(item, cell);
+
         _hoverTilesInfo.Add(cell, item);
     }
 
     public void InsertMark(MazeMark mark, Cell cell)
     {
         _hoverTilesInfo.Add(cell, mark);
-
         _components.Add(mark);
     }
 
@@ -232,14 +234,10 @@ public class Maze : MazeRunnerGameComponent
         return !_hoverTilesInfo.ContainsKey(cell);
     }
 
-    public void RemoveItem(Cell cell)
+    public void RemoveItem(MazeItem item, Cell cell)
     {
-        var cellPosition = GetCellPosition(cell);
-
-        var itemTile = _components.Where(mazeTile => mazeTile.Position == cellPosition && mazeTile is MazeItem).Single();
-
         _hoverTilesInfo.Remove(cell);
-        _components.Remove(itemTile);
+        _components.Remove(item);
     }
 
     private bool NeedOpenExit()

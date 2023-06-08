@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
+using System;
 using System.Drawing;
 
 namespace MazeRunner.MazeBase.Tiles;
@@ -10,6 +11,8 @@ public class Key : MazeItem
     private const float HitBoxOffset = 4;
 
     private const float HitBoxSize = 8;
+
+    public override event Action ItemCollectedNotify;
 
     public Key()
     {
@@ -37,10 +40,8 @@ public class Key : MazeItem
         return HitBoxHelper.GetHitBox(position, HitBoxOffset, HitBoxOffset, HitBoxSize, HitBoxSize);
     }
 
-    public override void ProcessCollecting(Maze maze, Cell cell)
+    public override void Collect()
     {
-        base.ProcessCollecting(maze, cell);
-
-        maze.IsKeyCollected = true;
+        ItemCollectedNotify.Invoke();
     }
 }

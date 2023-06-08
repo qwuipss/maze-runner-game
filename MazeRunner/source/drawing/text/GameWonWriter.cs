@@ -8,7 +8,9 @@ public class GameWonWriter : TextWriter
 {
     private readonly float _scaleFactor;
 
+#pragma warning disable CS0067 // The event 'GameWonWriter.WriterDiedNotify' is never used
     public override event Action WriterDiedNotify;
+#pragma warning restore CS0067 // The event 'GameWonWriter.WriterDiedNotify' is never used
 
     public override float ScaleFactor => _scaleFactor;
 

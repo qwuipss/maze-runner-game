@@ -3,6 +3,7 @@ using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -45,7 +46,7 @@ public class GameOverState : GameBaseState
 
         InitializeCameras();
         InitializeButtons();
-        InitializeComponentsList();
+        InitializeComponents();
     }
 
     public override void Draw(GameTime gameTime)
@@ -80,22 +81,28 @@ public class GameOverState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _restartButton = new RestartButton(() => RestartGame(), boxScale);
+            _restartButton = new RestartButton(boxScale);
 
             _restartButton.Initialize();
 
             _restartButton.Position = new Vector2(ViewWidth / 3 - _restartButton.Width / 2, ViewHeight / 2);
+
+            _restartButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _restartButton.ButtonPressed += RestartGame;
         }
 
         void InitializeMenuButton(float scaleDivider)
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _menuButton = new MenuButton(() => GoToMenu(), boxScale);
+            _menuButton = new MenuButton(boxScale);
 
             _menuButton.Initialize();
 
-            _menuButton.Position = new Vector2(2 * ViewWidth / 3 - _menuButton.Width / 2, ViewHeight / 2); ;
+            _menuButton.Position = new Vector2(2 * ViewWidth / 3 - _menuButton.Width / 2, ViewHeight / 2);
+
+            _menuButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _menuButton.ButtonPressed += GoToMenu;
         }
 
         var buttonsScaleDivider = 360;
@@ -114,7 +121,7 @@ public class GameOverState : GameBaseState
         _staticCamera = new StaticCamera(ViewWidth, ViewHeight);
     }
 
-    private void InitializeComponentsList()
+    private void InitializeComponents()
     {
         _components = new HashSet<MazeRunnerGameComponent>
         {

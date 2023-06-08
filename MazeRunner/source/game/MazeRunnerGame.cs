@@ -42,6 +42,7 @@ public class MazeRunnerGame : Game
     {
         Textures.Load(this);
         Fonts.Load(this);
+        Sounds.Load(this);
     }
 
     protected override void Update(GameTime gameTime)

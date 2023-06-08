@@ -13,7 +13,7 @@ public class RadioButtonContainer : MazeRunnerGameComponent
 
         foreach (var button in Buttons)
         {
-            button.ButtonSelected += ResetButtons;
+            button.ButtonPressed += ResetButtons;
         }
     }
 

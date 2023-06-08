@@ -41,7 +41,7 @@ public class GamePausedState : GameBaseState
         InitializeButtons();
         InitializeShadower();
         InitializeStaticCamera();
-        InitializeComponentsList();
+        InitializeComponents();
     }
 
     public override void Draw(GameTime gameTime)
@@ -75,37 +75,46 @@ public class GamePausedState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _restartButton = new RestartButton(() => RestartGame(), boxScale);
+            _restartButton = new RestartButton(boxScale);
 
             _restartButton.Initialize();
 
             _restartButton.Position = new Vector2((ViewWidth - _restartButton.Width) / 2, (ViewHeight - _restartButton.Height) / 2);
+
+            _restartButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _restartButton.ButtonPressed += RestartGame;
         }
 
         void InitializeResumeButton(float scaleDivider, float buttonOffsetCoeff)
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _resumeButton = new ResumeButton(() => ResumeGame(), boxScale);
+            _resumeButton = new ResumeButton(boxScale);
 
             _resumeButton.Initialize();
 
             var restartButtonPosition = _restartButton.Position;
 
             _resumeButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y - _restartButton.Height * buttonOffsetCoeff);
+
+            _resumeButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _resumeButton.ButtonPressed += ResumeGame;
         }
 
         void InitializeMenuButton(float scaleDivider, float buttonOffsetCoeff)
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _menuButton = new MenuButton(() => GoToMenu(), boxScale);
+            _menuButton = new MenuButton(boxScale);
 
             _menuButton.Initialize();
 
             var restartButtonPosition = _restartButton.Position;
 
             _menuButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y + _restartButton.Height * buttonOffsetCoeff);
+
+            _menuButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+            _menuButton.ButtonPressed += GoToMenu;
         }
 
         var buttonsScaleDivider = 400;
@@ -130,7 +139,7 @@ public class GamePausedState : GameBaseState
         };
     }
 
-    private void InitializeComponentsList()
+    private void InitializeComponents()
     {
         _components = new HashSet<MazeRunnerGameComponent>
         {

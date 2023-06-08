@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using System;
 using static MazeRunner.GameBase.Settings;
 
 namespace MazeRunner.Managers;
@@ -53,10 +54,15 @@ public static class KeyboardManager
 
     private static readonly CooldownButton _chalkDrawingButton;
 
+    private static readonly CooldownButton _nextTutorialTextButton;
+
     static KeyboardManager()
     {
-        _pauseSwitchButton = new CooldownButton(250, PauseSwitch);
-        _chalkDrawingButton = new CooldownButton(250, ChalkDrawing);
+        var cooldownMs = 250;
+
+        _pauseSwitchButton = new CooldownButton(cooldownMs, PauseSwitch);
+        _chalkDrawingButton = new CooldownButton(cooldownMs, ChalkDrawing);
+        _nextTutorialTextButton = new CooldownButton(cooldownMs, NextTutorialText);
     }
 
     public static Vector2 ProcessHeroMovement()
@@ -95,5 +101,10 @@ public static class KeyboardManager
     public static bool IsChalkDrawingButtonPressed(GameTime gameTime)
     {
         return _chalkDrawingButton.IsPressed(gameTime);
+    }
+
+    public static bool IsNextTutorialTextButtonPressed(GameTime gameTime)
+    {
+        return _nextTutorialTextButton.IsPressed(gameTime);
     }
 }

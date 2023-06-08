@@ -4,6 +4,7 @@ using MazeRunner.Drawing;
 using MazeRunner.Drawing.Writers;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -33,7 +34,7 @@ public class GameWonState : GameBaseState
         InitializeShadower();
         InitializeButtons();
         InitializeTextWriters();
-        InitializeComponentsList();
+        InitializeComponents();
     }
 
     public override void Draw(GameTime gameTime)
@@ -74,14 +75,17 @@ public class GameWonState : GameBaseState
 
         var boxScale = ViewWidth / scaleDivider;
 
-        _menuButton = new MenuButton(() => GoToMenu(), boxScale);
+        _menuButton = new MenuButton(boxScale);
 
         _menuButton.Initialize();
 
         _menuButton.Position = new Vector2((ViewWidth - _menuButton.Width) / 2, (ViewHeight - _menuButton.Height) / 2);
+
+        _menuButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
+        _menuButton.ButtonPressed += GoToMenu;
     }
 
-    private void InitializeComponentsList()
+    private void InitializeComponents()
     {
         _components = new HashSet<MazeRunnerGameComponent>
         {
