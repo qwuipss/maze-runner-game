@@ -1,20 +1,16 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
 using MazeRunner.Drawing;
-using MazeRunner.MazeBase.Tiles;
+using MazeRunner.Drawing.Writers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Threading;
-using MazeRunner.Drawing.Writers;
-using Microsoft.Xna.Framework.Input;
-using MazeRunner.Managers;
 
 namespace MazeRunner.GameBase.States;
 
@@ -22,9 +18,9 @@ public class GameTutorialState : GameBaseState
 {
     private GraphicsDevice _graphicsDevice;
 
-    private Maze _maze;
+    private readonly Maze _maze;
 
-    private Hero _hero;
+    private readonly Hero _hero;
 
     private HeroCamera _heroCamera;
 
@@ -50,7 +46,7 @@ public class GameTutorialState : GameBaseState
             component.Draw(gameTime);
         }
 
-        Drawer.EndDraw();   
+        Drawer.EndDraw();
     }
 
     public override void Update(GameTime gameTime)

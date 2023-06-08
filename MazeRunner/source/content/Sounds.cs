@@ -1,10 +1,4 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 
 namespace MazeRunner.Content;
@@ -29,8 +23,8 @@ public static class Sounds
 
     public static class Notifiers
     {
-        private const string ContentDirectory = $"{BaseContentDirectory}/notifiers"; 
-        
+        private const string ContentDirectory = $"{BaseContentDirectory}/notifiers";
+
         public static SoundEffect KeyCollected { get; private set; }
         public static SoundEffect FoodEaten { get; private set; }
 

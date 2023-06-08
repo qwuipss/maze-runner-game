@@ -1,15 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MazeRunner.Drawing.Writers;
 
 public class GameTutorialWriter : TextWriter
 {
-    private string _showingText;
+    private readonly string _showingText;
 
     public override event Action WriterDiedNotify;
 

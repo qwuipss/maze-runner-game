@@ -608,6 +608,30 @@
 /processorParam:TextureFormat=Color
 /build:mazetiles/traps/drop.png
 
+#begin sounds/buttons/button.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/buttons/button.wav
+
+#begin sounds/buttons/radioButton.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/buttons/radioButton.wav
+
+#begin sounds/notifiers/foodEaten.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/notifiers/foodEaten.wav
+
+#begin sounds/notifiers/keyCollected.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/notifiers/keyCollected.wav
+
 #begin sprites/guard/attack.png
 /importer:TextureImporter
 /processor:TextureProcessor

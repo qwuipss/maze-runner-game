@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MazeRunner.Gui.Buttons;
+﻿namespace MazeRunner.Gui.Buttons;
 
 public abstract class RadioButton : Button
 {
