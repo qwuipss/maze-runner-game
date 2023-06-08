@@ -27,7 +27,7 @@ public class MazeRunnerGame : Game
     {
         base.Initialize();
 
-        //SetFullScreen();
+        SetFullScreen();
         InitializeDrawer();
         InitializeShadower();
 

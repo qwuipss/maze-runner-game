@@ -241,7 +241,7 @@ public class GameRunningState : GameBaseState
 
         void InsertItems()
         {
-            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.PlayFoodEatenSound);
+            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.PlayFoodEatenSound); //
             MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage, SoundManager.PlayFoodEatenSound);
         }
 

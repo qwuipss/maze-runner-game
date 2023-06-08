@@ -175,7 +175,8 @@ public class Maze : MazeRunnerGameComponent
 
     public bool IsFloor(Cell cell)
     {
-        return Skeleton[cell.Y, cell.X].TileType is TileType.Floor and not TileType.Exit
+        return Skeleton[cell.Y, cell.X].TileType is TileType.Floor
+           && cell != ExitInfo.Cell
            && !_hoverTilesInfo.ContainsKey(cell);
     }
 
