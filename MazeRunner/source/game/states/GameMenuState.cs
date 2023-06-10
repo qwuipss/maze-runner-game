@@ -86,7 +86,7 @@ public class GameMenuState : GameBaseState
 
     private static Texture2D _cameraEffect;
 
-    public static event Action MenuTransferedNotify;
+    public static event Action MenuEnteredNotify;
 
     public static event Action MenuLeavedNotify;
 
@@ -108,7 +108,7 @@ public class GameMenuState : GameBaseState
 
     public GameMenuState()
     {
-        MenuTransferedNotify.Invoke();
+        MenuEnteredNotify.Invoke();
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)

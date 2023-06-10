@@ -47,7 +47,7 @@ public class Chalk : MazeItem
 
     public override void Collect()
     {
-        _hero.ChalkUses += RandomHelper.Next(0, 3);
+        _hero.ChalkUses += RandomHelper.Next(1, 4);
 
         ItemCollectedNotify.Invoke();
     }

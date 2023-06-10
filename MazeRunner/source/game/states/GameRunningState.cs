@@ -502,7 +502,7 @@ public class GameRunningState : GameBaseState
             {
                 _staticComponents.Clear();
 
-                FinishGame();
+                OverGame();
             }
         }
     }
@@ -527,9 +527,8 @@ public class GameRunningState : GameBaseState
         };
     }
 
-    private void FinishGame()
+    private void OverGame()
     {
-        GameOveredNotify.Invoke();
         ControlGiveUpNotify.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
     }
 

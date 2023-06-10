@@ -10,6 +10,10 @@ namespace MazeRunner.GameBase;
 
 public class MazeRunnerGame : Game
 {
+    private const int MinMusicPlayingPercentage = 30;
+
+    private const int MaxMusicPlayingPercentage = 100;
+
     private readonly GraphicsDeviceManager _graphics;
 
     private IGameState _gameState;
@@ -80,11 +84,16 @@ public class MazeRunnerGame : Game
 
     private static void InitializeMusic()
     {
-        GameMenuState.MenuTransferedNotify += SoundManager.PlayGameMenuMusic;
-        GameMenuState.MenuLeavedNotify += SoundManager.StopPlayingGameMenuMusic;
+        GameMenuState.MenuEnteredNotify += async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage());
+        GameMenuState.MenuLeavedNotify += async () => await SoundManager.StopPlayingGameMenuMusicAsync();
 
-        GameRunningState.GameStartedNotify += SoundManager.PlayGameRunningMusic;
-        GameRunningState.GameOveredNotify += SoundManager.StopPlayingGameRunningMusic;
+        GameRunningState.GameStartedNotify += async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage());
+        GameRunningState.GameOveredNotify += async () => await SoundManager.StopPlayingGameRunningMusicAsync();
+    }
+
+    private static int GetRandomMusicPlayingPercentage()
+    {
+        return RandomHelper.Next(MinMusicPlayingPercentage, MaxMusicPlayingPercentage);
     }
 
     private void SetFullScreen()

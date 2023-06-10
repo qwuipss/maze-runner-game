@@ -1,10 +1,19 @@
 ﻿using MazeRunner.Content;
 using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MazeRunner.Managers;
 
 public static class SoundManager
 {
+    private const int FadeDelayMs = 250;
+
+    private const float FadeValue = .05f;
+
+    private const float GameMenuMusicMaxVolume = .25f;
+
     private static readonly SoundEffectInstance _buttonPressed;
 
     private static readonly SoundEffectInstance _radioButtonPressed;
@@ -27,19 +36,27 @@ public static class SoundManager
 
     private static readonly SoundEffectInstance _gameRunningMusic;
 
+    private static readonly double _gameMenuMusicDurationMs;
+
+    private static readonly float _gameMenuMusicMaxVolume;
+
+    private static readonly double _gameRunningMusicDurationMs;
+
+    private static readonly float _gameRunningMusicMaxVolume;
+
     static SoundManager()
     {
         _buttonPressed = Sounds.Buttons.Button.CreateInstance();
-        _buttonPressed.Volume = .8f;
+        _buttonPressed.Volume = .3f;
 
         _radioButtonPressed = Sounds.Buttons.RadioButton.CreateInstance();
-        _radioButtonPressed.Volume = .55f;
+        _radioButtonPressed.Volume = .2f;
 
         _keyCollected = Sounds.Notifiers.KeyCollected.CreateInstance();
         _keyCollected.Volume = .15f;
 
         _foodEaten = Sounds.Notifiers.FoodEaten.CreateInstance();
-        _foodEaten.Volume = .5f;
+        _foodEaten.Volume = .3f;
 
         _chalkCollecting = Sounds.Notifiers.ChalkCollecting.CreateInstance();
         _chalkCollecting.Volume = .5f;
@@ -57,11 +74,17 @@ public static class SoundManager
         _guardAttackHit = Sounds.Sprites.Guard.AttackHit.CreateInstance();
         _guardAttackHit.Volume = .1f;
 
-        _gameMenuMusic = Sounds.Music.GameMenuMusic.CreateInstance();
-        _gameMenuMusic.Volume = .25f;
+        var gameMenuMusic = Sounds.Music.GameMenuMusic;
+        _gameMenuMusic = gameMenuMusic.CreateInstance();
+        _gameMenuMusic.Volume = 0;
+        _gameMenuMusicDurationMs = gameMenuMusic.Duration.TotalMilliseconds;
+        _gameMenuMusicMaxVolume = .3f;
 
-        _gameRunningMusic = Sounds.Music.GameRunningMusic.CreateInstance();
-        _gameRunningMusic.Volume = .2f;
+        var gameRunningMusic = Sounds.Music.GameRunningMusic;
+        _gameRunningMusic = gameRunningMusic.CreateInstance();
+        _gameRunningMusic.Volume = 0;
+        _gameRunningMusicDurationMs = gameRunningMusic.Duration.TotalMilliseconds;
+        _gameRunningMusicMaxVolume = .3f;
     }
 
     public static void PlayButtonPressedSound()
@@ -114,23 +137,60 @@ public static class SoundManager
         _guardAttackHit.Play();
     }
 
-    public static void PlayGameRunningMusic()
+    public async static Task PlayGameRunningMusicAsync(float playingDurationPercentage)
     {
-        _gameRunningMusic.Play();
+        await StartPlayingMusicWithFadeAsync(_gameRunningMusic, _gameRunningMusicDurationMs, _gameRunningMusicMaxVolume, playingDurationPercentage);
     }
 
-    public static void StopPlayingGameRunningMusic()
+    public static async Task StopPlayingGameRunningMusicAsync()
     {
-        _gameRunningMusic.Stop();
+        await StopPlayingMusicWithFadeAsync(_gameRunningMusic);
     }
 
-    public static void PlayGameMenuMusic()
+    public async static Task PlayGameMenuMusicAsync(float playingDurationPercentage)
     {
-        _gameMenuMusic.Play();
+        await StartPlayingMusicWithFadeAsync(_gameMenuMusic, _gameMenuMusicDurationMs, _gameMenuMusicMaxVolume, playingDurationPercentage);
     }
 
-    public static void StopPlayingGameMenuMusic()
+    public async static Task StopPlayingGameMenuMusicAsync()
     {
-        _gameMenuMusic.Stop();
+        await StopPlayingMusicWithFadeAsync(_gameMenuMusic);
+    }
+
+    private async static Task StartPlayingMusicWithFadeAsync(
+        SoundEffectInstance music, double musicDurationMs, float musicMaxVolume, float playingDurationPercentage)
+    {
+        var playingDurationMs = musicDurationMs * playingDurationPercentage / 100;
+
+        music.Play();
+
+        while (music.Volume < musicMaxVolume)
+        {
+            var newVolume = music.Volume + FadeValue;
+            newVolume = newVolume > musicMaxVolume ? musicMaxVolume : newVolume;
+
+            music.Volume = newVolume;
+
+            await Task.Delay(FadeDelayMs);
+        }
+
+        await Task.Delay((int)playingDurationMs);
+
+        await StopPlayingMusicWithFadeAsync(music);
+    }
+
+    private async static Task StopPlayingMusicWithFadeAsync(SoundEffectInstance music)
+    {
+        while (music.Volume > FadeValue)
+        {
+            var newVolume = music.Volume - FadeValue;
+            newVolume = newVolume < 0 ? 0 : newVolume;
+
+            music.Volume = newVolume;
+
+            await Task.Delay(FadeDelayMs);
+        }
+
+        music.Stop();
     }
 }
