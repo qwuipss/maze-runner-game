@@ -2,6 +2,7 @@
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
 
 namespace MazeRunner.Sprites.States;
 
@@ -10,6 +11,10 @@ public class GuardAttackState : GuardBaseState
     private const double AttackDelayMs = 550;
 
     private bool _isAttacking;
+
+    public static event Action AttackMissedNotify;
+
+    public static event Action AttackHitNotify;
 
     public GuardAttackState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
@@ -66,11 +71,18 @@ public class GuardAttackState : GuardBaseState
 
     private void DamageHeroIfNeeded()
     {
-        if (!Hero.IsDead
-         && !Hero.IsTakingDamage
-         && Vector2.Distance(Hero.Position, Guard.Position) < Guard.AttackDistance * 1.25)
+        if (!Hero.IsDead && !Hero.IsTakingDamage)
         {
-            Hero.TakeDamage(Guard.Damage);
+            if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.ElongatedAttackDistance)
+            {
+                AttackHitNotify.Invoke();
+
+                Hero.TakeDamage(Guard.Damage);
+            }
+            else
+            {
+                AttackMissedNotify.Invoke();
+            }
         }
     }
 

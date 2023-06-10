@@ -32,15 +32,15 @@ public class GameMenuState : GameBaseState
 
                 MazeDeadEndsRemovePercentage = 55,
 
-                MazeBayonetTrapInsertingPercentage = 2,
+                MazeBayonetTrapInsertingPercentage = 5, //2
                 MazeDropTrapInsertingPercentage = 1.25f,
 
-                GuardSpawnCount = 0,
+                GuardSpawnCount = 2,
 
                 ChalksInsertingPercentage = 1,
                 FoodInsertingPercentage = .75f,
 
-                HeroHealth = 5,
+                HeroHealth = 500, //5
                 ChalkUses = 10,
             });
 
@@ -84,9 +84,11 @@ public class GameMenuState : GameBaseState
         }
     }
 
-    public override event Action<IGameState> ControlGiveUpNotify;
-
     private static Texture2D _cameraEffect;
+
+    public static event Action MenuTransferedNotify;
+
+    public static event Action MenuLeavedNotify;
 
     private Lazy<GameParameters> _difficulty;
 
@@ -101,6 +103,13 @@ public class GameMenuState : GameBaseState
     private RadioButtonContainer _difficultySelectButtonsContainer;
 
     private HashSet<MazeRunnerGameComponent> _components;
+
+    public override event Action<IGameState> ControlGiveUpNotify;
+
+    public GameMenuState()
+    {
+        MenuTransferedNotify.Invoke();
+    }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
@@ -282,7 +291,11 @@ public class GameMenuState : GameBaseState
 
         Shadower = new EffectsHelper.Shadower(false);
 
-        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameRunningState(_difficulty.Value));
+        Shadower.TresholdReached += () =>
+        {
+            MenuLeavedNotify.Invoke();
+            ControlGiveUpNotify.Invoke(new GameRunningState(_difficulty.Value));
+        };
     }
 
     private void InitializeShadower()

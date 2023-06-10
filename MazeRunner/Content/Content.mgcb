@@ -620,6 +620,30 @@
 /processorParam:Quality=Best
 /build:sounds/buttons/radioButton.wav
 
+#begin sounds/music/gameMenuMusic.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/music/gameMenuMusic.wav
+
+#begin sounds/music/gameRunningMusic.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/music/gameRunningMusic.wav
+
+#begin sounds/notifiers/chalkCollecting.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/notifiers/chalkCollecting.wav
+
+#begin sounds/notifiers/chalkDrawing.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/notifiers/chalkDrawing.wav
+
 #begin sounds/notifiers/foodEaten.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -631,6 +655,24 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sounds/notifiers/keyCollected.wav
+
+#begin sounds/sprites/guard/attackHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/guard/attackHit.wav
+
+#begin sounds/sprites/guard/attackMissed.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/guard/attackMissed.wav
+
+#begin sounds/sprites/hero/run.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/hero/run.wav
 
 #begin sprites/guard/attack.png
 /importer:TextureImporter

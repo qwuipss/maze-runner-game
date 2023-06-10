@@ -39,7 +39,7 @@ public class HeroIdleState : HeroBaseState
             return new HeroRunState(this, Hero, Maze);
         }
 
-        HandleChalkCrossDrawing(gameTime);
+        HandleChalkDrawing(gameTime);
 
         base.ProcessState(gameTime);
 

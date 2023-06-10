@@ -10,7 +10,6 @@ using MazeRunner.Sprites;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -61,6 +60,10 @@ public class GameRunningState : GameBaseState
 
     public const int UpdateAreaHeightRadius = 5;
 
+    public static event Action GameStartedNotify;
+
+    public static event Action GameOveredNotify;
+
     public override event Action<IGameState> ControlGiveUpNotify;
 
     private static Texture2D _cameraEffect;
@@ -87,6 +90,8 @@ public class GameRunningState : GameBaseState
 
     private List<MazeRunnerGameComponent> _deadGameComponents;
 
+    private HashSet<Enemy> _pendingDisposeEnemies;
+
     private Lazy<HeroCameraEffectDecreaser> _cameraEffectDecreaser;
 
     public GameParameters GameParameters { get; init; }
@@ -102,6 +107,8 @@ public class GameRunningState : GameBaseState
         GameParameters = gameParameters;
 
         IsControlling = true;
+
+        GameStartedNotify.Invoke();
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
@@ -182,6 +189,8 @@ public class GameRunningState : GameBaseState
 
         ProcessGameWin();
 
+        MarkPendingDisposeEnemiesAsDead();
+
         HandleSecondaryButtons(gameTime);
 
         RespawnEnemies();
@@ -191,7 +200,7 @@ public class GameRunningState : GameBaseState
     private void InitializeComponents()
     {
         _respawnEnemies = new List<Enemy>();
-
+        _pendingDisposeEnemies = new HashSet<Enemy>();
         _deadGameComponents = new List<MazeRunnerGameComponent>();
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>
@@ -241,7 +250,7 @@ public class GameRunningState : GameBaseState
 
         void InsertItems()
         {
-            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.PlayFoodEatenSound); //
+            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.PlayChalkCollectingSound); //
             MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage, SoundManager.PlayFoodEatenSound);
         }
 
@@ -258,6 +267,12 @@ public class GameRunningState : GameBaseState
             Hero.Initialize(_maze);
 
             Hero.Position = position;
+
+            HeroBaseState.HeroDrewWithChalkNotify += SoundManager.PlayChalkDrawingSound;
+            HeroRunState.HeroBeganRunningNotify += SoundManager.PlayHeroRunSound;
+            HeroRunState.HeroFinishedRunningNotify += SoundManager.PausePlayingHeroRunSound;
+            GuardAttackState.AttackHitNotify += SoundManager.PlayGuardAttackHitSound;
+            GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
         }
 
         void CreateHero()
@@ -295,7 +310,7 @@ public class GameRunningState : GameBaseState
 
                 _enemies.Add(guard);
 
-                guard.EnemyDiedNotify += () => AddEnemyToRespawnList(CreateGuard());
+                guard.EnemyDiedNotify += () => AddEnemyToDisposeList(guard);
             }
         }
 
@@ -402,6 +417,33 @@ public class GameRunningState : GameBaseState
         _deadGameComponents.Clear();
     }
 
+    private void MarkPendingDisposeEnemiesAsDead()
+    {
+        if (_pendingDisposeEnemies.Count is 0)
+        {
+            return;
+        }
+
+        var deadComponentsCount = _deadGameComponents.Count;
+
+        foreach (var enemy in _pendingDisposeEnemies)
+        {
+            var distance = Vector2.Distance(enemy.Position, Hero.Position);
+
+            if (distance > GameRules.EnemyDisposeDistance)
+            {
+                _deadGameComponents.Add(enemy);
+
+                AddEnemyToRespawnList(enemy);
+            }
+        }
+
+        for (int i = deadComponentsCount; i < _deadGameComponents.Count; i++)
+        {
+            _pendingDisposeEnemies.Remove((Enemy)_deadGameComponents[i]);
+        }
+    }
+
     private void AddEnemyToRespawnList(Enemy enemy)
     {
         if (enemy is Guard)
@@ -412,6 +454,11 @@ public class GameRunningState : GameBaseState
         {
             throw new NotImplementedException();
         }
+    }
+
+    private void AddEnemyToDisposeList(Enemy enemy)
+    {
+        _pendingDisposeEnemies.Add(enemy);
     }
 
     private void RespawnEnemies()
@@ -431,13 +478,9 @@ public class GameRunningState : GameBaseState
 
     private void HandleSecondaryButtons(GameTime gameTime)
     {
-        var keyboardState = Keyboard.GetState();
-
         if (KeyboardManager.IsGamePauseSwitched(gameTime))
         {
-            ControlGiveUpNotify.Invoke(new GamePausedState(this));
-
-            ControlGiveUpNotify = null;
+            PauseGame();
         }
     }
 
@@ -459,9 +502,16 @@ public class GameRunningState : GameBaseState
             {
                 _staticComponents.Clear();
 
-                ControlGiveUpNotify.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
+                FinishGame();
             }
         }
+    }
+
+    private void PauseGame()
+    {
+        ControlGiveUpNotify.Invoke(new GamePausedState(this));
+
+        ControlGiveUpNotify = null;
     }
 
     private void WonGame()
@@ -470,7 +520,17 @@ public class GameRunningState : GameBaseState
 
         NeedShadowerActivate = true;
 
-        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameWonState());
+        Shadower.TresholdReached += () =>
+        {
+            GameOveredNotify.Invoke();
+            ControlGiveUpNotify.Invoke(new GameWonState());
+        };
+    }
+
+    private void FinishGame()
+    {
+        GameOveredNotify.Invoke();
+        ControlGiveUpNotify.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
     }
 
     private void ProcessGameWin()

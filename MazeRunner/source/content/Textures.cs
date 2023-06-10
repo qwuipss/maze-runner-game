@@ -12,12 +12,17 @@ public static class Textures
         private const string ContentDirectory = "tiles";
 
         public static Texture2D Floor_1 { get; private set; }
+
         public static Texture2D Floor_2 { get; private set; }
+
         public static Texture2D Floor_3 { get; private set; }
+
         public static Texture2D Floor_4 { get; private set; }
 
         public static Texture2D Wall_1 { get; private set; }
+
         public static Texture2D Wall_2 { get; private set; }
+
         public static Texture2D Wall_3 { get; private set; }
 
         public static Texture2D Exit { get; private set; }
@@ -43,8 +48,11 @@ public static class Textures
                 private const string ContentDirectory = $"{MazeItems.ContentDirectory}/food";
 
                 public static Texture2D Apple { get; private set; }
+
                 public static Texture2D Bread { get; private set; }
+
                 public static Texture2D Potato { get; private set; }
+
                 public static Texture2D Tomato { get; private set; }
 
                 public static void Load(Game game)
@@ -61,8 +69,11 @@ public static class Textures
                 private const string ContentDirectory = $"{MazeItems.ContentDirectory}/chalk";
 
                 public static Texture2D Chalk_1 { get; private set; }
+
                 public static Texture2D Chalk_2 { get; private set; }
+
                 public static Texture2D Chalk_3 { get; private set; }
+
                 public static Texture2D Chalk_4 { get; private set; }
 
                 public static void Load(Game game)
@@ -96,8 +107,11 @@ public static class Textures
                 private const string ContentDirectory = $"{MazeMarks.ContentDirectory}/chalk";
 
                 public static Texture2D Cross_1 { get; private set; }
+
                 public static Texture2D Cross_2 { get; private set; }
+
                 public static Texture2D Cross_3 { get; private set; }
+
                 public static Texture2D Cross_4 { get; private set; }
 
                 public static void Load(Game game)
@@ -145,9 +159,13 @@ public static class Textures
             private const string ContentDirectory = $"{Sprites.ContentDirectory}/hero";
 
             public static Texture2D Idle { get; private set; }
+
             public static Texture2D Run { get; private set; }
+
             public static Texture2D DamageTaking { get; private set; }
+
             public static Texture2D Dead { get; private set; }
+
             public static Texture2D Fall { get; private set; }
 
             public static void Load(Game game)
@@ -165,9 +183,13 @@ public static class Textures
             private const string ContentDirectory = $"{Sprites.ContentDirectory}/guard";
 
             public static Texture2D Idle { get; private set; }
+
             public static Texture2D Run { get; private set; }
+
             public static Texture2D Attack { get; private set; }
+
             public static Texture2D Dead { get; private set; }
+
             public static Texture2D Fall { get; private set; }
 
             public static void Load(Game game)
@@ -200,7 +222,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/start";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -216,7 +240,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/menu";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -232,7 +258,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/restart";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -248,7 +276,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/resume";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -264,7 +294,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/quit";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -280,7 +312,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/easy";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -296,7 +330,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/normal";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -312,7 +348,9 @@ public static class Textures
                 private const string ContentDirectory = $"{Buttons.ContentDirectory}/difficulty/hard";
 
                 public static Texture2D Idle { get; private set; }
+
                 public static Texture2D Hover { get; private set; }
+
                 public static Texture2D Click { get; private set; }
 
                 public static void Load(Game game)
@@ -342,6 +380,7 @@ public static class Textures
             private const string ContentDirectory = $"{Gui.ContentDirectory}/stateShowers";
 
             public static Texture2D Heart { get; private set; }
+
             public static Texture2D Chalk { get; private set; }
 
             public static void Load(Game game)

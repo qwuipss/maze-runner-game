@@ -2,6 +2,7 @@
 using MazeRunner.Drawing;
 using MazeRunner.GameBase.States;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -25,10 +26,26 @@ public class MazeRunnerGame : Game
 
     protected override void Initialize()
     {
+        void InitializeShadower()
+        {
+            var viewport = GraphicsDevice.Viewport;
+
+            var width = viewport.Width;
+            var height = viewport.Height;
+
+            EffectsHelper.Shadower.InitializeBlackBackground(width, height, GraphicsDevice);
+        }
+
+        void InitializeDrawer()
+        {
+            Drawer.Initialize(this);
+        }
+
         base.Initialize();
 
-        SetFullScreen();
+        //SetFullScreen();
         InitializeDrawer();
+        InitializeMusic();
         InitializeShadower();
 
         _gameState = new GameMenuState();
@@ -61,6 +78,15 @@ public class MazeRunnerGame : Game
         base.Draw(gameTime);
     }
 
+    private static void InitializeMusic()
+    {
+        GameMenuState.MenuTransferedNotify += SoundManager.PlayGameMenuMusic;
+        GameMenuState.MenuLeavedNotify += SoundManager.StopPlayingGameMenuMusic;
+
+        GameRunningState.GameStartedNotify += SoundManager.PlayGameRunningMusic;
+        GameRunningState.GameOveredNotify += SoundManager.StopPlayingGameRunningMusic;
+    }
+
     private void SetFullScreen()
     {
         _graphics.IsFullScreen = true;
@@ -71,10 +97,6 @@ public class MazeRunnerGame : Game
         _graphics.ApplyChanges();
     }
 
-    private void InitializeDrawer()
-    {
-        Drawer.Initialize(this);
-    }
 
     private void ControlGiveUpHandler(IGameState gameState)
     {
@@ -83,15 +105,5 @@ public class MazeRunnerGame : Game
         _gameState.Initialize(GraphicsDevice, this);
 
         _gameState.ControlGiveUpNotify += ControlGiveUpHandler;
-    }
-
-    private void InitializeShadower()
-    {
-        var viewport = GraphicsDevice.Viewport;
-
-        var width = viewport.Width;
-        var height = viewport.Height;
-
-        EffectsHelper.Shadower.InitializeBlackBackground(width, height, GraphicsDevice);
     }
 }

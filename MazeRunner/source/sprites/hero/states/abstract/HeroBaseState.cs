@@ -8,6 +8,8 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class HeroBaseState : SpriteBaseState
 {
+    public static event Action HeroDrewWithChalkNotify;
+
     protected Hero Hero { get; set; }
 
     protected Maze Maze { get; set; }
@@ -69,7 +71,7 @@ public abstract class HeroBaseState : SpriteBaseState
         return Vector2.Zero;
     }
 
-    protected void HandleChalkCrossDrawing(GameTime gameTime)
+    protected void HandleChalkDrawing(GameTime gameTime)
     {
         if (Hero.ChalkUses > 0 && KeyboardManager.IsChalkDrawingButtonPressed(gameTime))
         {
@@ -85,6 +87,8 @@ public abstract class HeroBaseState : SpriteBaseState
                 Maze.InsertMark(mark, cell);
 
                 Hero.ChalkUses--;
+
+                HeroDrewWithChalkNotify.Invoke();
             }
         }
     }

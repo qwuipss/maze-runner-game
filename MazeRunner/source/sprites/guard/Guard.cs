@@ -18,6 +18,12 @@ public class Guard : Enemy
 
     private const float AttackDistanceCoeff = .85f;
 
+    public const float AttackDistance = AttackDistanceCoeff * GameConstants.AssetsFrameSize;
+
+    public const float ElongatedAttackDistance = AttackDistance * 1.25f;
+
+    public static int Damage => 1;
+
     private float _drawingPriority;
 
     public override event Action EnemyDiedNotify;
@@ -25,10 +31,6 @@ public class Guard : Enemy
     public override bool IsDead => State is GuardDeadState or GuardFalledState or GuardFallingState or GuardDyingState;
 
     public override float DrawingPriority => _drawingPriority;
-
-    public int Damage => 1;
-
-    public float AttackDistance => AttackDistanceCoeff * GameConstants.AssetsFrameSize;
 
     public override Vector2 Speed => new(15, 15);
 
