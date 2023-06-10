@@ -21,7 +21,7 @@ public class HeroDyingState : HeroDeathBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new HeroDeadState(this, Hero, Maze);
+                return new HeroDiedState(this, Hero, Maze);
             }
 
             var framePosX = animationPoint.X + FrameSize;

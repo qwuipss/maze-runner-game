@@ -18,7 +18,7 @@ public class Hero : Sprite
 
     private Maze _maze;
 
-    public override bool IsDead => State is HeroDeadState or HeroFalledState or HeroFallingState or HeroDyingState;
+    public override bool IsDead => State is HeroDiedState or HeroFellState or HeroFallingState or HeroDyingState;
 
     public override Vector2 Speed => new(40, 40);
 

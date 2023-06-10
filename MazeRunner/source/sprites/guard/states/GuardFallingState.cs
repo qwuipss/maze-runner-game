@@ -21,7 +21,7 @@ public class GuardFallingState : GuardFallBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new GuardFalledState(this, Hero, Guard, Maze);
+                return new GuardFellState(this, Hero, Guard, Maze);
             }
 
             var framePosX = animationPoint.X + FrameSize;

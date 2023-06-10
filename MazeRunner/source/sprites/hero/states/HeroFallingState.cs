@@ -21,7 +21,7 @@ public class HeroFallingState : HeroFallBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new HeroFalledState(this, Hero, Maze);
+                return new HeroFellState(this, Hero, Maze);
             }
 
             var framePosX = animationPoint.X + FrameSize;

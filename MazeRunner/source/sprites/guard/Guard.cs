@@ -28,7 +28,7 @@ public class Guard : Enemy
 
     public override event Action EnemyDiedNotify;
 
-    public override bool IsDead => State is GuardDeadState or GuardFalledState or GuardFallingState or GuardDyingState;
+    public override bool IsDead => State is GuardDiedState or GuardFellState or GuardFallingState or GuardDyingState;
 
     public override float DrawingPriority => _drawingPriority;
 

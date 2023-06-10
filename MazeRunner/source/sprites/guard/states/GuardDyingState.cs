@@ -21,7 +21,7 @@ public class GuardDyingState : GuardDeathBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new GuardDeadState(this, Hero, Guard, Maze);
+                return new GuardDiedState(this, Hero, Guard, Maze);
             }
 
             var framePosX = animationPoint.X + FrameSize;

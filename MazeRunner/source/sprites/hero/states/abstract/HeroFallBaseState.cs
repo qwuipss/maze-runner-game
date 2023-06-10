@@ -7,8 +7,6 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class HeroFallBaseState : HeroBaseState
 {
-    public static event Action HeroFellNotify;
-
     public override Texture2D Texture => Textures.Sprites.Hero.Fall;
 
     public override int FramesCount => 4;

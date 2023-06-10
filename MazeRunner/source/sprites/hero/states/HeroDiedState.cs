@@ -5,13 +5,13 @@ using System;
 
 namespace MazeRunner.Sprites.States;
 
-public class HeroDeadState : HeroDeathBaseState
+public class HeroDiedState : HeroDeathBaseState
 {
     public static event Action HeroDiedNotify;
 
     public override double UpdateTimeDelayMs => double.MaxValue;
 
-    public HeroDeadState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
+    public HeroDiedState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
         var framePosX = (FramesCount - 1) * FrameSize;
 

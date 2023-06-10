@@ -98,8 +98,8 @@ public class MazeRunnerGame : Game
         HeroBaseState.HeroDrewWithChalkNotify += SoundManager.PlayChalkDrawingSound;
         HeroRunState.HeroBeganRunningNotify += SoundManager.PlayHeroRunSound;
         HeroRunState.HeroFinishedRunningNotify += SoundManager.PausePlayingHeroRunSound;
-        //HeroDeathBaseState.HeroDiedNotify += SoundManager.StopPlayingHeroRunSound;
-        HeroFallBaseState.HeroFellNotify += SoundManager.StopPlayingHeroRunSound;
+        HeroDiedState.HeroDiedNotify += SoundManager.StopPlayingHeroRunSound;
+        HeroFellState.HeroFellNotify += SoundManager.StopPlayingHeroRunSound;
         GuardAttackState.AttackHitNotify += SoundManager.PlayGuardAttackHitSound;
         GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
     }
