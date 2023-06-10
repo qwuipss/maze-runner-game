@@ -81,8 +81,7 @@ public class GameWonState : GameBaseState
 
         _menuButton.Position = new Vector2((ViewWidth - _menuButton.Width) / 2, (ViewHeight - _menuButton.Height) / 2);
 
-        _menuButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-        _menuButton.ButtonPressed += GoToMenu;
+        _menuButton.ButtonPressedNotify += GoToMenu;
     }
 
     private void InitializeComponents()

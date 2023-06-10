@@ -5,7 +5,7 @@ namespace MazeRunner.Gui.Buttons;
 
 public class EasyModeSelectRadioButton : RadioButton
 {
-    public override event Action ButtonPressed;
+    public override event Action ButtonPressedNotify;
 
     public EasyModeSelectRadioButton(float boxScale) : base(boxScale)
     {
@@ -16,9 +16,13 @@ public class EasyModeSelectRadioButton : RadioButton
         State = new EasyModeSelectButtonIdleState(this);
     }
 
-    public override void Click()
+    public override void Click(bool notifyAboutPush = true)
     {
-        ButtonPressed.Invoke();
+        if (notifyAboutPush)
+        {
+            ButtonPressedNotify.Invoke();
+        }
+
         IsSelected = true;
     }
 
@@ -27,7 +31,7 @@ public class EasyModeSelectRadioButton : RadioButton
         State = new EasyModeSelectButtonResetState(this);
     }
 
-    public override void Push()
+    public override void Push(bool notifyAboutPush = false)
     {
         Click();
 

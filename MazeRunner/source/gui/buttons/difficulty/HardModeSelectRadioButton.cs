@@ -5,7 +5,7 @@ namespace MazeRunner.Gui.Buttons;
 
 public class HardModeSelectRadioButton : RadioButton
 {
-    public override event Action ButtonPressed;
+    public override event Action ButtonPressedNotify;
 
     public HardModeSelectRadioButton(float boxScale) : base(boxScale)
     {
@@ -16,9 +16,13 @@ public class HardModeSelectRadioButton : RadioButton
         State = new HardModeSelectButtonIdleState(this);
     }
 
-    public override void Click()
+    public override void Click(bool notifyAboutPush = true)
     {
-        ButtonPressed.Invoke();
+        if (notifyAboutPush)
+        {
+            ButtonPressedNotify.Invoke();
+        }
+
         IsSelected = true;
     }
 
@@ -27,7 +31,7 @@ public class HardModeSelectRadioButton : RadioButton
         State = new HardModeSelectButtonResetState(this);
     }
 
-    public override void Push()
+    public override void Push(bool notifyAboutPush = false)
     {
         Click();
 

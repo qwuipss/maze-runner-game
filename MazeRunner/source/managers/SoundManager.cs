@@ -127,6 +127,11 @@ public static class SoundManager
         _heroRun.Pause();
     }
 
+    public static void StopPlayingHeroRunSound()
+    {
+        _heroRun.Stop();
+    }
+
     public static void PlayGuardAttackMissedSound()
     {
         _guardAttackMissed.Play();

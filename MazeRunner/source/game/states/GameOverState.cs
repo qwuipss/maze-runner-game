@@ -87,8 +87,7 @@ public class GameOverState : GameBaseState
 
             _restartButton.Position = new Vector2(ViewWidth / 3 - _restartButton.Width / 2, ViewHeight / 2);
 
-            _restartButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _restartButton.ButtonPressed += RestartGame;
+            _restartButton.ButtonPressedNotify += RestartGame;
         }
 
         void InitializeMenuButton(float scaleDivider)
@@ -101,8 +100,7 @@ public class GameOverState : GameBaseState
 
             _menuButton.Position = new Vector2(2 * ViewWidth / 3 - _menuButton.Width / 2, ViewHeight / 2);
 
-            _menuButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _menuButton.ButtonPressed += GoToMenu;
+            _menuButton.ButtonPressedNotify += GoToMenu;
         }
 
         var buttonsScaleDivider = 360;

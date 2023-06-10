@@ -160,8 +160,7 @@ public class GameMenuState : GameBaseState
 
             _startButton.Position = new Vector2((ViewWidth - _startButton.Width) / 2, (ViewHeight - _startButton.Height) / 2);
 
-            _startButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _startButton.ButtonPressed += StartGame;
+            _startButton.ButtonPressedNotify += StartGame;
         }
 
         void InitializeQuitGameButton(float scaleDivider)
@@ -174,8 +173,7 @@ public class GameMenuState : GameBaseState
 
             _quitButton.Position = new Vector2((ViewWidth - _quitButton.Width) / 2, 5 * ViewHeight / 7 - _quitButton.Height / 2);
 
-            _quitButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _quitButton.ButtonPressed += QuitGame;
+            _quitButton.ButtonPressedNotify += QuitGame;
         }
 
         void InitializeGameDifficultySelectRadioButtons(float scaleDivider, float buttonsOffsetCoeff)
@@ -191,7 +189,7 @@ public class GameMenuState : GameBaseState
                 _startButton.Position.Y + _startButton.Height * buttonsOffsetCoeff);
 
             normalSelectButton.Position = normalSelectButtonPosition;
-            normalSelectButton.ButtonPressed += () => _difficulty = GameModes.Normal;
+            normalSelectButton.ButtonPressedNotify += () => _difficulty = GameModes.Normal;
 
             var easySelectButton = new EasyModeSelectRadioButton(boxScale);
 
@@ -201,8 +199,7 @@ public class GameMenuState : GameBaseState
                 normalSelectButtonPosition.X - easySelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            easySelectButton.ButtonPressed += SoundManager.PlayRadioButtonPressedSound;
-            easySelectButton.ButtonPressed += () => _difficulty = GameModes.Easy;
+            easySelectButton.ButtonPressedNotify += () => _difficulty = GameModes.Easy;
 
             var hardSelectButton = new HardModeSelectRadioButton(boxScale);
 
@@ -212,14 +209,11 @@ public class GameMenuState : GameBaseState
                 normalSelectButtonPosition.X + normalSelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            hardSelectButton.ButtonPressed += SoundManager.PlayRadioButtonPressedSound;
-            hardSelectButton.ButtonPressed += () => _difficulty = GameModes.Hard;
+            hardSelectButton.ButtonPressedNotify += () => _difficulty = GameModes.Hard;
 
             _difficultySelectButtonsContainer = new RadioButtonContainer(easySelectButton, normalSelectButton, hardSelectButton);
 
             normalSelectButton.Push();
-
-            normalSelectButton.ButtonPressed += SoundManager.PlayRadioButtonPressedSound;
         }
 
         var startButtonScaleDivider = 360;

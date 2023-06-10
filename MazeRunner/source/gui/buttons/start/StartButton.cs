@@ -5,7 +5,7 @@ namespace MazeRunner.Gui.Buttons;
 
 public class StartButton : Button
 {
-    public override event Action ButtonPressed;
+    public override event Action ButtonPressedNotify;
 
     public StartButton(float boxScale) : base(boxScale)
     {
@@ -16,8 +16,11 @@ public class StartButton : Button
         State = new StartButtonIdleState(this);
     }
 
-    public override void Click()
+    public override void Click(bool notifyAboutPush = true)
     {
-        ButtonPressed.Invoke();
+        if (notifyAboutPush)
+        {
+            ButtonPressedNotify.Invoke();
+        }
     }
 }

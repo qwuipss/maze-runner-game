@@ -267,12 +267,6 @@ public class GameRunningState : GameBaseState
             Hero.Initialize(_maze);
 
             Hero.Position = position;
-
-            HeroBaseState.HeroDrewWithChalkNotify += SoundManager.PlayChalkDrawingSound;
-            HeroRunState.HeroBeganRunningNotify += SoundManager.PlayHeroRunSound;
-            HeroRunState.HeroFinishedRunningNotify += SoundManager.PausePlayingHeroRunSound;
-            GuardAttackState.AttackHitNotify += SoundManager.PlayGuardAttackHitSound;
-            GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
         }
 
         void CreateHero()

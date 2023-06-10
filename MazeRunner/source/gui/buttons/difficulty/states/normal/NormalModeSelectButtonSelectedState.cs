@@ -11,11 +11,14 @@ public class NormalModeSelectButtonSelectedState : ButtonBaseState
 
     public override int FramesCount => 5;
 
-    public NormalModeSelectButtonSelectedState(Button button) : base(button)
+    public NormalModeSelectButtonSelectedState(Button button, bool notifyAboutPush = true) : base(button)
     {
         if (button is RadioButton radioButton)
         {
-            radioButton.Click();
+            if (notifyAboutPush)
+            {
+                radioButton.Click();
+            }
         }
         else
         {

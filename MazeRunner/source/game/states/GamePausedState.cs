@@ -81,8 +81,7 @@ public class GamePausedState : GameBaseState
 
             _restartButton.Position = new Vector2((ViewWidth - _restartButton.Width) / 2, (ViewHeight - _restartButton.Height) / 2);
 
-            _restartButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _restartButton.ButtonPressed += RestartGame;
+            _restartButton.ButtonPressedNotify += RestartGame;
         }
 
         void InitializeResumeButton(float scaleDivider, float buttonOffsetCoeff)
@@ -97,8 +96,7 @@ public class GamePausedState : GameBaseState
 
             _resumeButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y - _restartButton.Height * buttonOffsetCoeff);
 
-            _resumeButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _resumeButton.ButtonPressed += ResumeGame;
+            _resumeButton.ButtonPressedNotify += ResumeGame;
         }
 
         void InitializeMenuButton(float scaleDivider, float buttonOffsetCoeff)
@@ -113,8 +111,7 @@ public class GamePausedState : GameBaseState
 
             _menuButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y + _restartButton.Height * buttonOffsetCoeff);
 
-            _menuButton.ButtonPressed += SoundManager.PlayButtonPressedSound;
-            _menuButton.ButtonPressed += GoToMenu;
+            _menuButton.ButtonPressedNotify += GoToMenu;
         }
 
         var buttonsScaleDivider = 400;

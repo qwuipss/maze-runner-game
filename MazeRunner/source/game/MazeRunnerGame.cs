@@ -1,8 +1,10 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.GameBase.States;
+using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
+using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -49,7 +51,7 @@ public class MazeRunnerGame : Game
 
         //SetFullScreen();
         InitializeDrawer();
-        InitializeMusic();
+        ApplySounds();
         InitializeShadower();
 
         _gameState = new GameMenuState();
@@ -82,13 +84,24 @@ public class MazeRunnerGame : Game
         base.Draw(gameTime);
     }
 
-    private static void InitializeMusic()
+    private static void ApplySounds()
     {
         GameMenuState.MenuEnteredNotify += async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage());
         GameMenuState.MenuLeavedNotify += async () => await SoundManager.StopPlayingGameMenuMusicAsync();
 
         GameRunningState.GameStartedNotify += async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage());
         GameRunningState.GameOveredNotify += async () => await SoundManager.StopPlayingGameRunningMusicAsync();
+
+        Button.StaticButtonPressedNotify += SoundManager.PlayButtonPressedSound;
+        RadioButton.StaticButtonPressedNotify += SoundManager.PlayRadioButtonPressedSound;
+
+        HeroBaseState.HeroDrewWithChalkNotify += SoundManager.PlayChalkDrawingSound;
+        HeroRunState.HeroBeganRunningNotify += SoundManager.PlayHeroRunSound;
+        HeroRunState.HeroFinishedRunningNotify += SoundManager.PausePlayingHeroRunSound;
+        //HeroDeathBaseState.HeroDiedNotify += SoundManager.StopPlayingHeroRunSound;
+        HeroFallBaseState.HeroFellNotify += SoundManager.StopPlayingHeroRunSound;
+        GuardAttackState.AttackHitNotify += SoundManager.PlayGuardAttackHitSound;
+        GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
     }
 
     private static int GetRandomMusicPlayingPercentage()

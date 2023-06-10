@@ -1,11 +1,14 @@
 ﻿using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
+using System;
 
 namespace MazeRunner.Sprites.States;
 
 public class HeroDeadState : HeroDeathBaseState
 {
+    public static event Action HeroDiedNotify;
+
     public override double UpdateTimeDelayMs => double.MaxValue;
 
     public HeroDeadState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
