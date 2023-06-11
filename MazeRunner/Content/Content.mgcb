@@ -680,6 +680,18 @@
 /processorParam:Quality=Best
 /build:sounds/sprites/hero/run.wav
 
+#begin sounds/transiters/gameOver.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/transiters/gameOver.wav
+
+#begin sounds/transiters/gameWon.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/transiters/gameWon.wav
+
 #begin sprites/guard/attack.png
 /importer:TextureImporter
 /processor:TextureProcessor

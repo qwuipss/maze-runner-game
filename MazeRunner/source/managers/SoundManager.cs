@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Content;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,6 +52,10 @@ public static class SoundManager
 
     private static readonly SoundEffectInstance _guardAttackHit;
 
+    private static readonly SoundEffectInstance _gameWon;
+
+    private static readonly SoundEffectInstance _gameOvered;
+
     private static readonly SoundEffectInstance _gameMenuMusic;
 
     private static readonly SoundEffectInstance _gameRunningMusic;
@@ -74,7 +77,7 @@ public static class SoundManager
         _radioButtonPressed.Volume = .2f;
 
         _keyCollected = Sounds.Notifiers.KeyCollected.CreateInstance();
-        _keyCollected.Volume = .15f;
+        _keyCollected.Volume = .05f;
 
         _foodEaten = Sounds.Notifiers.FoodEaten.CreateInstance();
         _foodEaten.Volume = .3f;
@@ -91,6 +94,12 @@ public static class SoundManager
 
         _heroGetHit = Sounds.Sprites.Hero.GetHit.CreateInstance();
         _heroGetHit.Volume = .1f;
+
+        _gameWon = Sounds.Transiters.GameWon.CreateInstance();
+        _gameWon.Volume = .1f;
+
+        _gameOvered = Sounds.Transiters.GameOvered.CreateInstance();
+        _gameOvered.Volume = .15f;
 
         _guardAttackMissed = Sounds.Sprites.Guard.AttackMissed.CreateInstance();
         _guardAttackMissed.Volume = .1f;
@@ -131,6 +140,16 @@ public static class SoundManager
         _foodEaten.Play();
     }
 
+    public static void PlayGameWonSound()
+    {
+        _gameWon.Play();
+    }
+
+    public static void PlayGameOveredSound()
+    {
+        _gameOvered.Play();
+    }
+
     public static void PlayChalkDrawingSound()
     {
         _chalkDrawing.Play();
@@ -169,6 +188,29 @@ public static class SoundManager
     public static void PlayHeroGetHitSound()
     {
         _heroGetHit.Play();
+    }
+
+    public static void ChangeGameRunningMusicVolume(float changePercentage)
+    {
+        if (changePercentage is 0)
+        {
+            return;
+        }
+
+        var volumeChange = _gameRunningMusic.Volume * changePercentage / 100;
+
+        var newVolume = _gameRunningMusic.Volume + volumeChange;
+
+        if (changePercentage < 0)
+        {
+            newVolume = newVolume < 0 ? 0 : newVolume;
+        }
+        else
+        {
+            newVolume = newVolume > _gameRunningMusicMaxVolume ? _gameRunningMusicMaxVolume : newVolume;
+        }
+
+        _gameRunningMusic.Volume = newVolume;
     }
 
     public async static Task PlayGameRunningMusicAsync(float playingDurationPercentage, CancellationToken cancellationToken)

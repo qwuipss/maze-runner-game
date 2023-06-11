@@ -99,11 +99,27 @@ public static class Sounds
         }
     }
 
+    public static class Transiters
+    {
+        private const string ContentDirectory = $"{BaseContentDirectory}/transiters";
+
+        public static SoundEffect GameWon { get; private set; }
+
+        public static SoundEffect GameOvered { get; private set; }
+
+        public static void Load(Game game)
+        {
+            GameWon = game.Content.Load<SoundEffect>($"{ContentDirectory}/gameWon");
+            GameOvered = game.Content.Load<SoundEffect>($"{ContentDirectory}/gameOver");
+        }
+    }
+
     public static void Load(Game game)
     {
         Buttons.Load(game);
         Notifiers.Load(game);
         Sprites.Load(game);
         Music.Load(game);
+        Transiters.Load(game);
     }
 }

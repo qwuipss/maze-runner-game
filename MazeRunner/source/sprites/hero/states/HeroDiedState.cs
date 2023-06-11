@@ -11,9 +11,9 @@ public class HeroDiedState : HeroDeathBaseState
 
     public override double UpdateTimeDelayMs => double.MaxValue;
 
-    public HeroDiedState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
+    public HeroDiedState(ISpriteState previousState, Hero hero, Maze maze, bool needNotifyingAboutDead) : base(previousState, hero, maze)
     {
-        if (previousState is HeroRunState)
+        if (needNotifyingAboutDead)
         {
             HeroDiedNotify.Invoke();
         }

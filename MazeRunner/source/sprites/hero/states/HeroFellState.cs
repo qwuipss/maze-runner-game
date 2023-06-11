@@ -10,9 +10,9 @@ public class HeroFellState : HeroFallBaseState
 
     public override double UpdateTimeDelayMs => double.MaxValue;
 
-    public HeroFellState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
+    public HeroFellState(ISpriteState previousState, Hero hero, Maze maze, bool needNotifyingAboutFall) : base(previousState, hero, maze)
     {
-        if (previousState is HeroRunState)
+        if (needNotifyingAboutFall)
         {
             HeroFellNotify.Invoke();
         }

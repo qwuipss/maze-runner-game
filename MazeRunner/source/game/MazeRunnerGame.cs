@@ -7,7 +7,6 @@ using MazeRunner.Managers;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase;
@@ -89,13 +88,26 @@ public class MazeRunnerGame : Game
     private static void ApplySounds()
     {
         var gameMenuMusicBreaker = new SoundManager.MusicBreaker();
-        GameMenuState.MenuEnteredNotify += 
+        GameMenuState.MenuEnteredNotify +=
             async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage(), gameMenuMusicBreaker.CancellationToken);
         GameMenuState.MenuLeavedNotify += gameMenuMusicBreaker.StopMusic;
 
         var gameRunningMusicBreaker = new SoundManager.MusicBreaker();
-        GameRunningState.GameStartedNotify += 
+        GameRunningState.GameStartedNotify +=
             async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage(), gameRunningMusicBreaker.CancellationToken);
+
+        GameRunningState.GameOveredNotify += SoundManager.PlayGameOveredSound;
+        GameRunningState.GameWonNotify += () =>
+        {
+            gameRunningMusicBreaker.StopMusic();
+            SoundManager.PlayGameWonSound();
+        };
+
+        GameOverState.GameMenuReturnedNotify += gameRunningMusicBreaker.StopMusic;
+
+        GamePausedState.GamePausedNotify += () => SoundManager.ChangeGameRunningMusicVolume(-50);
+        GamePausedState.GameResumedNotify += () => SoundManager.ChangeGameRunningMusicVolume(100);
+        GamePausedState.GameMenuReturnedNotify += gameRunningMusicBreaker.StopMusic;
 
         Button.StaticButtonPressedNotify += SoundManager.PlayButtonPressedSound;
         RadioButton.StaticButtonPressedNotify += SoundManager.PlayRadioButtonPressedSound;

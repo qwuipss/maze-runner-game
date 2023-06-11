@@ -3,7 +3,6 @@ using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
-using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;

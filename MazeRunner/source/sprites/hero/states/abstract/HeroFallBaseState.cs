@@ -1,7 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace MazeRunner.Sprites.States;
 

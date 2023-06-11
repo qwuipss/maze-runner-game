@@ -3,7 +3,6 @@ using MazeRunner.Components;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
-using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
@@ -13,6 +12,8 @@ namespace MazeRunner.GameBase.States;
 
 public class GameOverState : GameBaseState
 {
+    public static event Action GameMenuReturnedNotify;
+
     public override event Action<IGameState> ControlGiveUpNotify;
 
     private readonly GameRunningState _runningState;
@@ -136,8 +137,10 @@ public class GameOverState : GameBaseState
 
     private void GoToMenu()
     {
-        NeedShadowerActivate = true;
-
         Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameMenuState());
+
+        GameMenuReturnedNotify.Invoke();
+
+        NeedShadowerActivate = true;
     }
 }

@@ -62,6 +62,8 @@ public class GameRunningState : GameBaseState
 
     public static event Action GameStartedNotify;
 
+    public static event Action GameWonNotify;
+
     public static event Action GameOveredNotify;
 
     public override event Action<IGameState> ControlGiveUpNotify;
@@ -516,13 +518,14 @@ public class GameRunningState : GameBaseState
 
         Shadower.TresholdReached += () =>
         {
-            GameOveredNotify.Invoke();
+            GameWonNotify.Invoke();
             ControlGiveUpNotify.Invoke(new GameWonState());
         };
     }
 
     private void OverGame()
     {
+        GameOveredNotify.Invoke();
         ControlGiveUpNotify.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
     }
 

@@ -5,10 +5,13 @@ namespace MazeRunner.Sprites.States;
 
 public class HeroFallingState : HeroFallBaseState
 {
+    private readonly ISpriteState _previousState;
+
     public override double UpdateTimeDelayMs => 75;
 
     public HeroFallingState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
+        _previousState = previousState;
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
@@ -21,7 +24,7 @@ public class HeroFallingState : HeroFallBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new HeroFellState(this, Hero, Maze);
+                return new HeroFellState(this, Hero, Maze, _previousState is HeroRunState);
             }
 
             var framePosX = animationPoint.X + FrameSize;

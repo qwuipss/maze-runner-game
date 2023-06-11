@@ -4,7 +4,6 @@ using MazeRunner.Drawing;
 using MazeRunner.Drawing.Writers;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
-using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
