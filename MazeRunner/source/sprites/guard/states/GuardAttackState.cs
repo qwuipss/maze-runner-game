@@ -8,16 +8,17 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardAttackState : GuardBaseState
 {
-    private const double AttackDelayMs = 550;
+    public const double AttackDelayMs = 550;
 
-    private bool _isAttacking;
+    private bool _isAttackOnCooldown;
 
     public static event Action AttackMissedNotify;
 
     public static event Action AttackHitNotify;
 
-    public GuardAttackState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
+    public GuardAttackState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isOnCooldown) : base(previousState, hero, guard, maze)
     {
+        _isAttackOnCooldown = isOnCooldown;
     }
 
     public override Texture2D Texture => Textures.Sprites.Guard.Attack;
@@ -35,14 +36,14 @@ public class GuardAttackState : GuardBaseState
 
         ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
-        if (!_isAttacking && ElapsedGameTimeMs > AttackDelayMs)
+        if (_isAttackOnCooldown && ElapsedGameTimeMs > AttackDelayMs)
         {
-            _isAttacking = true;
+            _isAttackOnCooldown = false;
 
             ElapsedGameTimeMs -= AttackDelayMs;
         }
 
-        if (_isAttacking)
+        if (!_isAttackOnCooldown)
         {
             ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
 
@@ -71,7 +72,7 @@ public class GuardAttackState : GuardBaseState
 
     private void DamageHeroIfNeeded()
     {
-        if (!Hero.IsDead)// && !Hero.IsTakingDamage)
+        if (!Hero.IsDead && !Hero.IsTakingDamage)
         {
             if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.ElongatedAttackDistance)
             {

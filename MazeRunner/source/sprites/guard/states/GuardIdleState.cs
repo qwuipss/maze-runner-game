@@ -8,6 +8,10 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardIdleState : GuardBaseState
 {
+    private readonly ISpriteState _previousState;
+
+    private bool IsAttackOnCooldown => _previousState is GuardAttackState;
+
     public override Texture2D Texture => Textures.Sprites.Guard.Idle;
 
     public override int FramesCount => 4;
@@ -16,6 +20,7 @@ public class GuardIdleState : GuardBaseState
 
     public GuardIdleState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
+        _previousState = previousState;
     }
 
     public GuardIdleState(Hero hero, Guard guard, Maze maze) : this(null, hero, guard, maze)
@@ -36,10 +41,12 @@ public class GuardIdleState : GuardBaseState
 
         if (IsHeroNearby(out var _))
         {
-            return new GuardChaseState(this, Hero, Guard, Maze);
+            return new GuardChaseState(this, Hero, Guard, Maze, IsAttackOnCooldown);
         }
 
-        ElapsedGameTimeMs += gameTime.ElapsedGameTime.TotalMilliseconds;
+        var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;
+
+        ElapsedGameTimeMs += elapsedTime;
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {

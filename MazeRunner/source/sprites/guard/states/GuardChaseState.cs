@@ -5,12 +5,28 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardChaseState : GuardMoveBaseState
 {
-    public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
+    private bool _isAttackOnCooldown;
+
+    private double _elapsedTimeCounter;
+
+    public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isAttackOnCooldown = false) 
+        : base(previousState, hero, guard, maze)
     {
+        _isAttackOnCooldown = isAttackOnCooldown;
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
+        if (_isAttackOnCooldown)
+        {
+            _elapsedTimeCounter += gameTime.ElapsedGameTime.TotalMilliseconds;
+
+            if (_elapsedTimeCounter > GuardAttackState.AttackDelayMs)
+            {
+                _isAttackOnCooldown = false;
+            }
+        }
+
         if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);
@@ -23,7 +39,7 @@ public class GuardChaseState : GuardMoveBaseState
 
         if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.AttackDistance)
         {
-            return new GuardAttackState(this, Hero, Guard, Maze);
+            return new GuardAttackState(this, Hero, Guard, Maze, _isAttackOnCooldown);
         }
 
         var direction = GetMovementDirection(pathToHero);
