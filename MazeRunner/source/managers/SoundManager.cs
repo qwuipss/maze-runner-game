@@ -8,11 +8,30 @@ namespace MazeRunner.Managers;
 
 public static class SoundManager
 {
+    public class MusicBreaker
+    {
+        private CancellationTokenSource _cancellationTokenSource;
+
+        public CancellationToken CancellationToken => _cancellationTokenSource.Token;
+
+        public MusicBreaker()
+        {
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+
+        public void StopMusic()
+        {
+            _cancellationTokenSource.Cancel();
+
+            _cancellationTokenSource = new CancellationTokenSource();
+        }
+    }
+
     private const int FadeDelayMs = 250;
 
     private const float FadeValue = .05f;
 
-    private const float GameMenuMusicMaxVolume = .25f;
+    public const int PauseDelayMs = 125;
 
     private static readonly SoundEffectInstance _buttonPressed;
 
@@ -27,6 +46,8 @@ public static class SoundManager
     private static readonly SoundEffectInstance _chalkCollecting;
 
     private static readonly SoundEffectInstance _heroRun;
+
+    private static readonly SoundEffectInstance _heroGetHit;
 
     private static readonly SoundEffectInstance _guardAttackMissed;
 
@@ -67,6 +88,9 @@ public static class SoundManager
         _heroRun = Sounds.Sprites.Hero.Run.CreateInstance();
         _heroRun.Volume = .1f;
         _heroRun.IsLooped = true;
+
+        _heroGetHit = Sounds.Sprites.Hero.GetHit.CreateInstance();
+        _heroGetHit.Volume = .1f;
 
         _guardAttackMissed = Sounds.Sprites.Guard.AttackMissed.CreateInstance();
         _guardAttackMissed.Volume = .1f;
@@ -142,28 +166,25 @@ public static class SoundManager
         _guardAttackHit.Play();
     }
 
-    public async static Task PlayGameRunningMusicAsync(float playingDurationPercentage)
+    public static void PlayHeroGetHitSound()
     {
-        await StartPlayingMusicWithFadeAsync(_gameRunningMusic, _gameRunningMusicDurationMs, _gameRunningMusicMaxVolume, playingDurationPercentage);
+        _heroGetHit.Play();
     }
 
-    public static async Task StopPlayingGameRunningMusicAsync()
+    public async static Task PlayGameRunningMusicAsync(float playingDurationPercentage, CancellationToken cancellationToken)
     {
-        await StopPlayingMusicWithFadeAsync(_gameRunningMusic);
+        await StartPlayingMusicWithFadeAsync(
+            _gameRunningMusic, _gameRunningMusicDurationMs, _gameRunningMusicMaxVolume, playingDurationPercentage, cancellationToken);
     }
 
-    public async static Task PlayGameMenuMusicAsync(float playingDurationPercentage)
+    public async static Task PlayGameMenuMusicAsync(float playingDurationPercentage, CancellationToken cancellationToken)
     {
-        await StartPlayingMusicWithFadeAsync(_gameMenuMusic, _gameMenuMusicDurationMs, _gameMenuMusicMaxVolume, playingDurationPercentage);
+        await StartPlayingMusicWithFadeAsync(
+            _gameMenuMusic, _gameMenuMusicDurationMs, _gameMenuMusicMaxVolume, playingDurationPercentage, cancellationToken);
     }
-
-    public async static Task StopPlayingGameMenuMusicAsync()
-    {
-        await StopPlayingMusicWithFadeAsync(_gameMenuMusic);
-    }
-
+    static readonly Semaphore locker = new(1, 1);
     private async static Task StartPlayingMusicWithFadeAsync(
-        SoundEffectInstance music, double musicDurationMs, float musicMaxVolume, float playingDurationPercentage)
+        SoundEffectInstance music, double musicDurationMs, float musicMaxVolume, float playingDurationPercentage, CancellationToken cancellationToken)
     {
         var playingDurationMs = musicDurationMs * playingDurationPercentage / 100;
 
@@ -176,10 +197,10 @@ public static class SoundManager
 
             music.Volume = newVolume;
 
-            await Task.Delay(FadeDelayMs);
+            await Task.Delay(FadeDelayMs, CancellationToken.None);
         }
 
-        await Task.Delay((int)playingDurationMs);
+        await Task.Delay((int)playingDurationMs, cancellationToken).ContinueWith(task => task.Exception == default);
 
         await StopPlayingMusicWithFadeAsync(music);
     }

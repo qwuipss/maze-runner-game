@@ -668,6 +668,12 @@
 /processorParam:Quality=Best
 /build:sounds/sprites/guard/attackMissed.wav
 
+#begin sounds/sprites/hero/getHit.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/hero/getHit.wav
+
 #begin sounds/sprites/hero/run.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

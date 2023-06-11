@@ -7,6 +7,8 @@ using MazeRunner.Managers;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase;
 
@@ -86,11 +88,14 @@ public class MazeRunnerGame : Game
 
     private static void ApplySounds()
     {
-        GameMenuState.MenuEnteredNotify += async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage());
-        GameMenuState.MenuLeavedNotify += async () => await SoundManager.StopPlayingGameMenuMusicAsync();
+        var gameMenuMusicBreaker = new SoundManager.MusicBreaker();
+        GameMenuState.MenuEnteredNotify += 
+            async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage(), gameMenuMusicBreaker.CancellationToken);
+        GameMenuState.MenuLeavedNotify += gameMenuMusicBreaker.StopMusic;
 
-        GameRunningState.GameStartedNotify += async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage());
-        GameRunningState.GameOveredNotify += async () => await SoundManager.StopPlayingGameRunningMusicAsync();
+        var gameRunningMusicBreaker = new SoundManager.MusicBreaker();
+        GameRunningState.GameStartedNotify += 
+            async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage(), gameRunningMusicBreaker.CancellationToken);
 
         Button.StaticButtonPressedNotify += SoundManager.PlayButtonPressedSound;
         RadioButton.StaticButtonPressedNotify += SoundManager.PlayRadioButtonPressedSound;
@@ -100,13 +105,20 @@ public class MazeRunnerGame : Game
         HeroRunState.HeroFinishedRunningNotify += SoundManager.PausePlayingHeroRunSound;
         HeroDiedState.HeroDiedNotify += SoundManager.StopPlayingHeroRunSound;
         HeroFellState.HeroFellNotify += SoundManager.StopPlayingHeroRunSound;
-        GuardAttackState.AttackHitNotify += SoundManager.PlayGuardAttackHitSound;
+
+        GuardAttackState.AttackHitNotify +=
+            async () =>
+            {
+                SoundManager.PlayGuardAttackHitSound();
+                await Task.Delay(SoundManager.PauseDelayMs);
+                SoundManager.PlayHeroGetHitSound();
+            };
         GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
     }
 
     private static int GetRandomMusicPlayingPercentage()
     {
-        return RandomHelper.Next(MinMusicPlayingPercentage, MaxMusicPlayingPercentage);
+        return RandomHelper.Next(MinMusicPlayingPercentage, MaxMusicPlayingPercentage + 1);
     }
 
     private void SetFullScreen()

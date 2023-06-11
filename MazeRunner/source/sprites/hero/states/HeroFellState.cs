@@ -12,6 +12,11 @@ public class HeroFellState : HeroFallBaseState
 
     public HeroFellState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
+        if (previousState is HeroRunState)
+        {
+            HeroFellNotify.Invoke();
+        }
+
         var framePosX = (FramesCount - 1) * FrameSize;
 
         CurrentAnimationFramePoint = new Point(framePosX, 0);

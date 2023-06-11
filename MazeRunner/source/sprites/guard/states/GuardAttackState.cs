@@ -71,7 +71,7 @@ public class GuardAttackState : GuardBaseState
 
     private void DamageHeroIfNeeded()
     {
-        if (!Hero.IsDead && !Hero.IsTakingDamage)
+        if (!Hero.IsDead)// && !Hero.IsTakingDamage)
         {
             if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.ElongatedAttackDistance)
             {
