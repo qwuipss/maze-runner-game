@@ -7,6 +7,8 @@ using MazeRunner.Managers;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase;
@@ -87,21 +89,67 @@ public class MazeRunnerGame : Game
 
     private static void ApplySounds()
     {
+        static async Task PlayAfterDelayAsync(double musicDurationMs, float percentageDelay, Action playAction, CancellationToken cancellationToken)
+        {
+            var delay = musicDurationMs * percentageDelay / 100;
+
+            await Task.Delay((int)delay, cancellationToken).ContinueWith(task => task.Exception == default);
+
+            if (!cancellationToken.IsCancellationRequested)
+            {
+                playAction.Invoke();
+            }
+        }
+
         var gameMenuMusicBreaker = new SoundManager.MusicBreaker();
+        var gameRunningMusicBreaker = new SoundManager.MusicBreaker();
+
+        var gameMenuPlayAfterDelayBreaker = new SoundManager.MusicBreaker();
+        var gameRunningPlayAfterDelayBreaker = new SoundManager.MusicBreaker();
+
+        SoundManager.GameMenuMusicEndPlaying +=
+            async () => 
+            await PlayAfterDelayAsync(
+                SoundManager.GameMenuMusicDurationMs, 
+                GetRandomMusicPlayingPercentage(), 
+                async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage(), gameMenuMusicBreaker.CancellationToken), 
+                gameMenuPlayAfterDelayBreaker.CancellationToken);
+
+        SoundManager.GameRunningMusicEndPlaying +=
+            async () =>
+            await PlayAfterDelayAsync(
+                SoundManager.GameRunningMusicDurationMs,
+                GetRandomMusicPlayingPercentage(),
+                async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage(), gameRunningMusicBreaker.CancellationToken),
+                gameRunningPlayAfterDelayBreaker.CancellationToken);
+
         GameMenuState.MenuEnteredNotify +=
             async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage(), gameMenuMusicBreaker.CancellationToken);
-        GameMenuState.MenuLeavedNotify += gameMenuMusicBreaker.StopMusic;
+        GameMenuState.MenuLeavedNotify +=
+            () =>
+            {
+                gameMenuMusicBreaker.StopMusic();
+                gameMenuPlayAfterDelayBreaker.StopMusic();
+            };
+            
 
-        var gameRunningMusicBreaker = new SoundManager.MusicBreaker();
         GameRunningState.GameStartedNotify +=
             async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage(), gameRunningMusicBreaker.CancellationToken);
 
-        GameRunningState.GameOveredNotify += SoundManager.PlayGameOveredSound;
-        GameRunningState.GameWonNotify += () =>
-        {
-            gameRunningMusicBreaker.StopMusic();
-            SoundManager.PlayGameWonSound();
-        };
+        GameRunningState.GameOveredNotify += 
+            () =>
+            {
+                gameRunningMusicBreaker.StopMusic();
+                gameRunningPlayAfterDelayBreaker.StopMusic();
+                SoundManager.PlayGameOveredSound();
+            };
+        GameRunningState.GameWonNotify +=
+            () =>
+            {
+                gameRunningMusicBreaker.StopMusic();
+                gameRunningPlayAfterDelayBreaker.StopMusic();
+                SoundManager.PlayGameWonSound();
+            };
 
         GameOverState.GameMenuReturnedNotify += gameRunningMusicBreaker.StopMusic;
 
@@ -118,6 +166,7 @@ public class MazeRunnerGame : Game
         HeroDiedState.HeroDiedNotify += SoundManager.StopPlayingHeroRunSound;
         HeroFellState.HeroFellNotify += SoundManager.StopPlayingHeroRunSound;
 
+        GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
         GuardAttackState.AttackHitNotify +=
             async () =>
             {
@@ -125,7 +174,6 @@ public class MazeRunnerGame : Game
                 await Task.Delay(SoundManager.PauseDelayMs);
                 SoundManager.PlayHeroGetHitSound();
             };
-        GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
     }
 
     private static int GetRandomMusicPlayingPercentage()
@@ -142,7 +190,6 @@ public class MazeRunnerGame : Game
 
         _graphics.ApplyChanges();
     }
-
 
     private void ControlGiveUpHandler(IGameState gameState)
     {
