@@ -36,7 +36,7 @@ public class GuardIdleState : GuardBaseState
 
         if (CollidesWithTraps(Guard, Maze, false, out var _))
         {
-            return new GuardWalkState(this, Hero, Guard, Maze);
+            return new GuardWalkState(this, Hero, Guard, Maze, GuardWalkState.TrapEscapePathLength);
         }
 
         if (IsHeroNearby(out var _))

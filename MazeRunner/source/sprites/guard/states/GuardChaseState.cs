@@ -9,7 +9,7 @@ public class GuardChaseState : GuardMoveBaseState
 
     private double _elapsedTimeCounter;
 
-    public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isAttackOnCooldown = false) 
+    public GuardChaseState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isAttackOnCooldown = true) 
         : base(previousState, hero, guard, maze)
     {
         _isAttackOnCooldown = isAttackOnCooldown;

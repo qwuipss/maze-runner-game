@@ -12,13 +12,15 @@ public class GuardWalkState : GuardMoveBaseState
 
     private const int WalkPathMaxLength = 6;
 
+    public const int TrapEscapePathLength = 2;
+
     private readonly LinkedList<Vector2> _walkPath;
 
-    public GuardWalkState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
+    public GuardWalkState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, int? walkPathLength = null) : base(previousState, hero, guard, maze)
     {
-        var walkPathLength = RandomHelper.Next(WalkPathMinLength, WalkPathMaxLength);
+        walkPathLength ??= RandomHelper.Next(WalkPathMinLength, WalkPathMaxLength);
 
-        _walkPath = GetRandomWalkPath(walkPathLength);
+        _walkPath = GetRandomWalkPath(walkPathLength.Value);
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

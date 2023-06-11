@@ -26,7 +26,7 @@ public class GuardChaseAwaitState : GuardMoveBaseState
 
         if (CollidesWithTraps(Guard, Maze, false, out var _))
         {
-            return new GuardWalkState(this, Hero, Guard, Maze);
+            return new GuardWalkState(this, Hero, Guard, Maze, GuardWalkState.TrapEscapePathLength);
         }
 
         if (!PathToHeroExist(Hero, Guard, Maze, out var pathToHero))
