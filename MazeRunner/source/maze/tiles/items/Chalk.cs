@@ -15,6 +15,8 @@ public class Chalk : MazeItem
 
     private readonly Hero _hero;
 
+    public new static event Action ItemCollectedStaticNotify;
+
     public override event Action ItemCollectedNotify;
 
     public Chalk(Hero hero)
@@ -22,6 +24,8 @@ public class Chalk : MazeItem
         _hero = hero;
 
         State = new ChalkIdleState();
+
+        ItemCollectedNotify += ItemCollectedStaticNotify.Invoke;
     }
 
     public override TileType TileType

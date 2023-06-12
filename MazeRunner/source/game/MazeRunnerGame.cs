@@ -4,11 +4,10 @@ using MazeRunner.GameBase.States;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
+using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase;
@@ -89,90 +88,73 @@ public class MazeRunnerGame : Game
 
     private static void ApplySounds()
     {
-        static async Task PlayAfterDelayAsync(double musicDurationMs, float percentageDelay, Action playAction, CancellationToken cancellationToken)
-        {
-            var delay = musicDurationMs * percentageDelay / 100;
+        var gameMenuMusic = SoundManager.Music.GameMenuMusic;
+        var gameRunningMusic = SoundManager.Music.GameRunningMusic;
 
-            await Task.Delay((int)delay, cancellationToken).ContinueWith(task => task.Exception == default);
-
-            if (!cancellationToken.IsCancellationRequested)
-            {
-                playAction.Invoke();
-            }
-        }
-
-        var gameMenuMusicBreaker = new SoundManager.MusicBreaker();
-        var gameRunningMusicBreaker = new SoundManager.MusicBreaker();
-
-        var gameMenuPlayAfterDelayBreaker = new SoundManager.MusicBreaker();
-        var gameRunningPlayAfterDelayBreaker = new SoundManager.MusicBreaker();
-
-        SoundManager.GameMenuMusicEndPlaying +=
-            async () => 
-            await PlayAfterDelayAsync(
-                SoundManager.GameMenuMusicDurationMs, 
-                GetRandomMusicPlayingPercentage(), 
-                async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage(), gameMenuMusicBreaker.CancellationToken), 
-                gameMenuPlayAfterDelayBreaker.CancellationToken);
-
-        SoundManager.GameRunningMusicEndPlaying +=
-            async () =>
-            await PlayAfterDelayAsync(
-                SoundManager.GameRunningMusicDurationMs,
-                GetRandomMusicPlayingPercentage(),
-                async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage(), gameRunningMusicBreaker.CancellationToken),
-                gameRunningPlayAfterDelayBreaker.CancellationToken);
+        gameMenuMusic.MusicPlayed +=
+            async () => await gameMenuMusic.PlayAfterDelayAsync(GetRandomMusicPlayingPercentage(), GetRandomMusicPlayingPercentage());
+        gameRunningMusic.MusicPlayed +=
+            async () => await gameRunningMusic.PlayAfterDelayAsync(GetRandomMusicPlayingPercentage(), GetRandomMusicPlayingPercentage());
 
         GameMenuState.MenuEnteredNotify +=
-            async () => await SoundManager.PlayGameMenuMusicAsync(GetRandomMusicPlayingPercentage(), gameMenuMusicBreaker.CancellationToken);
+            async () => await gameMenuMusic.StartPlayingMusicWithFadeAsync(GetRandomMusicPlayingPercentage());
         GameMenuState.MenuLeavedNotify +=
             () =>
             {
-                gameMenuMusicBreaker.StopMusic();
-                gameMenuPlayAfterDelayBreaker.StopMusic();
+                gameMenuMusic.StopPlaying();
+                gameMenuMusic.StopWaitingPlayDelay();
             };
-            
+
 
         GameRunningState.GameStartedNotify +=
-            async () => await SoundManager.PlayGameRunningMusicAsync(GetRandomMusicPlayingPercentage(), gameRunningMusicBreaker.CancellationToken);
+            async () => await gameRunningMusic.StartPlayingMusicWithFadeAsync(GetRandomMusicPlayingPercentage());
 
-        GameRunningState.GameOveredNotify += 
+        GameRunningState.GameOveredNotify +=
             () =>
             {
-                gameRunningMusicBreaker.StopMusic();
-                gameRunningPlayAfterDelayBreaker.StopMusic();
-                SoundManager.PlayGameOveredSound();
+                gameRunningMusic.StopPlaying();
+                gameRunningMusic.StopWaitingPlayDelay();
+                SoundManager.Transiters.PlayGameOveredSound();
             };
         GameRunningState.GameWonNotify +=
             () =>
             {
-                gameRunningMusicBreaker.StopMusic();
-                gameRunningPlayAfterDelayBreaker.StopMusic();
-                SoundManager.PlayGameWonSound();
+                gameRunningMusic.StopPlaying();
+                gameRunningMusic.StopWaitingPlayDelay();
+                SoundManager.Transiters.PlayGameWonSound();
             };
 
-        GameOverState.GameMenuReturnedNotify += gameRunningMusicBreaker.StopMusic;
+        GameOverState.GameMenuReturnedNotify += gameRunningMusic.StopPlaying;
 
-        GamePausedState.GamePausedNotify += () => SoundManager.ChangeGameRunningMusicVolume(-50);
-        GamePausedState.GameResumedNotify += () => SoundManager.ChangeGameRunningMusicVolume(100);
-        GamePausedState.GameMenuReturnedNotify += gameRunningMusicBreaker.StopMusic;
+        GamePausedState.GamePausedNotify += () => gameRunningMusic.ChangeMusicVolume(-50);
+        GamePausedState.GameResumedNotify += () => gameRunningMusic.ChangeMusicVolume(100);
+        GamePausedState.GameMenuReturnedNotify +=
+            () =>
+            {
+                gameRunningMusic.StopPlaying();
+                gameRunningMusic.StopWaitingPlayDelay();
+            };
 
-        Button.StaticButtonPressedNotify += SoundManager.PlayButtonPressedSound;
-        RadioButton.StaticButtonPressedNotify += SoundManager.PlayRadioButtonPressedSound;
+        Button.StaticButtonPressedNotify += SoundManager.Buttons.PlayButtonPressedSound;
+        RadioButton.StaticButtonPressedNotify += SoundManager.Buttons.PlayRadioButtonPressedSound;
 
-        HeroBaseState.HeroDrewWithChalkNotify += SoundManager.PlayChalkDrawingSound;
-        HeroRunState.HeroBeganRunningNotify += SoundManager.PlayHeroRunSound;
-        HeroRunState.HeroFinishedRunningNotify += SoundManager.PausePlayingHeroRunSound;
-        HeroDiedState.HeroDiedNotify += SoundManager.StopPlayingHeroRunSound;
-        HeroFellState.HeroFellNotify += SoundManager.StopPlayingHeroRunSound;
+        Chalk.ItemCollectedStaticNotify += SoundManager.Notifiers.PlayChalkCollectedSound;
+        Food.ItemCollectedStaticNotify += SoundManager.Notifiers.PlayFoodEatenSound;
+        Key.ItemCollectedStaticNotify += SoundManager.Notifiers.PlayKeyCollectedSound;
 
-        GuardAttackState.AttackMissedNotify += SoundManager.PlayGuardAttackMissedSound;
+        HeroBaseState.HeroDrewWithChalkNotify += SoundManager.Notifiers.PlayChalkDrawingSound;
+        HeroRunState.HeroBeganRunningNotify += SoundManager.Sprites.Hero.PlayRunSound;
+        HeroRunState.HeroFinishedRunningNotify += SoundManager.Sprites.Hero.PausePlayingRunSound;
+        HeroDiedState.HeroDiedNotify += SoundManager.Sprites.Hero.StopPlayingRunSound;
+        HeroFellState.HeroFellNotify += SoundManager.Sprites.Hero.StopPlayingRunSound;
+
+        GuardAttackState.AttackMissedNotify += SoundManager.Sprites.Guard.PlayAttackMissedSound;
         GuardAttackState.AttackHitNotify +=
             async () =>
             {
-                SoundManager.PlayGuardAttackHitSound();
+                SoundManager.Sprites.Guard.PlayAttackHitSound();
                 await Task.Delay(SoundManager.PauseDelayMs);
-                SoundManager.PlayHeroGetHitSound();
+                SoundManager.Sprites.Hero.PlayGetHitSound();
             };
     }
 

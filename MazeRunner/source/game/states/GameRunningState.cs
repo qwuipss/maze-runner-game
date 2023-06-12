@@ -237,8 +237,6 @@ public class GameRunningState : GameBaseState
             var keyCollectedActions = () =>
             {
                 _maze.IsKeyCollected = true;
-
-                SoundManager.PlayKeyCollectedSound();
             };
 
             MazeGenerator.InsertItem(_maze, key, keyCollectedActions);
@@ -252,8 +250,8 @@ public class GameRunningState : GameBaseState
 
         void InsertItems()
         {
-            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.PlayChalkCollectingSound); //
-            MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage, SoundManager.PlayFoodEatenSound);
+            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage);
+            MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
         }
 
         void InsertExit()

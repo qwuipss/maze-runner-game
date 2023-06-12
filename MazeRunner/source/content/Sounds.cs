@@ -114,6 +114,47 @@ public static class Sounds
         }
     }
 
+    public static class Traps
+    {
+        public static class Bayonet
+        {
+            private const string ContentDirectory = $"{Traps.ContentDirectory}/bayonet";
+
+            public static SoundEffect Activate { get; private set; }
+
+            public static SoundEffect Deactivate { get; private set; }
+
+            public static void Load(Game game)
+            {
+                Activate = game.Content.Load<SoundEffect>($"{ContentDirectory}/activate");
+                Deactivate = game.Content.Load<SoundEffect>($"{ContentDirectory}/deactivate");
+            }
+        }
+
+        public static class Drop
+        {
+            private const string ContentDirectory = $"{Traps.ContentDirectory}/drop";
+
+            public static SoundEffect Activate { get; private set; }
+
+            public static SoundEffect Deactivate { get; private set; }
+
+            public static void Load(Game game)
+            {
+                Activate = game.Content.Load<SoundEffect>($"{ContentDirectory}/activate");
+                Deactivate = game.Content.Load<SoundEffect>($"{ContentDirectory}/deactivate");
+            }
+        }
+
+        private const string ContentDirectory = $"{BaseContentDirectory}/traps";
+
+        public static void Load(Game game)
+        {
+            Bayonet.Load(game);
+            Drop.Load(game);
+        }
+    }
+
     public static void Load(Game game)
     {
         Buttons.Load(game);
@@ -121,5 +162,6 @@ public static class Sounds
         Sprites.Load(game);
         Music.Load(game);
         Transiters.Load(game);
+        Traps.Load(game);
     }
 }

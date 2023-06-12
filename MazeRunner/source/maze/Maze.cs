@@ -215,13 +215,15 @@ public class Maze : MazeRunnerGameComponent
         Skeleton[cell.Y, cell.X] = new Floor();
     }
 
-    public void InsertItem(MazeItem item, Cell cell, Action collectingActions)
+#nullable enable
+    public void InsertItem(MazeItem item, Cell cell, Action? collectingActions = null)
     {
         item.ItemCollectedNotify += collectingActions;
         item.ItemCollectedNotify += () => RemoveItem(item, cell);
 
         _hoverTilesInfo.Add(cell, item);
     }
+#nullable disable
 
     public void InsertMark(MazeMark mark, Cell cell)
     {

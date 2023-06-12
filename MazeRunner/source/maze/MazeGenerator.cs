@@ -168,7 +168,7 @@ public static class MazeGenerator
         maze.InsertItem(item, floorCell, collectingActions);
     }
 
-    public static void InsertItems(Maze maze, Func<MazeItem> itemSource, float percentage, Action collectingActions)
+    public static void InsertItems(Maze maze, Func<MazeItem> itemSource, float percentage)
     {
         var insertionsCount = GetInsertionsCount(maze, percentage);
 
@@ -176,7 +176,7 @@ public static class MazeGenerator
         {
             var floorCell = GetRandomCell(maze, maze.IsFloor).First();
 
-            maze.InsertItem(itemSource.Invoke(), floorCell, collectingActions);
+            maze.InsertItem(itemSource.Invoke(), floorCell);
         }
     }
 
