@@ -102,7 +102,7 @@ public class MazeRunnerGame : Game
             () =>
             {
                 gameMenuMusic.StopPlaying();
-                gameMenuMusic.StopWaitingPlayDelay();
+                gameMenuMusic.StopWaitingPlayingDelay();
             };
 
 
@@ -113,14 +113,14 @@ public class MazeRunnerGame : Game
             () =>
             {
                 gameRunningMusic.StopPlaying();
-                gameRunningMusic.StopWaitingPlayDelay();
+                gameRunningMusic.StopWaitingPlayingDelay();
                 SoundManager.Transiters.PlayGameOveredSound();
             };
         GameRunningState.GameWonNotify +=
             () =>
             {
                 gameRunningMusic.StopPlaying();
-                gameRunningMusic.StopWaitingPlayDelay();
+                gameRunningMusic.StopWaitingPlayingDelay();
                 SoundManager.Transiters.PlayGameWonSound();
             };
 
@@ -132,15 +132,15 @@ public class MazeRunnerGame : Game
             () =>
             {
                 gameRunningMusic.StopPlaying();
-                gameRunningMusic.StopWaitingPlayDelay();
+                gameRunningMusic.StopWaitingPlayingDelay();
             };
 
         Button.StaticButtonPressedNotify += SoundManager.Buttons.PlayButtonPressedSound;
         RadioButton.StaticButtonPressedNotify += SoundManager.Buttons.PlayRadioButtonPressedSound;
 
-        Chalk.ItemCollectedStaticNotify += SoundManager.Notifiers.PlayChalkCollectedSound;
-        Food.ItemCollectedStaticNotify += SoundManager.Notifiers.PlayFoodEatenSound;
-        Key.ItemCollectedStaticNotify += SoundManager.Notifiers.PlayKeyCollectedSound;
+        Chalk.StaticItemCollectedNotify += SoundManager.Notifiers.PlayChalkCollectedSound;
+        Food.StaticItemCollectedNotify += SoundManager.Notifiers.PlayFoodEatenSound;
+        Key.StaticItemCollectedNotify += SoundManager.Notifiers.PlayKeyCollectedSound;
 
         HeroBaseState.HeroDrewWithChalkNotify += SoundManager.Notifiers.PlayChalkDrawingSound;
         HeroRunState.HeroBeganRunningNotify += SoundManager.Sprites.Hero.PlayRunSound;

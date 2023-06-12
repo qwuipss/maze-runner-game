@@ -266,7 +266,7 @@ public static class SoundManager
                 _musicBreaker.Break();
             }
 
-            public void StopWaitingPlayDelay()
+            public void StopWaitingPlayingDelay()
             {
                 _playAfterDelayBreaker.Break();
             }

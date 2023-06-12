@@ -12,7 +12,7 @@ public class Key : MazeItem
 
     private const float HitBoxSize = 8;
 
-    public new static event Action ItemCollectedStaticNotify;
+    public new static event Action StaticItemCollectedNotify;
 
     public override event Action ItemCollectedNotify;
 
@@ -20,7 +20,7 @@ public class Key : MazeItem
     {
         State = new KeyIdleState();
 
-        ItemCollectedNotify += ItemCollectedStaticNotify.Invoke;
+        ItemCollectedNotify += StaticItemCollectedNotify.Invoke;
     }
 
     public override TileType TileType
