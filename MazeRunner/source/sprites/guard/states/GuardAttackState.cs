@@ -12,6 +12,8 @@ public class GuardAttackState : GuardBaseState
 
     private bool _isAttackOnCooldown;
 
+    private bool _attackMissedSoundPlayed;
+
     public GuardAttackState(
         ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isOnCooldown, double cooldownTimeCounter)
         : base(previousState, hero, guard, maze)
@@ -79,13 +81,18 @@ public class GuardAttackState : GuardBaseState
         {
             if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.ElongatedAttackDistance)
             {
-                await SoundManager.Sprites.Guard.PlayAttackHitAndHeroGetHitSoundsAsync(Guard.AttackHitSound);
+                await SoundManager.Sprites.Guard.PlayAttackHitAndHeroGetHitSoundsAsync();
 
                 Hero.TakeDamage(Guard.Damage);
             }
             else
             {
-                SoundManager.Sprites.Guard.PlayAttackMissedSound(Guard.AttackMissedSound);
+                if (!_attackMissedSoundPlayed)
+                {
+                    _attackMissedSoundPlayed = true;
+
+                    SoundManager.Sprites.Guard.PlayAttackMissedSound();
+                }
             }
         }
     }

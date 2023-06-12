@@ -138,7 +138,7 @@ public class GameRunningState : GameBaseState
     public static void StopPlayingMusic()
     {
         GameRunningMusic.StopPlaying();
-        GameRunningMusic.StopWaitingPlayingDelay();
+        GameRunningMusic.StopPlaying();
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)

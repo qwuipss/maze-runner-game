@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Extensions;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Threading;
@@ -8,6 +9,53 @@ namespace MazeRunner.Managers;
 
 public static class SoundManager
 {
+    private class MultiSoundPlayer
+    {
+        private readonly SoundEffect _soundEffect;
+
+        private readonly SoundEffectInstance _soundEffectInstance;
+
+        private readonly float _volume;
+
+        private SoundEffectInstance SoundEffectInstance
+        {
+            get
+            {
+                var soundEffect = _soundEffect.CreateInstance();
+                soundEffect.Volume = _volume;
+
+                return soundEffect;
+            }
+        }
+
+        public MultiSoundPlayer(SoundEffect soundEffect, float volume)
+        {
+            if (!volume.InRange(0, 1))
+            {
+                throw new ArgumentOutOfRangeException(nameof(volume));
+            }
+
+            _volume = volume;
+
+            _soundEffect = soundEffect;
+            
+            _soundEffectInstance = _soundEffect.CreateInstance();
+            _soundEffectInstance.Volume = volume;
+        }
+
+        public void Play()
+        {
+            if (_soundEffectInstance.State is SoundState.Playing)
+            {
+                SoundEffectInstance.Play();
+            }
+            else
+            {
+                _soundEffectInstance.Play();
+            }
+        }
+    }
+
     public class MusicBreaker
     {
         private Lazy<CancellationTokenSource> _cancellationTokenSource;
@@ -29,77 +77,24 @@ public static class SoundManager
 
     public static class Buttons
     {
-        private static readonly SoundEffect _buttonPressedSound;
+        private static readonly MultiSoundPlayer _buttonPressedSoundPlayer;
 
-        private static readonly SoundEffect _radioButtonPressedSound;
-
-        private static readonly SoundEffectInstance _buttonPressedSoundEffect;
-
-        private static readonly SoundEffectInstance _radioButtonPressedSoundEffect;
-
-        private static readonly float _buttonPressedSoundVolume;
-
-        private static readonly float _radioButtonPressedSoundVolume;
-
-        private static SoundEffectInstance ButtonPressedSoundEffect
-        {
-            get
-            {
-                var soundEffect = _buttonPressedSound.CreateInstance();
-                soundEffect.Volume = _buttonPressedSoundVolume;
-
-                return soundEffect;
-            }
-        }
-
-        private static SoundEffectInstance RadioButtonPressedSoundEffect
-        {
-            get
-            {
-                var soundEffect = _radioButtonPressedSound.CreateInstance();
-                soundEffect.Volume = _radioButtonPressedSoundVolume;
-
-                return soundEffect;
-            }
-        }
+        private static readonly MultiSoundPlayer _radioButtonPressedSoundPlayer;
 
         static Buttons()
         {
-            _buttonPressedSoundVolume = .3f;
-            _radioButtonPressedSoundVolume = .2f;
-
-            _buttonPressedSound = Sounds.Buttons.Button;
-            _radioButtonPressedSound = Sounds.Buttons.RadioButton;
-
-            _buttonPressedSoundEffect = _buttonPressedSound.CreateInstance();
-            _buttonPressedSoundEffect.Volume = _buttonPressedSoundVolume;
-
-            _radioButtonPressedSoundEffect = _radioButtonPressedSound.CreateInstance();
-            _radioButtonPressedSoundEffect.Volume = _radioButtonPressedSoundVolume;
+            _buttonPressedSoundPlayer = new MultiSoundPlayer(Sounds.Buttons.Button, .3f);
+            _radioButtonPressedSoundPlayer = new MultiSoundPlayer(Sounds.Buttons.RadioButton, .2f);
         }
 
         public static void PlayButtonPressedSound()
         {
-            if (_buttonPressedSoundEffect.State is SoundState.Playing)
-            {
-                ButtonPressedSoundEffect.Play();
-            }
-            else
-            {
-                Play(_buttonPressedSoundEffect);
-            }
+            _buttonPressedSoundPlayer.Play();
         }
 
         public static void PlayRadioButtonPressedSound()
         {
-            if (_radioButtonPressedSoundEffect.State is SoundState.Playing)
-            {
-                RadioButtonPressedSoundEffect.Play();
-            }
-            else
-            {
-                Play(_radioButtonPressedSoundEffect);
-            }
+            _radioButtonPressedSoundPlayer.Play();
         }
     }
 
@@ -107,45 +102,42 @@ public static class SoundManager
     {
         private static readonly SoundEffectInstance _keyCollected;
 
-        private static readonly SoundEffectInstance _foodEaten;
+        private static readonly MultiSoundPlayer _foodEatenSoundPlayer;
 
-        private static readonly SoundEffectInstance _chalkDrawing;
+        private static readonly MultiSoundPlayer _chalkCollectingSoundPlayer;
 
-        private static readonly SoundEffectInstance _chalkCollecting;
+        private static readonly MultiSoundPlayer _chalkDrawingSoundPlayer;
 
         static Notifiers()
         {
             _keyCollected = Sounds.Notifiers.KeyCollected.CreateInstance();
             _keyCollected.Volume = .05f;
 
-            _foodEaten = Sounds.Notifiers.FoodEaten.CreateInstance();
-            _foodEaten.Volume = .3f;
+            _foodEatenSoundPlayer = new MultiSoundPlayer(Sounds.Notifiers.FoodEaten, .3f);
 
-            _chalkCollecting = Sounds.Notifiers.ChalkCollecting.CreateInstance();
-            _chalkCollecting.Volume = .5f;
+            _chalkCollectingSoundPlayer = new MultiSoundPlayer(Sounds.Notifiers.ChalkCollecting, .5f);
 
-            _chalkDrawing = Sounds.Notifiers.ChalkDrawing.CreateInstance();
-            _chalkDrawing.Volume = .35f;
+            _chalkDrawingSoundPlayer = new MultiSoundPlayer(Sounds.Notifiers.ChalkDrawing, .35f);
         }
 
         public static void PlayChalkDrawingSound()
         {
-            Play(_chalkDrawing);
+            _chalkDrawingSoundPlayer.Play();
         }
 
         public static void PlayChalkCollectedSound()
         {
-            Play(_chalkCollecting);
+            _chalkCollectingSoundPlayer.Play();
+        }
+
+        public static void PlayFoodEatenSound()
+        {
+            _foodEatenSoundPlayer.Play();
         }
 
         public static void PlayKeyCollectedSound()
         {
             Play(_keyCollected);
-        }
-
-        public static void PlayFoodEatenSound()
-        {
-            Play(_foodEaten);
         }
     }
 
@@ -155,25 +147,22 @@ public static class SoundManager
         {
             private static readonly SoundEffectInstance _run;
 
-            private static readonly SoundEffectInstance _getHit;
-
-            private static readonly float _soundsVolume;
+            private static readonly MultiSoundPlayer _getHitSoundPlayer;
 
             static Hero()
             {
-                _soundsVolume = .1f;
+                var soundVolume = .1f;
 
                 _run = Sounds.Sprites.Hero.Run.CreateInstance();
-                _run.Volume = _soundsVolume;
+                _run.Volume = soundVolume;
                 _run.IsLooped = true;
 
-                _getHit = Sounds.Sprites.Hero.GetHit.CreateInstance();
-                _getHit.Volume = _soundsVolume;
+                _getHitSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Hero.GetHit, soundVolume);
             }
 
             public static void PlayGetHitSound()
             {
-                Play(_getHit);
+                _getHitSoundPlayer.Play();
             }
 
             public static void PlayRunSound()
@@ -194,62 +183,38 @@ public static class SoundManager
 
         public static class Guard
         {
-            private static readonly SoundEffect _attackMissed;
+            private static readonly MultiSoundPlayer _attackMissedSoundPlayer;
 
-            private static readonly SoundEffect _attackHit;
-
-            private static readonly float _soundVolume;
-
-            public static SoundEffectInstance AttackMissed
-            {
-                get
-                {
-                    var soundEffect = _attackMissed.CreateInstance();
-                    soundEffect.Volume = _soundVolume;
-
-                    return soundEffect;
-                }
-            }
-
-            public static SoundEffectInstance AttackHit
-            {
-                get
-                {
-                    var sound = _attackHit.CreateInstance();
-                    sound.Volume = _soundVolume;
-
-                    return sound;
-                }
-            }
+            private static readonly MultiSoundPlayer _attackHitSoundPlayer;
 
             static Guard()
             {
-                _soundVolume = .1f;
+                var soundVolume = .1f;
 
-                _attackMissed = Sounds.Sprites.Guard.AttackMissed;
+                _attackMissedSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Guard.AttackMissed, soundVolume);
 
-                _attackHit = Sounds.Sprites.Guard.AttackHit;
+                _attackHitSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Guard.AttackHit, soundVolume);
             }
 
-            public static void PlayAttackMissedSound(SoundEffectInstance attackMissedSound)
+            public static void PlayAttackMissedSound()
             {
-                Play(attackMissedSound);
+                _attackMissedSoundPlayer.Play();
             }
 
-            public async static Task PlayAttackHitAndHeroGetHitSoundsAsync(SoundEffectInstance attakHitSound)
+            public async static Task PlayAttackHitAndHeroGetHitSoundsAsync()
             {
                 await Task.Factory.StartNew(
                     async () =>
                     {
-                        PlayAttackHitSound(attakHitSound);
+                        PlayAttackHitSound();
                         await Task.Delay(PauseDelayMs);
                         Hero.PlayGetHitSound();
                     });
             }
 
-            private static void PlayAttackHitSound(SoundEffectInstance attackHitSound)
+            private static void PlayAttackHitSound()
             {
-                Play(attackHitSound);
+                _attackHitSoundPlayer.Play();
             }
         }
     }
@@ -290,8 +255,6 @@ public static class SoundManager
 
             private readonly MusicBreaker _musicBreaker;
 
-            private readonly MusicBreaker _playAfterDelayBreaker;
-
             public event Action MusicPlayed;
 
             public float MaxVolume { get; init; }
@@ -303,7 +266,6 @@ public static class SoundManager
                 _musicDuration = music.Duration.TotalMilliseconds;
 
                 _musicBreaker = new MusicBreaker();
-                _playAfterDelayBreaker = new MusicBreaker();
 
                 MaxVolume = maxVolume;
             }
@@ -311,6 +273,7 @@ public static class SoundManager
             public async Task StartPlayingMusicWithFadeAsync(float playingDurationPercentage)
             {
                 var playingDurationMs = _musicDuration * playingDurationPercentage / 100;
+                var cancellationToken = _musicBreaker.CancellationToken;
 
                 _music.Play();
 
@@ -321,14 +284,12 @@ public static class SoundManager
 
                     _music.Volume = newVolume;
 
-                    await Task.Delay(FadeDelayMs, CancellationToken.None);
+                    await Task.Delay(FadeDelayMs, cancellationToken).ContinueWith(task => { });
                 }
-
-                var cancellationToken = _musicBreaker.CancellationToken;
 
                 await Task.Delay((int)playingDurationMs, cancellationToken).ContinueWith(task => { });
 
-                await StopPlayingMusicWithFadeAsync();
+               await StopPlayingMusicWithFadeAsync();
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
@@ -339,8 +300,7 @@ public static class SoundManager
             public async Task PlayAfterDelayAsync(float percentageDelay, float playingDurationPercentage)
             {
                 var delay = _musicDuration * percentageDelay / 100;
-
-                var cancellationToken = _playAfterDelayBreaker.CancellationToken;
+                var cancellationToken = _musicBreaker.CancellationToken;
 
                 await Task.Delay((int)delay, cancellationToken).ContinueWith(task => { });
 
@@ -353,11 +313,6 @@ public static class SoundManager
             public void StopPlaying()
             {
                 _musicBreaker.Break();
-            }
-
-            public void StopWaitingPlayingDelay()
-            {
-                _playAfterDelayBreaker.Break();
             }
 
             public void ChangeVolume(float changePercentage)

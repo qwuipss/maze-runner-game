@@ -30,10 +30,6 @@ public class Guard : Enemy
 
     private float _drawingPriority;
 
-    public readonly SoundEffectInstance AttackMissedSound;
-
-    public readonly SoundEffectInstance AttackHitSound;
-
     public override event Action EnemyDiedNotify;
 
     public override bool IsDead => State is GuardDiedState or GuardFellState or GuardFallingState or GuardDyingState;
@@ -45,9 +41,6 @@ public class Guard : Enemy
     public Guard()
     {
         _drawingPriority = base.DrawingPriority;
-
-        AttackMissedSound = SoundManager.Sprites.Guard.AttackMissed;
-        AttackHitSound = SoundManager.Sprites.Guard.AttackHit;
     }
 
     public override RectangleF GetHitBox(Vector2 position)

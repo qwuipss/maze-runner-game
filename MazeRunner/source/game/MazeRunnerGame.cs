@@ -58,16 +58,22 @@ public class MazeRunnerGame : Game
 
     protected override void Update(GameTime gameTime)
     {
-        _gameState.Update(gameTime);
+        if (IsActive)
+        {
+            _gameState.Update(gameTime);
+        }
 
         base.Update(gameTime);
     }
 
     protected override void Draw(GameTime gameTime)
     {
-        GraphicsDevice.Clear(Color.Black);
+        if (IsActive)
+        {
+            GraphicsDevice.Clear(Color.Black);
 
-        _gameState.Draw(gameTime);
+            _gameState.Draw(gameTime);
+        }
 
         base.Draw(gameTime);
     }

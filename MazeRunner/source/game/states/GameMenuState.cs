@@ -162,7 +162,7 @@ public class GameMenuState : GameBaseState
     private static void StopPlayingMusic()
     {
         _gameMenuMusic.StopPlaying();
-        _gameMenuMusic.StopWaitingPlayingDelay();
+        _gameMenuMusic.StopPlaying();
     }
 
     private void InitializeButtons()
