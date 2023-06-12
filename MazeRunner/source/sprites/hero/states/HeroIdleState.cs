@@ -27,6 +27,8 @@ public class HeroIdleState : HeroBaseState
 
         if (CollidesWithTraps(Hero, Maze, true, out var trapType))
         {
+            PlayDeathSound(trapType);
+
             return GetTrapCollidingState(trapType);
         }
 

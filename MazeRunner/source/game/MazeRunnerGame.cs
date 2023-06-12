@@ -3,6 +3,7 @@ using MazeRunner.Drawing;
 using MazeRunner.GameBase.States;
 using MazeRunner.Helpers;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.GameBase;
@@ -45,6 +46,9 @@ public class MazeRunnerGame : Game
         //SetFullScreen();
         InitializeDrawer();
         InitializeShadower();
+
+        Activated += (_, _) => SoundEffect.MasterVolume = 1;
+        Deactivated += (_, _) => SoundEffect.MasterVolume = 0;
 
         HandleGiveUpControl(new GameMenuState());
     }

@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Helpers;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles.States;
@@ -9,7 +10,7 @@ public class DropTrapActivatedState : DropTrapBaseState
 
     protected override double UpdateTimeDelayMs => _updateTimeDelayMs;
 
-    public DropTrapActivatedState()
+    public DropTrapActivatedState(Hero hero, MazeTrap trap) : base(hero, trap)
     {
         var minUpdateTimeMs = 1000;
         var maxUpdateTimeMs = 1300;
@@ -27,7 +28,7 @@ public class DropTrapActivatedState : DropTrapBaseState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            return new DropTrapDeactivatingState();
+            return new DropTrapDeactivatingState(Hero, Trap);
         }
 
         return this;

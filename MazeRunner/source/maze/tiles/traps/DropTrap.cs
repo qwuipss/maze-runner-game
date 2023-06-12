@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System.Drawing;
 
@@ -17,9 +18,9 @@ public class DropTrap : MazeTrap
 
     public override TrapType TrapType => TrapType.Drop;
 
-    public DropTrap()
+    public DropTrap(Hero hero)
     {
-        State = new DropTrapDeactivatedState();
+        State = new DropTrapDeactivatedState(hero, this);
     }
 
     public override RectangleF GetHitBox(Vector2 position)

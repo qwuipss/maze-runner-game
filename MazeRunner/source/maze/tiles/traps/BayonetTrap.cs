@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles.States;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using System.Drawing;
 
@@ -21,9 +22,9 @@ public class BayonetTrap : MazeTrap
 
     public override TrapType TrapType => TrapType.Bayonet;
 
-    public BayonetTrap()
+    public BayonetTrap(Hero hero)
     {
-        State = new BayonetTrapDeactivatedState();
+        State = new BayonetTrapDeactivatedState(hero, this);
     }
 
     public override RectangleF GetHitBox(Vector2 position)

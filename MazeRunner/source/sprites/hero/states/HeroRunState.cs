@@ -38,6 +38,8 @@ public class HeroRunState : HeroBaseState
         {
             SoundManager.Sprites.Hero.PausePlayingRunSound();
 
+            PlayDeathSound(trapType);
+
             return GetTrapCollidingState(trapType);
         }
 

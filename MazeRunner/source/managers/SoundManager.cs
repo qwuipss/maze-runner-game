@@ -1,5 +1,7 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Extensions;
+using MazeRunner.GameBase;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Threading;
@@ -15,14 +17,14 @@ public static class SoundManager
 
         private readonly SoundEffectInstance _soundEffectInstance;
 
-        private readonly float _volume;
+        public float Volume { get; set; }
 
         private SoundEffectInstance SoundEffectInstance
         {
             get
             {
                 var soundEffect = _soundEffect.CreateInstance();
-                soundEffect.Volume = _volume;
+                soundEffect.Volume = Volume;
 
                 return soundEffect;
             }
@@ -35,7 +37,7 @@ public static class SoundManager
                 throw new ArgumentOutOfRangeException(nameof(volume));
             }
 
-            _volume = volume;
+            Volume = volume;
 
             _soundEffect = soundEffect;
             
@@ -43,9 +45,9 @@ public static class SoundManager
             _soundEffectInstance.Volume = volume;
         }
 
-        public void Play()
+        public void Play(bool playNewAnyway = false)
         {
-            if (_soundEffectInstance.State is SoundState.Playing)
+            if (playNewAnyway || _soundEffectInstance.State is SoundState.Playing)
             {
                 SoundEffectInstance.Play();
             }
@@ -53,25 +55,6 @@ public static class SoundManager
             {
                 _soundEffectInstance.Play();
             }
-        }
-    }
-
-    public class MusicBreaker
-    {
-        private Lazy<CancellationTokenSource> _cancellationTokenSource;
-
-        public CancellationToken CancellationToken => _cancellationTokenSource.Value.Token;
-
-        public MusicBreaker()
-        {
-            _cancellationTokenSource = new Lazy<CancellationTokenSource>();
-        }
-
-        public void Break()
-        {
-            _cancellationTokenSource.Value.Cancel();
-
-            _cancellationTokenSource = new Lazy<CancellationTokenSource>();
         }
     }
 
@@ -147,6 +130,8 @@ public static class SoundManager
         {
             private static readonly SoundEffectInstance _run;
 
+            private static readonly SoundEffectInstance _getPierced;
+
             private static readonly MultiSoundPlayer _getHitSoundPlayer;
 
             static Hero()
@@ -157,12 +142,22 @@ public static class SoundManager
                 _run.Volume = soundVolume;
                 _run.IsLooped = true;
 
+                _getPierced = Sounds.Sprites.Hero.GetPierced.CreateInstance();
+                _getPierced.Volume = soundVolume;
+
                 _getHitSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Hero.GetHit, soundVolume);
             }
 
             public static void PlayGetHitSound()
             {
                 _getHitSoundPlayer.Play();
+            }
+
+            public static async void PlayGetPiercedSoundAsync()
+            {
+                await Task.Delay((int)(PauseDelayMs * 1.25));
+
+                Play(_getPierced);
             }
 
             public static void PlayRunSound()
@@ -192,7 +187,6 @@ public static class SoundManager
                 var soundVolume = .1f;
 
                 _attackMissedSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Guard.AttackMissed, soundVolume);
-
                 _attackHitSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Guard.AttackHit, soundVolume);
             }
 
@@ -247,6 +241,25 @@ public static class SoundManager
 
     public static class Music
     {
+        private class MusicBreaker
+        {
+            private Lazy<CancellationTokenSource> _cancellationTokenSource;
+
+            public CancellationToken CancellationToken => _cancellationTokenSource.Value.Token;
+
+            public MusicBreaker()
+            {
+                _cancellationTokenSource = new Lazy<CancellationTokenSource>();
+            }
+
+            public void Break()
+            {
+                _cancellationTokenSource.Value.Cancel();
+
+                _cancellationTokenSource = new Lazy<CancellationTokenSource>();
+            }
+        }
+
         public class MusicPlayer
         {
             private readonly SoundEffectInstance _music;
@@ -369,28 +382,79 @@ public static class SoundManager
     {
         public static class Drop
         {
-            private static readonly SoundEffectInstance _activate;
+            private static readonly MultiSoundPlayer _activate;
 
-            private static readonly SoundEffectInstance _deactivate;
+            private static readonly MultiSoundPlayer _deactivate;
 
             static Drop()
             {
-                _activate = Sounds.Traps.Drop.Activate.CreateInstance();
-                _deactivate = Sounds.Traps.Drop.Deactivate.CreateInstance();
+                _activate = new MultiSoundPlayer(Sounds.Traps.Drop.Activate, MaxVolume);
+                _deactivate = new MultiSoundPlayer(Sounds.Traps.Drop.Deactivate, MaxVolume);
+            }
+
+            public static void PlayActivateSound(float distanceToObject)
+            {
+                Traps.PlayActivateSound(_activate, distanceToObject);
+            }
+
+            public static void PlayDeactivateSound(float distanceToObject)
+            {
+                Traps.PlayDeactivateSound(_deactivate, distanceToObject);
             }
         }
 
         public static class Bayonet
         {
-            private static readonly SoundEffectInstance _activate;
+            private static readonly MultiSoundPlayer _activate;
 
-            private static readonly SoundEffectInstance _deactivate;
+            private static readonly MultiSoundPlayer _deactivate;
 
             static Bayonet()
             {
-                _activate = Sounds.Traps.Bayonet.Activate.CreateInstance();
-                _deactivate = Sounds.Traps.Bayonet.Deactivate.CreateInstance();
+                _activate = new MultiSoundPlayer(Sounds.Traps.Bayonet.Activate, MaxVolume);
+                _deactivate = new MultiSoundPlayer(Sounds.Traps.Bayonet.Deactivate, MaxVolume);
             }
+
+            public static void PlayActivateSound(float distanceToObject)
+            {
+                Traps.PlayActivateSound(_activate, distanceToObject);
+            }
+
+            public static void PlayDeactivateSound(float distanceToObject)
+            {
+                Traps.PlayDeactivateSound(_deactivate, distanceToObject);
+            }
+        }
+
+        private const float SoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
+
+        private const float MaxVolume = .4f;
+
+        private static void PlayActivateSound(MultiSoundPlayer player, float distanceToObject)
+        {
+            if (distanceToObject > SoundPlayingRadius)
+            {
+                return;
+            }
+
+            player.Volume = GetVolume(distanceToObject);
+            player.Play(true);
+        }
+
+        private static void PlayDeactivateSound(MultiSoundPlayer player, float distanceToObject)
+        {
+            if (distanceToObject > SoundPlayingRadius)
+            {
+                return;
+            }
+
+            player.Volume = GetVolume(distanceToObject);
+            player.Play(true);
+        }
+
+        private static float GetVolume(float distanceToObject)
+        {
+            return MaxVolume * (1 - distanceToObject / SoundPlayingRadius);
         }
     }
 

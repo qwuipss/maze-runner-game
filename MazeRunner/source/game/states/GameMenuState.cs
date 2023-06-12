@@ -54,7 +54,7 @@ public class GameMenuState : GameBaseState
                 MazeDeadEndsRemovePercentage = 60,
 
                 MazeBayonetTrapInsertingPercentage = 2.25f,
-                MazeDropTrapInsertingPercentage = 1.75f,
+                MazeDropTrapInsertingPercentage = 45f, //1.75
 
                 GuardSpawnCount = 15,
 
@@ -258,8 +258,8 @@ public class GameMenuState : GameBaseState
 
         MazeGenerator.MakeCyclic(_maze, deadEndsRemovePercentage);
 
-        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), bayonetTrapInsertingPercentage);
-        MazeGenerator.InsertTraps(_maze, () => new DropTrap(), dropTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(null), bayonetTrapInsertingPercentage);
+        MazeGenerator.InsertTraps(_maze, () => new DropTrap(null), dropTrapInsertingPercentage);
 
         MazeGenerator.InsertExit(_maze);
 

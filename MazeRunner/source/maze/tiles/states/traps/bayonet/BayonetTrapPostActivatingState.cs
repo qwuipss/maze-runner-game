@@ -1,12 +1,16 @@
-﻿using Microsoft.Xna.Framework;
+﻿using MazeRunner.Managers;
+using MazeRunner.Sprites;
+using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles.States;
 
 public class BayonetTrapPostActivatingState : BayonetTrapBaseState
 {
-    public BayonetTrapPostActivatingState()
+    public BayonetTrapPostActivatingState(Hero hero, MazeTrap trap) : base(hero, trap)
     {
         CurrentAnimationFramePoint = new Point(FrameSize * 3, 0);
+
+        SoundManager.Traps.Bayonet.PlayActivateSound(GetDistanceToHero());
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)
@@ -19,7 +23,7 @@ public class BayonetTrapPostActivatingState : BayonetTrapBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameSize)
             {
-                return new BayonetTrapActivatedState();
+                return new BayonetTrapActivatedState(Hero, Trap);
             }
 
             animationPoint.X += FrameSize;

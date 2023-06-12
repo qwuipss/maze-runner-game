@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.MazeBase.Tiles.States;
@@ -10,4 +11,8 @@ public abstract class BayonetTrapBaseState : MazeTrapBaseState
     public override int FramesCount => 10;
 
     protected override double UpdateTimeDelayMs => 40;
+
+    protected BayonetTrapBaseState(Hero hero, MazeTrap trap) : base(hero, trap)
+    {
+    }
 }

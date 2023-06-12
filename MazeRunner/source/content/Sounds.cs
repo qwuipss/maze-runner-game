@@ -53,10 +53,13 @@ public static class Sounds
 
             public static SoundEffect GetHit { get; private set; }
 
+            public static SoundEffect GetPierced { get; private set; }
+
             public static void Load(Game game)
             {
                 Run = game.Content.Load<SoundEffect>($"{ContentDirectory}/run");
                 GetHit = game.Content.Load<SoundEffect>($"{ContentDirectory}/getHit");
+                GetPierced = game.Content.Load<SoundEffect>($"{ContentDirectory}/getPierced");
             }
         }
 

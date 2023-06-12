@@ -76,6 +76,8 @@ public class GameRunningState : GameBaseState
 
     private Maze _maze;
 
+    public Hero _hero;
+
     private StaticCamera _staticCamera;
 
     private FindKeyWriter _findKeyTextWriter;
@@ -101,8 +103,6 @@ public class GameRunningState : GameBaseState
     public GameParameters GameParameters { get; init; }
 
     public bool IsControlling { get; set; }
-
-    public Hero Hero { get; private set; }
 
     public HeroCamera HeroCamera { get; private set; }
 
@@ -137,7 +137,6 @@ public class GameRunningState : GameBaseState
 
     public static void StopPlayingMusic()
     {
-        GameRunningMusic.StopPlaying();
         GameRunningMusic.StopPlaying();
     }
 
@@ -204,7 +203,7 @@ public class GameRunningState : GameBaseState
             ProcessShadowerState(_staticComponents);
         }
 
-        var heroCell = SpriteBaseState.GetSpriteCell(Hero);
+        var heroCell = SpriteBaseState.GetSpriteCell(_hero);
         var updatableArea = HitBoxHelper.GetArea(heroCell, UpdateAreaWidthRadius, UpdateAreaHeightRadius, _maze.Skeleton);
 
         UpdateGameComponents(updatableArea);
@@ -238,7 +237,7 @@ public class GameRunningState : GameBaseState
 
         _gameComponents = new HashSet<MazeRunnerGameComponent>
         {
-            _maze, _findKeyTextWriter, HeroCamera, Hero,
+            _maze, _findKeyTextWriter, HeroCamera, _hero,
         };
 
         foreach (var enemy in _enemies)
@@ -276,16 +275,16 @@ public class GameRunningState : GameBaseState
 
         void InsertTraps()
         {
-            MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(), GameParameters.MazeBayonetTrapInsertingPercentage);
-            MazeGenerator.InsertTraps(_maze, () => new DropTrap(), GameParameters.MazeDropTrapInsertingPercentage);
+            MazeGenerator.InsertTraps(_maze, () => new BayonetTrap(_hero), GameParameters.MazeBayonetTrapInsertingPercentage);
+            MazeGenerator.InsertTraps(_maze, () => new DropTrap(_hero), GameParameters.MazeDropTrapInsertingPercentage);
         }
 
         void InsertItems()
         {
             MazeGenerator.InsertItems(
-                _maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.Notifiers.PlayChalkCollectedSound);
+                _maze, () => new Chalk(_hero), GameParameters.ChalksInsertingPercentage, SoundManager.Notifiers.PlayChalkCollectedSound);
             MazeGenerator.InsertItems(
-                _maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage, SoundManager.Notifiers.PlayFoodEatenSound);
+                _maze, () => new Food(_hero), GameParameters.FoodInsertingPercentage, SoundManager.Notifiers.PlayFoodEatenSound);
         }
 
         void InsertExit()
@@ -298,30 +297,30 @@ public class GameRunningState : GameBaseState
             var cell = MazeGenerator.GetRandomCell(_maze, _maze.IsFloor).First();
             var position = Maze.GetCellPosition(cell);
 
-            Hero.Initialize(_maze);
+            _hero.Initialize(_maze);
 
-            Hero.Position = position;
+            _hero.Position = position;
         }
 
         void CreateHero()
         {
-            Hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
+            _hero = new Hero(GameParameters.HeroHealth, GameParameters.ChalkUses);
         }
 
         void InitializeMaze()
         {
-            _maze.Initialize(Hero);
+            _maze.Initialize(_hero);
             _maze.InitializeComponents();
         }
 
         GenerateMaze();
 
-        InsertTraps();
         InsertExit();
         InsertKey();
 
         CreateHero();
 
+        InsertTraps();
         InsertItems();
 
         InitializeHero();
@@ -351,7 +350,7 @@ public class GameRunningState : GameBaseState
     {
         void InitializeCameraEffect()
         {
-            var shadowTreshold = Hero.FrameSize * 2.4f;
+            var shadowTreshold = _hero.FrameSize * 2.4f;
 
             _cameraEffect = EffectsHelper.CreateGradientCircleEffect(ViewWidth, ViewHeight, shadowTreshold, GraphicsDevice);
         }
@@ -363,7 +362,7 @@ public class GameRunningState : GameBaseState
 
         _staticCamera = new StaticCamera(ViewWidth, ViewHeight);
 
-        HeroCamera = new HeroCamera(Hero, ViewWidth, ViewHeight)
+        HeroCamera = new HeroCamera(_hero, ViewWidth, ViewHeight)
         {
             Effect = _cameraEffect,
         };
@@ -373,13 +372,13 @@ public class GameRunningState : GameBaseState
 
     private void InitializeTextWriters()
     {
-        _findKeyTextWriter = new FindKeyWriter(Hero, _maze);
+        _findKeyTextWriter = new FindKeyWriter(_hero, _maze);
 
         var scaleDivider = 450;
 
-        _heroHealthWriter = new HeroHealthWriter(Hero, scaleDivider, ViewWidth);
+        _heroHealthWriter = new HeroHealthWriter(_hero, scaleDivider, ViewWidth);
 
-        _heroChalkUsesWriter = new HeroChalkUsesWriter(Hero, _heroHealthWriter, scaleDivider, ViewWidth);
+        _heroChalkUsesWriter = new HeroChalkUsesWriter(_hero, _heroHealthWriter, scaleDivider, ViewWidth);
 
         _findKeyTextWriter.WriterDiedNotify += () => AddComponentToDeadList(_findKeyTextWriter);
     }
@@ -401,7 +400,7 @@ public class GameRunningState : GameBaseState
             Position = position,
         };
 
-        guard.Initialize(Hero, _maze);
+        guard.Initialize(_hero, _maze);
 
         return guard;
     }
@@ -414,7 +413,7 @@ public class GameRunningState : GameBaseState
         }
 
         var cellPosition = Maze.GetCellPosition(cell);
-        var distanceToHero = Vector2.Distance(Hero.Position, cellPosition);
+        var distanceToHero = Vector2.Distance(_hero.Position, cellPosition);
 
         var mazeTile = _maze.Skeleton[cell.Y, cell.X];
 
@@ -456,7 +455,7 @@ public class GameRunningState : GameBaseState
 
         foreach (var enemy in _pendingDisposeEnemies)
         {
-            var distance = Vector2.Distance(enemy.Position, Hero.Position);
+            var distance = Vector2.Distance(enemy.Position, _hero.Position);
 
             if (distance > GameRules.EnemyDisposeDistance)
             {
@@ -514,12 +513,12 @@ public class GameRunningState : GameBaseState
 
     private bool IsMazeEscaped()
     {
-        return SpriteBaseState.GetSpriteCell(Hero) == _maze.ExitInfo.Cell;
+        return SpriteBaseState.GetSpriteCell(_hero) == _maze.ExitInfo.Cell;
     }
 
     private void ProcessStateControl(GameTime gameTime)
     {
-        if (Hero.IsDead && !_isGameOver)
+        if (_hero.IsDead && !_isGameOver)
         {
             _isGameOver = true;
         }

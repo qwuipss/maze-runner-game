@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Helpers;
+using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles.States;
@@ -9,7 +10,7 @@ public class BayonetTrapActivatedState : BayonetTrapBaseState
 
     protected override double UpdateTimeDelayMs => _updateTimeDelayMs;
 
-    public BayonetTrapActivatedState()
+    public BayonetTrapActivatedState(Hero hero, MazeTrap trap) : base(hero, trap)
     {
         var minUpdateTimeMs = 1000;
         var maxUpdateTimeMs = 3000;
@@ -27,7 +28,7 @@ public class BayonetTrapActivatedState : BayonetTrapBaseState
 
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
-            return new BayonetTrapDeactivatingState();
+            return new BayonetTrapDeactivatingState(Hero, Trap);
         }
 
         return this;
