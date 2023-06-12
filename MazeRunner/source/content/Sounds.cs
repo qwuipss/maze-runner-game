@@ -88,13 +88,13 @@ public static class Sounds
     {
         private const string ContentDirectory = $"{BaseContentDirectory}/music";
 
-        public static SoundEffect GameMenuMusic { get; private set; }
+        public static SoundEffect GameMenu { get; private set; }
 
         public static SoundEffect GameRunningMusic { get; private set; }
 
         public static void Load(Game game)
         {
-            GameMenuMusic = game.Content.Load<SoundEffect>($"{ContentDirectory}/gameMenuMusic");
+            GameMenu = game.Content.Load<SoundEffect>($"{ContentDirectory}/gameMenuMusic");
             GameRunningMusic = game.Content.Load<SoundEffect>($"{ContentDirectory}/gameRunningMusic");
         }
     }

@@ -12,15 +12,21 @@ public class GuardWalkState : GuardMoveBaseState
 
     private const int WalkPathMaxLength = 6;
 
-    public const int TrapEscapePathLength = 2;
+    public const int TrapEscapePathLength = 1;
 
     private readonly LinkedList<Vector2> _walkPath;
+
+    private readonly ISpriteState _previousState;
+
+    private bool IsAttackOnCooldown => _previousState is GuardAttackState;
 
     public GuardWalkState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, int? walkPathLength = null) : base(previousState, hero, guard, maze)
     {
         walkPathLength ??= RandomHelper.Next(WalkPathMinLength, WalkPathMaxLength);
 
         _walkPath = GetRandomWalkPath(walkPathLength.Value);
+
+        _previousState = previousState;
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
@@ -32,7 +38,7 @@ public class GuardWalkState : GuardMoveBaseState
 
         if (IsHeroNearby(out var _))
         {
-            return new GuardChaseState(this, Hero, Guard, Maze);
+            return new GuardChaseState(this, Hero, Guard, Maze, IsAttackOnCooldown);
         }
 
         var walkPosition = _walkPath.First();

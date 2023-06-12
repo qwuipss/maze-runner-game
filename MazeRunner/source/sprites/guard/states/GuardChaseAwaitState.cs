@@ -7,14 +7,22 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardChaseAwaitState : GuardMoveBaseState
 {
+    private readonly bool _isAttackOnCooldown;
+
+    private readonly double _cooldownTimeCounter;
+
     public override Texture2D Texture => Textures.Sprites.Guard.Idle;
 
     public override int FramesCount => 4;
 
     public override double UpdateTimeDelayMs => double.MaxValue;
 
-    public GuardChaseAwaitState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
+    public GuardChaseAwaitState(
+        ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isAttackOnCooldown, double cooldownTimeCounter = 0)
+        : base(previousState, hero, guard, maze)
     {
+        _isAttackOnCooldown = isAttackOnCooldown;
+        _cooldownTimeCounter = cooldownTimeCounter;
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
@@ -38,7 +46,7 @@ public class GuardChaseAwaitState : GuardMoveBaseState
 
         if (ProcessMovement(direction, gameTime))
         {
-            return new GuardChaseState(this, Hero, Guard, Maze);
+            return new GuardChaseState(this, Hero, Guard, Maze, _isAttackOnCooldown, _cooldownTimeCounter);
         }
 
         return this;

@@ -3,16 +3,11 @@ using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace MazeRunner.Sprites.States;
 
 public class HeroRunState : HeroBaseState
 {
-    public static event Action HeroBeganRunningNotify;
-
-    public static event Action HeroFinishedRunningNotify;
-
     public override Texture2D Texture => Textures.Sprites.Hero.Run;
 
     public override int FramesCount => 4;
@@ -21,7 +16,7 @@ public class HeroRunState : HeroBaseState
 
     public HeroRunState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
-        HeroBeganRunningNotify.Invoke();
+        SoundManager.Sprites.Hero.PlayRunSound();
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
@@ -30,7 +25,7 @@ public class HeroRunState : HeroBaseState
 
         if (movement == Vector2.Zero)
         {
-            HeroFinishedRunningNotify.Invoke();
+            SoundManager.Sprites.Hero.PausePlayingRunSound();
 
             return new HeroIdleState(this, Hero, Maze);
         }
@@ -41,7 +36,7 @@ public class HeroRunState : HeroBaseState
 
         if (CollidesWithTraps(Hero, Maze, true, out var trapType))
         {
-            HeroFinishedRunningNotify.Invoke();
+            SoundManager.Sprites.Hero.PausePlayingRunSound();
 
             return GetTrapCollidingState(trapType);
         }

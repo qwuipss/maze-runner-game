@@ -7,6 +7,10 @@ namespace MazeRunner.Helpers;
 
 public static class RandomHelper
 {
+    private const int MinMusicPlayingPercentage = 30;
+
+    private const int MaxMusicPlayingPercentage = 100;
+
     private static readonly Random _random;
 
     static RandomHelper()
@@ -27,6 +31,11 @@ public static class RandomHelper
     public static T Choice<T>(IList<T> collection)
     {
         return collection[_random.Next(0, collection.Count)];
+    }
+
+    public static int GetRandomMusicPlayingPercentage()
+    {
+        return _random.Next(MinMusicPlayingPercentage, MaxMusicPlayingPercentage + 1);
     }
 
     public static T Choice<T>(IDictionary<T, float> itemChancePairs)

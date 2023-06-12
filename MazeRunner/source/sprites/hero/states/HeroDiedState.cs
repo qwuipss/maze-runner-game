@@ -1,23 +1,15 @@
 ﻿using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
-using System;
 
 namespace MazeRunner.Sprites.States;
 
 public class HeroDiedState : HeroDeathBaseState
 {
-    public static event Action HeroDiedNotify;
-
     public override double UpdateTimeDelayMs => double.MaxValue;
 
-    public HeroDiedState(ISpriteState previousState, Hero hero, Maze maze, bool needNotifyingAboutDead) : base(previousState, hero, maze)
+    public HeroDiedState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
-        if (needNotifyingAboutDead)
-        {
-            HeroDiedNotify.Invoke();
-        }
-
         var framePosX = (FramesCount - 1) * FrameSize;
 
         CurrentAnimationFramePoint = new Point(framePosX, 0);

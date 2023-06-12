@@ -1,8 +1,8 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
 
 namespace MazeRunner.Sprites.States;
 
@@ -12,13 +12,16 @@ public class GuardAttackState : GuardBaseState
 
     private bool _isAttackOnCooldown;
 
-    public static event Action AttackMissedNotify;
-
-    public static event Action AttackHitNotify;
-
-    public GuardAttackState(ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isOnCooldown) : base(previousState, hero, guard, maze)
+    public GuardAttackState(
+        ISpriteState previousState, Hero hero, Guard guard, Maze maze, bool isOnCooldown, double cooldownTimeCounter)
+        : base(previousState, hero, guard, maze)
     {
         _isAttackOnCooldown = isOnCooldown;
+
+        if (_isAttackOnCooldown)
+        {
+            ElapsedGameTimeMs += cooldownTimeCounter;
+        }
     }
 
     public override Texture2D Texture => Textures.Sprites.Guard.Attack;
@@ -62,7 +65,7 @@ public class GuardAttackState : GuardBaseState
                 ElapsedGameTimeMs -= UpdateTimeDelayMs;
             }
 
-            DamageHeroIfNeeded();
+            DamageHeroIfNeededAsync();
 
             FaceToHero();
         }
@@ -70,19 +73,19 @@ public class GuardAttackState : GuardBaseState
         return this;
     }
 
-    private void DamageHeroIfNeeded()
+    private async void DamageHeroIfNeededAsync()
     {
         if (!Hero.IsDead && !Hero.IsTakingDamage)
         {
             if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.ElongatedAttackDistance)
             {
-                AttackHitNotify.Invoke();
+                await SoundManager.Sprites.Guard.PlayAttackHitAndHeroGetHitSoundsAsync(Guard.AttackHitSound);
 
                 Hero.TakeDamage(Guard.Damage);
             }
             else
             {
-                AttackMissedNotify.Invoke();
+                SoundManager.Sprites.Guard.PlayAttackMissedSound(Guard.AttackMissedSound);
             }
         }
     }

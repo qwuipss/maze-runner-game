@@ -107,14 +107,18 @@ public static class SoundManager
 
             private static readonly SoundEffectInstance _getHit;
 
+            private static readonly float _soundsVolume;
+
             static Hero()
             {
+                _soundsVolume = .1f;
+
                 _run = Sounds.Sprites.Hero.Run.CreateInstance();
-                _run.Volume = .1f;
+                _run.Volume = _soundsVolume;
                 _run.IsLooped = true;
 
                 _getHit = Sounds.Sprites.Hero.GetHit.CreateInstance();
-                _getHit.Volume = .1f;
+                _getHit.Volume = _soundsVolume;
             }
 
             public static void PlayGetHitSound()
@@ -140,27 +144,62 @@ public static class SoundManager
 
         public static class Guard
         {
-            private static readonly SoundEffectInstance _attackMissed;
+            private static readonly SoundEffect _attackMissed;
 
-            private static readonly SoundEffectInstance _attackHit;
+            private static readonly SoundEffect _attackHit;
+
+            private static readonly float _soundsVolume;
+
+            public static SoundEffectInstance AttackMissed
+            {
+                get
+                {
+                    var sound = _attackMissed.CreateInstance();
+                    sound.Volume = _soundsVolume;
+
+                    return sound;
+                }
+            }
+
+            public static SoundEffectInstance AttackHit
+            {
+                get
+                {
+                    var sound = _attackHit.CreateInstance();
+                    sound.Volume = _soundsVolume;
+
+                    return sound;
+                }
+            }
 
             static Guard()
             {
-                _attackMissed = Sounds.Sprites.Guard.AttackMissed.CreateInstance();
-                _attackMissed.Volume = .1f;
+                _soundsVolume = .1f;
 
-                _attackHit = Sounds.Sprites.Guard.AttackHit.CreateInstance();
-                _attackHit.Volume = .1f;
+                _attackMissed = Sounds.Sprites.Guard.AttackMissed;
+
+                _attackHit = Sounds.Sprites.Guard.AttackHit;
             }
 
-            public static void PlayAttackMissedSound()
+            public static void PlayAttackMissedSound(SoundEffectInstance attackMissedSound)
             {
-                Play(_attackMissed);
+                Play(attackMissedSound);
             }
 
-            public static void PlayAttackHitSound()
+            public async static Task PlayAttackHitAndHeroGetHitSoundsAsync(SoundEffectInstance attakHitSound)
             {
-                Play(_attackHit);
+                await Task.Factory.StartNew(
+                    async () =>
+                    {
+                        PlayAttackHitSound(attakHitSound);
+                        await Task.Delay(PauseDelayMs);
+                        Hero.PlayGetHitSound();
+                    });
+            }
+
+            private static void PlayAttackHitSound(SoundEffectInstance attackHitSound)
+            {
+                Play(attackHitSound);
             }
         }
     }
@@ -237,7 +276,7 @@ public static class SoundManager
 
                 var cancellationToken = _musicBreaker.CancellationToken;
 
-                await Task.Delay((int)playingDurationMs, cancellationToken).ContinueWith(task => task.Exception == default);
+                await Task.Delay((int)playingDurationMs, cancellationToken).ContinueWith(task => { });
 
                 await StopPlayingMusicWithFadeAsync();
 
@@ -253,7 +292,7 @@ public static class SoundManager
 
                 var cancellationToken = _playAfterDelayBreaker.CancellationToken;
 
-                await Task.Delay((int)delay, cancellationToken).ContinueWith(task => task.Exception == default);
+                await Task.Delay((int)delay, cancellationToken).ContinueWith(task => { });
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
@@ -271,7 +310,7 @@ public static class SoundManager
                 _playAfterDelayBreaker.Break();
             }
 
-            public void ChangeMusicVolume(float changePercentage)
+            public void ChangeVolume(float changePercentage)
             {
                 if (changePercentage is 0)
                 {
@@ -316,7 +355,7 @@ public static class SoundManager
 
         static Music()
         {
-            GameMenuMusic = new MusicPlayer(Sounds.Music.GameMenuMusic, .3f);
+            GameMenuMusic = new MusicPlayer(Sounds.Music.GameMenu, .3f);
             GameRunningMusic = new MusicPlayer(Sounds.Music.GameRunningMusic, .3f);
         }
     }
@@ -334,16 +373,6 @@ public static class SoundManager
                 _activate = Sounds.Traps.Drop.Activate.CreateInstance();
                 _deactivate = Sounds.Traps.Drop.Deactivate.CreateInstance();
             }
-
-            public static void PlayActivate()
-            {
-                Play(_activate);
-            }
-
-            public static void PlayDeactivate()
-            {
-                Play(_deactivate);
-            }
         }
 
         public static class Bayonet
@@ -356,16 +385,6 @@ public static class SoundManager
             {
                 _activate = Sounds.Traps.Bayonet.Activate.CreateInstance();
                 _deactivate = Sounds.Traps.Bayonet.Deactivate.CreateInstance();
-            }
-
-            public static void PlayActivate()
-            {
-                Play(_activate);
-            }
-
-            public static void PlayDeactivate()
-            {
-                Play(_deactivate);
             }
         }
     }

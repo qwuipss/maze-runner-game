@@ -1,14 +1,17 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
+using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.Gui.Buttons;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MazeRunner.GameBase.States;
 
@@ -83,11 +86,11 @@ public class GameMenuState : GameBaseState
         }
     }
 
+    private const float GameMenuMusicMaxVolume = .3f;
+
+    private static readonly SoundManager.Music.MusicPlayer _gameMenuMusic;
+
     private static Texture2D _cameraEffect;
-
-    public static event Action MenuEnteredNotify;
-
-    public static event Action MenuLeavedNotify;
 
     private Lazy<GameParameters> _difficulty;
 
@@ -105,9 +108,18 @@ public class GameMenuState : GameBaseState
 
     public override event Action<IGameState> ControlGiveUpNotify;
 
+    static GameMenuState()
+    {
+        _gameMenuMusic = new SoundManager.Music.MusicPlayer(Sounds.Music.GameMenu, GameMenuMusicMaxVolume);
+
+        _gameMenuMusic.MusicPlayed +=
+            async () => await _gameMenuMusic.PlayAfterDelayAsync(
+                RandomHelper.GetRandomMusicPlayingPercentage(), RandomHelper.GetRandomMusicPlayingPercentage());
+    }
+
     public GameMenuState()
     {
-        MenuEnteredNotify.Invoke();
+        Task.Factory.StartNew(async () => await _gameMenuMusic.StartPlayingMusicWithFadeAsync(RandomHelper.GetRandomMusicPlayingPercentage()));
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
@@ -145,6 +157,12 @@ public class GameMenuState : GameBaseState
         }
 
         ProcessShadowerState(_components);
+    }
+
+    private static void StopPlayingMusic()
+    {
+        _gameMenuMusic.StopPlaying();
+        _gameMenuMusic.StopWaitingPlayingDelay();
     }
 
     private void InitializeButtons()
@@ -270,11 +288,18 @@ public class GameMenuState : GameBaseState
         };
     }
 
+    private void InitializeShadower()
+    {
+        Shadower = new EffectsHelper.Shadower(true);
+
+        Shadower.TresholdReached += () => NeedShadowerDeactivate = true;
+    }
+
     private void InitializeComponents()
     {
         _components = new HashSet<MazeRunnerGameComponent>
         {
-            _startButton, _quitButton, _maze, _staticCamera, _difficultySelectButtonsContainer, Shadower,
+            _maze, _staticCamera, Shadower, _difficultySelectButtonsContainer, _quitButton, _startButton,
         };
     }
 
@@ -286,16 +311,9 @@ public class GameMenuState : GameBaseState
 
         Shadower.TresholdReached += () =>
         {
-            MenuLeavedNotify.Invoke();
+            StopPlayingMusic();
             ControlGiveUpNotify.Invoke(new GameRunningState(_difficulty.Value));
         };
-    }
-
-    private void InitializeShadower()
-    {
-        Shadower = new EffectsHelper.Shadower(true);
-
-        Shadower.TresholdReached += () => NeedShadowerDeactivate = true;
     }
 
     private void QuitGame()

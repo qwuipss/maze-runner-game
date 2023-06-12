@@ -15,8 +15,6 @@ public class Food : MazeItem
 
     private readonly Hero _hero;
 
-    public new static event Action StaticItemCollectedNotify;
-
     public override event Action ItemCollectedNotify;
 
     public Food(Hero hero)
@@ -24,8 +22,6 @@ public class Food : MazeItem
         _hero = hero;
 
         State = new FoodIdleState();
-
-        ItemCollectedNotify += StaticItemCollectedNotify.Invoke;
     }
 
     public override TileType TileType

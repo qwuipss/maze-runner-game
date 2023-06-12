@@ -13,11 +13,9 @@ namespace MazeRunner.GameBase.States;
 
 public class GamePausedState : GameBaseState
 {
-    public static event Action GamePausedNotify;
+    private const float PauseGameVolumePercentageChange = -50;
 
-    public static event Action GameResumedNotify;
-
-    public static event Action GameMenuReturnedNotify;
+    private const float ResumeGameVolumePercentageChange = 100;
 
     public override event Action<IGameState> ControlGiveUpNotify;
 
@@ -33,11 +31,15 @@ public class GamePausedState : GameBaseState
 
     private HashSet<MazeRunnerGameComponent> _components;
 
+    private bool _handleSecondaryButtons;
+
     public GamePausedState(GameRunningState runningState)
     {
         _runningState = runningState;
 
-        GamePausedNotify.Invoke();
+        _handleSecondaryButtons = true;
+
+        GameRunningState.GameRunningMusic.ChangeVolume(PauseGameVolumePercentageChange);
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
@@ -74,7 +76,11 @@ public class GamePausedState : GameBaseState
         }
 
         ProcessShadowerState(_components);
-        HandleSecondaryButtons(gameTime);
+
+        if (_handleSecondaryButtons)
+        {
+            HandleSecondaryButtons(gameTime);
+        }
     }
 
     private void InitializeButtons()
@@ -90,6 +96,7 @@ public class GamePausedState : GameBaseState
             _restartButton.Position = new Vector2((ViewWidth - _restartButton.Width) / 2, (ViewHeight - _restartButton.Height) / 2);
 
             _restartButton.ButtonPressedNotify += RestartGame;
+            _restartButton.ButtonPressedNotify += () => _handleSecondaryButtons = false;
         }
 
         void InitializeResumeButton(float scaleDivider, float buttonOffsetCoeff)
@@ -105,6 +112,7 @@ public class GamePausedState : GameBaseState
             _resumeButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y - _restartButton.Height * buttonOffsetCoeff);
 
             _resumeButton.ButtonPressedNotify += ResumeGame;
+            _resumeButton.ButtonPressedNotify += () => _handleSecondaryButtons = false;
         }
 
         void InitializeMenuButton(float scaleDivider, float buttonOffsetCoeff)
@@ -120,6 +128,7 @@ public class GamePausedState : GameBaseState
             _menuButton.Position = new Vector2(restartButtonPosition.X, restartButtonPosition.Y + _restartButton.Height * buttonOffsetCoeff);
 
             _menuButton.ButtonPressedNotify += GoToMenu;
+            _menuButton.ButtonPressedNotify += () => _handleSecondaryButtons = false;
         }
 
         var buttonsScaleDivider = 400;
@@ -162,7 +171,7 @@ public class GamePausedState : GameBaseState
 
     private void ResumeGame()
     {
-        GameResumedNotify.Invoke();
+        GameRunningState.GameRunningMusic.ChangeVolume(ResumeGameVolumePercentageChange);
         ControlGiveUpNotify.Invoke(_runningState);
     }
 
@@ -175,10 +184,10 @@ public class GamePausedState : GameBaseState
 
     private void GoToMenu()
     {
-        GameMenuReturnedNotify.Invoke();
-
-        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameMenuState());
+        GameRunningState.StopPlayingMusic();
 
         NeedShadowerActivate = true;
+
+        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameMenuState());
     }
 }

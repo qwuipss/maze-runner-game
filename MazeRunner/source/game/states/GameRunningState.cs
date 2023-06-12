@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Components;
+using MazeRunner.Content;
 using MazeRunner.Drawing;
 using MazeRunner.Drawing.Writers;
 using MazeRunner.Helpers;
@@ -13,6 +14,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using RectangleXna = Microsoft.Xna.Framework.Rectangle;
 
 namespace MazeRunner.GameBase.States;
@@ -56,15 +58,15 @@ public class GameRunningState : GameBaseState
         }
     }
 
+    private const float GameRunningMusicMaxVolume = .3f;
+
+    private const int SecondaryButtonsHandleBlockDelayMs = 1000;
+
     public const int UpdateAreaWidthRadius = 7;
 
     public const int UpdateAreaHeightRadius = 5;
 
-    public static event Action GameStartedNotify;
-
-    public static event Action GameWonNotify;
-
-    public static event Action GameOveredNotify;
+    public static readonly SoundManager.Music.MusicPlayer GameRunningMusic;
 
     public override event Action<IGameState> ControlGiveUpNotify;
 
@@ -104,13 +106,39 @@ public class GameRunningState : GameBaseState
 
     public HeroCamera HeroCamera { get; private set; }
 
+    private bool _handleSecondaryButtons;
+
+    static GameRunningState()
+    {
+        GameRunningMusic = new SoundManager.Music.MusicPlayer(Sounds.Music.GameRunningMusic, GameRunningMusicMaxVolume);
+
+        GameRunningMusic.MusicPlayed +=
+            async () => await GameRunningMusic.PlayAfterDelayAsync(
+                RandomHelper.GetRandomMusicPlayingPercentage(), RandomHelper.GetRandomMusicPlayingPercentage());
+
+    }
+
     public GameRunningState(GameParameters gameParameters)
     {
         GameParameters = gameParameters;
 
         IsControlling = true;
 
-        GameStartedNotify.Invoke();
+        Task.Factory.StartNew(async () => await GameRunningMusic.StartPlayingMusicWithFadeAsync(RandomHelper.GetRandomMusicPlayingPercentage()));
+
+        Task.Factory.StartNew(
+            async () =>
+            {
+                await Task.Delay(SecondaryButtonsHandleBlockDelayMs);
+
+                _handleSecondaryButtons = true;
+            });
+    }
+
+    public static void StopPlayingMusic()
+    {
+        GameRunningMusic.StopPlaying();
+        GameRunningMusic.StopWaitingPlayingDelay();
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
@@ -193,7 +221,10 @@ public class GameRunningState : GameBaseState
 
         MarkPendingDisposeEnemiesAsDead();
 
-        HandleSecondaryButtons(gameTime);
+        if (_handleSecondaryButtons)
+        {
+            HandleSecondaryButtons(gameTime);
+        }
 
         RespawnEnemies();
         DisposeDeadGameComponents();
@@ -234,12 +265,13 @@ public class GameRunningState : GameBaseState
         {
             var key = new Key();
 
-            var keyCollectedActions = () =>
+            var collectedAction = () =>
             {
                 _maze.IsKeyCollected = true;
+                SoundManager.Notifiers.PlayKeyCollectedSound();
             };
 
-            MazeGenerator.InsertItem(_maze, key, keyCollectedActions);
+            MazeGenerator.InsertItem(_maze, key, collectedAction);
         }
 
         void InsertTraps()
@@ -250,8 +282,10 @@ public class GameRunningState : GameBaseState
 
         void InsertItems()
         {
-            MazeGenerator.InsertItems(_maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage);
-            MazeGenerator.InsertItems(_maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage);
+            MazeGenerator.InsertItems(
+                _maze, () => new Chalk(Hero), GameParameters.ChalksInsertingPercentage, SoundManager.Notifiers.PlayChalkCollectedSound);
+            MazeGenerator.InsertItems(
+                _maze, () => new Food(Hero), GameParameters.FoodInsertingPercentage, SoundManager.Notifiers.PlayFoodEatenSound);
         }
 
         void InsertExit()
@@ -516,14 +550,16 @@ public class GameRunningState : GameBaseState
 
         Shadower.TresholdReached += () =>
         {
-            GameWonNotify.Invoke();
+            StopPlayingMusic();
+            SoundManager.Transiters.PlayGameWonSound();
             ControlGiveUpNotify.Invoke(new GameWonState());
         };
     }
 
     private void OverGame()
     {
-        GameOveredNotify.Invoke();
+        StopPlayingMusic();
+        SoundManager.Transiters.PlayGameOveredSound();
         ControlGiveUpNotify.Invoke(new GameOverState(this, HeroCamera.EffectTransparency));
     }
 

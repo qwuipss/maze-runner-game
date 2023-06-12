@@ -9,8 +9,6 @@ namespace MazeRunner.Gui.Buttons;
 
 public abstract class Button : MazeRunnerGameComponent
 {
-    public static event Action StaticButtonPressedNotify;
-
     public abstract event Action ButtonPressedNotify;
 
     public static float DrawingPriority => .15f;
@@ -27,14 +25,9 @@ public abstract class Button : MazeRunnerGameComponent
 
     protected IButtonState State { get; set; }
 
-    public Button(float boxScale, bool needSubscribingStaticActions = true)
+    public Button(float boxScale)
     {
         BoxScale = boxScale;
-
-        if (needSubscribingStaticActions)
-        {
-            ButtonPressedNotify += StaticButtonPressedNotify.Invoke;
-        }
     }
 
     public abstract void Initialize();

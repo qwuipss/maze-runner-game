@@ -8,8 +8,6 @@ namespace MazeRunner.Sprites.States;
 
 public abstract class HeroBaseState : SpriteBaseState
 {
-    public static event Action HeroDrewWithChalkNotify;
-
     protected Hero Hero { get; set; }
 
     protected Maze Maze { get; set; }
@@ -79,6 +77,8 @@ public abstract class HeroBaseState : SpriteBaseState
 
             if (Maze.CanInsertMark(cell))
             {
+                SoundManager.Notifiers.PlayChalkDrawingSound();
+
                 var mark = new ChalkMark
                 {
                     Position = Maze.GetCellPosition(cell)
@@ -87,8 +87,6 @@ public abstract class HeroBaseState : SpriteBaseState
                 Maze.InsertMark(mark, cell);
 
                 Hero.ChalkUses--;
-
-                HeroDrewWithChalkNotify.Invoke();
             }
         }
     }

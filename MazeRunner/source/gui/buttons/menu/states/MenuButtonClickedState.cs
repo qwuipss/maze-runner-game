@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -24,6 +25,8 @@ public class MenuButtonClickedState : ButtonPushBaseState
 
             if (animationPoint.X == (FramesCount - 1) * FrameWidth)
             {
+                SoundManager.Buttons.PlayButtonPressedSound();
+
                 Button.Click();
 
                 return new MenuButtonResetState(Button);
