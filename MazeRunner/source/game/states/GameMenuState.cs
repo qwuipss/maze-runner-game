@@ -40,7 +40,7 @@ public class GameMenuState : GameBaseState
                 GuardSpawnCount = 2,
 
                 ChalksInsertingPercentage = 1,
-                FoodInsertingPercentage = .75f,
+                FoodInsertingPercentage = 25, // .75
 
                 HeroHealth = 500, //5
                 ChalkUses = 10,

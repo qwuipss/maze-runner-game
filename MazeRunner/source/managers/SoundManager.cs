@@ -29,27 +29,77 @@ public static class SoundManager
 
     public static class Buttons
     {
-        private static readonly SoundEffectInstance _buttonPressed;
+        private static readonly SoundEffect _buttonPressedSound;
 
-        private static readonly SoundEffectInstance _radioButtonPressed;
+        private static readonly SoundEffect _radioButtonPressedSound;
+
+        private static readonly SoundEffectInstance _buttonPressedSoundEffect;
+
+        private static readonly SoundEffectInstance _radioButtonPressedSoundEffect;
+
+        private static readonly float _buttonPressedSoundVolume;
+
+        private static readonly float _radioButtonPressedSoundVolume;
+
+        private static SoundEffectInstance ButtonPressedSoundEffect
+        {
+            get
+            {
+                var soundEffect = _buttonPressedSound.CreateInstance();
+                soundEffect.Volume = _buttonPressedSoundVolume;
+
+                return soundEffect;
+            }
+        }
+
+        private static SoundEffectInstance RadioButtonPressedSoundEffect
+        {
+            get
+            {
+                var soundEffect = _radioButtonPressedSound.CreateInstance();
+                soundEffect.Volume = _radioButtonPressedSoundVolume;
+
+                return soundEffect;
+            }
+        }
 
         static Buttons()
         {
-            _buttonPressed = Sounds.Buttons.Button.CreateInstance();
-            _buttonPressed.Volume = .3f;
+            _buttonPressedSoundVolume = .3f;
+            _radioButtonPressedSoundVolume = .2f;
 
-            _radioButtonPressed = Sounds.Buttons.RadioButton.CreateInstance();
-            _radioButtonPressed.Volume = .2f;
+            _buttonPressedSound = Sounds.Buttons.Button;
+            _radioButtonPressedSound = Sounds.Buttons.RadioButton;
+
+            _buttonPressedSoundEffect = _buttonPressedSound.CreateInstance();
+            _buttonPressedSoundEffect.Volume = _buttonPressedSoundVolume;
+
+            _radioButtonPressedSoundEffect = _radioButtonPressedSound.CreateInstance();
+            _radioButtonPressedSoundEffect.Volume = _radioButtonPressedSoundVolume;
         }
 
         public static void PlayButtonPressedSound()
         {
-            Play(_buttonPressed);
+            if (_buttonPressedSoundEffect.State is SoundState.Playing)
+            {
+                ButtonPressedSoundEffect.Play();
+            }
+            else
+            {
+                Play(_buttonPressedSoundEffect);
+            }
         }
 
         public static void PlayRadioButtonPressedSound()
         {
-            Play(_radioButtonPressed);
+            if (_radioButtonPressedSoundEffect.State is SoundState.Playing)
+            {
+                RadioButtonPressedSoundEffect.Play();
+            }
+            else
+            {
+                Play(_radioButtonPressedSoundEffect);
+            }
         }
     }
 
@@ -148,16 +198,16 @@ public static class SoundManager
 
             private static readonly SoundEffect _attackHit;
 
-            private static readonly float _soundsVolume;
+            private static readonly float _soundVolume;
 
             public static SoundEffectInstance AttackMissed
             {
                 get
                 {
-                    var sound = _attackMissed.CreateInstance();
-                    sound.Volume = _soundsVolume;
+                    var soundEffect = _attackMissed.CreateInstance();
+                    soundEffect.Volume = _soundVolume;
 
-                    return sound;
+                    return soundEffect;
                 }
             }
 
@@ -166,7 +216,7 @@ public static class SoundManager
                 get
                 {
                     var sound = _attackHit.CreateInstance();
-                    sound.Volume = _soundsVolume;
+                    sound.Volume = _soundVolume;
 
                     return sound;
                 }
@@ -174,7 +224,7 @@ public static class SoundManager
 
             static Guard()
             {
-                _soundsVolume = .1f;
+                _soundVolume = .1f;
 
                 _attackMissed = Sounds.Sprites.Guard.AttackMissed;
 
