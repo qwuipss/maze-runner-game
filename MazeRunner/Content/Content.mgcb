@@ -656,6 +656,12 @@
 /processorParam:Quality=Best
 /build:sounds/notifiers/keyCollected.wav
 
+#begin sounds/sprites/common/abyssFall.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/common/abyssFall.wav
+
 #begin sounds/sprites/guard/attackHit.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -667,6 +673,30 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sounds/sprites/guard/attackMissed.wav
+
+#begin sounds/sprites/guard/dyingFall.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/guard/dyingFall.wav
+
+#begin sounds/sprites/guard/getPierced.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/guard/getPierced.wav
+
+#begin sounds/sprites/guard/run.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/guard/run.wav
+
+#begin sounds/sprites/hero/dyingFall.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/hero/dyingFall.wav
 
 #begin sounds/sprites/hero/getHit.wav
 /importer:WavImporter
@@ -704,29 +734,11 @@
 /processorParam:Quality=Best
 /build:sounds/traps/bayonet/activate.wav
 
-#begin sounds/traps/bayonet/activate.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sounds/traps/bayonet/activate.wav
-
 #begin sounds/traps/bayonet/deactivate.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sounds/traps/bayonet/deactivate.wav
-
-#begin sounds/traps/bayonet/deactivate.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sounds/traps/bayonet/deactivate.wav
-
-#begin sounds/traps/drop/activate.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sounds/traps/drop/activate.wav
 
 #begin sounds/traps/drop/activate.wav
 /importer:WavImporter

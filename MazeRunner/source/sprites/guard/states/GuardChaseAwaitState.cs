@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.MazeBase;
+using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -46,6 +47,11 @@ public class GuardChaseAwaitState : GuardMoveBaseState
 
         if (ProcessMovement(direction, gameTime))
         {
+            if (CollidesWithTraps(Guard, Maze, true, out trapType))
+            {
+                return GetTrapCollidingState(trapType);
+            }
+
             return new GuardChaseState(this, Hero, Guard, Maze, _isAttackOnCooldown, _cooldownTimeCounter);
         }
 

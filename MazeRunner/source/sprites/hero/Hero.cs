@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.Sprites.States;
 using Microsoft.Xna.Framework;
@@ -55,6 +56,8 @@ public class Hero : Sprite
 
     public void TakeDamage(int damage)
     {
+        SoundManager.Sprites.Hero.PlayGetHitSoundWithDelay();
+
         Health -= damage;
 
         if (Health <= 0)

@@ -51,6 +51,11 @@ public class GuardWalkState : GuardMoveBaseState
             return new GuardIdleState(this, Hero, Guard, Maze);
         }
 
+        if (CollidesWithTraps(Guard, Maze, true, out trapType))
+        {
+            return GetTrapCollidingState(trapType);
+        }
+
         if (IsPositionReached(walkPosition, Guard))
         {
             _walkPath.RemoveFirst();

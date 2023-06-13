@@ -90,18 +90,4 @@ public abstract class HeroBaseState : SpriteBaseState
             }
         }
     }
-
-    protected static void PlayDeathSound(TrapType trapType)
-    {
-        switch (trapType)
-        {
-            case TrapType.Bayonet:
-                SoundManager.Sprites.Hero.PlayGetPiercedSoundAsync();
-                break;
-            case TrapType.Drop:
-                break;
-            default:
-                throw new NotImplementedException();
-        }
-    }
 }

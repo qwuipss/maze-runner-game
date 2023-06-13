@@ -56,12 +56,12 @@ public class GameMenuState : GameBaseState
                 MazeBayonetTrapInsertingPercentage = 2.25f,
                 MazeDropTrapInsertingPercentage = 45f, //1.75
 
-                GuardSpawnCount = 15,
+                GuardSpawnCount = 35, //15
 
                 ChalksInsertingPercentage = 1.25f,
                 FoodInsertingPercentage = .75f,
 
-                HeroHealth = 3,
+                HeroHealth = 1, //3
                 ChalkUses = 15,
             });
 
@@ -113,13 +113,13 @@ public class GameMenuState : GameBaseState
         _gameMenuMusic = new SoundManager.Music.MusicPlayer(Sounds.Music.GameMenu, GameMenuMusicMaxVolume);
 
         _gameMenuMusic.MusicPlayed +=
-            async () => await _gameMenuMusic.PlayAfterDelayAsync(
+            async () => await _gameMenuMusic.PlayAfterDelay(
                 RandomHelper.GetRandomMusicPlayingPercentage(), RandomHelper.GetRandomMusicPlayingPercentage());
     }
 
     public GameMenuState()
     {
-        Task.Factory.StartNew(async () => await _gameMenuMusic.StartPlayingMusicWithFadeAsync(RandomHelper.GetRandomMusicPlayingPercentage()));
+        Task.Factory.StartNew(async () => await _gameMenuMusic.StartPlayingMusicWithFade(RandomHelper.GetRandomMusicPlayingPercentage()));
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)

@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase;
+﻿using MazeRunner.Managers;
+using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
@@ -9,6 +10,7 @@ public class GuardFallingState : GuardFallBaseState
 
     public GuardFallingState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
+        SoundManager.Sprites.Common.PlayAbyssFallSound(GetDistanceToHero());
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

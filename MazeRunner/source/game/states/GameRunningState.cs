@@ -113,7 +113,7 @@ public class GameRunningState : GameBaseState
         GameRunningMusic = new SoundManager.Music.MusicPlayer(Sounds.Music.GameRunningMusic, GameRunningMusicMaxVolume);
 
         GameRunningMusic.MusicPlayed +=
-            async () => await GameRunningMusic.PlayAfterDelayAsync(
+            async () => await GameRunningMusic.PlayAfterDelay(
                 RandomHelper.GetRandomMusicPlayingPercentage(), RandomHelper.GetRandomMusicPlayingPercentage());
 
     }
@@ -124,7 +124,7 @@ public class GameRunningState : GameBaseState
 
         IsControlling = true;
 
-        Task.Factory.StartNew(async () => await GameRunningMusic.StartPlayingMusicWithFadeAsync(RandomHelper.GetRandomMusicPlayingPercentage()));
+        Task.Factory.StartNew(async () => await GameRunningMusic.StartPlayingMusicWithFade(RandomHelper.GetRandomMusicPlayingPercentage()));
 
         Task.Factory.StartNew(
             async () =>
@@ -401,6 +401,8 @@ public class GameRunningState : GameBaseState
         };
 
         guard.Initialize(_hero, _maze);
+
+        guard.EnemyDiedNotify += () => AddEnemyToDisposeList(guard);
 
         return guard;
     }

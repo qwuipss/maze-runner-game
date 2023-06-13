@@ -36,11 +36,10 @@ public class HeroRunState : HeroBaseState
 
         if (CollidesWithTraps(Hero, Maze, true, out var trapType))
         {
-            SoundManager.Sprites.Hero.PausePlayingRunSound();
+            SoundManager.Sprites.Hero.StopPlayingRunSound();
+            SoundManager.Sprites.Hero.PlayDeathSound(trapType);
 
-            PlayDeathSound(trapType);
-
-            return GetTrapCollidingState(trapType);
+            //return GetTrapCollidingState(trapType);
         }
 
         ProcessItemsColliding();

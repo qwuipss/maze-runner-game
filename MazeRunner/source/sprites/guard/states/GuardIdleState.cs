@@ -34,14 +34,14 @@ public class GuardIdleState : GuardBaseState
             return GetTrapCollidingState(trapType);
         }
 
-        if (CollidesWithTraps(Guard, Maze, false, out var _))
-        {
-            return new GuardWalkState(this, Hero, Guard, Maze, GuardWalkState.TrapEscapePathLength);
-        }
-
         if (IsHeroNearby(out var _))
         {
             return new GuardChaseState(this, Hero, Guard, Maze, IsAttackOnCooldown);
+        }
+
+        if (CollidesWithTraps(Guard, Maze, false, out var _))
+        {
+            return new GuardWalkState(this, Hero, Guard, Maze, GuardWalkState.TrapEscapePathLength);
         }
 
         var elapsedTime = gameTime.ElapsedGameTime.TotalMilliseconds;

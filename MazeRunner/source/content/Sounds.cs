@@ -45,6 +45,18 @@ public static class Sounds
 
     public static class Sprites
     {
+        public static class Common
+        {
+            private const string ContentDirectory = $"{Sprites.ContentDirectory}/common";
+
+            public static SoundEffect AbyssFall { get; private set; }
+
+            public static void Load(Game game)
+            {
+                AbyssFall = game.Content.Load<SoundEffect>($"{ContentDirectory}/abyssFall");
+            }
+        }
+
         public static class Hero
         {
             private const string ContentDirectory = $"{Sprites.ContentDirectory}/hero";
@@ -55,11 +67,14 @@ public static class Sounds
 
             public static SoundEffect GetPierced { get; private set; }
 
+            public static SoundEffect DyingFall { get; private set; }
+
             public static void Load(Game game)
             {
                 Run = game.Content.Load<SoundEffect>($"{ContentDirectory}/run");
                 GetHit = game.Content.Load<SoundEffect>($"{ContentDirectory}/getHit");
                 GetPierced = game.Content.Load<SoundEffect>($"{ContentDirectory}/getPierced");
+                DyingFall = game.Content.Load<SoundEffect>($"{ContentDirectory}/dyingFall");
             }
         }
 
@@ -71,10 +86,19 @@ public static class Sounds
 
             public static SoundEffect AttackHit { get; private set; }
 
+            public static SoundEffect Run { get; private set; }
+
+            public static SoundEffect GetPierced { get; private set; }
+
+            public static SoundEffect DyingFall { get; private set; }
+
             public static void Load(Game game)
             {
                 AttackMissed = game.Content.Load<SoundEffect>($"{ContentDirectory}/attackMissed");
                 AttackHit = game.Content.Load<SoundEffect>($"{ContentDirectory}/attackHit");
+                Run = game.Content.Load<SoundEffect>($"{ContentDirectory}/run");
+                GetPierced = game.Content.Load<SoundEffect>($"{ContentDirectory}/getPierced");
+                DyingFall = game.Content.Load<SoundEffect>($"{ContentDirectory}/dyingFall");
             }
         }
 
@@ -82,6 +106,7 @@ public static class Sounds
 
         public static void Load(Game game)
         {
+            Common.Load(game);
             Hero.Load(game);
             Guard.Load(game);
         }

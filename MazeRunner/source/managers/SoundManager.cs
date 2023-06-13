@@ -1,6 +1,7 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Extensions;
 using MazeRunner.GameBase;
+using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
@@ -11,111 +12,81 @@ namespace MazeRunner.Managers;
 
 public static class SoundManager
 {
-    private class MultiSoundPlayer
+    public class SoundEffectData
     {
-        private readonly SoundEffect _soundEffect;
-
-        private readonly SoundEffectInstance _soundEffectInstance;
+        public SoundEffect SoundEffect { get; init; }
 
         public float Volume { get; set; }
 
-        private SoundEffectInstance SoundEffectInstance
+        public SoundEffectData(SoundEffect soundEffect, float volume = 0)
         {
-            get
-            {
-                var soundEffect = _soundEffect.CreateInstance();
-                soundEffect.Volume = Volume;
-
-                return soundEffect;
-            }
-        }
-
-        public MultiSoundPlayer(SoundEffect soundEffect, float volume)
-        {
-            if (!volume.InRange(0, 1))
-            {
-                throw new ArgumentOutOfRangeException(nameof(volume));
-            }
-
+            SoundEffect = soundEffect;
             Volume = volume;
-
-            _soundEffect = soundEffect;
-            
-            _soundEffectInstance = _soundEffect.CreateInstance();
-            _soundEffectInstance.Volume = volume;
         }
 
-        public void Play(bool playNewAnyway = false)
+        public SoundEffectData Copy()
         {
-            if (playNewAnyway || _soundEffectInstance.State is SoundState.Playing)
-            {
-                SoundEffectInstance.Play();
-            }
-            else
-            {
-                _soundEffectInstance.Play();
-            }
+            return new SoundEffectData(SoundEffect, Volume);
         }
     }
 
     public static class Buttons
     {
-        private static readonly MultiSoundPlayer _buttonPressedSoundPlayer;
+        private static readonly SoundEffectData _buttonPressedSoundPlayer;
 
-        private static readonly MultiSoundPlayer _radioButtonPressedSoundPlayer;
+        private static readonly SoundEffectData _radioButtonPressedSoundPlayer;
 
         static Buttons()
         {
-            _buttonPressedSoundPlayer = new MultiSoundPlayer(Sounds.Buttons.Button, .3f);
-            _radioButtonPressedSoundPlayer = new MultiSoundPlayer(Sounds.Buttons.RadioButton, .2f);
+            _buttonPressedSoundPlayer = new SoundEffectData(Sounds.Buttons.Button, .3f);
+            _radioButtonPressedSoundPlayer = new SoundEffectData(Sounds.Buttons.RadioButton, .2f);
         }
 
         public static void PlayButtonPressedSound()
         {
-            _buttonPressedSoundPlayer.Play();
+            Play(_buttonPressedSoundPlayer);
         }
 
         public static void PlayRadioButtonPressedSound()
         {
-            _radioButtonPressedSoundPlayer.Play();
+            Play(_radioButtonPressedSoundPlayer);
         }
     }
 
     public static class Notifiers
     {
-        private static readonly SoundEffectInstance _keyCollected;
+        private static readonly SoundEffectData _keyCollected;
 
-        private static readonly MultiSoundPlayer _foodEatenSoundPlayer;
+        private static readonly SoundEffectData _foodEatenSoundData;
 
-        private static readonly MultiSoundPlayer _chalkCollectingSoundPlayer;
+        private static readonly SoundEffectData _chalkCollectingSoundData;
 
-        private static readonly MultiSoundPlayer _chalkDrawingSoundPlayer;
+        private static readonly SoundEffectData _chalkDrawingSoundData;
 
         static Notifiers()
         {
-            _keyCollected = Sounds.Notifiers.KeyCollected.CreateInstance();
-            _keyCollected.Volume = .05f;
+            _keyCollected = new SoundEffectData(Sounds.Notifiers.KeyCollected, .15f);
 
-            _foodEatenSoundPlayer = new MultiSoundPlayer(Sounds.Notifiers.FoodEaten, .3f);
+            _foodEatenSoundData = new SoundEffectData(Sounds.Notifiers.FoodEaten, .3f);
 
-            _chalkCollectingSoundPlayer = new MultiSoundPlayer(Sounds.Notifiers.ChalkCollecting, .5f);
+            _chalkCollectingSoundData = new SoundEffectData(Sounds.Notifiers.ChalkCollecting, .5f);
 
-            _chalkDrawingSoundPlayer = new MultiSoundPlayer(Sounds.Notifiers.ChalkDrawing, .35f);
+            _chalkDrawingSoundData = new SoundEffectData(Sounds.Notifiers.ChalkDrawing, .35f);
         }
 
         public static void PlayChalkDrawingSound()
         {
-            _chalkDrawingSoundPlayer.Play();
+            Play(_chalkDrawingSoundData);
         }
 
         public static void PlayChalkCollectedSound()
         {
-            _chalkCollectingSoundPlayer.Play();
+            Play(_chalkCollectingSoundData);
         }
 
         public static void PlayFoodEatenSound()
         {
-            _foodEatenSoundPlayer.Play();
+            Play(_foodEatenSoundData);
         }
 
         public static void PlayKeyCollectedSound()
@@ -126,116 +97,178 @@ public static class SoundManager
 
     public static class Sprites
     {
+        public static class Common
+        {
+            private const float SoundMaxVolume = .5f;
+
+            private const float SoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
+
+            private static readonly SoundEffectData _abyssFallSoundData;
+
+            static Common()
+            {
+                _abyssFallSoundData = new SoundEffectData(Sounds.Sprites.Common.AbyssFall);
+            }
+
+            public static void PlayAbyssFallSound(float distanceToObject)
+            {
+                PlayDynamicVolumeSound(distanceToObject, SoundPlayingRadius, GetDynamicVolume, _abyssFallSoundData);
+            }
+
+            private static float GetDynamicVolume(float distanceToObject)
+            {
+                return SoundManager.GetDynamicVolume(distanceToObject, SoundMaxVolume, SoundPlayingRadius);
+            }
+        }
+
         public static class Hero
         {
-            private static readonly SoundEffectInstance _run;
+            private static readonly SoundEffectInstance _runSoundEffectInstance;
 
-            private static readonly SoundEffectInstance _getPierced;
+            private static readonly SoundEffectData _getPiercedSoundData;
 
-            private static readonly MultiSoundPlayer _getHitSoundPlayer;
+            private static readonly SoundEffectData _getHitSoundData;
+
+            private static readonly SoundEffectData _dyingFall;
 
             static Hero()
             {
-                var soundVolume = .1f;
+                var soundsVolume = .1f;
 
-                _run = Sounds.Sprites.Hero.Run.CreateInstance();
-                _run.Volume = soundVolume;
-                _run.IsLooped = true;
+                _runSoundEffectInstance = Sounds.Sprites.Hero.Run.CreateInstance();
+                _runSoundEffectInstance.Volume = soundsVolume;
+                _runSoundEffectInstance.IsLooped = true;
 
-                _getPierced = Sounds.Sprites.Hero.GetPierced.CreateInstance();
-                _getPierced.Volume = soundVolume;
+                _getPiercedSoundData = new SoundEffectData(Sounds.Sprites.Hero.GetPierced, soundsVolume);
 
-                _getHitSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Hero.GetHit, soundVolume);
+                _getHitSoundData = new SoundEffectData(Sounds.Sprites.Hero.GetHit, soundsVolume);
+
+                _dyingFall = new SoundEffectData(Sounds.Sprites.Hero.DyingFall, soundsVolume);
             }
 
-            public static void PlayGetHitSound()
+            public static async void PlayGetHitSoundWithDelay()
             {
-                _getHitSoundPlayer.Play();
+                await Task.Delay(PauseDelayMs);
+
+                Play(_getHitSoundData);
             }
 
-            public static async void PlayGetPiercedSoundAsync()
+            public static async void PlayGetPiercedSoundWithDelay()
             {
                 await Task.Delay((int)(PauseDelayMs * 1.25));
 
-                Play(_getPierced);
+                Play(_getPiercedSoundData);
+            }
+
+            public static async void PlayDyingFallSoundWithDelay()
+            {
+                await Task.Delay((int)(PauseDelayMs * 3.2));
+
+                Play(_dyingFall);
             }
 
             public static void PlayRunSound()
             {
-                Play(_run);
+                Play(_runSoundEffectInstance);
             }
 
             public static void PausePlayingRunSound()
             {
-                Pause(_run);
+                Pause(_runSoundEffectInstance);
             }
 
             public static void StopPlayingRunSound()
             {
-                Stop(_run);
+                Stop(_runSoundEffectInstance);
+            }
+
+            public static void PlayDeathSound(TrapType trapType)
+            {
+                switch (trapType)
+                {
+                    case TrapType.Bayonet:
+                        PlayGetPiercedSoundWithDelay();
+                        break;
+                    case TrapType.Drop:
+                        PlayDyingFallSoundWithDelay();
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
             }
         }
 
         public static class Guard
         {
-            private static readonly MultiSoundPlayer _attackMissedSoundPlayer;
+            private const float SoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
 
-            private static readonly MultiSoundPlayer _attackHitSoundPlayer;
+            private const float RunSoundMaxVolume = .4f;
+
+            private static readonly SoundEffectData _attackMissedSoundData;
+
+            private static readonly SoundEffectData _attackHitSoundData;
+
+            private static readonly SoundEffectData _runSoundData;
+
+            public static SoundEffectData RunSoundData => _runSoundData.Copy();
 
             static Guard()
             {
-                var soundVolume = .1f;
+                var attackSoundsVolume = .1f;
 
-                _attackMissedSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Guard.AttackMissed, soundVolume);
-                _attackHitSoundPlayer = new MultiSoundPlayer(Sounds.Sprites.Guard.AttackHit, soundVolume);
+                _attackMissedSoundData = new SoundEffectData(Sounds.Sprites.Guard.AttackMissed, attackSoundsVolume);
+                _attackHitSoundData = new SoundEffectData(Sounds.Sprites.Guard.AttackHit, attackSoundsVolume);
             }
 
             public static void PlayAttackMissedSound()
             {
-                _attackMissedSoundPlayer.Play();
+                Play(_attackMissedSoundData);
             }
 
-            public async static Task PlayAttackHitAndHeroGetHitSoundsAsync()
+            public static void PlayAttackHitSound()
             {
-                await Task.Factory.StartNew(
-                    async () =>
-                    {
-                        PlayAttackHitSound();
-                        await Task.Delay(PauseDelayMs);
-                        Hero.PlayGetHitSound();
-                    });
+                Play(_attackHitSoundData);
             }
 
-            private static void PlayAttackHitSound()
+            public static void PlayRunSound(MazeRunner.Sprites.Guard guard)
             {
-                _attackHitSoundPlayer.Play();
+
+            }
+
+            private static void PlayActivateSound(SoundEffectData activateSoundEffectData, float distanceToObject)
+            {
+                PlayDynamicVolumeSound(distanceToObject, SoundPlayingRadius, GetDynamicVolume, activateSoundEffectData);
+            }
+
+            private static float GetDynamicVolume(float distanceToObject)
+            {
+                var volume = SoundManager.GetDynamicVolume(distanceToObject, RunSoundMaxVolume, SoundPlayingRadius);
+
+                return volume;
             }
         }
     }
 
     public static class Transiters
     {
-        private static readonly SoundEffectInstance _gameWon;
+        private static readonly SoundEffectData _gameWonSoundData;
 
-        private static readonly SoundEffectInstance _gameOvered;
+        private static readonly SoundEffectData _gameOveredSoundData;
 
         static Transiters()
         {
-            _gameWon = Sounds.Transiters.GameWon.CreateInstance();
-            _gameWon.Volume = .1f;
-
-            _gameOvered = Sounds.Transiters.GameOvered.CreateInstance();
-            _gameOvered.Volume = .15f;
+            _gameWonSoundData = new SoundEffectData(Sounds.Transiters.GameWon, .1f);
+            _gameOveredSoundData = new SoundEffectData(Sounds.Transiters.GameOvered, .15f);
         }
 
         public static void PlayGameWonSound()
         {
-            Play(_gameWon);
+            Play(_gameWonSoundData);
         }
 
         public static void PlayGameOveredSound()
         {
-            Play(_gameOvered);
+            Play(_gameOveredSoundData);
         }
     }
 
@@ -270,7 +303,7 @@ public static class SoundManager
 
             public event Action MusicPlayed;
 
-            public float MaxVolume { get; init; }
+            public float MusicMaxVolume { get; init; }
 
             public MusicPlayer(SoundEffect music, float maxVolume)
             {
@@ -280,20 +313,20 @@ public static class SoundManager
 
                 _musicBreaker = new MusicBreaker();
 
-                MaxVolume = maxVolume;
+                MusicMaxVolume = maxVolume;
             }
 
-            public async Task StartPlayingMusicWithFadeAsync(float playingDurationPercentage)
+            public async Task StartPlayingMusicWithFade(float playingDurationPercentage)
             {
                 var playingDurationMs = _musicDuration * playingDurationPercentage / 100;
                 var cancellationToken = _musicBreaker.CancellationToken;
 
                 _music.Play();
 
-                while (_music.Volume < MaxVolume)
+                while (_music.Volume < MusicMaxVolume)
                 {
                     var newVolume = _music.Volume + FadeValue;
-                    newVolume = newVolume > MaxVolume ? MaxVolume : newVolume;
+                    newVolume = newVolume > MusicMaxVolume ? MusicMaxVolume : newVolume;
 
                     _music.Volume = newVolume;
 
@@ -302,7 +335,7 @@ public static class SoundManager
 
                 await Task.Delay((int)playingDurationMs, cancellationToken).ContinueWith(task => { });
 
-               await StopPlayingMusicWithFadeAsync();
+               await StopPlayingMusicWithFade();
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
@@ -310,7 +343,7 @@ public static class SoundManager
                 }
             }
 
-            public async Task PlayAfterDelayAsync(float percentageDelay, float playingDurationPercentage)
+            public async Task PlayAfterDelay(float percentageDelay, float playingDurationPercentage)
             {
                 var delay = _musicDuration * percentageDelay / 100;
                 var cancellationToken = _musicBreaker.CancellationToken;
@@ -319,7 +352,7 @@ public static class SoundManager
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
-                    await StartPlayingMusicWithFadeAsync(playingDurationPercentage);
+                    await StartPlayingMusicWithFade(playingDurationPercentage);
                 }
             }
 
@@ -345,13 +378,13 @@ public static class SoundManager
                 }
                 else
                 {
-                    newVolume = newVolume > MaxVolume ? MaxVolume : newVolume;
+                    newVolume = newVolume > MusicMaxVolume ? MusicMaxVolume : newVolume;
                 }
 
                 _music.Volume = newVolume;
             }
 
-            private async Task StopPlayingMusicWithFadeAsync()
+            private async Task StopPlayingMusicWithFade()
             {
                 while (_music.Volume > FadeValue)
                 {
@@ -382,79 +415,69 @@ public static class SoundManager
     {
         public static class Drop
         {
-            private static readonly MultiSoundPlayer _activate;
+            private static readonly SoundEffectData _activateSoundEffectData;
 
-            private static readonly MultiSoundPlayer _deactivate;
+            private static readonly SoundEffectData _deactivateSoundEffectData;
 
             static Drop()
             {
-                _activate = new MultiSoundPlayer(Sounds.Traps.Drop.Activate, MaxVolume);
-                _deactivate = new MultiSoundPlayer(Sounds.Traps.Drop.Deactivate, MaxVolume);
+                _activateSoundEffectData = new SoundEffectData(Sounds.Traps.Drop.Activate);
+                _deactivateSoundEffectData = new SoundEffectData(Sounds.Traps.Drop.Deactivate);
             }
 
             public static void PlayActivateSound(float distanceToObject)
             {
-                Traps.PlayActivateSound(_activate, distanceToObject);
+                Traps.PlayActivateSound(_activateSoundEffectData, distanceToObject);
             }
 
             public static void PlayDeactivateSound(float distanceToObject)
             {
-                Traps.PlayDeactivateSound(_deactivate, distanceToObject);
+                Traps.PlayDeactivateSound(_deactivateSoundEffectData, distanceToObject);
             }
         }
 
         public static class Bayonet
         {
-            private static readonly MultiSoundPlayer _activate;
+            private static readonly SoundEffectData _activateSoundData;
 
-            private static readonly MultiSoundPlayer _deactivate;
+            private static readonly SoundEffectData _deactivateSoundData;
 
             static Bayonet()
             {
-                _activate = new MultiSoundPlayer(Sounds.Traps.Bayonet.Activate, MaxVolume);
-                _deactivate = new MultiSoundPlayer(Sounds.Traps.Bayonet.Deactivate, MaxVolume);
+                _activateSoundData = new SoundEffectData(Sounds.Traps.Bayonet.Activate);
+                _deactivateSoundData = new SoundEffectData(Sounds.Traps.Bayonet.Deactivate);
             }
 
             public static void PlayActivateSound(float distanceToObject)
             {
-                Traps.PlayActivateSound(_activate, distanceToObject);
+                Traps.PlayActivateSound(_activateSoundData, distanceToObject);
             }
 
             public static void PlayDeactivateSound(float distanceToObject)
             {
-                Traps.PlayDeactivateSound(_deactivate, distanceToObject);
+                Traps.PlayDeactivateSound(_deactivateSoundData, distanceToObject);
             }
         }
 
         private const float SoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
 
-        private const float MaxVolume = .4f;
+        private const float SoundMaxVolume = .4f;
 
-        private static void PlayActivateSound(MultiSoundPlayer player, float distanceToObject)
+        private static void PlayActivateSound(SoundEffectData activateSoundEffectData, float distanceToObject)
         {
-            if (distanceToObject > SoundPlayingRadius)
-            {
-                return;
-            }
-
-            player.Volume = GetVolume(distanceToObject);
-            player.Play(true);
+            PlayDynamicVolumeSound(distanceToObject, SoundPlayingRadius, GetDynamicVolume, activateSoundEffectData);
         }
 
-        private static void PlayDeactivateSound(MultiSoundPlayer player, float distanceToObject)
+        private static void PlayDeactivateSound(SoundEffectData deactivateSoundEffectData, float distanceToObject)
         {
-            if (distanceToObject > SoundPlayingRadius)
-            {
-                return;
-            }
-
-            player.Volume = GetVolume(distanceToObject);
-            player.Play(true);
+            PlayDynamicVolumeSound(distanceToObject, SoundPlayingRadius, GetDynamicVolume, deactivateSoundEffectData);
         }
 
-        private static float GetVolume(float distanceToObject)
+        private static float GetDynamicVolume(float distanceToObject)
         {
-            return MaxVolume * (1 - distanceToObject / SoundPlayingRadius);
+            var volume = SoundManager.GetDynamicVolume(distanceToObject, SoundMaxVolume, SoundPlayingRadius);
+
+            return volume;
         }
     }
 
@@ -463,6 +486,14 @@ public static class SoundManager
     private const float FadeValue = .05f;
 
     public const int PauseDelayMs = 125;
+
+    private static void Play(SoundEffectData soundEffectData)
+    {
+        var soundEffectInstance = soundEffectData.SoundEffect.CreateInstance();
+        soundEffectInstance.Volume = soundEffectData.Volume;
+
+        Play(soundEffectInstance);
+    }
 
     private static void Play(SoundEffectInstance soundEffect)
     {
@@ -477,5 +508,24 @@ public static class SoundManager
     private static void Stop(SoundEffectInstance soundEffect)
     {
         soundEffect.Stop();
+    }
+
+    private static float GetDynamicVolume(float distanceToObject, float maxVolume, float soundPlayingRadius)
+    {
+        return maxVolume * (1 - distanceToObject / soundPlayingRadius);
+    }
+
+    private static void PlayDynamicVolumeSound(
+        float distanceToObject, float soundPlayingRadius, Func<float, float> dynamicVolumeGetter, SoundEffectData soundEffectData)
+    {
+        if (distanceToObject > soundPlayingRadius)
+        {
+            return;
+        }
+
+        var volume = dynamicVolumeGetter.Invoke(distanceToObject);
+        soundEffectData.Volume = volume;
+
+        Play(soundEffectData);
     }
 }

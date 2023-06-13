@@ -19,7 +19,7 @@ public class Maze : MazeRunnerGameComponent
 
     private const int MazeTileUpdateAreaHeightRadius = GameRunningState.UpdateAreaHeightRadius;
 
-    private const int MazeTileCollideAreaRadius = 2;
+    private const int MazeTileCollideAreaRadius = 3;
 
     private const float ExitOpenDistanceCoeff = 2;
 

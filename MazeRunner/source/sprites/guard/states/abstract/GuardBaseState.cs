@@ -54,4 +54,11 @@ public abstract class GuardBaseState : SpriteBaseState
 
         return pathExist;
     }
+
+    protected float GetDistanceToHero()
+    {
+        var distance = Vector2.Distance(Hero.Position, Guard.Position);
+
+        return distance;
+    }
 }

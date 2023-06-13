@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -27,9 +28,9 @@ public class HeroIdleState : HeroBaseState
 
         if (CollidesWithTraps(Hero, Maze, true, out var trapType))
         {
-            PlayDeathSound(trapType);
+            SoundManager.Sprites.Hero.PlayDeathSound(trapType);
 
-            return GetTrapCollidingState(trapType);
+            //return GetTrapCollidingState(trapType);
         }
 
         if (movement != Vector2.Zero)

@@ -50,6 +50,11 @@ public class GuardChaseState : GuardMoveBaseState
             return new GuardChaseAwaitState(this, Hero, Guard, Maze, _isAttackOnCooldown, _cooldownTimeCounter);
         }
 
+        if (CollidesWithTraps(Guard, Maze, true, out trapType))
+        {
+            return GetTrapCollidingState(trapType);
+        }
+
         base.ProcessState(gameTime);
 
         return this;

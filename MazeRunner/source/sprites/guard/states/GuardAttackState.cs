@@ -75,13 +75,13 @@ public class GuardAttackState : GuardBaseState
         return this;
     }
 
-    private async void DamageHeroIfNeededAsync()
+    private void DamageHeroIfNeededAsync()
     {
         if (!Hero.IsDead && !Hero.IsTakingDamage)
         {
             if (Vector2.Distance(Hero.Position, Guard.Position) < Guard.ElongatedAttackDistance)
             {
-                await SoundManager.Sprites.Guard.PlayAttackHitAndHeroGetHitSoundsAsync();
+                SoundManager.Sprites.Guard.PlayAttackHitSound();
 
                 Hero.TakeDamage(Guard.Damage);
             }
