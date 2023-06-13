@@ -30,7 +30,7 @@ public class HeroIdleState : HeroBaseState
         {
             SoundManager.Sprites.Hero.PlayDeathSound(trapType);
 
-            //return GetTrapCollidingState(trapType);
+            return GetTrapCollidingState(trapType);
         }
 
         if (movement != Vector2.Zero)

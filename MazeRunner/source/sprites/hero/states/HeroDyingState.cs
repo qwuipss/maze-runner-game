@@ -14,8 +14,6 @@ public class HeroDyingState : HeroDeathBaseState
         {
             SoundManager.Sprites.Hero.StopPlayingRunSound();
         }
-
-        SoundManager.Sprites.Hero.PlayDyingFallSoundWithDelay();
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

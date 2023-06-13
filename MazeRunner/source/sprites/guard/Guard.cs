@@ -38,9 +38,13 @@ public class Guard : Enemy
 
     public override Vector2 Speed => new(15, 15);
 
+    public SoundManager.SoundEffectData RunSoundEffectData { get; init; }
+
     public Guard()
     {
         _drawingPriority = base.DrawingPriority;
+
+        RunSoundEffectData = SoundManager.Sprites.Guard.RunSoundData;
     }
 
     public override RectangleF GetHitBox(Vector2 position)

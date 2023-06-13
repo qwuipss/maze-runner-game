@@ -12,7 +12,7 @@ public class GuardWalkState : GuardMoveBaseState
 
     private const int WalkPathMaxLength = 6;
 
-    public const int TrapEscapePathLength = 1;
+    public const int TrapEscapePathLength = 2;
 
     private readonly LinkedList<Vector2> _walkPath;
 

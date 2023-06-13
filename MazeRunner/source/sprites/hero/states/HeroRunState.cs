@@ -39,7 +39,7 @@ public class HeroRunState : HeroBaseState
             SoundManager.Sprites.Hero.StopPlayingRunSound();
             SoundManager.Sprites.Hero.PlayDeathSound(trapType);
 
-            //return GetTrapCollidingState(trapType);
+            return GetTrapCollidingState(trapType);
         }
 
         ProcessItemsColliding();
