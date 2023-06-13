@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase;
+﻿using MazeRunner.Managers;
+using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
@@ -18,6 +19,8 @@ public class GuardChaseState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
+        SoundManager.Sprites.Guard.ProcessRunSoundPlaying(Guard, GetDistanceToHero());
+
         if (_isAttackOnCooldown)
         {
             _cooldownTimeCounter += gameTime.ElapsedGameTime.TotalMilliseconds;

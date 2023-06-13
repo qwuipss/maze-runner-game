@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using System.Collections.Generic;
@@ -31,6 +32,8 @@ public class GuardWalkState : GuardMoveBaseState
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
+        SoundManager.Sprites.Guard.ProcessRunSoundPlaying(Guard, GetDistanceToHero());
+
         if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
             return GetTrapCollidingState(trapType);

@@ -14,8 +14,6 @@ public class HeroFallingState : HeroFallBaseState
         {
             SoundManager.Sprites.Hero.StopPlayingRunSound();
         }
-
-        SoundManager.Sprites.Common.PlayAbyssFallSound(0);
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

@@ -1,5 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -21,6 +22,11 @@ public class GuardIdleState : GuardBaseState
     public GuardIdleState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
         _previousState = previousState;
+
+        if (_previousState is GuardChaseState or GuardWalkState)
+        {
+            SoundManager.Sprites.Guard.PauseRunSound(Guard);
+        }
     }
 
     public GuardIdleState(Hero hero, Guard guard, Maze maze) : this(null, hero, guard, maze)

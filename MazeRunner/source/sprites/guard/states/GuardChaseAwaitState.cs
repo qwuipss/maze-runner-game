@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
@@ -24,6 +25,8 @@ public class GuardChaseAwaitState : GuardMoveBaseState
     {
         _isAttackOnCooldown = isAttackOnCooldown;
         _cooldownTimeCounter = cooldownTimeCounter;
+
+        SoundManager.Sprites.Guard.PauseRunSound(Guard);
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

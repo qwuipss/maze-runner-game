@@ -28,6 +28,8 @@ public class Guard : Enemy
 
     public static int Damage => 1;
 
+    private Hero _hero;
+
     private float _drawingPriority;
 
     public override event Action EnemyDiedNotify;
@@ -38,13 +40,14 @@ public class Guard : Enemy
 
     public override Vector2 Speed => new(15, 15);
 
-    public SoundManager.SoundEffectData RunSoundEffectData { get; init; }
+    public SoundEffectInstance RunSoundEffectInstance { get; init; }
 
     public Guard()
     {
         _drawingPriority = base.DrawingPriority;
 
-        RunSoundEffectData = SoundManager.Sprites.Guard.RunSoundData;
+        RunSoundEffectInstance = SoundManager.Sprites.Guard.RunSoundData.SoundEffect.CreateInstance();
+        RunSoundEffectInstance.IsLooped = true; 
     }
 
     public override RectangleF GetHitBox(Vector2 position)
@@ -55,15 +58,17 @@ public class Guard : Enemy
     public void Initialize(Hero hero, Maze maze)
     {
         State = new GuardIdleState(hero, this, maze);
+
+        _hero = hero;
     }
 
     public override void Update(GameTime gameTime)
     {
         base.Update(gameTime);
 
-        if (_drawingPriority == base.DrawingPriority && IsDead)
+        if (_drawingPriority < _hero.DrawingPriority && IsDead)
         {
-            _drawingPriority += .1f;
+            _drawingPriority = _hero.DrawingPriority - float.Epsilon;
 
             EnemyDiedNotify.Invoke();
         }

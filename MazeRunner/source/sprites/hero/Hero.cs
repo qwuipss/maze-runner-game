@@ -62,6 +62,8 @@ public class Hero : Sprite
 
         if (Health <= 0)
         {
+            SoundManager.Sprites.Hero.PlayDyingFallSoundWithDelay();
+
             State = new HeroDyingState(State, this, _maze);
         }
 

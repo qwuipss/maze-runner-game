@@ -24,6 +24,8 @@ public class GuardAttackState : GuardBaseState
         {
             ElapsedGameTimeMs += cooldownTimeCounter;
         }
+
+        SoundManager.Sprites.Guard.PauseRunSound(Guard);
     }
 
     public override Texture2D Texture => Textures.Sprites.Guard.Attack;
