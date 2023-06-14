@@ -66,6 +66,8 @@ public class GameRunningState : GameBaseState
 
     public const int UpdateAreaHeightRadius = 5;
 
+    public static event Action GameWonNotify;
+
     public static readonly SoundManager.Music.MusicPlayer GameRunningMusic;
 
     public override event Action<IGameState> ControlGiveUpNotify;
@@ -124,9 +126,9 @@ public class GameRunningState : GameBaseState
 
         IsControlling = true;
 
-        Task.Factory.StartNew(async () => await GameRunningMusic.StartPlayingMusicWithFade(RandomHelper.GetRandomMusicPlayingPercentage()));
+        Task.Run(async () => await GameRunningMusic.StartPlayingMusicWithFade(RandomHelper.GetRandomMusicPlayingPercentage()));
 
-        Task.Factory.StartNew(
+        Task.Run(
             async () =>
             {
                 await Task.Delay(SecondaryButtonsHandleBlockDelayMs);
@@ -267,6 +269,7 @@ public class GameRunningState : GameBaseState
             var collectedAction = () =>
             {
                 _maze.IsKeyCollected = true;
+
                 SoundManager.Notifiers.PlayKeyCollectedSound();
             };
 
@@ -552,7 +555,11 @@ public class GameRunningState : GameBaseState
         Shadower.TresholdReached += () =>
         {
             StopPlayingMusic();
+
+            GameWonNotify.Invoke();
+
             SoundManager.Transiters.PlayGameWonSound();
+
             ControlGiveUpNotify.Invoke(new GameWonState());
         };
     }

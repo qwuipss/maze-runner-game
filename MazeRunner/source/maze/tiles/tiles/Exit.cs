@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase.Tiles.States;
+﻿using MazeRunner.Managers;
+using MazeRunner.MazeBase.Tiles.States;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.MazeBase.Tiles;
@@ -47,6 +48,9 @@ public class Exit : MazeTile
         if (State is ExitClosedState)
         {
             _drawingPriority = .4f;
+
+            SoundManager.Exit.PlayKeyOpeningSound();
+            SoundManager.Exit.PlayOpenSoundWithDelay();
 
             State = new ExitOpeningState();
         }

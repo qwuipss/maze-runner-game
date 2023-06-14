@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase;
+﻿using MazeRunner.Managers;
+using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 
@@ -21,6 +22,8 @@ public class HeroDiedState : HeroDeathBaseState
         {
             if (trapType is TrapType.Drop)
             {
+                SoundManager.Sprites.Common.PlayAbyssFallSound(0);
+
                 return new HeroFallingState(this, Hero, Maze);
             }
         }

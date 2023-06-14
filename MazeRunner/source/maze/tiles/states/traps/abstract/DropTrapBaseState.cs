@@ -1,6 +1,5 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Sprites;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MazeRunner.MazeBase.Tiles.States;

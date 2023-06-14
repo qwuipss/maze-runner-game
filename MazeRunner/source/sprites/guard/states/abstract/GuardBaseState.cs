@@ -22,6 +22,11 @@ public abstract class GuardBaseState : SpriteBaseState
         Maze = maze;
     }
 
+    protected static bool IsStatePlayingRunSound(ISpriteState state)
+    {
+        return state is GuardChaseState or GuardWalkState;
+    }
+
     protected override GuardBaseState GetTrapCollidingState(TrapType trapType)
     {
         return trapType switch

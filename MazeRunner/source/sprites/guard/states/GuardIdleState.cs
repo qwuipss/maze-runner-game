@@ -25,7 +25,7 @@ public class GuardIdleState : GuardBaseState
 
         if (_previousState is GuardChaseState or GuardWalkState)
         {
-            SoundManager.Sprites.Guard.PauseRunSound(Guard);
+            SoundManager.Sprites.Guard.PauseRunSoundIfPlaying(Guard);
         }
     }
 
@@ -37,6 +37,8 @@ public class GuardIdleState : GuardBaseState
     {
         if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
+            SoundManager.Sprites.Guard.PlayTrapDeathSound(trapType, GetDistanceToHero());
+
             return GetTrapCollidingState(trapType);
         }
 

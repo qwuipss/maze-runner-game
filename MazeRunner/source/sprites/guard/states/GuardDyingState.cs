@@ -1,4 +1,5 @@
-﻿using MazeRunner.MazeBase;
+﻿using MazeRunner.Managers;
+using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 
 namespace MazeRunner.Sprites.States;
@@ -7,6 +8,10 @@ public class GuardDyingState : GuardDeathBaseState
 {
     public GuardDyingState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
+        if (IsStatePlayingRunSound(previousState))
+        {
+            SoundManager.Sprites.Guard.PauseRunSoundIfPlaying(Guard);
+        }
     }
 
     public override double UpdateTimeDelayMs => 100;

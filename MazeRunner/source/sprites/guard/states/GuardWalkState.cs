@@ -36,6 +36,8 @@ public class GuardWalkState : GuardMoveBaseState
 
         if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
+            SoundManager.Sprites.Guard.PlayTrapDeathSound(trapType, GetDistanceToHero());
+
             return GetTrapCollidingState(trapType);
         }
 

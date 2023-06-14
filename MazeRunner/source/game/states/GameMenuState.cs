@@ -37,7 +37,7 @@ public class GameMenuState : GameBaseState
                 MazeBayonetTrapInsertingPercentage = 5, //2
                 MazeDropTrapInsertingPercentage = 1.25f,
 
-                GuardSpawnCount = 2,
+                GuardSpawnCount = 1, // 7
 
                 ChalksInsertingPercentage = 1,
                 FoodInsertingPercentage = 25, // .75

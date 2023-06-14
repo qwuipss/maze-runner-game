@@ -1,4 +1,5 @@
-﻿using MazeRunner.Managers;
+﻿using MazeRunner.GameBase.States;
+using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
@@ -12,10 +13,20 @@ public abstract class HeroBaseState : SpriteBaseState
 
     protected Maze Maze { get; set; }
 
+    static HeroBaseState()
+    {
+        GamePausedState.GamePausedNotify += SoundManager.Sprites.Hero.PauseRunSoundIfPlaying;
+    }
+
     protected HeroBaseState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState)
     {
         Hero = hero;
         Maze = maze;
+    }
+
+    protected static bool IsStatePlayingRunSound(ISpriteState state)
+    {
+        return state is HeroRunState;
     }
 
     protected override HeroBaseState GetTrapCollidingState(TrapType trapType)

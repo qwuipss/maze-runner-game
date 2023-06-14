@@ -1,4 +1,5 @@
 ﻿using MazeRunner.GameBase;
+using MazeRunner.GameBase.States;
 using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
@@ -47,7 +48,7 @@ public class Guard : Enemy
         _drawingPriority = base.DrawingPriority;
 
         RunSoundEffectInstance = SoundManager.Sprites.Guard.RunSoundData.SoundEffect.CreateInstance();
-        RunSoundEffectInstance.IsLooped = true; 
+        RunSoundEffectInstance.IsLooped = true;
     }
 
     public override RectangleF GetHitBox(Vector2 position)
@@ -60,6 +61,11 @@ public class Guard : Enemy
         State = new GuardIdleState(hero, this, maze);
 
         _hero = hero;
+
+        GamePausedState.GamePausedNotify += () => SoundManager.Sprites.Guard.PauseRunSoundIfPlaying(this);
+        GameRunningState.GameWonNotify += () => SoundManager.Sprites.Guard.DisposeRunSound(this);
+        GameOverState.GameRestartedNotify += () => SoundManager.Sprites.Guard.DisposeRunSound(this);
+        GameOverState.GameMenuReturnedNotify += () => SoundManager.Sprites.Guard.DisposeRunSound(this);
     }
 
     public override void Update(GameTime gameTime)
@@ -68,7 +74,7 @@ public class Guard : Enemy
 
         if (_drawingPriority < _hero.DrawingPriority && IsDead)
         {
-            _drawingPriority = _hero.DrawingPriority - float.Epsilon;
+            _drawingPriority = _hero.DrawingPriority + 1e-2f;
 
             EnemyDiedNotify.Invoke();
         }

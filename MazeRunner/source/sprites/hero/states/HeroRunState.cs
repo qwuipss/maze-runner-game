@@ -25,7 +25,7 @@ public class HeroRunState : HeroBaseState
 
         if (movement == Vector2.Zero)
         {
-            SoundManager.Sprites.Hero.PausePlayingRunSound();
+            SoundManager.Sprites.Hero.PauseRunSoundIfPlaying();
 
             return new HeroIdleState(this, Hero, Maze);
         }
@@ -36,8 +36,8 @@ public class HeroRunState : HeroBaseState
 
         if (CollidesWithTraps(Hero, Maze, true, out var trapType))
         {
-            SoundManager.Sprites.Hero.StopPlayingRunSound();
-            SoundManager.Sprites.Hero.PlayDeathSound(trapType);
+            SoundManager.Sprites.Hero.StopPlayingRunSoundIfPlaying();
+            SoundManager.Sprites.Hero.PlayTrapDeathSound(trapType);
 
             return GetTrapCollidingState(trapType);
         }

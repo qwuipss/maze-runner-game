@@ -10,9 +10,9 @@ public class HeroDyingState : HeroDeathBaseState
 
     public HeroDyingState(ISpriteState previousState, Hero hero, Maze maze) : base(previousState, hero, maze)
     {
-        if (previousState is HeroRunState)
+        if (IsStatePlayingRunSound(previousState))
         {
-            SoundManager.Sprites.Hero.StopPlayingRunSound();
+            SoundManager.Sprites.Hero.StopPlayingRunSoundIfPlaying();
         }
     }
 

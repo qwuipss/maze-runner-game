@@ -1,8 +1,6 @@
 ﻿using MazeRunner.Content;
-using MazeRunner.Extensions;
 using MazeRunner.GameBase;
 using MazeRunner.MazeBase.Tiles;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using System;
 using System.Threading;
@@ -172,17 +170,17 @@ public static class SoundManager
                 Play(_runSoundEffectInstance);
             }
 
-            public static void PausePlayingRunSound()
+            public static void PauseRunSoundIfPlaying()
             {
-                Pause(_runSoundEffectInstance);
+                PauseIfPlaying(_runSoundEffectInstance);
             }
 
-            public static void StopPlayingRunSound()
+            public static void StopPlayingRunSoundIfPlaying()
             {
-                Stop(_runSoundEffectInstance);
+                StopIfNot(_runSoundEffectInstance);
             }
 
-            public static void PlayDeathSound(TrapType trapType)
+            public static void PlayTrapDeathSound(TrapType trapType)
             {
                 switch (trapType)
                 {
@@ -201,6 +199,10 @@ public static class SoundManager
 
         public static class Guard
         {
+            private const float DeathSoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
+
+            private const float DeathSoundMaxVolume = .4f;
+
             private const float RunSoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
 
             private const float RunSoundMaxVolume = .4f;
@@ -211,15 +213,21 @@ public static class SoundManager
 
             private static readonly SoundEffectData _runSoundData;
 
+            private static readonly SoundEffectData _getPiercedSoundData;
+
+            private static readonly SoundEffectData _dyingFallSoundData;
+
             public static SoundEffectData RunSoundData => _runSoundData.Copy();
 
             static Guard()
             {
-                var attackSoundsVolume = .1f;
+                var attckSoundsVolume = .1f;
 
-                _attackMissedSoundData = new SoundEffectData(Sounds.Sprites.Guard.AttackMissed, attackSoundsVolume);
-                _attackHitSoundData = new SoundEffectData(Sounds.Sprites.Guard.AttackHit, attackSoundsVolume);
-                _runSoundData = new SoundEffectData(Sounds.Sprites.Guard.Run, attackSoundsVolume);
+                _attackMissedSoundData = new SoundEffectData(Sounds.Sprites.Guard.AttackMissed, attckSoundsVolume);
+                _attackHitSoundData = new SoundEffectData(Sounds.Sprites.Guard.AttackHit, attckSoundsVolume);
+                _runSoundData = new SoundEffectData(Sounds.Sprites.Guard.Run);
+                _getPiercedSoundData = new SoundEffectData(Sounds.Sprites.Guard.GetPierced);
+                _dyingFallSoundData = new SoundEffectData(Sounds.Sprites.Guard.DyingFall);
             }
 
             public static void PlayAttackMissedSound()
@@ -234,20 +242,85 @@ public static class SoundManager
 
             public static void ProcessRunSoundPlaying(MazeRunner.Sprites.Guard guard, float distanceToObject)
             {
-                PlayContinuousDynamicVolumeSound(distanceToObject, RunSoundPlayingRadius, GetDynamicVolume, guard.RunSoundEffectInstance);
+                ProcessPlayingContinuousDynamicVolumeSound(distanceToObject, RunSoundPlayingRadius, GetRunSoundDynamicVolume, guard.RunSoundEffectInstance);
             }
 
-            public static void PauseRunSound(MazeRunner.Sprites.Guard guard)
+            public static void PauseRunSoundIfPlaying(MazeRunner.Sprites.Guard guard)
             {
-                Pause(guard.RunSoundEffectInstance);
+                PauseIfPlaying(guard.RunSoundEffectInstance);
             }
 
-            private static float GetDynamicVolume(float distanceToObject)
+            public static void DisposeRunSound(MazeRunner.Sprites.Guard guard)
             {
-                var volume = SoundManager.GetDynamicVolume(distanceToObject, RunSoundMaxVolume, RunSoundPlayingRadius);
+                guard.RunSoundEffectInstance.Dispose();
+            }
+
+            public static void PlayTrapDeathSound(TrapType trapType, float distanceToObject)
+            {
+                switch (trapType)
+                {
+                    case TrapType.Drop:
+                        Common.PlayAbyssFallSound(distanceToObject);
+                        break;
+                    case TrapType.Bayonet:
+                        PlayGetPiercedSound(distanceToObject);
+                        PlayDyingFallSoundWithDelay(distanceToObject);
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+
+            private static void PlayGetPiercedSound(float distanceToObject)
+            {
+                PlayDynamicVolumeSound(distanceToObject, DeathSoundPlayingRadius, GetDeathSoundDynamicVolume, _getPiercedSoundData);
+            }
+
+            private static async void PlayDyingFallSoundWithDelay(float distanceToObject)
+            {
+                await Task.Delay((int)(PauseDelayMs * 2.9));
+
+                PlayDynamicVolumeSound(distanceToObject, DeathSoundPlayingRadius, GetDeathSoundDynamicVolume, _dyingFallSoundData);
+            }
+
+            private static float GetRunSoundDynamicVolume(float distanceToObject)
+            {
+                var volume = GetDynamicVolume(distanceToObject, RunSoundMaxVolume, RunSoundPlayingRadius);
 
                 return volume;
             }
+
+            private static float GetDeathSoundDynamicVolume(float distanceToObject)
+            {
+                var volume = GetDynamicVolume(distanceToObject, DeathSoundMaxVolume, DeathSoundPlayingRadius);
+
+                return volume;
+            }
+        }
+    }
+
+    public static class Exit
+    {
+        private static readonly SoundEffectData _keyOpeningSoundData;
+
+        private static readonly SoundEffectData _openSoundData;
+
+        static Exit()
+        {
+            _keyOpeningSoundData = new SoundEffectData(Sounds.Exit.KeyOpening, .3f);
+            _openSoundData = new SoundEffectData(Sounds.Exit.Open, .05f);
+        }
+
+        public static void PlayKeyOpeningSound()
+        {
+            Play(_keyOpeningSoundData);
+        }
+
+        public static async void PlayOpenSoundWithDelay()
+        {
+            await Task.Delay(PauseDelayMs * 3);
+
+            Play(_openSoundData);
         }
     }
 
@@ -337,7 +410,7 @@ public static class SoundManager
 
                 await Task.Delay((int)playingDurationMs, cancellationToken).ContinueWith(task => { });
 
-               await StopPlayingMusicWithFade();
+                await StopPlayingMusicWithFade();
 
                 if (!cancellationToken.IsCancellationRequested)
                 {
@@ -398,7 +471,7 @@ public static class SoundManager
                     await Task.Delay(FadeDelayMs);
                 }
 
-                Stop(_music);
+                StopIfNot(_music);
             }
         }
 
@@ -463,7 +536,7 @@ public static class SoundManager
 
         private const float SoundPlayingRadius = GameConstants.AssetsFrameSize * 2.5f;
 
-        private const float SoundMaxVolume = .4f;
+        private const float SoundMaxVolume = .35f;
 
         private static void PlayActivateSound(SoundEffectData activateSoundEffectData, float distanceToObject)
         {
@@ -497,19 +570,28 @@ public static class SoundManager
         Play(soundEffectInstance);
     }
 
-    private static void Play(SoundEffectInstance soundEffect)
+    private static void Play(SoundEffectInstance soundEffectInstance)
     {
-        soundEffect.Play();
+        if (!soundEffectInstance.IsDisposed)
+        {
+            soundEffectInstance.Play();
+        }
     }
 
-    private static void Pause(SoundEffectInstance soundEffect)
+    private static void PauseIfPlaying(SoundEffectInstance soundEffectInstance)
     {
-        soundEffect.Pause();
+        if (!soundEffectInstance.IsDisposed && soundEffectInstance.State is SoundState.Playing)
+        {
+            soundEffectInstance.Pause();
+        }
     }
 
-    private static void Stop(SoundEffectInstance soundEffect)
+    private static void StopIfNot(SoundEffectInstance soundEffectInstance)
     {
-        soundEffect.Stop();
+        if (!soundEffectInstance.IsDisposed && soundEffectInstance.State is not SoundState.Stopped)
+        {
+            soundEffectInstance.Stop();
+        }
     }
 
     private static float GetDynamicVolume(float distanceToObject, float maxVolume, float soundPlayingRadius)
@@ -531,21 +613,21 @@ public static class SoundManager
         Play(soundEffectData);
     }
 
-    private static void PlayContinuousDynamicVolumeSound(
+    private static void ProcessPlayingContinuousDynamicVolumeSound(
         float distanceToObject, float soundPlayingRadius, Func<float, float> dynamicVolumeGetter, SoundEffectInstance soundEffectInstance)
     {
         if (distanceToObject > soundPlayingRadius)
         {
-            if (soundEffectInstance.State is SoundState.Playing)
-            {
-                Pause(soundEffectInstance);
-            }
+            PauseIfPlaying(soundEffectInstance);
 
             return;
         }
 
         soundEffectInstance.Volume = dynamicVolumeGetter.Invoke(distanceToObject);
 
-        Play(soundEffectInstance);
+        if (soundEffectInstance.State is not SoundState.Playing)
+        {
+            Play(soundEffectInstance);
+        }
     }
 }

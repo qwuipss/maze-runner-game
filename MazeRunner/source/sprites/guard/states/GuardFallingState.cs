@@ -10,6 +10,10 @@ public class GuardFallingState : GuardFallBaseState
 
     public GuardFallingState(ISpriteState previousState, Hero hero, Guard guard, Maze maze) : base(previousState, hero, guard, maze)
     {
+        if (IsStatePlayingRunSound(previousState))
+        {
+            SoundManager.Sprites.Guard.PauseRunSoundIfPlaying(Guard);
+        }
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)

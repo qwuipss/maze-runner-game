@@ -25,7 +25,7 @@ public class GuardAttackState : GuardBaseState
             ElapsedGameTimeMs += cooldownTimeCounter;
         }
 
-        SoundManager.Sprites.Guard.PauseRunSound(Guard);
+        SoundManager.Sprites.Guard.PauseRunSoundIfPlaying(Guard);
     }
 
     public override Texture2D Texture => Textures.Sprites.Guard.Attack;
@@ -38,6 +38,8 @@ public class GuardAttackState : GuardBaseState
     {
         if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
+            SoundManager.Sprites.Guard.PlayTrapDeathSound(trapType, GetDistanceToHero());
+
             return GetTrapCollidingState(trapType);
         }
 

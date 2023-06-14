@@ -17,9 +17,11 @@ public class GamePausedState : GameBaseState
 
     private const float ResumeGameVolumePercentageChange = 100;
 
-    public override event Action<IGameState> ControlGiveUpNotify;
-
     private readonly GameRunningState _runningState;
+
+    public static event Action GamePausedNotify;
+
+    public override event Action<IGameState> ControlGiveUpNotify;
 
     private StaticCamera _staticCamera;
 
@@ -40,6 +42,8 @@ public class GamePausedState : GameBaseState
         _handleSecondaryButtons = true;
 
         GameRunningState.GameRunningMusic.ChangeVolume(PauseGameVolumePercentageChange);
+
+        GamePausedNotify.Invoke();
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
@@ -172,6 +176,7 @@ public class GamePausedState : GameBaseState
     private void ResumeGame()
     {
         GameRunningState.GameRunningMusic.ChangeVolume(ResumeGameVolumePercentageChange);
+
         ControlGiveUpNotify.Invoke(_runningState);
     }
 

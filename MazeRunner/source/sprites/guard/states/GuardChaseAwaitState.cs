@@ -1,7 +1,6 @@
 ﻿using MazeRunner.Content;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
-using MazeRunner.MazeBase.Tiles;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -26,13 +25,15 @@ public class GuardChaseAwaitState : GuardMoveBaseState
         _isAttackOnCooldown = isAttackOnCooldown;
         _cooldownTimeCounter = cooldownTimeCounter;
 
-        SoundManager.Sprites.Guard.PauseRunSound(Guard);
+        SoundManager.Sprites.Guard.PauseRunSoundIfPlaying(Guard);
     }
 
     public override ISpriteState ProcessState(GameTime gameTime)
     {
         if (CollidesWithTraps(Guard, Maze, true, out var trapType))
         {
+            SoundManager.Sprites.Guard.PlayTrapDeathSound(trapType, GetDistanceToHero());
+
             return GetTrapCollidingState(trapType);
         }
 

@@ -620,6 +620,18 @@
 /processorParam:Quality=Best
 /build:sounds/buttons/radioButton.wav
 
+#begin sounds/exit/keyOpening.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/exit/keyOpening.wav
+
+#begin sounds/exit/open.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/exit/open.wav
+
 #begin sounds/music/gameMenuMusic.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

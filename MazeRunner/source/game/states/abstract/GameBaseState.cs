@@ -9,10 +9,6 @@ namespace MazeRunner.GameBase.States;
 
 public abstract class GameBaseState : IGameState
 {
-    private const int UpdateAreaWidthRadius = 7;
-
-    private const int UpdateAreaHeightRadius = 5;
-
     public abstract event Action<IGameState> ControlGiveUpNotify;
 
     protected GraphicsDevice GraphicsDevice { get; set; }

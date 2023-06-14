@@ -112,6 +112,21 @@ public static class Sounds
         }
     }
 
+    public static class Exit
+    {
+        private const string ContentDirectory = $"{BaseContentDirectory}/exit";
+
+        public static SoundEffect Open { get; private set; }
+
+        public static SoundEffect KeyOpening { get; private set; }
+
+        public static void Load(Game game)
+        {
+            Open = game.Content.Load<SoundEffect>($"{ContentDirectory}/open");
+            KeyOpening = game.Content.Load<SoundEffect>($"{ContentDirectory}/keyOpening");
+        }
+    }
+
     public static class Music
     {
         private const string ContentDirectory = $"{BaseContentDirectory}/music";
@@ -191,5 +206,6 @@ public static class Sounds
         Music.Load(game);
         Transiters.Load(game);
         Traps.Load(game);
+        Exit.Load(game);
     }
 }
