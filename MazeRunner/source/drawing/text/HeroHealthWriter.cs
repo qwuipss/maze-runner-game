@@ -54,10 +54,10 @@ public class HeroHealthWriter : TextWriter
     public override void Draw(GameTime gameTime)
     {
         Drawer.Draw(
-            HeartTexture, 
-            HeartTextureDrawingPosition, 
-            new Rectangle(0, 0, HeartTexture.Width, HeartTexture.Height), 
-            DrawingPriority, 
+            HeartTexture,
+            HeartTextureDrawingPosition,
+            new Rectangle(0, 0, HeartTexture.Width, HeartTexture.Height),
+            DrawingPriority,
             scale: _scaleFactor);
 
         Drawer.DrawString(this);

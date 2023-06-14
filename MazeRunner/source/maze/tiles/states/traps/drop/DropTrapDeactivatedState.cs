@@ -6,16 +6,17 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class DropTrapDeactivatedState : DropTrapBaseState
 {
+    private const int MinUpdateTimeMs = 1000;
+
+    private const int MaxUpdateTimeMs = 15000;
+
     private readonly double _updateTimeDelayMs;
 
     protected override double UpdateTimeDelayMs => _updateTimeDelayMs;
 
     public DropTrapDeactivatedState(Hero hero, MazeTrap trap) : base(hero, trap)
     {
-        var minUpdateTimeMs = 1000;
-        var maxUpdateTimeMs = 15000;
-
-        _updateTimeDelayMs = RandomHelper.Next(minUpdateTimeMs, maxUpdateTimeMs);
+        _updateTimeDelayMs = RandomHelper.Next(MinUpdateTimeMs, MaxUpdateTimeMs);
     }
 
     public override IMazeTileState ProcessState(GameTime gameTime)

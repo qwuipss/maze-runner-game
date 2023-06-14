@@ -61,6 +61,11 @@ public class GuardIdleState : GuardBaseState
             var animationPoint = CurrentAnimationFramePoint;
             var framePosX = (animationPoint.X + FrameSize) % (FrameSize * FramesCount);
 
+            if (framePosX == FrameSize * 3)
+            {
+                SoundManager.Sprites.Guard.PlaySwordFellSound(GetDistanceToHero());
+            }
+
             if (framePosX is 0 && animationPoint.X == (FramesCount - 1) * FrameSize && RandomHelper.RandomBoolean())
             {
                 return new GuardWalkState(this, Hero, Guard, Maze);

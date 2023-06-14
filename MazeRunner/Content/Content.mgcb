@@ -626,12 +626,6 @@
 /processorParam:Quality=Best
 /build:sounds/buttons/button.wav
 
-#begin sounds/buttons/cantBeClicked.wav
-/importer:WavImporter
-/processor:SoundEffectProcessor
-/processorParam:Quality=Best
-/build:sounds/buttons/cantBeClicked.wav
-
 #begin sounds/buttons/radioButton.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -722,6 +716,12 @@
 /processorParam:Quality=Best
 /build:sounds/sprites/guard/run.wav
 
+#begin sounds/sprites/guard/swordFell.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/sprites/guard/swordFell.wav
+
 #begin sounds/sprites/hero/dyingFall.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor
@@ -769,6 +769,12 @@
 /processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:sounds/traps/bayonet/deactivate.wav
+
+#begin sounds/traps/bayonet/preActivate.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/traps/bayonet/preActivate.wav
 
 #begin sounds/traps/drop/activate.wav
 /importer:WavImporter

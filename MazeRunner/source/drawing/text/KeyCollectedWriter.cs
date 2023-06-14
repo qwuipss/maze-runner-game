@@ -1,14 +1,8 @@
 ﻿using MazeRunner.Content;
-using MazeRunner.GameBase;
 using MazeRunner.MazeBase;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace MazeRunner.Drawing.Writers;
 
@@ -58,10 +52,10 @@ public class KeyCollectedWriter : TextWriter
         if (_needDrawing)
         {
             Drawer.Draw(
-                _keyCollectedTexture, 
-                Position, 
-                new Rectangle(0, 0, _keyCollectedTexture.Width, _keyCollectedTexture.Height), 
-                DrawingPriority, 
+                _keyCollectedTexture,
+                Position,
+                new Rectangle(0, 0, _keyCollectedTexture.Width, _keyCollectedTexture.Height),
+                DrawingPriority,
                 scale: _scaleFactor);
         }
     }

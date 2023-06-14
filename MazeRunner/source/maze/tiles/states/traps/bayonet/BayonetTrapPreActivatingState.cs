@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Helpers;
+using MazeRunner.Managers;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 
@@ -6,16 +7,17 @@ namespace MazeRunner.MazeBase.Tiles.States;
 
 public class BayonetTrapPreActivatingState : BayonetTrapBaseState
 {
+    private const int MinUpdateTimeMs = 700;
+
+    private const int MaxUpdateTimeMs = 1000;
+
     private readonly double _updateTimeDelayMs;
 
     protected override double UpdateTimeDelayMs => _updateTimeDelayMs;
 
     public BayonetTrapPreActivatingState(Hero hero, MazeTrap trap) : base(hero, trap)
     {
-        var minUpdateTimeMs = 700;
-        var maxUpdateTimeMs = 1000;
-
-        _updateTimeDelayMs = RandomHelper.Next(minUpdateTimeMs, maxUpdateTimeMs);
+        _updateTimeDelayMs = RandomHelper.Next(MinUpdateTimeMs, MaxUpdateTimeMs);
 
         CurrentAnimationFramePoint = new Point(FrameSize, 0);
     }
@@ -27,6 +29,11 @@ public class BayonetTrapPreActivatingState : BayonetTrapBaseState
         if (ElapsedGameTimeMs > UpdateTimeDelayMs)
         {
             var animationPoint = CurrentAnimationFramePoint;
+
+            if (animationPoint.X == FrameSize * 2)
+            {
+                SoundManager.Traps.Bayonet.PlayPreActivateSound(GetDistanceToHero());
+            }
 
             if (animationPoint.X == FrameSize * 4)
             {

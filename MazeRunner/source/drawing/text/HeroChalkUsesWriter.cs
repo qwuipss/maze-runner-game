@@ -62,10 +62,10 @@ public class HeroChalkUsesWriter : TextWriter
     public override void Draw(GameTime gameTime)
     {
         Drawer.Draw(
-            ChalkTexture, 
-            ChalkTextureDrawingPosition, 
-            new Rectangle(0, 0, ChalkTexture.Width, ChalkTexture.Height), 
-            DrawingPriority, 
+            ChalkTexture,
+            ChalkTextureDrawingPosition,
+            new Rectangle(0, 0, ChalkTexture.Width, ChalkTexture.Height),
+            DrawingPriority,
             scale: _scaleFactor);
 
         Drawer.DrawString(this);

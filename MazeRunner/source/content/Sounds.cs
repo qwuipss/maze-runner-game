@@ -92,6 +92,8 @@ public static class Sounds
 
             public static SoundEffect DyingFall { get; private set; }
 
+            public static SoundEffect SwordFell { get; private set; }
+
             public static void Load(Game game)
             {
                 AttackMissed = game.Content.Load<SoundEffect>($"{ContentDirectory}/attackMissed");
@@ -99,6 +101,7 @@ public static class Sounds
                 Run = game.Content.Load<SoundEffect>($"{ContentDirectory}/run");
                 GetPierced = game.Content.Load<SoundEffect>($"{ContentDirectory}/getPierced");
                 DyingFall = game.Content.Load<SoundEffect>($"{ContentDirectory}/dyingFall");
+                SwordFell = game.Content.Load<SoundEffect>($"{ContentDirectory}/swordFell");
             }
         }
 
@@ -165,11 +168,14 @@ public static class Sounds
 
             public static SoundEffect Activate { get; private set; }
 
+            public static SoundEffect PreActivate { get; private set; }
+
             public static SoundEffect Deactivate { get; private set; }
 
             public static void Load(Game game)
             {
                 Activate = game.Content.Load<SoundEffect>($"{ContentDirectory}/activate");
+                PreActivate = game.Content.Load<SoundEffect>($"{ContentDirectory}/preActivate");
                 Deactivate = game.Content.Load<SoundEffect>($"{ContentDirectory}/deactivate");
             }
         }
