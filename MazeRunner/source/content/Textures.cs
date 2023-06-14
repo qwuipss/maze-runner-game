@@ -383,10 +383,13 @@ public static class Textures
 
             public static Texture2D Chalk { get; private set; }
 
+            public static Texture2D KeyCollected { get; private set; }
+
             public static void Load(Game game)
             {
                 Heart = game.Content.Load<Texture2D>($"{ContentDirectory}/heart");
                 Chalk = game.Content.Load<Texture2D>($"{ContentDirectory}/chalk");
+                KeyCollected = game.Content.Load<Texture2D>($"{ContentDirectory}/keyCollected");
             }
         }
 

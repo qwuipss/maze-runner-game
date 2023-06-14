@@ -332,6 +332,18 @@
 /processorParam:TextureFormat=Color
 /build:gui/stateShowers/heart.png
 
+#begin gui/stateShowers/keyCollected.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gui/stateShowers/keyCollected.png
+
 #begin mazetiles/items/chalk/chalk_1.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -8,13 +8,11 @@ namespace MazeRunner.Drawing.Writers;
 
 public class HeroChalkUsesWriter : TextWriter
 {
-    private static readonly Texture2D _chalkTexture;
+    public static readonly Texture2D ChalkTexture;
 
     private readonly float _scaleFactor;
 
     private readonly Hero _hero;
-
-    private readonly Vector2 _chalkTextureDrawingPosition;
 
     private int _count;
 
@@ -26,9 +24,11 @@ public class HeroChalkUsesWriter : TextWriter
 
     public override string Text => $"x{_count}";
 
+    public Vector2 ChalkTextureDrawingPosition { get; init; }
+
     static HeroChalkUsesWriter()
     {
-        _chalkTexture = Textures.Gui.StateShowers.Chalk;
+        ChalkTexture = Textures.Gui.StateShowers.Chalk;
     }
 
     public HeroChalkUsesWriter(Hero hero, HeroHealthWriter healthWriter, float scaleDivider, int viewWidth)
@@ -48,20 +48,25 @@ public class HeroChalkUsesWriter : TextWriter
 
         var stringSize = Font.MeasureString($"x{_count}") * _scaleFactor;
 
-        _chalkTextureDrawingPosition = new Vector2(
+        ChalkTextureDrawingPosition = new Vector2(
             0,
             healthWriter.HeartTextureDrawingPosition.Y + HeroHealthWriter.HeartTexture.Height * healthWriter.ScaleFactor * topOffset);
 
         var textDowningCoeff = .86f;
 
         Position = new Vector2(
-            _chalkTexture.Width * _scaleFactor * textOffset,
-            _chalkTextureDrawingPosition.Y + _chalkTexture.Height * _scaleFactor - stringSize.Y * textDowningCoeff);
+            ChalkTexture.Width * _scaleFactor * textOffset,
+            ChalkTextureDrawingPosition.Y + ChalkTexture.Height * _scaleFactor - stringSize.Y * textDowningCoeff);
     }
 
     public override void Draw(GameTime gameTime)
     {
-        Drawer.Draw(_chalkTexture, _chalkTextureDrawingPosition, new Rectangle(0, 0, _chalkTexture.Width, _chalkTexture.Height), DrawingPriority, scale: _scaleFactor);
+        Drawer.Draw(
+            ChalkTexture, 
+            ChalkTextureDrawingPosition, 
+            new Rectangle(0, 0, ChalkTexture.Width, ChalkTexture.Height), 
+            DrawingPriority, 
+            scale: _scaleFactor);
 
         Drawer.DrawString(this);
     }

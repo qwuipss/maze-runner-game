@@ -88,6 +88,8 @@ public class GameRunningState : GameBaseState
 
     private HeroChalkUsesWriter _heroChalkUsesWriter;
 
+    private KeyCollectedWriter _keyCollectedWriter;
+
     private List<Enemy> _enemies;
 
     private HashSet<MazeRunnerGameComponent> _gameComponents;
@@ -249,7 +251,7 @@ public class GameRunningState : GameBaseState
 
         _staticComponents = new HashSet<MazeRunnerGameComponent>
         {
-            _heroHealthWriter, _heroChalkUsesWriter, Shadower,
+            _heroHealthWriter, _heroChalkUsesWriter, _keyCollectedWriter, Shadower,
         };
     }
 
@@ -382,6 +384,8 @@ public class GameRunningState : GameBaseState
         _heroHealthWriter = new HeroHealthWriter(_hero, scaleDivider, ViewWidth);
 
         _heroChalkUsesWriter = new HeroChalkUsesWriter(_hero, _heroHealthWriter, scaleDivider, ViewWidth);
+
+        _keyCollectedWriter = new KeyCollectedWriter(_maze, _heroChalkUsesWriter, scaleDivider, ViewWidth);
 
         _findKeyTextWriter.WriterDiedNotify += () => AddComponentToDeadList(_findKeyTextWriter);
     }
