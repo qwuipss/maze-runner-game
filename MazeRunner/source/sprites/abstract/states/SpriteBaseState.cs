@@ -59,7 +59,8 @@ public abstract class SpriteBaseState : ISpriteState
             return true;
         }
 
-        trapType = TrapType.None;
+        trapType = TrapType.Drop;
+
         return false;
     }
 

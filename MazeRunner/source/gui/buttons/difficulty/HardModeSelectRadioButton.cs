@@ -7,7 +7,7 @@ public class HardModeSelectRadioButton : RadioButton
 {
     public override event Action ButtonPressedNotify;
 
-    public HardModeSelectRadioButton(float boxScale) : base(boxScale)
+    public HardModeSelectRadioButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 
@@ -33,7 +33,7 @@ public class HardModeSelectRadioButton : RadioButton
 
     public override void Push(bool notifyAboutPush = false)
     {
-        Click();
+        Click(notifyAboutPush);
 
         State = new HardModeSelectButtonSelectedState(this);
     }

@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,9 +25,12 @@ public class MenuButtonHoverState : ButtonBaseState
             return new MenuButtonIdleState(Button);
         }
 
-        if (mouseState.LeftButton == ButtonState.Pressed)
+        if (mouseState.LeftButton is ButtonState.Pressed)
         {
-            return new MenuButtonClickedState(Button);
+            if (Button.CanBeClicked.Invoke())
+            {
+                return new MenuButtonClickedState(Button);
+            }
         }
 
         return this;

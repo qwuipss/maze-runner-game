@@ -30,8 +30,12 @@ public class GameOverState : GameBaseState
 
     private HashSet<MazeRunnerGameComponent> _components;
 
+    private bool _canButtonsBeClicked;
+
     public GameOverState(GameRunningState runningState, float cameraEffectTransparency)
     {
+        _canButtonsBeClicked = true;
+
         Shadower = new EffectsHelper.Shadower(false);
 
         _runningState = runningState;
@@ -84,7 +88,7 @@ public class GameOverState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _restartButton = new RestartButton(boxScale);
+            _restartButton = new RestartButton(boxScale, () => _canButtonsBeClicked);
 
             _restartButton.Initialize();
 
@@ -97,7 +101,7 @@ public class GameOverState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _menuButton = new MenuButton(boxScale);
+            _menuButton = new MenuButton(boxScale, () => _canButtonsBeClicked);
 
             _menuButton.Initialize();
 
@@ -132,6 +136,7 @@ public class GameOverState : GameBaseState
 
     private void RestartGame()
     {
+        _canButtonsBeClicked = false;
         NeedShadowerActivate = true;
 
         Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameRunningState(_runningState.GameParameters));
@@ -143,6 +148,7 @@ public class GameOverState : GameBaseState
     {
         GameRunningState.StopPlayingMusic();
 
+        _canButtonsBeClicked = false;
         NeedShadowerActivate = true;
 
         GameMenuReturnedNotify.Invoke();

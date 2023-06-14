@@ -30,24 +30,24 @@ public static class SoundManager
 
     public static class Buttons
     {
-        private static readonly SoundEffectData _buttonPressedSoundPlayer;
+        private static readonly SoundEffectData _buttonPressedSoundData;
 
-        private static readonly SoundEffectData _radioButtonPressedSoundPlayer;
+        private static readonly SoundEffectData _radioButtonPressedSoundData;
 
         static Buttons()
         {
-            _buttonPressedSoundPlayer = new SoundEffectData(Sounds.Buttons.Button, .3f);
-            _radioButtonPressedSoundPlayer = new SoundEffectData(Sounds.Buttons.RadioButton, .2f);
+            _buttonPressedSoundData = new SoundEffectData(Sounds.Buttons.Button, .3f);
+            _radioButtonPressedSoundData = new SoundEffectData(Sounds.Buttons.RadioButton, .2f);
         }
 
         public static void PlayButtonPressedSound()
         {
-            Play(_buttonPressedSoundPlayer);
+            Play(_buttonPressedSoundData);
         }
 
         public static void PlayRadioButtonPressedSound()
         {
-            Play(_radioButtonPressedSoundPlayer);
+            Play(_radioButtonPressedSoundData);
         }
     }
 

@@ -7,7 +7,7 @@ public class ResumeButton : Button
 {
     public override event Action ButtonPressedNotify;
 
-    public ResumeButton(float boxScale) : base(boxScale)
+    public ResumeButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 

@@ -17,17 +17,24 @@ namespace MazeRunner.GameBase.States;
 
 public class GameMenuState : GameBaseState
 {
+    private enum DifficultyMode
+    {
+        Easy,
+        Normal,
+        Hard,
+    }
+
     private static class GameModes
     {
-        public static readonly Lazy<GameParameters> Easy;
+        public static readonly GameParameters Easy;
 
-        public static readonly Lazy<GameParameters> Normal;
+        public static readonly GameParameters Normal;
 
-        public static readonly Lazy<GameParameters> Hard;
+        public static readonly GameParameters Hard;
 
         static GameModes()
         {
-            Easy = new Lazy<GameParameters>(() => new GameParameters()
+            Easy = new GameParameters
             {
                 MazeWidth = 9,
                 MazeHeight = 9,
@@ -44,9 +51,9 @@ public class GameMenuState : GameBaseState
 
                 HeroHealth = 500, //5
                 ChalkUses = 10,
-            });
+            };
 
-            Normal = new Lazy<GameParameters>(() => new GameParameters()
+            Normal = new GameParameters
             {
                 MazeWidth = 35,
                 MazeHeight = 35,
@@ -63,9 +70,9 @@ public class GameMenuState : GameBaseState
 
                 HeroHealth = 1, //3
                 ChalkUses = 15,
-            });
+            };
 
-            Hard = new Lazy<GameParameters>(() => new GameParameters()
+            Hard = new GameParameters
             {
                 MazeWidth = 45,
                 MazeHeight = 45,
@@ -82,17 +89,23 @@ public class GameMenuState : GameBaseState
 
                 HeroHealth = 2,
                 ChalkUses = 25,
-            });
+            };
         }
     }
 
     private const float GameMenuMusicMaxVolume = .3f;
 
+    private const int ButtonsCantBeClickedEnterDelayMs = 750;
+
+    private static readonly Dictionary<DifficultyMode, GameParameters> _difficultyParameters;
+
     private static readonly SoundManager.Music.MusicPlayer _gameMenuMusic;
 
-    private static Texture2D _cameraEffect;
+    private static readonly DifficultyMode _defaultDifficulty;
 
-    private Lazy<GameParameters> _difficulty;
+    private static DifficultyMode? _lastSelectedDifficultyMode;
+
+    private static Texture2D _cameraEffect;
 
     private Button _startButton;
 
@@ -106,6 +119,8 @@ public class GameMenuState : GameBaseState
 
     private HashSet<MazeRunnerGameComponent> _components;
 
+    private bool _canButtonsBeClicked;
+
     public override event Action<IGameState> ControlGiveUpNotify;
 
     static GameMenuState()
@@ -115,6 +130,10 @@ public class GameMenuState : GameBaseState
         _gameMenuMusic.MusicPlayed +=
             async () => await _gameMenuMusic.PlayAfterDelay(
                 RandomHelper.GetRandomMusicPlayingPercentage(), RandomHelper.GetRandomMusicPlayingPercentage());
+
+        _difficultyParameters = GetDifficultyParameters();
+
+        _defaultDifficulty = DifficultyMode.Normal;
     }
 
     public GameMenuState()
@@ -128,8 +147,7 @@ public class GameMenuState : GameBaseState
 
         TurnOnMouseVisible(game);
 
-        _difficulty = GameModes.Normal;
-
+        TemporaryBlockButtonsClicks();
         InitializeButtons();
         InitializeCamera();
         InitializeMaze();
@@ -165,13 +183,49 @@ public class GameMenuState : GameBaseState
         _gameMenuMusic.StopPlaying();
     }
 
+    private static Dictionary<DifficultyMode, GameParameters> GetDifficultyParameters()
+    {
+        return new Dictionary<DifficultyMode, GameParameters>
+        {
+            { DifficultyMode.Easy, GameModes.Easy },
+            { DifficultyMode.Normal, GameModes.Normal },
+            { DifficultyMode.Hard, GameModes.Hard },
+        };
+    }
+
+    private static GameParameters GetDifficultyGameParameters()
+    {
+        _lastSelectedDifficultyMode ??= _defaultDifficulty;
+
+        return _difficultyParameters[_lastSelectedDifficultyMode.Value];
+    }
+
+    private static void PushDifficultySelectButtonWithDifficultyMode(
+        RadioButton easySelectButton, RadioButton normalSelectButton, RadioButton hardSelectButton)
+    {
+        switch (_lastSelectedDifficultyMode)
+        {
+            case DifficultyMode.Easy:
+                easySelectButton.Push();
+                break;
+            case DifficultyMode.Normal:
+                normalSelectButton.Push();
+                break;
+            case DifficultyMode.Hard:
+                hardSelectButton.Push();
+                break;
+            default:
+                throw new NotImplementedException();
+        }
+    }
+
     private void InitializeButtons()
     {
         void InitializeGameStartButton(float scaleDivider)
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _startButton = new StartButton(boxScale);
+            _startButton = new StartButton(boxScale, () => _canButtonsBeClicked);
 
             _startButton.Initialize();
 
@@ -184,7 +238,7 @@ public class GameMenuState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _quitButton = new QuitButton(boxScale);
+            _quitButton = new QuitButton(boxScale, () => _canButtonsBeClicked);
 
             _quitButton.Initialize();
 
@@ -197,7 +251,7 @@ public class GameMenuState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            var normalSelectButton = new NormalModeSelectRadioButton(boxScale);
+            var normalSelectButton = new NormalModeSelectRadioButton(boxScale, () => _canButtonsBeClicked);
 
             normalSelectButton.Initialize();
 
@@ -206,9 +260,10 @@ public class GameMenuState : GameBaseState
                 _startButton.Position.Y + _startButton.Height * buttonsOffsetCoeff);
 
             normalSelectButton.Position = normalSelectButtonPosition;
-            normalSelectButton.ButtonPressedNotify += () => _difficulty = GameModes.Normal;
 
-            var easySelectButton = new EasyModeSelectRadioButton(boxScale);
+            normalSelectButton.ButtonPressedNotify += () => _lastSelectedDifficultyMode = DifficultyMode.Normal;
+
+            var easySelectButton = new EasyModeSelectRadioButton(boxScale, () => _canButtonsBeClicked);
 
             easySelectButton.Initialize();
 
@@ -216,9 +271,9 @@ public class GameMenuState : GameBaseState
                 normalSelectButtonPosition.X - easySelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            easySelectButton.ButtonPressedNotify += () => _difficulty = GameModes.Easy;
+            easySelectButton.ButtonPressedNotify += () => _lastSelectedDifficultyMode = DifficultyMode.Easy;
 
-            var hardSelectButton = new HardModeSelectRadioButton(boxScale);
+            var hardSelectButton = new HardModeSelectRadioButton(boxScale, () => _canButtonsBeClicked);
 
             hardSelectButton.Initialize();
 
@@ -226,11 +281,13 @@ public class GameMenuState : GameBaseState
                 normalSelectButtonPosition.X + normalSelectButton.Width * buttonsOffsetCoeff,
                 normalSelectButtonPosition.Y);
 
-            hardSelectButton.ButtonPressedNotify += () => _difficulty = GameModes.Hard;
+            hardSelectButton.ButtonPressedNotify += () => _lastSelectedDifficultyMode = DifficultyMode.Hard;
 
             _difficultySelectButtonsContainer = new RadioButtonContainer(easySelectButton, normalSelectButton, hardSelectButton);
 
-            normalSelectButton.Push();
+            _lastSelectedDifficultyMode ??= DifficultyMode.Normal;
+
+            PushDifficultySelectButtonWithDifficultyMode(easySelectButton, normalSelectButton, hardSelectButton);
         }
 
         var startButtonScaleDivider = 360;
@@ -305,6 +362,8 @@ public class GameMenuState : GameBaseState
 
     private void StartGame()
     {
+        _canButtonsBeClicked = false;
+
         NeedShadowerActivate = true;
 
         Shadower = new EffectsHelper.Shadower(false);
@@ -312,12 +371,24 @@ public class GameMenuState : GameBaseState
         Shadower.TresholdReached += () =>
         {
             StopPlayingMusic();
-            ControlGiveUpNotify.Invoke(new GameRunningState(_difficulty.Value));
+            ControlGiveUpNotify.Invoke(new GameRunningState(GetDifficultyGameParameters()));
         };
     }
 
     private void QuitGame()
     {
+        _canButtonsBeClicked = false;
+
         Environment.Exit(0);
+    }
+
+    private void TemporaryBlockButtonsClicks()
+    {
+        Task.Run(async () =>
+        {
+            await Task.Delay(ButtonsCantBeClickedEnterDelayMs);
+
+            _canButtonsBeClicked = true;
+        });
     }
 }

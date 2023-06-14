@@ -7,7 +7,7 @@ public class MenuButton : Button
 {
     public override event Action ButtonPressedNotify;
 
-    public MenuButton(float boxScale) : base(boxScale)
+    public MenuButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 

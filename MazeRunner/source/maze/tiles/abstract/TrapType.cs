@@ -2,7 +2,6 @@
 
 public enum TrapType
 {
-    None,
     Drop,
     Bayonet,
 }

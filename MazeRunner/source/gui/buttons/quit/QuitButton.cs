@@ -7,7 +7,7 @@ public class QuitButton : Button
 {
     public override event Action ButtonPressedNotify;
 
-    public QuitButton(float boxScale) : base(boxScale)
+    public QuitButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 

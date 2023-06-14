@@ -7,7 +7,7 @@ public class NormalModeSelectRadioButton : RadioButton
 {
     public override event Action ButtonPressedNotify;
 
-    public NormalModeSelectRadioButton(float boxScale) : base(boxScale)
+    public NormalModeSelectRadioButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 

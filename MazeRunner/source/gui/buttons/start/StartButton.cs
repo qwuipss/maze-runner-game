@@ -7,7 +7,7 @@ public class StartButton : Button
 {
     public override event Action ButtonPressedNotify;
 
-    public StartButton(float boxScale) : base(boxScale)
+    public StartButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 

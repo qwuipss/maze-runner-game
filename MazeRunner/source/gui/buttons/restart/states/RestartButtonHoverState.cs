@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Content;
+using MazeRunner.Managers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -24,9 +25,12 @@ public class RestartButtonHoverState : ButtonBaseState
             return new RestartButtonIdleState(Button);
         }
 
-        if (mouseState.LeftButton == ButtonState.Pressed)
+        if (mouseState.LeftButton is ButtonState.Pressed)
         {
-            return new RestartButtonClickedState(Button);
+            if (Button.CanBeClicked.Invoke())
+            {
+                return new RestartButtonClickedState(Button);
+            }
         }
 
         return this;

@@ -35,8 +35,12 @@ public class GamePausedState : GameBaseState
 
     private bool _handleSecondaryButtons;
 
+    private bool _canButtonsBeClicked;
+
     public GamePausedState(GameRunningState runningState)
     {
+        _canButtonsBeClicked = true;
+
         _runningState = runningState;
 
         _handleSecondaryButtons = true;
@@ -93,7 +97,7 @@ public class GamePausedState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _restartButton = new RestartButton(boxScale);
+            _restartButton = new RestartButton(boxScale, () => _canButtonsBeClicked);
 
             _restartButton.Initialize();
 
@@ -107,7 +111,7 @@ public class GamePausedState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _resumeButton = new ResumeButton(boxScale);
+            _resumeButton = new ResumeButton(boxScale, () => _canButtonsBeClicked);
 
             _resumeButton.Initialize();
 
@@ -123,7 +127,7 @@ public class GamePausedState : GameBaseState
         {
             var boxScale = ViewWidth / scaleDivider;
 
-            _menuButton = new MenuButton(boxScale);
+            _menuButton = new MenuButton(boxScale, () => _canButtonsBeClicked);
 
             _menuButton.Initialize();
 
@@ -175,6 +179,8 @@ public class GamePausedState : GameBaseState
 
     private void ResumeGame()
     {
+        _canButtonsBeClicked = false;
+
         GameRunningState.GameRunningMusic.ChangeVolume(ResumeGameVolumePercentageChange);
 
         ControlGiveUpNotify.Invoke(_runningState);
@@ -182,15 +188,17 @@ public class GamePausedState : GameBaseState
 
     private void RestartGame()
     {
-        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameRunningState(_runningState.GameParameters));
-
+        _canButtonsBeClicked = false;
         NeedShadowerActivate = true;
+
+        Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameRunningState(_runningState.GameParameters));
     }
 
     private void GoToMenu()
     {
         GameRunningState.StopPlayingMusic();
 
+        _canButtonsBeClicked = false;
         NeedShadowerActivate = true;
 
         Shadower.TresholdReached += () => ControlGiveUpNotify.Invoke(new GameMenuState());

@@ -26,7 +26,9 @@ public class KeyCollectedWriter : TextWriter
 
     public override string Text => throw new NotImplementedException();
 
+#pragma warning disable CS0067 // The event 'KeyCollectedWriter.WriterDiedNotify' is never used
     public override event Action WriterDiedNotify;
+#pragma warning restore CS0067 // The event 'KeyCollectedWriter.WriterDiedNotify' is never used
 
     static KeyCollectedWriter()
     {

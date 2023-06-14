@@ -7,7 +7,7 @@ public class RestartButton : Button
 {
     public override event Action ButtonPressedNotify;
 
-    public RestartButton(float boxScale) : base(boxScale)
+    public RestartButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 

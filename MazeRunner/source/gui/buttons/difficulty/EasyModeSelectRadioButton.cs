@@ -7,7 +7,7 @@ public class EasyModeSelectRadioButton : RadioButton
 {
     public override event Action ButtonPressedNotify;
 
-    public EasyModeSelectRadioButton(float boxScale) : base(boxScale)
+    public EasyModeSelectRadioButton(float boxScale, Func<bool> canBeClicked) : base(boxScale, canBeClicked)
     {
     }
 
@@ -33,7 +33,7 @@ public class EasyModeSelectRadioButton : RadioButton
 
     public override void Push(bool notifyAboutPush = false)
     {
-        Click();
+        Click(notifyAboutPush);
 
         State = new EasyModeSelectButtonSelectedState(this);
     }

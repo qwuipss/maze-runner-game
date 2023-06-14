@@ -23,11 +23,14 @@ public abstract class Button : MazeRunnerGameComponent
 
     public float BoxScale { get; init; }
 
+    public Func<bool> CanBeClicked { get; init; }
+
     protected IButtonState State { get; set; }
 
-    public Button(float boxScale)
+    public Button(float boxScale, Func<bool> canBeClicked)
     {
         BoxScale = boxScale;
+        CanBeClicked = canBeClicked;
     }
 
     public abstract void Initialize();

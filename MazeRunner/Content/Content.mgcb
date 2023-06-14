@@ -626,6 +626,12 @@
 /processorParam:Quality=Best
 /build:sounds/buttons/button.wav
 
+#begin sounds/buttons/cantBeClicked.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sounds/buttons/cantBeClicked.wav
+
 #begin sounds/buttons/radioButton.wav
 /importer:WavImporter
 /processor:SoundEffectProcessor

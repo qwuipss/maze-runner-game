@@ -23,9 +23,13 @@ public class GameWonState : GameBaseState
 
     private HashSet<MazeRunnerGameComponent> _components;
 
+    private bool _canButtonsBeClicked;
+
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
         base.Initialize(graphicsDevice, game);
+
+        _canButtonsBeClicked = true;
 
         TurnOnMouseVisible(game);
 
@@ -74,7 +78,7 @@ public class GameWonState : GameBaseState
 
         var boxScale = ViewWidth / scaleDivider;
 
-        _menuButton = new MenuButton(boxScale);
+        _menuButton = new MenuButton(boxScale, () => _canButtonsBeClicked);
 
         _menuButton.Initialize();
 
@@ -95,6 +99,7 @@ public class GameWonState : GameBaseState
     {
         Shadower = new EffectsHelper.Shadower(false);
 
+        _canButtonsBeClicked = false;
         NeedShadowerActivate = true;
 
         Shadower.TresholdReached += () =>
