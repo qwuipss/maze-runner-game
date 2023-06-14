@@ -41,15 +41,15 @@ public class GameMenuState : GameBaseState
 
                 MazeDeadEndsRemovePercentage = 55,
 
-                MazeBayonetTrapInsertingPercentage = 5, //2
+                MazeBayonetTrapInsertingPercentage = 2, 
                 MazeDropTrapInsertingPercentage = 1.25f,
 
-                GuardSpawnCount = 1, // 7
+                GuardSpawnCount = 7,
 
                 ChalksInsertingPercentage = 1,
-                FoodInsertingPercentage = 25, // .75
+                FoodInsertingPercentage = .75f,
 
-                HeroHealth = 500, //5
+                HeroHealth = 5,
                 ChalkUses = 10,
             };
 
@@ -61,14 +61,14 @@ public class GameMenuState : GameBaseState
                 MazeDeadEndsRemovePercentage = 60,
 
                 MazeBayonetTrapInsertingPercentage = 2.25f,
-                MazeDropTrapInsertingPercentage = 45f, //1.75
+                MazeDropTrapInsertingPercentage = 1.75f,
 
-                GuardSpawnCount = 35, //15
+                GuardSpawnCount = 15,
 
                 ChalksInsertingPercentage = 1.25f,
                 FoodInsertingPercentage = .75f,
 
-                HeroHealth = 1, //3
+                HeroHealth = 3,
                 ChalkUses = 15,
             };
 
