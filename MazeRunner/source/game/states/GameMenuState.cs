@@ -36,12 +36,12 @@ public class GameMenuState : GameBaseState
         {
             Easy = new GameParameters
             {
-                MazeWidth = 9,
-                MazeHeight = 9,
+                MazeWidth = 25,
+                MazeHeight = 25,
 
                 MazeDeadEndsRemovePercentage = 55,
 
-                MazeBayonetTrapInsertingPercentage = 2, 
+                MazeBayonetTrapInsertingPercentage = 2,
                 MazeDropTrapInsertingPercentage = 1.25f,
 
                 GuardSpawnCount = 7,
@@ -50,7 +50,7 @@ public class GameMenuState : GameBaseState
                 FoodInsertingPercentage = .75f,
 
                 HeroHealth = 5,
-                ChalkUses = 10,
+                ChalkUses = 5,
             };
 
             Normal = new GameParameters
@@ -69,7 +69,7 @@ public class GameMenuState : GameBaseState
                 FoodInsertingPercentage = .75f,
 
                 HeroHealth = 3,
-                ChalkUses = 15,
+                ChalkUses = 10,
             };
 
             Hard = new GameParameters
@@ -88,7 +88,7 @@ public class GameMenuState : GameBaseState
                 FoodInsertingPercentage = 0.5f,
 
                 HeroHealth = 2,
-                ChalkUses = 25,
+                ChalkUses = 15,
             };
         }
     }

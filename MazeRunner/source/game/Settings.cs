@@ -6,9 +6,7 @@ internal static class Settings
 {
     public static Keys PauseSwitch => Keys.Escape;
 
-    public static Keys ChalkDrawing => Keys.X;
-
-    public static Keys NextTutorialText => Keys.Space;
+    public static Keys ChalkDrawing => Keys.Space;
 
     public static Keys MoveUp => Keys.W;
     public static Keys MoveDown => Keys.S;

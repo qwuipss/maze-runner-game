@@ -61,7 +61,6 @@ public static class KeyboardManager
 
         _pauseSwitchButton = new CooldownButton(cooldownMs, PauseSwitch);
         _chalkDrawingButton = new CooldownButton(cooldownMs, ChalkDrawing);
-        _nextTutorialTextButton = new CooldownButton(cooldownMs, NextTutorialText);
     }
 
     public static Vector2 ProcessHeroMovement()
@@ -100,10 +99,5 @@ public static class KeyboardManager
     public static bool IsChalkDrawingButtonPressed(GameTime gameTime)
     {
         return _chalkDrawingButton.IsPressed(gameTime);
-    }
-
-    public static bool IsNextTutorialTextButtonPressed(GameTime gameTime)
-    {
-        return _nextTutorialTextButton.IsPressed(gameTime);
     }
 }

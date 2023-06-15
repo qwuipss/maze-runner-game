@@ -8,7 +8,7 @@ namespace MazeRunner.Sprites.States;
 
 public class GuardAttackState : GuardBaseState
 {
-    public const double AttackDelayMs = 550;
+    public const double AttackDelayMs = 850;
 
     private bool _isAttackOnCooldown;
 
