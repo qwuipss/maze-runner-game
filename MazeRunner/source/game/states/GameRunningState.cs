@@ -64,7 +64,7 @@ public class GameRunningState : GameBaseState
 
     public const int UpdateAreaWidthRadius = 7;
 
-    public const int UpdateAreaHeightRadius = 5;
+    public const int UpdateAreaHeightRadius = 7;
 
     public static event Action GameWonNotify;
 
