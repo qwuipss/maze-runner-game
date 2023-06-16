@@ -31,8 +31,6 @@ public class GameWonState : GameBaseState
 
         _canButtonsBeClicked = true;
 
-        TurnOnMouseVisible(game);
-
         InitializeCamera();
         InitializeShadower();
         InitializeButtons();
@@ -43,6 +41,8 @@ public class GameWonState : GameBaseState
     public override void Draw(GameTime gameTime)
     {
         Drawer.BeginDraw(_staticCamera);
+
+        Drawer.DrawCursor(BaseCursor);
 
         foreach (var component in _components)
         {

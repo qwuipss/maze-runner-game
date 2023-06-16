@@ -393,10 +393,23 @@ public static class Textures
             }
         }
 
+        public static class Cursors
+        {
+            private const string ContentDirectory = $"{Gui.ContentDirectory}/cursors";
+
+            public static Texture2D BaseCursor { get; private set; }
+
+            public static void Load(Game game)
+            {
+                BaseCursor = game.Content.Load<Texture2D>($"{ContentDirectory}/baseCursor");
+            }
+        }
+
         public static void Load(Game game)
         {
             Buttons.Load(game);
             StateShowers.Load(game);
+            Cursors.Load(game);
         }
     }
 

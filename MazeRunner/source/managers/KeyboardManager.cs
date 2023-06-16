@@ -53,8 +53,6 @@ public static class KeyboardManager
 
     private static readonly CooldownButton _chalkDrawingButton;
 
-    private static readonly CooldownButton _nextTutorialTextButton;
-
     static KeyboardManager()
     {
         var cooldownMs = 250;

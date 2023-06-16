@@ -146,8 +146,6 @@ public class GameRunningState : GameBaseState
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
-        TurnOffMouseVisible(game);
-
         if (GraphicsDevice is not null)
         {
             return;

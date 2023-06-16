@@ -308,6 +308,18 @@
 /processorParam:TextureFormat=Color
 /build:gui/buttons/start/idle.png
 
+#begin gui/cursors/baseCursor.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:gui/cursors/baseCursor.png
+
 #begin gui/stateShowers/chalk.png
 /importer:TextureImporter
 /processor:TextureProcessor

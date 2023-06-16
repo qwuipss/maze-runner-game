@@ -54,8 +54,6 @@ public class GamePausedState : GameBaseState
     {
         base.Initialize(graphicsDevice, game);
 
-        TurnOnMouseVisible(game);
-
         InitializeButtons();
         InitializeShadower();
         InitializeStaticCamera();
@@ -67,6 +65,8 @@ public class GamePausedState : GameBaseState
         _runningState.Draw(gameTime);
 
         Drawer.BeginDraw(_staticCamera);
+
+        Drawer.DrawCursor(BaseCursor);
 
         foreach (var component in _components)
         {

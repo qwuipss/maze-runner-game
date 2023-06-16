@@ -143,7 +143,7 @@ public class GameMenuState : GameBaseState
     {
         base.Initialize(graphicsDevice, game);
 
-        TurnOnMouseVisible(game);
+        TurnOffMouseVisible(game);
 
         TemporaryBlockButtonsClicks();
         InitializeButtons();
@@ -156,6 +156,8 @@ public class GameMenuState : GameBaseState
     public override void Draw(GameTime gameTime)
     {
         Drawer.BeginDraw(_staticCamera);
+
+        Drawer.DrawCursor(BaseCursor);
 
         foreach (var component in _components)
         {

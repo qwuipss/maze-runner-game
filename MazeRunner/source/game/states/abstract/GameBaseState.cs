@@ -1,4 +1,5 @@
 ﻿using MazeRunner.Components;
+using MazeRunner.Gui.Cursors;
 using MazeRunner.Helpers;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,17 +12,19 @@ public abstract class GameBaseState : IGameState
 {
     public abstract event Action<IGameState> ControlGiveUpNotify;
 
-    protected GraphicsDevice GraphicsDevice { get; set; }
+    protected int ViewWidth { get; private set; }
 
-    protected int ViewWidth { get; set; }
-
-    protected int ViewHeight { get; set; }
+    protected int ViewHeight { get; private set; }
 
     protected EffectsHelper.Shadower Shadower { get; set; }
 
     protected bool NeedShadowerActivate { get; set; }
 
     protected bool NeedShadowerDeactivate { get; set; }
+
+    protected GraphicsDevice GraphicsDevice { get; private set; }
+
+    protected BaseCursor BaseCursor { get; private set; }
 
     public abstract void Draw(GameTime gameTime);
 
@@ -35,19 +38,13 @@ public abstract class GameBaseState : IGameState
         }
     }
 
-    protected static void TurnOnMouseVisible(Game game)
-    {
-        if (!game.IsMouseVisible)
-        {
-            game.IsMouseVisible = true;
-        }
-    }
-
     public virtual void Initialize(GraphicsDevice graphicsDevice, Game game)
     {
         GraphicsDevice = graphicsDevice;
 
         InitializeViewDimensions();
+
+        BaseCursor = new BaseCursor(ViewWidth * .45f, ViewWidth);
     }
 
     private void InitializeViewDimensions()

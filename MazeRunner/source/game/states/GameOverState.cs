@@ -49,8 +49,6 @@ public class GameOverState : GameBaseState
     {
         base.Initialize(graphicsDevice, game);
 
-        TurnOnMouseVisible(game);
-
         InitializeCameras();
         InitializeButtons();
         InitializeComponents();
@@ -61,6 +59,8 @@ public class GameOverState : GameBaseState
         _runningState.Draw(gameTime);
 
         Drawer.BeginDraw(_staticCamera);
+
+        Drawer.DrawCursor(BaseCursor);
 
         foreach (var component in _components)
         {

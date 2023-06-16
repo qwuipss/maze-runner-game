@@ -1,11 +1,13 @@
 ﻿using MazeRunner.Cameras;
 using MazeRunner.Drawing.Writers;
 using MazeRunner.Gui.Buttons;
+using MazeRunner.Gui.Cursors;
 using MazeRunner.Helpers;
 using MazeRunner.MazeBase.Tiles;
 using MazeRunner.Sprites;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Drawing;
 using ColorXna = Microsoft.Xna.Framework.Color;
 using RectagleXna = Microsoft.Xna.Framework.Rectangle;
@@ -35,34 +37,43 @@ public static class Drawer
         _spriteBatch.End();
     }
 
+    public static void DrawCursor(IGameCursor cursor)
+    {
+        var cursorPosition = Mouse.GetState().Position.ToVector2();
+        var cursorTexture = cursor.Texture;
+
+        Draw(cursorTexture,
+             cursorPosition,
+             new RectagleXna(0, 0, cursorTexture.Width, cursorTexture.Height),
+             0,
+             scale: cursor.ScaleFactor);
+    }
+
     public static void DrawButton(Button button)
     {
-        Draw(
-            button.Texture,
-            button.Position,
-            button.CurrentAnimationFrame,
-            Button.DrawingPriority,
-            scale: button.BoxScale);
+        Draw(button.Texture,
+             button.Position,
+             button.CurrentAnimationFrame,
+             Button.DrawingPriority,
+             scale: button.BoxScale);
     }
 
     public static void DrawString(TextWriter textWriter)
     {
-        _spriteBatch.DrawString(
-            textWriter.Font,
-            textWriter.Text,
-            textWriter.Position,
-            textWriter.Color,
-            0,
-            Vector2.Zero,
-            textWriter.ScaleFactor,
-            SpriteEffects.None,
-            textWriter.DrawingPriority);
+        _spriteBatch.DrawString(textWriter.Font,
+                                textWriter.Text,
+                                textWriter.Position,
+                                textWriter.Color,
+                                0,
+                                Vector2.Zero,
+                                textWriter.ScaleFactor,
+                                SpriteEffects.None,
+                                textWriter.DrawingPriority);
     }
 
     public static void DrawSprite(Sprite sprite)
     {
-        Draw(
-             sprite.Texture,
+        Draw(sprite.Texture,
              sprite.Position,
              sprite.CurrentAnimationFrame,
              sprite.DrawingPriority,
@@ -71,8 +82,7 @@ public static class Drawer
 
     public static void DrawMazeTile(MazeTile mazeTile)
     {
-        Draw(
-             mazeTile.Texture,
+        Draw(mazeTile.Texture,
              mazeTile.Position,
              mazeTile.CurrentAnimationFrame,
              mazeTile.DrawingPriority,

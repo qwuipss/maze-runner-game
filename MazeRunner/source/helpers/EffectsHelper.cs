@@ -42,7 +42,7 @@ public static class EffectsHelper
         public override void Draw(GameTime gameTime)
         {
             Drawer.Draw(
-                _blackBackground, Vector2.Zero, new Rectangle(0, 0, _blackBackground.Width, _blackBackground.Height), 0, transparency: _transparency);
+                _blackBackground, Vector2.Zero, new Rectangle(0, 0, _blackBackground.Width, _blackBackground.Height), 1e-2f, transparency: _transparency);
         }
 
         public override void Update(GameTime gameTime)
