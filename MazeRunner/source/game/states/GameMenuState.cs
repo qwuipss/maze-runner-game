@@ -49,7 +49,7 @@ public class GameMenuState : GameBaseState
                 ChalksInsertingPercentage = 1,
                 FoodInsertingPercentage = .75f,
 
-                HeroHealth = 1555,
+                HeroHealth = 5,
                 ChalkUses = 5,
             };
 
@@ -136,7 +136,7 @@ public class GameMenuState : GameBaseState
 
     public GameMenuState()
     {
-        Task.Factory.StartNew(async () => await _gameMenuMusic.StartPlayingMusicWithFade(RandomHelper.GetRandomMusicPlayingPercentage()));
+        Task.Run(async () => await _gameMenuMusic.StartPlayingMusicWithFade(RandomHelper.GetRandomMusicPlayingPercentage()));
     }
 
     public override void Initialize(GraphicsDevice graphicsDevice, Game game)

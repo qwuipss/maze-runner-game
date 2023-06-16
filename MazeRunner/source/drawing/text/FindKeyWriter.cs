@@ -50,6 +50,8 @@ public class FindKeyWriter : TextWriter
         _hero = hero;
         _maze = maze;
 
+        Position = _hero.Position;
+
         var skeleton = maze.Skeleton;
 
         var sideCell = new Cell(skeleton.GetLength(1), 0);
@@ -83,6 +85,10 @@ public class FindKeyWriter : TextWriter
         if (_needWriting)
         {
             Position = GetDrawingPosition();
+        }
+        else
+        {
+            Position = _hero.Position;
         }
     }
 
