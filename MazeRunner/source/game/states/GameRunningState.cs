@@ -62,7 +62,7 @@ public class GameRunningState : GameBaseState
 
     private const int SecondaryButtonsHandleBlockDelayMs = 1000;
 
-    public const int UpdateAreaWidthRadius = 7;
+    public const int UpdateAreaWidthRadius = 9;
 
     public const int UpdateAreaHeightRadius = 7;
 

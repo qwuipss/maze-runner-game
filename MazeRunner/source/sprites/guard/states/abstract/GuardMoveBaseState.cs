@@ -118,10 +118,10 @@ public abstract class GuardMoveBaseState : GuardBaseState
         return new Vector2(position.X + halfFrameSize, position.Y + halfFrameSize);
     }
 
-    protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cell, Maze maze, HashSet<Cell> visitedCells)
+    protected static IEnumerable<Cell> GetAdjacentMovingCells(Cell cellFrom, Maze maze, HashSet<Cell> visitedCells)
     {
-        return MazeGenerator.GetAdjacentCells(cell, maze, 1)
-            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall and not TileType.Exit && !visitedCells.Contains(cell));
+        return MazeGenerator.GetAdjacentCells(cellFrom, maze, 1)
+            .Where(cell => maze.Skeleton[cell.Y, cell.X].TileType is not TileType.Wall && maze.ExitInfo.Cell != cell && !visitedCells.Contains(cell));
     }
 
     public static bool PathToHeroExist(Hero hero, Guard guard, Maze maze, out IEnumerable<Vector2> path)

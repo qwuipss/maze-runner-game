@@ -49,7 +49,7 @@ public class GameMenuState : GameBaseState
                 ChalksInsertingPercentage = 1,
                 FoodInsertingPercentage = .75f,
 
-                HeroHealth = 5,
+                HeroHealth = 1555,
                 ChalkUses = 5,
             };
 
@@ -101,9 +101,7 @@ public class GameMenuState : GameBaseState
 
     private static readonly SoundManager.Music.MusicPlayer _gameMenuMusic;
 
-    private static readonly DifficultyMode _defaultDifficulty;
-
-    private static DifficultyMode? _lastSelectedDifficultyMode;
+    private static DifficultyMode _lastSelectedDifficultyMode;
 
     private static Texture2D _cameraEffect;
 
@@ -133,7 +131,7 @@ public class GameMenuState : GameBaseState
 
         _difficultyParameters = GetDifficultyParameters();
 
-        _defaultDifficulty = DifficultyMode.Normal;
+        _lastSelectedDifficultyMode = DifficultyMode.Normal;
     }
 
     public GameMenuState()
@@ -195,9 +193,7 @@ public class GameMenuState : GameBaseState
 
     private static GameParameters GetDifficultyGameParameters()
     {
-        _lastSelectedDifficultyMode ??= _defaultDifficulty;
-
-        return _difficultyParameters[_lastSelectedDifficultyMode.Value];
+        return _difficultyParameters[_lastSelectedDifficultyMode];
     }
 
     private static void PushDifficultySelectButtonWithDifficultyMode(
@@ -284,8 +280,6 @@ public class GameMenuState : GameBaseState
             hardSelectButton.ButtonPressedNotify += () => _lastSelectedDifficultyMode = DifficultyMode.Hard;
 
             _difficultySelectButtonsContainer = new RadioButtonContainer(easySelectButton, normalSelectButton, hardSelectButton);
-
-            _lastSelectedDifficultyMode ??= DifficultyMode.Normal;
 
             PushDifficultySelectButtonWithDifficultyMode(easySelectButton, normalSelectButton, hardSelectButton);
         }
