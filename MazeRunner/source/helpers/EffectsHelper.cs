@@ -11,15 +11,15 @@ public static class EffectsHelper
 {
     public class Shadower : MazeRunnerGameComponent
     {
-        public event Action TresholdReached;
-
         public const double StepAddDelay = 25;
 
         public const float Step = .05f;
 
+        private static Texture2D _blackBackground;
+
         public static Texture2D BlackBackground => _blackBackground;
 
-        private static Texture2D _blackBackground;
+        public event Action TresholdReached;
 
         private readonly float _step;
 
