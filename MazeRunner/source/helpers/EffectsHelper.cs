@@ -42,7 +42,7 @@ public static class EffectsHelper
         public override void Draw(GameTime gameTime)
         {
             Drawer.Draw(
-                _blackBackground, Vector2.Zero, new Rectangle(0, 0, _blackBackground.Width, _blackBackground.Height), 1e-2f, transparency: _transparency);
+                _blackBackground, Vector2.Zero, new Rectangle(0, 0, _blackBackground.Width, _blackBackground.Height), 0.05f, transparency: _transparency);
         }
 
         public override void Update(GameTime gameTime)
@@ -59,8 +59,6 @@ public static class EffectsHelper
             if (!_transparency.InRange(0, 1))
             {
                 TresholdReached.Invoke();
-
-                return;
             }
         }
 
