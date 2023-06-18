@@ -46,7 +46,8 @@ public class HeroCamera : MazeRunnerGameComponent, ICamera
 
         _bordersOffset = Matrix.CreateTranslation(_viewWidth / 2, _viewHeight / 2, 0);
 
-        var scaleFactor = 7;
+        var scaleDivider = 275f;
+        var scaleFactor = viewWidth / scaleDivider;
 
         _scale = Matrix.CreateScale(scaleFactor, scaleFactor, 0);
 
