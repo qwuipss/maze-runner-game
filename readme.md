@@ -1,10 +1,9 @@
 # Base information
 
-Title: `Maze Runner`
-Platform: `PC`
-OS: `Windows`
+Title: `Maze Runner`<br />
+Platform: `PC`<br />
+OS: `Windows`<br />
 Genre: `Adventure`
-Multiplayer: `-`
 
 # Gameplay
 
@@ -17,4 +16,6 @@ There is **3** difficulty levels: **easy**, **normal** and **hard**, that differ
 + Dynamic volume sound effects
 + Procedurally generated maze
  
+# Demo gameplay
+
 ![Demo gameplay](demo.jpg)
