@@ -36,7 +36,7 @@ public class FindKeyWriter : TextWriter
 
     private double _textShowTimeMs;
 
-    public override event Action WriterDiedNotify;
+    public event Action WriterDiedNotify;
 
     public override float ScaleFactor => .2f;
 

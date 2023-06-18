@@ -7,8 +7,6 @@ namespace MazeRunner.Drawing.Writers;
 
 public abstract class TextWriter : MazeRunnerGameComponent
 {
-    public abstract event Action WriterDiedNotify;
-
     public abstract float ScaleFactor { get; }
 
     public abstract string Text { get; }
