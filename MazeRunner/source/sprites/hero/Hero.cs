@@ -1,4 +1,5 @@
-﻿using MazeRunner.Helpers;
+﻿using MazeRunner.GameBase.States;
+using MazeRunner.Helpers;
 using MazeRunner.Managers;
 using MazeRunner.MazeBase;
 using MazeRunner.Sprites.States;
@@ -35,6 +36,8 @@ public class Hero : Sprite
     {
         Health = health;
         ChalkUses = chalkUses;
+
+        GameRunningState.GameWonNotify += SoundManager.Sprites.Hero.StopPlayingRunSoundIfPlaying;
     }
 
     public void Initialize(Maze maze)
