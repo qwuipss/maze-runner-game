@@ -36,15 +36,15 @@ public class GameMenuState : GameBaseState
         {
             Easy = new GameParameters
             {
-                MazeWidth = 7,
-                MazeHeight = 7,
+                MazeWidth = 25,
+                MazeHeight = 25,
 
                 MazeDeadEndsRemovePercentage = 55,
 
                 MazeBayonetTrapInsertingPercentage = 2,
                 MazeDropTrapInsertingPercentage = 1.25f,
 
-                GuardSpawnCount = 1,
+                GuardSpawnCount = 7,
 
                 ChalksInsertingPercentage = 1,
                 FoodInsertingPercentage = .75f,

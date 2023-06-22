@@ -563,8 +563,6 @@ public class GameRunningState : GameBaseState
             SoundManager.Transiters.PlayGameWonSound();
 
             ControlGiveUpNotify.Invoke(new GameWonState());
-
-            GameWonNotify = null;
         };
     }
 
