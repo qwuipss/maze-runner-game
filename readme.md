@@ -19,3 +19,10 @@ There is **3** difficulty levels: **easy**, **normal** and **hard**, that differ
 # Demo gameplay
 
 ![Demo gameplay](demo.jpg)
+
+# Getting started
+
++ Clone the project
++ Install Monogame (as an extension in Visual Studio)
++ Compile
++ Run
