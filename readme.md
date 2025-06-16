@@ -2,7 +2,6 @@
 
 Title: `Maze Runner`  
 Platform: `PC`  
-OS: `Windows`  
 Genre: `Adventure`  
 
 # Gameplay
